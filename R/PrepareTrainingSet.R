@@ -1,9 +1,21 @@
-#prepare subpopulations, the training subpop is subpop1
-#inputs are two subpopulations (e.g. same day or different days) and a list of genes (the ordered list from most to least important)
-#it generates one training dataset and a reference classification matrix
-#the input matrix has gene names in rows and cell names in columns (make sure gene names in the same format)
-
-#Prepare an object here, making sure it has 2 subpop slots
+#' prepares two subpopulations
+#'
+#' @description  prepares a training subpopulation to build a prediction model and evaluate the model - subpop1. The resulting model is applied to predict the second subpopulation - subpop2
+#' @param subpop1 the training subpop, a data frame, rows contain gene names, columns contain cell IDs, can be an  \code{ExpressionSet} object
+#' @param subpop2 the prediction subpop  rows contain gene names, columns contain cell IDs, can be an \code{ExpressionSet} object
+#' @param genes a vector of gene symbols used for prediction, gene symbols must be in the same format with gene names in subpop2
+#' genes are listed by the order of importance
+#' @return Two dataframes
+#' @author QN
+#' @Example
+#' prepare_2_subpop(mat1, mat2, geneNames)
+#' \dontrun{
+#'
+#' prepare_2_subpop(subpop1 = NULL,
+#'                  subpop2 = NULL,
+#'                  genes = "")
+#' }
+#'
 
 prepare_2_subpop <-function(subpop1, subpop2, genes){
   # making sure the gene list contains fewer than 500 genes
@@ -21,10 +33,4 @@ prepare_2_subpop <-function(subpop1, subpop2, genes){
   # reference classification for comparing predicted results
   cellNames_subpop <- cbind(colnames(subpop1), colnames(subpop2)) #note: may edit this to maje 2 genetic classes 1 and 2
 }
-
-
-#---------------------------------------------
-#after this step we have: subsampling, cluster_select, cluster_compare, DE_idx, ori_dat, ori_dat2
-#---------------------------------------------
-
 

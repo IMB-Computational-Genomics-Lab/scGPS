@@ -1,50 +1,46 @@
-#' build cvfit model and evaluate prediction accuracy
+#' Main training
 #'
-#' @description  Train a LASSO model or a LDA model using 50% cells from a subpopulation
-#' @param cluster_select_indx_S1 changes in each of the bootstrap from the dandom sample command the training
+#' @description  Training LASSO and LDA
+#' @param cluster_select_indx_S1 is the index from random sampling
+#' genes are listed by the order of importance
 #' @return a list containing: predict_clusters, predictor_S2, sub_cvfit_out, dat_DE_fm_DE, cvfit, predictor_S1,fit.lda
-#' @keywords Training model
 #' @author QN
 #' @Example
-#' To be added with a toy dataset
+#' prepare_2_subpop(mat1, mat2, geneNames)
 #' \dontrun{
-#' predict_marker(cluster_select_indx_S1 = NULL)
+#'
+#' prepare_2_subpop(subpop1 = NULL,
+#'                  subpop2 = NULL,
+#'                  genes = "")
 #' }
 #'
-#'
 
-predict_marker<- Lit_New_Lasso(cluster_select_indx_S1 = NULL)
-
-c_selectID="Subpop1"
-c_compareID="Subpop2"
-
-Lit_New_Lasso <-function(cluster_select_indx_S1=NULL, SubPop1, SubPop2) {
-
-  #taking a subsampling size of 50% of the cluster_select out for training
-  subsampling =round(ncol(subpop1)/2)
-
-  #check if the sizes are balanced. e.g. subpop1 is more than 2 times bigger than subpop2
-  #e.g. there is a very big cluster present in the dataset  C/2 = subsampling >length(total-C=cluster_compare)
-  if (ncol(SubPop2) > subsampling) {
+Lit_New_Lasso <-function(cluster_select_indx_S1=NULL) {
+  #cluster_select_indx_S1 <-sample(cluster_select, subsampling, replace=F)
+  #check if there is a very big cluster present in the dataset  C/2 = subsampling >length(total-C=cluster_compare)
+  if (length(cluster_compare) > subsampling ) {
     cluster_compare_indx_S1 <- sample(cluster_compare, subsampling , replace=F)
   } else {
     cluster_compare_indx_S1 <- cluster_compare
   }
 
+  c_compareID = 1:length(unique(my.clusters))
+  c_compareID <- paste0(c_compareID[-which(c_compareID==c_selectID)], collapse="")
   M_or_DE_idx=DE_idx
+
 
   #prepare predictor matrix containing both clutering classes
   predictor_S1 <-ori_dat[M_or_DE_idx, c(cluster_select_indx_S1 , cluster_compare_indx_S1)]
   #generate categorical response
   #set all values to cluster select (character type)
-  y_cat = rep("Subpop1",length(predictor_S1[1,]))
+  y_cat = rep(c_selectID,length(predictor_S1[1,]))
   #replace values for cluster compare
   #first get a new matrix
   ori_compare <-ori_dat[,cluster_compare]
   #get indexes for cells in predictor_S1 belong to cluster_compare class
   Sub_clustercompare_Indx_S1 <-which(colnames(predictor_S1) %in% colnames(ori_compare))
   #change value of the cluster id
-  y_cat[Sub_clustercompare_Indx_S1] <-rep("Subpop2", length(Sub_clustercompare_Indx_S1))
+  y_cat[Sub_clustercompare_Indx_S1] <-rep(c_compareID, length(Sub_clustercompare_Indx_S1))
 
 
   #fitting with cross validation to find the best LASSO model
@@ -79,7 +75,7 @@ Lit_New_Lasso <-function(cluster_select_indx_S1=NULL, SubPop1, SubPop2) {
   require(dplyr)
   dat_DE %>% group_by(Dfd) %>% summarise(Deviance = max(Deviance)) -> dat_DE_fm_DE
   dat_DE_fm_DE <-as.data.frame(dat_DE_fm_DE)
-  dat_DE_fm_DE$DEgenes <-paste0('DEgenes_C',"SubPop1",'_day_', dayID)
+  dat_DE_fm_DE$DEgenes <-paste0('DEgenes_C',c_selectID,'_day_', dayID)
   remaining <-c('remaining', 1, 'DEgenes')
   dat_DE_fm_DE <-rbind(dat_DE_fm_DE, remaining)
 

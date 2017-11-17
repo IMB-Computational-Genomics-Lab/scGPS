@@ -1,64 +1,21 @@
-#this script does generates all needed lists for 1 selected clusters!
-#it compares within day and between day clusters
-#it has both LASSO and LDA models
-#it calculate accuracy and LASSO gene lists
+#' Main training
+#'
+#' @description  Training LASSO and LDA
+#' @param subpop2 the prediction subpop  rows contain gene names, columns contain cell IDs, can be an \code{ExpressionSet} object
+#' @param genes a vector of gene symbols used for prediction, gene symbols must be in the same format with gene names in subpop2
+#' genes are listed by the order of importance
+#' @return a list containing: predict_clusters, predictor_S2, sub_cvfit_out, dat_DE_fm_DE, cvfit, predictor_S1,fit.lda
+#' @author QN
+#' @Example
+#' prepare_2_subpop(mat1, mat2, geneNames)
+#' \dontrun{
+#'
+#' prepare_2_subpop(subpop1 = NULL,
+#'                  subpop2 = NULL,
+#'                  genes = "")
+#' }
+#'
 
-library(glmnet)
-library(caret)
-
-argv <- commandArgs(TRUE)
-
-c_selectID=argv[1]
-dayID=argv[2]
-dayID2=argv[3]
-
-#c_selectID=1; dayID=2; dayID2=5
-
-ori_dat <-readRDS(paste0("Exprs_DCVLnorm_unlog_minus1_pos_Day", dayID, ".RDS"))
-my.clusters <-readRDS(paste0("my.clusters_0.45_day",dayID, ".RDS"))
-
-#making sure only genes appearing in the two datasets are used to build cvfit
-ori_dat_2 <-readRDS(paste0("../Exprs_DCVLnorm_unlog_minus1_pos_Day", dayID2, ".RDS"))
-names <-rownames(ori_dat)
-names <-gsub("_.*", '', names)
-rownames(ori_dat) <-names
-
-#get cluster IDs
-n_clusters <-length(unique(my.clusters))
-#extract clusters
-
-cluster_select <- which(my.clusters==as.numeric(c_selectID))
-
-cluster_compare <-  which(my.clusters !=as.numeric(c_selectID))
-
-#this cellNames_cluster is to calculate the accuracy
-cellNames_cluster <- cbind(colnames(ori_dat), my.clusters)
-
-DE_result <- read.table(paste0('DEseq_Cluster', c_selectID, '_vs_OtherClusters_Day', dayID,'.txt_filtered_pAdjusted_sorted.txt'), header=T)
-
-DEgenes <-DE_result$id
-
-DEgenes <-gsub("_.*", '', DEgenes)
-
-#select top 500, the DE_result is an already sorted list
-if(length(DEgenes) >500){DEgenes <- DEgenes[1:500]}
-
-#making sure only genes shared with oridat2 are kept
-names <-gsub("_.*", '', rownames(ori_dat_2))
-rownames(ori_dat_2) <- names
-DEgenes_filtered <- DEgenes[which(DEgenes %in% names)]
-DE_idx <-which(rownames(ori_dat) %in% DEgenes_filtered)
-
-#taking a subsampling size of 50% of the cluster_select out for training
-subsampling =round(length(cluster_select)/2)
-
-#---------------------------------------------
-#after this step we have: subsampling, cluster_select, cluster_compare, DE_idx, ori_dat, ori_dat2
-#---------------------------------------------
-
-##########################################################################################
-
-#this function build cvfit model and evaluate prediction accuracy
 Lit_New_Lasso <-function(cluster_select_indx_S1=NULL) {
     	#cluster_select_indx_S1 <-sample(cluster_select, subsampling, replace=F)
     	#check if there is a very big cluster present in the dataset  C/2 = subsampling >length(total-C=cluster_compare)
@@ -144,11 +101,29 @@ Lit_New_Lasso <-function(cluster_select_indx_S1=NULL) {
       return(list(predict_clusters, predictor_S2, sub_cvfit_out, dat_DE_fm_DE, cvfit, predictor_S1,fit.lda ))
   }
 
-#this function takes cvfit as the input and predict cells in another day or the same day
-#this function predict the percent cells in the next cluster
 
-predict_day <-function(dayID_same_or_nextday, predictor_S1, cvfit ){
-	dayIDtarget <- dayID_same_or_nextday
+#' Prediction
+#'
+#' @description  this function takes cvfit as the input and predict cells in another subpopulation
+#' @param cvfit the LASSO fit object
+#' @param predictor_S1 a predictor matrix
+#' @param dayID a character specifying day ID
+#' @return a list containing:	list_predict_clusters_LASSO and list_predict_clusters_LDA
+#' @keywords Input
+#' @author QN
+#' @Example
+#' prepare_2_subpop(mat1, mat2, geneNames)
+#' \dontrun{
+#'
+#' predict_subpop(
+#'                  dayID = NULL,
+#'                  predictor_S1 = NULL,
+#'                  cvfit = NULL)
+#' }
+#'
+
+predict_subpop <-function(dayID, predictor_S1, cvfit ){
+	dayIDtarget <- dayID
 	my.clusters <-readRDS(paste0("my.clusters_0.45_day",dayIDtarget, ".RDS"))
 	ori_dat_2 <- readRDS(paste0("../Exprs_DCVLnorm_unlog_minus1_pos_Day", dayIDtarget, ".RDS"))
   names <-rownames(ori_dat_2)
@@ -208,23 +183,41 @@ predict_day <-function(dayID_same_or_nextday, predictor_S1, cvfit ){
 	return(list(predict_percent_LASSO =	list_predict_clusters_LASSO, predict_clusters_LDA = list_predict_clusters_LDA))
 }
 
-#Lists to be saved. Note that only list_predict_sameDay and list_predict_DifferentDay are day-specific; all others are shared for the same models LASSO or LDA
-list_SigGenes = list() #for extracting genes post LASSO
-list_Deviance = list() #for plotting deviance explained
-list_cvFit = list() #for saving lasso model
-list_lda = list() #for saving lda model
+#' Bootstrap run
+#'
+#' @description  this function takes cvfit as the input and predict cells in another subpopulation
+#' @param cvfit the LASSO fit object
+#' @param predictor_S1 a predictor matrix
+#' @param dayID a character specifying day ID
+#' @return a list containing:list_acc_inacc,  list_SigGenes, list_Deviance, list_cvFit,  list_predict_sameDay, list_predict_DifferentDay
 
-list_acc_inacc = list() #for plotting accuracy of a model
-list_predict_sameDay = list() #for percent predicted by LASSO
-list_predict_DifferentDay = list() #for percent predicted by LDA
+#' @keywords Bootstrap
+#' @author QN
+#' @Example
+#' prepare_2_subpop(mat1, mat2, geneNames)
+#' \dontrun{
+#'
+#' predict_subpop(
+#'                  dayID = NULL,
+#'                  predictor_S1 = NULL,
+#'                  cvfit = NULL)
+#' }
+#'
 
-#Run the loop below and save one big object containing all 7 lists above as the output
-for (i in 1:100){
 
-#c_compareID = 1:length(unique(my.clusters)) #not using this?
-#c_compareID <- paste0(c_compareID[-which(c_compareID==c_selectID)], collapse="") #not using this?
-#Call the big function here
-#to randomise the input first
+
+bootstrap_run <- function(bootstrap_number=100){
+  #Lists to be saved. Note that only list_predict_sameDay and list_predict_DifferentDay are day-specific; all others are shared for the same models LASSO or LDA
+  list_SigGenes = list() #for extracting genes post LASSO
+  list_Deviance = list() #for plotting deviance explained
+  list_cvFit = list() #for saving lasso model
+  list_lda = list() #for saving lda model
+
+  list_acc_inacc = list() #for plotting accuracy of a model
+  list_predict_sameDay = list() #for percent predicted by LASSO
+  list_predict_DifferentDay = list() #for percent predicted by LDA
+
+  for (i in 1:bootstrap_number){
 
         cluster_select_indx_S1 <-sample(cluster_select, subsampling, replace=F)
         predict_marker<- Lit_New_Lasso(cluster_select_indx_S1 = cluster_select_indx_S1)
@@ -256,14 +249,14 @@ for (i in 1:100){
         cvfit=predict_marker[[5]]
         fit.lda =predict_marker[[7]]
         #predict lasso
-        list_predict_sameDay[[i]] <- predict_day(dayID_same_or_nextday = dayID, predictor_S1 = predict_marker[[6]], cvfit= predict_marker[[5]])
+        list_predict_sameDay[[i]] <- predict_subpop(dayID = dayID, predictor_S1 = predict_marker[[6]], cvfit= predict_marker[[5]])
         #predict LDA
-        list_predict_DifferentDay[[i]] <- predict_day(dayID_same_or_nextday = dayID2, predictor_S1 = predict_marker[[6]], cvfit= predict_marker[[5]])
+        list_predict_DifferentDay[[i]] <- predict_subpop(dayID = dayID2, predictor_S1 = predict_marker[[6]], cvfit= predict_marker[[5]])
 
         }
-###################################################################################################
-list_all <-list(list_acc_inacc =list_acc_inacc,  list_SigGenes = list_SigGenes, list_Deviance = list_Deviance,  list_cvFit = list_cvFit,  list_predict_sameDay = list_predict_sameDay, list_predict_DifferentDay = list_predict_DifferentDay)
-saveRDS(list_all, paste0('LASSO_LDA_DEgenes_cluster', c_selectID,'fromDay',dayID,'_toDay_', dayID2, '.RDS'))
+  list_all <-list(list_acc_inacc =list_acc_inacc,  list_SigGenes = list_SigGenes, list_Deviance = list_Deviance,  list_cvFit = list_cvFit,  list_predict_sameDay = list_predict_sameDay, list_predict_DifferentDay = list_predict_DifferentDay)
+  saveRDS(list_all, paste0('LASSO_LDA_DEgenes_cluster', c_selectID,'fromDay',dayID,'_toDay_', dayID2, '.RDS'))
+  }
 
 
 
