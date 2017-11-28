@@ -19,13 +19,11 @@ if the gene list contains too many genes, only the top 500 genes are used.}
 
 \item{c_selectID}{a selected number to specify which subpopulation to be used for training}
 
-\item{out_idx}{a number for index to write results into the list output}
+\item{out_idx}{a number to specify index to write results into the list output.
+This is needed for running bootstrap.}
 }
 \value{
 a \code{list} with prediction results written in to the index \code{out_idx}
-}
-\description{
-Training 50% of all cells to find optimal LASSO and LDA models to predict a subpopulation
 }
 \examples{
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/MainLassoLDATraining.R
 \name{bootstrap_scGPS}
 \alias{bootstrap_scGPS}
-\title{BootStrap}
+\title{BootStrap runs for both scGPS training and prediction}
 \usage{
 bootstrap_scGPS(nboots = 1, mixedpop1 = mixedpop1, mixedpop2 = mixedpop2,
   c_selectID, listData = list())
@@ -10,18 +10,19 @@ bootstrap_scGPS(nboots = 1, mixedpop1 = mixedpop1, mixedpop2 = mixedpop2,
 \arguments{
 \item{nboots}{a number specifying how many bootstraps to be run}
 
-\item{mixedpop1}{is a \linkS4class{SingleCellExperiment} object from the train mixed population}
+\item{mixedpop1}{a \linkS4class{SingleCellExperiment} object from a mixed population for training}
 
-\item{mixedpop2}{is a \linkS4class{SingleCellExperiment} object from the target mixed population
-of importance, e.g. differentially expressed genes that are most significant}
+\item{mixedpop2}{a \linkS4class{SingleCellExperiment} object from a target mixed population for prediction}
 
-\item{listData}{is a \code{list} object, which contains trained results for the first mixed population}
+\item{listData}{a \code{list} object, which contains trained results for the first mixed population}
 }
 \value{
 a \code{list} with prediction results written in to the index \code{out_idx}
 }
 \description{
-Predict a new mixed population after training the model for a subpopulation in the first mixed population
+LASSO and LDA prediction for each of all the subpopulations in
+the new mixed population after training the model for a subpopulation in the
+first mixed population. The number of bootstraps to be run can be specified.
 }
 \examples{
 c_selectID<-1

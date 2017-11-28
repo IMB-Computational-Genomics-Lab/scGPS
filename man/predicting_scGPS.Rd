@@ -7,20 +7,24 @@
 predicting_scGPS(listData = NULL, mixedpop2 = NULL, out_idx = NULL)
 }
 \arguments{
-\item{listData}{is a \code{list} object, which contains trained results for the first mixed population}
+\item{listData}{a \code{list} object containing trained results for the
+selected subpopulation in the first mixed population}
 
-\item{mixedpop2}{is a \linkS4class{SingleCellExperiment} object from the target mixed population
-of importance, e.g. differentially expressed genes that are most significant}
+\item{mixedpop2}{a \linkS4class{SingleCellExperiment} object from the target
+mixed population of importance, e.g. differentially expressed genes that are most significant}
 
-\item{out_idx}{a number for index to write results into the list output}
+\item{out_idx}{a number to specify index to write results into the list output.
+This is needed for running bootstrap.}
 }
 \value{
 a \code{list} with prediction results written in to the index \code{out_idx}
 }
 \description{
-Predict a new mixed population after training the model for a subpopulation in the first mixed population.
-All subpopulations in the new target mixed population will be predicted, where each will has a transition score
-from the orginal subpopulation to the new subpopulation.
+Predict a new mixed population after training the model for a
+subpopulation in the first mixed population.
+All subpopulations in the new target mixed population will be predicted, where
+each targeted subpopulation will have a transition score from the orginal
+subpopulation to the new subpopulation.
 }
 \examples{
 c_selectID<-1

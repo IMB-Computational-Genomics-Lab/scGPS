@@ -1,6 +1,7 @@
 #' Main training function for a subpopulation
 #'
-#' @description  Training 50% of all cells to find optimal LASSO and LDA models to predict a subpopulation
+#' @description  Training \code{50%} of all cells to find optimal LASSO and LDA
+#' models to predict a subpopulation
 #' @param mixedpop1 is a \linkS4class{SingleCellExperiment} object from the train mixed population
 #' @param mixedpop2 is a \linkS4class{SingleCellExperiment} object from the target mixed population
 #' @param genes a vector of gene names (for LASSO shrinkage); gene symbols must be
@@ -8,7 +9,8 @@
 #' of importance, e.g. differentially expressed genes that are most significan, so that
 #' if the gene list contains too many genes, only the top 500 genes are used.
 #' @param c_selectID a selected number to specify which subpopulation to be used for training
-#' @param out_idx a number for index to write results into the list output
+#' @param out_idx a number to specify index to write results into the list output.
+#' This is needed for running bootstrap.
 #' @return a \code{list} with prediction results written in to the index \code{out_idx}
 #' @export
 #' @author Quan Nguyen, 2017-11-25
@@ -200,13 +202,17 @@ training_scGPS <-function(genes, mixedpop1 = NULL,
 
 #' Main prediction function applying the optimal LASSO and LDA models
 #'
-#' @description  Predict a new mixed population after training the model for a subpopulation in the first mixed population.
-#' All subpopulations in the new target mixed population will be predicted, where each will has a transition score
-#' from the orginal subpopulation to the new subpopulation.
-#' @param listData is a \code{list} object, which contains trained results for the first mixed population
-#' @param mixedpop2 is a \linkS4class{SingleCellExperiment} object from the target mixed population
-#' of importance, e.g. differentially expressed genes that are most significant
-#' @param out_idx a number for index to write results into the list output
+#' @description  Predict a new mixed population after training the model for a
+#' subpopulation in the first mixed population.
+#' All subpopulations in the new target mixed population will be predicted, where
+#' each targeted subpopulation will have a transition score from the orginal
+#' subpopulation to the new subpopulation.
+#' @param listData a \code{list} object containing trained results for the
+#' selected subpopulation in the first mixed population
+#' @param mixedpop2 a \linkS4class{SingleCellExperiment} object from the target
+#' mixed population of importance, e.g. differentially expressed genes that are most significant
+#' @param out_idx a number to specify index to write results into the list output.
+#' This is needed for running bootstrap.
 #' @return a \code{list} with prediction results written in to the index \code{out_idx}
 #' @export
 #' @author Quan Nguyen, 2017-11-25
@@ -291,13 +297,14 @@ predicting_scGPS <-function(listData = NULL,  mixedpop2 = NULL, out_idx=NULL){
 }
 
 
-#' BootStrap
+#' BootStrap runs for both scGPS training and prediction
 #'
-#' @description  Predict a new mixed population after training the model for a subpopulation in the first mixed population
-#' @param listData is a \code{list} object, which contains trained results for the first mixed population
-#' @param mixedpop1 is a \linkS4class{SingleCellExperiment} object from the train mixed population
-#' @param mixedpop2 is a \linkS4class{SingleCellExperiment} object from the target mixed population
-#' of importance, e.g. differentially expressed genes that are most significant
+#' @description  LASSO and LDA prediction for each of all the subpopulations in
+#' the new mixed population after training the model for a subpopulation in the
+#' first mixed population. The number of bootstraps to be run can be specified.
+#' @param listData  a \code{list} object, which contains trained results for the first mixed population
+#' @param mixedpop1 a \linkS4class{SingleCellExperiment} object from a mixed population for training
+#' @param mixedpop2 a \linkS4class{SingleCellExperiment} object from a target mixed population for prediction
 #' @param nboots a number specifying how many bootstraps to be run
 #' @return a \code{list} with prediction results written in to the index \code{out_idx}
 #' @export
