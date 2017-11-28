@@ -8,17 +8,25 @@ NewscGPS(ExpressionMatrix = NULL, GeneMetadata = NULL,
   CellMetadata = NULL)
 }
 \arguments{
-\item{ExpressionMatrix}{An expression matrix in data.frame or matrix format. Rows should represent a transcript and its normalised counts, while columns should represent individual cells.}
+\item{ExpressionMatrix}{An expression matrix in data.frame or matrix format.
+Rows should represent a transcript and its normalised counts,
+while columns should represent individual cells.}
 
-\item{GeneMetadata}{A data frame or vector containing gene identifiers used in the expression matrix. The first column should hold the cell identifiers you are using in the expression matrix. Other columns contain information about the genes, such as their corresponding ENSEMBL transcript identifiers, whether or not they are a control and any additional information supplied by the user. This is an optional field.}
+\item{GeneMetadata}{A data frame or vector containing gene identifiers used in
+the expression matrix. The first column should hold the cell identifiers
+you are using in the expression matrix. Other columns contain information about
+the genes, such as their corresponding ENSEMBL transcript identifiers.}
 
-\item{CellMetadata}{A data frame containing cell identifiers (usually barcodes) and an integer representing which batch they belong to. This is an optional field, and it best used for experiments that contain data from multiple samples. This data frame can also hold additional information supplied by the user.}
+\item{CellMetadata}{A data frame containing cell identifiers (usually barcodes)
+and an integer representing which batch they belong to.}
 }
 \value{
-This function generates an object belonging to the \linkS4class{SingleCellExperiment}.
+This function generates an scGPS object belonging to the \linkS4class{SingleCellExperiment}.
 }
 \description{
-\code{\link{NewscGPS}} generates a \linkS4class{SingleCellExperiment} object for use with the scGPS package. This object contains an expression matrix, associated metadata (cells, genes, clusters), and bootstrap results. elementMetadata refer to genes/genomic features.
+\code{\link{NewscGPS}} generates a scGPS object in the \linkS4class{SingleCellExperiment} class
+for use with the scGPS package.This object contains an expression matrix, associated
+metadata (cells, genes, clusters). The data are expected to be normalised counts.
 }
 \examples{
 day2 <- sample1

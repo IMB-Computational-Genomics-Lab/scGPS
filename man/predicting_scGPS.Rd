@@ -2,9 +2,9 @@
 % Please edit documentation in R/MainLassoLDATraining.R
 \name{predicting_scGPS}
 \alias{predicting_scGPS}
-\title{Main prediction}
+\title{Main prediction function applying the optimal LASSO and LDA models}
 \usage{
-predicting_scGPS(listData = NULL, mixedpop2 = NULL, out_idx)
+predicting_scGPS(listData = NULL, mixedpop2 = NULL, out_idx = NULL)
 }
 \arguments{
 \item{listData}{is a \code{list} object, which contains trained results for the first mixed population}
@@ -12,13 +12,15 @@ predicting_scGPS(listData = NULL, mixedpop2 = NULL, out_idx)
 \item{mixedpop2}{is a \linkS4class{SingleCellExperiment} object from the target mixed population
 of importance, e.g. differentially expressed genes that are most significant}
 
-\item{out_idx}{a number for index of the list}
+\item{out_idx}{a number for index to write results into the list output}
 }
 \value{
 a \code{list} with prediction results written in to the index \code{out_idx}
 }
 \description{
-Predict a new mixed population after training the model for a subpopulation in the first mixed population
+Predict a new mixed population after training the model for a subpopulation in the first mixed population.
+All subpopulations in the new target mixed population will be predicted, where each will has a transition score
+from the orginal subpopulation to the new subpopulation.
 }
 \examples{
 c_selectID<-1

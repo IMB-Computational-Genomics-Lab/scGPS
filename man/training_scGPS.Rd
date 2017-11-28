@@ -2,29 +2,30 @@
 % Please edit documentation in R/MainLassoLDATraining.R
 \name{training_scGPS}
 \alias{training_scGPS}
-\title{Main training}
+\title{Main training function for a subpopulation}
 \usage{
 training_scGPS(genes, mixedpop1 = NULL, mixedpop2 = NULL, c_selectID,
   listData = list(), out_idx)
 }
 \arguments{
 \item{genes}{a vector of gene names (for LASSO shrinkage); gene symbols must be
-in the same format with gene names in subpop2; #' genes are listed by the order
-of importance, e.g. differentially expressed genes that are most significant}
+in the same format with gene names in subpop2. Note that genes are listed by the order
+of importance, e.g. differentially expressed genes that are most significan, so that
+if the gene list contains too many genes, only the top 500 genes are used.}
 
 \item{mixedpop1}{is a \linkS4class{SingleCellExperiment} object from the train mixed population}
 
 \item{mixedpop2}{is a \linkS4class{SingleCellExperiment} object from the target mixed population}
 
-\item{c_selectID}{a selected number to specify which subpop to be used for training}
+\item{c_selectID}{a selected number to specify which subpopulation to be used for training}
 
-\item{out_idx}{a number for index of the list}
+\item{out_idx}{a number for index to write results into the list output}
 }
 \value{
 a \code{list} with prediction results written in to the index \code{out_idx}
 }
 \description{
-Training LASSO and LDA
+Training 50% of all cells to find optimal LASSO and LDA models to predict a subpopulation
 }
 \examples{
 

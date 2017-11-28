@@ -1,13 +1,14 @@
-#' Main training
+#' Main training function for a subpopulation
 #'
-#' @description  Training LASSO and LDA
+#' @description  Training 50% of all cells to find optimal LASSO and LDA models to predict a subpopulation
 #' @param mixedpop1 is a \linkS4class{SingleCellExperiment} object from the train mixed population
 #' @param mixedpop2 is a \linkS4class{SingleCellExperiment} object from the target mixed population
 #' @param genes a vector of gene names (for LASSO shrinkage); gene symbols must be
-#' in the same format with gene names in subpop2; #' genes are listed by the order
-#' of importance, e.g. differentially expressed genes that are most significant
-#' @param c_selectID a selected number to specify which subpop to be used for training
-#' @param out_idx a number for index of the list
+#' in the same format with gene names in subpop2. Note that genes are listed by the order
+#' of importance, e.g. differentially expressed genes that are most significan, so that
+#' if the gene list contains too many genes, only the top 500 genes are used.
+#' @param c_selectID a selected number to specify which subpopulation to be used for training
+#' @param out_idx a number for index to write results into the list output
 #' @return a \code{list} with prediction results written in to the index \code{out_idx}
 #' @export
 #' @author Quan Nguyen, 2017-11-25
@@ -197,13 +198,15 @@ training_scGPS <-function(genes, mixedpop1 = NULL,
 }
 
 
-#' Main prediction
+#' Main prediction function applying the optimal LASSO and LDA models
 #'
-#' @description  Predict a new mixed population after training the model for a subpopulation in the first mixed population
+#' @description  Predict a new mixed population after training the model for a subpopulation in the first mixed population.
+#' All subpopulations in the new target mixed population will be predicted, where each will has a transition score
+#' from the orginal subpopulation to the new subpopulation.
 #' @param listData is a \code{list} object, which contains trained results for the first mixed population
 #' @param mixedpop2 is a \linkS4class{SingleCellExperiment} object from the target mixed population
 #' of importance, e.g. differentially expressed genes that are most significant
-#' @param out_idx a number for index of the list
+#' @param out_idx a number for index to write results into the list output
 #' @return a \code{list} with prediction results written in to the index \code{out_idx}
 #' @export
 #' @author Quan Nguyen, 2017-11-25
@@ -221,7 +224,7 @@ training_scGPS <-function(genes, mixedpop1 = NULL,
 #' listData  <- training_scGPS(genes, mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, c_selectID, listData =list(), out_idx=out_idx)
 #' listData  <- predicting_scGPS(listData =listData,  mixedpop2 = mixedpop2, out_idx=out_idx)
 
-predicting_scGPS <-function(listData = NULL,  mixedpop2 = NULL, out_idx){
+predicting_scGPS <-function(listData = NULL,  mixedpop2 = NULL, out_idx=NULL){
   #predictor_S1 is the dataset used for the training phase (already transposed)
   predictor_S1 <- listData$predictor_S1[[out_idx]][[1]] #1 for extract matrix
   cvfit_best <- listData$LassoFit[[out_idx]][[1]]
@@ -265,12 +268,10 @@ predicting_scGPS <-function(listData = NULL,  mixedpop2 = NULL, out_idx){
     report_LASSO <- paste0('LASSO for subpop', c_selectID_2, ' in target mixedpop2')
     predict_clusters_LASSO <- list( report_LASSO, predict_clusters_LASSO)
     list_predict_clusters_LASSO <-c(list_predict_clusters_LASSO, predict_clusters_LASSO )
-    #cluster_select_predict <- subset(compare, (as.numeric(compare$my.clusters) == c_selectID &  compare$`1`==c_selectID) | (compare$my.clusters!=c_selectID &  compare$`1`!=c_selectID))
 
     #predict LDA:
     newdataset <-t(predictor_S2_temp)
     newdataset <-as.data.frame(newdataset)
-
     predict_clusters_LDA <- predict(fit.lda, newdataset)
     LDA_result <- as.data.frame(table(predict_clusters_LDA )) #convert table() to 2x2 dataframe, it will always have 2 variable names: $name, Freq
     LDA_cluster_idx <- which(LDA_result[,1] == c_selectID)
