@@ -4,11 +4,13 @@
 \alias{bootstrap_scGPS}
 \title{BootStrap runs for both scGPS training and prediction}
 \usage{
-bootstrap_scGPS(nboots = 1, mixedpop1 = mixedpop1, mixedpop2 = mixedpop2,
-  c_selectID, listData = list())
+bootstrap_scGPS(nboots = 1, genes = genes, mixedpop1 = mixedpop1,
+  mixedpop2 = mixedpop2, c_selectID, listData = list())
 }
 \arguments{
 \item{nboots}{a number specifying how many bootstraps to be run}
+
+\item{genes}{a gene list to build the model}
 
 \item{mixedpop1}{a \linkS4class{SingleCellExperiment} object from a mixed population for training}
 
@@ -35,7 +37,7 @@ mixedpop2 <-NewscGPS(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$da
                      CellMetadata = day5$dat5_clusters)
 genes <-GeneList
 genes <-genes$Merged_unique
-test <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, c_selectID, listData =list())
+test <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list())
 names(test)
 test$LassoPredict
 test$LDAPredict

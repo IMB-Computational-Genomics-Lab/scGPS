@@ -25,6 +25,10 @@ This is needed for running bootstrap.}
 \value{
 a \code{list} with prediction results written in to the index \code{out_idx}
 }
+\description{
+Training a haft of all cells to find optimal LASSO and LDA
+models to predict a subpopulation
+}
 \examples{
 
 c_selectID<-1

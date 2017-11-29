@@ -1,6 +1,6 @@
 #' Main training function for a subpopulation
 #'
-#' @description  Training \code{50%} of all cells to find optimal LASSO and LDA
+#' @description  Training a haft of all cells to find optimal LASSO and LDA
 #' models to predict a subpopulation
 #' @param mixedpop1 is a \linkS4class{SingleCellExperiment} object from the train mixed population
 #' @param mixedpop2 is a \linkS4class{SingleCellExperiment} object from the target mixed population
@@ -52,9 +52,9 @@ training_scGPS <-function(genes, mixedpop1 = NULL,
   # select top 500, the DE_result is an already sorted list
   if(length(genes) >500){genes <- genes[1:500]}
   #select genes
-  names1 <- elementMetadata(mixedpop1)$GeneSymbol
+  names1 <- elementMetadata(mixedpop1)[,1]
   subpop1_selected_genes <- names1[which(names1 %in% genes)]
-  names2 <-elementMetadata(mixedpop2)$GeneSymbol
+  names2 <-elementMetadata(mixedpop2)[,1]
   genes_in_both <-names2[which(names2 %in% subpop1_selected_genes)]
   genes_in_both_idx1 <-which(names1 %in%  genes_in_both)
   # done selecting genes--------------------------------------------------------
@@ -305,6 +305,7 @@ predicting_scGPS <-function(listData = NULL,  mixedpop2 = NULL, out_idx=NULL){
 #' @param listData  a \code{list} object, which contains trained results for the first mixed population
 #' @param mixedpop1 a \linkS4class{SingleCellExperiment} object from a mixed population for training
 #' @param mixedpop2 a \linkS4class{SingleCellExperiment} object from a target mixed population for prediction
+#' @param genes a gene list to build the model
 #' @param nboots a number specifying how many bootstraps to be run
 #' @return a \code{list} with prediction results written in to the index \code{out_idx}
 #' @export
@@ -320,16 +321,16 @@ predicting_scGPS <-function(listData = NULL,  mixedpop2 = NULL, out_idx=NULL){
 #'                      CellMetadata = day5$dat5_clusters)
 #' genes <-GeneList
 #' genes <-genes$Merged_unique
-#' test <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, c_selectID, listData =list())
+#' test <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list())
 #' names(test)
 #' test$LassoPredict
 #' test$LDAPredict
 
 
-bootstrap_scGPS <- function(nboots = 1,mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, c_selectID, listData =list()){
+bootstrap_scGPS <- function(nboots = 1, genes = genes, mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, c_selectID, listData =list()){
 
   for (out_idx in 1:nboots){
-    listData  <- training_scGPS(genes, mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, c_selectID, listData =listData, out_idx=out_idx)
+    listData  <- training_scGPS(genes =genes, mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, c_selectID, listData =listData, out_idx=out_idx)
     print(paste0("done ", out_idx))
     listData  <- predicting_scGPS(listData =listData,  mixedpop2 = mixedpop2, out_idx=out_idx)
   }
