@@ -17,17 +17,16 @@ knitr::opts_chunk$set(
 ```
 #A simple workflow of the scGPS
 ```{r}
-
 #To install
-devtools::load_all()
 #devtools::install_github("IMB-Computational-Genomics-Lab/scGPS",auth_token = "yourToken")
 
+devtools::load_all()
 
-#load mixed population 1
+#load mixed population 1 (loaded from sample1 dataset, named it as day2)
 day2 <- sample1
 mixedpop1 <-NewscGPS_SME(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day2$dat2geneInfo,
                      CellMetadata = day2$dat2_clusters)
-#load mixed population 3
+#load mixed population 2 (loaded from sample2 dataset, named it as day5)
 day5 <- sample2
 mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
                      CellMetadata = day5$dat5_clusters)
