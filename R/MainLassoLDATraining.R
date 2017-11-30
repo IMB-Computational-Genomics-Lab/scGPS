@@ -358,11 +358,11 @@ bootstrap_scGPS_parallel <- function(ncores=4, nboots = 1, genes = genes, mixedp
   cl <- makeCluster(ncores)
 
   #clusterExport(cl, c("listData1", "mixedpop1", "mixpop2", "out_idx"))
-  clusterExport(cl, c( "mixedpop1","mixedpop2", "c_selectID", "listData1", "genes",
-                       "training_scGPS", "predicting_scGPS"))
+  #clusterExport(cl, c( "mixedpop1","mixedpop2", "c_selectID", "listData1", "genes",
+  #                     "training_scGPS", "predicting_scGPS"))
 
-  clusterEvalQ(cl, library("glmnet", "caret", "scGPS",
-                           "SingleCellExperiment"))
+  #clusterEvalQ(cl, library("glmnet", "caret", "scGPS",
+  #                         "SingleCellExperiment"))
   parLapply(cl, 1:nboots, function(out_idx){
 
     listData  <- training_scGPS(genes =genes, mixedpop1 = mixedpop1,

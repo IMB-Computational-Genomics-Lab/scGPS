@@ -1,6 +1,6 @@
 ---
 title: "scGPS test"
-author: "QN"
+author: "Quan Nguyen"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
@@ -18,7 +18,10 @@ knitr::opts_chunk$set(
 #A simple workflow of the scGPS
 ```{r}
 
+#To install
 devtools::load_all()
+#devtools::install_github("IMB-Computational-Genomics-Lab/scGPS",auth_token = "yourToken")
+
 
 #load mixed population 1
 day2 <- sample1
@@ -36,12 +39,23 @@ genes <-genes$Merged_unique
 c_selectID<-1
 
 #run the test bootstrap
-test <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list())
+LSOLDA_dat <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list())
 
 #display some results 
-names(test)
-test$LassoPredict
-test$LDAPredict
+names(LSOLDA_dat)
+LSOLDA_dat$LassoPredict
+LSOLDA_dat$LDAPredict
+
+#summary results LDA
+summary_prediction_lda(LSOLDA_dat=LSOLDA_dat, nPredSubpop=4)
+
+#summary results Lasso
+summary_prediction_lda(LSOLDA_dat=LSOLDA_dat, nPredSubpop=4)
+
+#summary deviance 
+summary_deviance(LSOLDA_dat)
+
+
 ```
 
 # Some references for Vignette documentation (temporarily kept only)
