@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 ```
 #A simple workflow of the scGPS
 ```{r}
-#To install
+#To install from the development version
 #devtools::install_github("IMB-Computational-Genomics-Lab/scGPS",auth_token = "yourToken")
 
 devtools::load_all()
@@ -30,12 +30,12 @@ mixedpop1 <-NewscGPS_SME(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day
 day5 <- sample2
 mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
                      CellMetadata = day5$dat5_clusters)
-#load gene list 
+#load gene list (this can be any lists of user selected genes)
 genes <-GeneList
 genes <-genes$Merged_unique
 
 #select a subpopulation
-c_selectID<-1
+c_selectID <- 1
 
 #run the test bootstrap
 LSOLDA_dat <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list())
@@ -46,10 +46,10 @@ LSOLDA_dat$LassoPredict
 LSOLDA_dat$LDAPredict
 
 #summary results LDA
-summary_prediction_lda(LSOLDA_dat=LSOLDA_dat, nPredSubpop=4)
+summary_prediction_lda(LSOLDA_dat=LSOLDA_dat, nPredSubpop = 4)
 
 #summary results Lasso
-summary_prediction_lda(LSOLDA_dat=LSOLDA_dat, nPredSubpop=4)
+summary_prediction_lasso(LSOLDA_dat=LSOLDA_dat, nPredSubpop = 4)
 
 #summary deviance 
 summary_deviance(LSOLDA_dat)
