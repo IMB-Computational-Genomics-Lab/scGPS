@@ -42,7 +42,6 @@ mixedpop2 <-NewscGPS(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$da
 genes <-GeneList
 genes <-genes$Merged_unique
 listData  <- training_scGPS(genes, mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, c_selectID, listData =list(), out_idx=out_idx)
-day2 <- sample1
 
 }
 \author{

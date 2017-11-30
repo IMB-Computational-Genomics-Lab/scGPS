@@ -42,6 +42,9 @@ names(test)
 test$LassoPredict
 test$LDAPredict
 }
+\seealso{
+\code{\link{bootstrap_scGPS_parallel}} for parallel options
+}
 \author{
 Quan Nguyen, 2017-11-25
 }

@@ -27,7 +27,6 @@
 #' genes <-GeneList
 #' genes <-genes$Merged_unique
 #' listData  <- training_scGPS(genes, mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, c_selectID, listData =list(), out_idx=out_idx)
-#' day2 <- sample1
 #'
 
 training_scGPS <-function(genes, mixedpop1 = NULL,
@@ -302,6 +301,7 @@ predicting_scGPS <-function(listData = NULL,  mixedpop2 = NULL, out_idx=NULL){
 #' @description  LASSO and LDA prediction for each of all the subpopulations in
 #' the new mixed population after training the model for a subpopulation in the
 #' first mixed population. The number of bootstraps to be run can be specified.
+#' @seealso \code{\link{bootstrap_scGPS_parallel}} for parallel options
 #' @param listData  a \code{list} object, which contains trained results for the first mixed population
 #' @param mixedpop1 a \linkS4class{SingleCellExperiment} object from a mixed population for training
 #' @param mixedpop2 a \linkS4class{SingleCellExperiment} object from a target mixed population for prediction
@@ -326,7 +326,6 @@ predicting_scGPS <-function(listData = NULL,  mixedpop2 = NULL, out_idx=NULL){
 #' test$LassoPredict
 #' test$LDAPredict
 
-
 bootstrap_scGPS <- function(nboots = 1, genes = genes, mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, c_selectID, listData =list()){
 
   for (out_idx in 1:nboots){
@@ -338,7 +337,46 @@ bootstrap_scGPS <- function(nboots = 1, genes = genes, mixedpop1 = mixedpop1, mi
 }
 
 
+#' BootStrap runs for both scGPS training and prediction with parallel option
+#'
+#' @description  same as bootstrap_scGPS, but with an multicore option
+#' @param listData  a \code{list} object, which contains trained results for the first mixed population
+#' @param mixedpop1 a \linkS4class{SingleCellExperiment} object from a mixed population for training
+#' @param mixedpop2 a \linkS4class{SingleCellExperiment} object from a target mixed population for prediction
+#' @param genes a gene list to build the model
+#' @param nboots a number specifying how many bootstraps to be run
+#' @param ncores a number specifying how many cpus to be used for running
+#' @return a \code{list} with prediction results written in to the index \code{out_idx}
+#' @export
+#' @author Quan Nguyen, 2017-11-25
+#'
+#'
 
+
+bootstrap_scGPS_parallel <- function(ncores=4, nboots = 1, genes = genes, mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, c_selectID, listData =list()) {
+
+  cl <- makeCluster(ncores)
+
+  #clusterExport(cl, c("listData1", "mixedpop1", "mixpop2", "out_idx"))
+  clusterExport(cl, c( "mixedpop1","mixedpop2", "c_selectID", "listData1", "genes",
+                       "training_scGPS", "predicting_scGPS"))
+
+  clusterEvalQ(cl, library("glmnet", "caret", "scGPS",
+                           "SingleCellExperiment"))
+  parLapply(cl, 1:nboots, function(out_idx){
+
+    listData  <- training_scGPS(genes =genes, mixedpop1 = mixedpop1,
+    mixedpop2 = mixedpop2, c_selectID, listData =listData1, out_idx=out_idx)
+
+    print(paste0("done ", out_idx))
+
+    listData  <- predicting_scGPS(listData =listData,  mixedpop2 = mixedpop2, out_idx=out_idx)
+
+  }
+)
+  stopCluster(cl)
+  return(listData)
+}
 
 
 
