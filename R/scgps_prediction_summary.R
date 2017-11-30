@@ -4,6 +4,7 @@
 #' @param LSOLDA_dat is a list containing the training results from \code{training_scGPS}
 #' the object \code{LSOLDA_dat}, the \code{summary_accuracy} summarise \code{n} bootstraps
 #' @return a vector of percent accuracy for the selected subpopulation
+#' @export
 #' @examples
 #' c_selectID<-1
 #' day2 <- sample1
@@ -37,6 +38,7 @@ summary_accuracy <-function(object=LSOLDA_dat){
 #' deviance explained, a dataframe containg information for the full deviance, and a
 #' dataframe containing gene names and coefficients
 #' of the best model
+#' @export
 #' @examples
 #' c_selectID<-1
 #' day2 <- sample1
@@ -76,6 +78,7 @@ summary_deviance <-function(object=LSOLDA_dat){
 #' @param nPredSubpop is the number of subpopulations in the target mixed population
 #' @return a dataframe containg information for the Lasso prediction results, each column
 #' contains prediction results for all subpopulations from each bootstrap run
+#' @export
 #' @examples
 #' c_selectID<-1
 #' day2 <- sample1
@@ -120,6 +123,7 @@ summary_prediction_lasso <-function(LSOLDA_dat=NULL, nPredSubpop=NULL){
 #' @param nPredSubpop is the number of subpopulations in the target mixed population
 #' @return a dataframe containg information for the LDA prediction results, each column
 #' contains prediction results for all subpopulations from each bootstrap run
+#' @export
 #' @examples
 #' c_selectID<-1
 #' day2 <- sample1
