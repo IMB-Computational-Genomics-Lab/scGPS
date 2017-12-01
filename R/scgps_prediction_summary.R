@@ -95,9 +95,16 @@ summary_deviance <-function(object=LSOLDA_dat){
 
 summary_prediction_lasso <-function(LSOLDA_dat=NULL, nPredSubpop=NULL){
   pred_lasso <- LSOLDA_dat$LassoPredict
+  for(i in 1:length(pred_lasso)) {
+    for(j in 1:length(pred_lasso[[i]])){
+      if(identical(pred_lasso[[i]][[j]], numeric(0))){
+        pred_lasso[[i]][[j]] <-"NA"
+      }
+    }
+  }
 
   pred_lasso_tranformed <- as.vector(unlist(pred_lasso))
-  pred_lasso_tranformed[which(pred_lasso_tranformed == "")] <-"NA"
+
 
   toremove <- grep("target", pred_lasso_tranformed)
 
@@ -141,10 +148,15 @@ summary_prediction_lasso <-function(LSOLDA_dat=NULL, nPredSubpop=NULL){
 
 summary_prediction_lda <-function(LSOLDA_dat=NULL, nPredSubpop=NULL){
   pred_lda <- LSOLDA_dat$LDAPredict
+  for(i in 1:length(pred_lda)) {
+    for(j in 1:length(pred_lda[[i]])){
+      if(identical(pred_lda[[i]][[j]], numeric(0))){
+        pred_lda[[i]][[j]] <-"NA"
+      }
+    }
+  }
 
   pred_lda_tranformed <- as.vector(unlist(pred_lda))
-
-  pred_lda_tranformed[which(pred_lda_tranformed == "")] <-"NA"
 
   toremove <- grep("target", pred_lda_tranformed)
 
@@ -160,5 +172,6 @@ summary_prediction_lda <-function(LSOLDA_dat=NULL, nPredSubpop=NULL){
 
   return(pred_lda_mtrx)
 }
+
 
 
