@@ -12,14 +12,14 @@ Encoding: UTF-8
 LazyData: true
 License: GPL-3
 RoxygenNote: 6.0.1
-Depends: R (>= 3.3), Biobase, ggplot2, SummarizedExperiment, glmnet, caret, dplyr
+Depends: R (>= 3.3), Biobase, SummarizedExperiment, glmnet, caret, dplyr
 Imports:
   glmnet (> 2.0),
   caret (>= 6.0),
   ggplot2 (>= 2.2.1),
+  dplyr,
   parallel
 Suggests:
-  dplyr (>= 0.3.0.1),
   Matrix (>= 1.2),
   testthat,
     knitr,

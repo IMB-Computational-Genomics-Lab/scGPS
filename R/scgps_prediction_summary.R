@@ -97,6 +97,7 @@ summary_prediction_lasso <-function(LSOLDA_dat=NULL, nPredSubpop=NULL){
   pred_lasso <- LSOLDA_dat$LassoPredict
 
   pred_lasso_tranformed <- as.vector(unlist(pred_lasso))
+  pred_lasso_tranformed[which(pred_lasso_tranformed == "")] <-"NA"
 
   toremove <- grep("target", pred_lasso_tranformed)
 
@@ -142,6 +143,8 @@ summary_prediction_lda <-function(LSOLDA_dat=NULL, nPredSubpop=NULL){
   pred_lda <- LSOLDA_dat$LDAPredict
 
   pred_lda_tranformed <- as.vector(unlist(pred_lda))
+
+  pred_lda_tranformed[which(pred_lda_tranformed == "")] <-"NA"
 
   toremove <- grep("target", pred_lda_tranformed)
 

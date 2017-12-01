@@ -237,7 +237,7 @@ predicting_scGPS <-function(listData = NULL,  mixedpop2 = NULL, out_idx=NULL){
 
   my.clusters <- colData(mixedpop2)[,1]
   ori_dat_2 <- assay(mixedpop2)
-  names <-elementMetadata(mixedpop2)$GeneSymbol
+  names <-elementMetadata(mixedpop2)[,1]
 
   list_predict_clusters_LASSO <- list()
   list_predict_clusters_LDA <- list()

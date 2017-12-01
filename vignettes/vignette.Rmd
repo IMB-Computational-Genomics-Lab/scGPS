@@ -15,8 +15,15 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
+
 #A simple workflow of the scGPS
 ```{r}
+
+#Installation instruction
+#Prior to install scGPS you need to install the SummarizedExperiment bioconductor package as the following
+#source("https://bioconductor.org/biocLite.R")
+#biocLite("SummarizedExperiment")
+
 #To install from the development version
 #devtools::install_github("IMB-Computational-Genomics-Lab/scGPS",auth_token = "yourToken")
 
