@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 ```
 
 #A simple workflow of the scGPS
-```{r}
+```{r, warning = FALSE, message = FALSE}
 
 #Installation instruction
 #Prior to install scGPS you need to install the SummarizedExperiment bioconductor package as the following
@@ -64,7 +64,7 @@ summary_deviance(LSOLDA_dat)
 ```
 #A complete workflow of the scGPS: given an unknown mixed popultation, find clusters and estimate relationship between clusters 
 
-```{r}
+```{r, warning = FALSE, message = FALSE}
 #given a single cell expression matrix, without clustering information 
 day5 <- sample2
 cellnames <- colnames(day5$dat5_counts)
