@@ -351,7 +351,9 @@ FindOptimalStability <- function(list_clusters, run_RandIdx){
 
 plot_CORE <-function(original.tree, list_clusters =NULL){
   #-----------------------------------------------------------------------------
-  #Function to plot dendrogram and color (by Steve Horvarth, Peter Langelder, and Tal Galili)
+  #Function to plot dendrogram and color
+  #The function implemented the code by Steve Horvarth, Peter Langelder, and Tal Galili (used in the WGCNA package, version 1.61)
+  #Customised scripts were used for scGPS object and clustering colors
   #-----------------------------------------------------------------------------
   col_all <- matrix(unlist(list_clusters), ncol = length(list_clusters))
   col_all <-as.data.frame(col_all)
@@ -398,9 +400,9 @@ plot_CORE <-function(original.tree, list_clusters =NULL){
     if (saveMar)
       par(mar = oldMar)
   }
-  #####
-  #--------------plotColorUnderTree--------------#
-  #####
+  #-----------------------------------------------------------------------------
+  #plotColorUnderTree
+  #-----------------------------------------------------------------------------
   plotColorUnderTree <- function (dendro, colors, rowLabels = NULL, rowWidths = NULL,
                                   rowText = NULL, rowTextAlignment = c("left", "center", "right"),
                                   rowTextIgnore = NULL, textPositions = NULL, addTextGuide = TRUE,
@@ -412,9 +414,9 @@ plot_CORE <-function(original.tree, list_clusters =NULL){
                       addTextGuide = addTextGuide, cex.rowLabels = cex.rowLabels,
                       cex.rowText = cex.rowText, startAt = 0, ...)
   }
-  #####
-  #--------------plotOrderedColors--------------#
-  #####
+  #-----------------------------------------------------------------------------
+  #plotOrderedColors
+  #-----------------------------------------------------------------------------
   plotOrderedColors <- function (order, colors, rowLabels = NULL, rowWidths = NULL,
                                  rowText = NULL, rowTextAlignment = c("left", "center", "right"),
                                  rowTextIgnore = NULL, textPositions = NULL, addTextGuide = TRUE,
@@ -558,12 +560,12 @@ plot_CORE <-function(original.tree, list_clusters =NULL){
     for (j in 0:(nColorRows + nTextRows)) lines(x = c(0, 1),
                                                 y = c(yBottom[j + 1], yBottom[j + 1]))
   }
-  #####
-  #--------------------------------
-  #End function to plot dendrogram and color
-  #--------------------------------
-  #hack the colors
 
+  #-----------------------------------------------------------------------------
+  #Start selecting colors
+  #-----------------------------------------------------------------------------
+
+  #this color range assumes a maximum 15 clusters
   color_range <- c("#4c7700","#673dc2","#009a15","#c00097","#cda900","#0165c7","#f0760f","#0cabff","#f4215a","#00c9ce","#824f00","#714973","#006837","#ffa5a1","#e4c27f")
 
   number_colors <-length(unique(unlist(col_all)))
@@ -573,8 +575,8 @@ plot_CORE <-function(original.tree, list_clusters =NULL){
   }
   colnames(col_all2)<-gsub("V","",colnames(col_all2))
 
-  #pdf(paste0(path,'Clustering_param_tree_and_ClusterColors_day',day,'.pdf'))
+
   plotDendroAndColors(original.tree,col_all2)
-  #dev.off()
+
 
 }
