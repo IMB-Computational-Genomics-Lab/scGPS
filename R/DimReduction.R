@@ -53,9 +53,9 @@ CIDR_scGPS <- function(expression.matrix=NULL,ngenes = 1500, scaling = TRUE, the
   print("computes the _CIDR_ dissimilarity matrix...")
   sData <- scDissim(sData)
   print("PCA plot with proportion of variance explained...")
-  system.time(sData <- scPCA(sData))
+  sData <- scPCA(sData, plotPC = FALSE)
   print("find the number of PC...")
-  system.time(sData <- nPC(sData))
+  sData <- nPC(sData)
   print("perform clustering...")
   sData <- scCluster(sData)
   cidr_PCA_20 <-sData@PC[,1:20]
