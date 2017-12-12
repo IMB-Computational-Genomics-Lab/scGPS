@@ -24,11 +24,17 @@ optimal resolution
 CORE is an algorithm to generate reproduciable clustering,
 CORE is first implemented in ascend R package. Here, CORE V2.0 introduces several new
 functionalities, including three key feature:
-fast implementation with C++ allowing clustering of hundreds of thousands of
-cells (C++ and paralellisation options), outlier revomal important if singletons
-exist, a number of dimensionality reduction methods for confirming clustering
-results, and an option to select the number of optimisation tree height windows
-for increasing resolution
+fast implementation with C++ and paralellisation options allowing clustering
+of hundreds of thousands of cells (ongoing development), outlier revomal important if singletons
+exist (done), a number of dimensionality reduction methods including the imputation
+implementation (CIDR) for confirming clustering results (done), and an option
+to select the number of optimisation tree height windows for increasing resolution
+}
+\examples{
+day5 <- sample2
+mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
+                         CellMetadata = day5$dat5_clusters)
+test <- CORE_scGPS(mixedpop2, remove_outlier = c(1))
 }
 \author{
 Quan Nguyen, 2017-11-25

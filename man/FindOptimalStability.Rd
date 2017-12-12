@@ -15,7 +15,16 @@ FindOptimalStability(list_clusters, run_RandIdx)
 a \code{list} with optimal stability, cluster count and summary stats
 }
 \description{
-Find the optimal cluster
+from calculated stability based on Rand indexes for consecutive
+clustering run, find the resolution (window), where the stability is the highest
+}
+\examples{
+day5 <- sample2
+mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
+                        CellMetadata = day5$dat5_clusters)
+cluster_all <-clustering_scGPS(object=mixedpop2)
+stab_df <- FindStability(list_clusters=cluster_all$list_clusters, cluster_ref = cluster_all$cluster_ref)
+optimal_stab <- FindOptimalStability(list_clusters = list_clusters, stab_df)
 }
 \author{
 Quan Nguyen, 2017-11-25
