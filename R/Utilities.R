@@ -61,3 +61,61 @@ distance_scGPS <-function(object = NULL){
   print("Performing hierarchical clustering")
   return(list("tree"=original.tree, "ref_clust" = original.clusters))
 }
+
+#' find DE genes
+#'
+#' @description  Calculate distance matrix and perform hclust
+#' @param expression_matrix is  a normalised expression matrix.
+#' @param cluster corresponding cluster information in the expression_matrix
+#' by going through CORE or from other method).
+#' @return a \code{matrix} with Eucleadean distance used for clustreting
+#' @export
+#' @author Quan Nguyen, 2017-11-25
+#'
+
+
+# library(foreach)
+# library(doParallel)
+# no_cores=8
+# cl <- makeCluster(no_cores-1)
+# registerDoParallel(cl)
+
+findMarkers_scGPS <- function(expression_matrix=NULL, cluster = NULL) {
+  library(DESeq)
+
+  DE_exprsMat <- round(expression_matrix+1)
+
+  DE_results <- list()
+  for (cl_id in unique(cluster)) {
+    #arrange clusters and exprs matrix
+    cl_index <- which(as.character(cluster) == as.character(cl_id))
+    mainCl_idx <- which(as.character(cluster) != as.character(cl_id))
+    condition_cluster = cluster
+    condition_cluster[mainCl_idx] <- rep("Others", length(mainCl_idx))
+    condition_cluster[cl_index] <- rep(as.character(cl_id), length(cl_index))
+    diff_mat <- DE_exprsMat[,c(mainCl_idx, cl_index)]
+    #start DE
+    print(paste0("Start estimate dispersions for cluster ", as.character(cl_id) , "..."))
+    cds = newCountDataSet(diff_mat, condition_cluster)
+    cds = estimateSizeFactors( cds )
+    cds = estimateDispersions( cds, method="per-condition" , fitType = "local" )
+    print(paste0("Done estimate dispersions. Start nbinom test for cluster ",as.character(cl_id) , "..."))
+    res1 = nbinomTest( cds, "Others", as.character(cl_id))
+    print(paste0("Done nbinom test for cluster ",as.character(cl_id) , " ..."))
+    #adjust folchange
+    print(paste0("Adjust foldchange by subtracting basemean to 1..."))
+    res1 <- mutate(res1,  AdjustedFC = (baseMeanB-1)/(baseMeanA-1))
+    res1 <- mutate(res1,  AdjustedLogFC = log2((baseMeanB-1)/(baseMeanA-1)))
+    #order
+    res1_order <- arrange(res1, pval, desc(abs(AdjustedLogFC)))
+    #write to list
+    DE_results <- c(DE_results, list(res1))
+    name_list =paste0("DE_Subpop", cl_id, "vsRemaining")
+    names(DE_results)[length(DE_results)] <- name_list
+  }
+
+  return(DE_results)
+}
+
+
+
