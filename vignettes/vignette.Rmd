@@ -45,7 +45,7 @@ genes <-genes$Merged_unique
 c_selectID <- 1
 
 #run the test bootstrap
-LSOLDA_dat <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list())
+suppressWarnings(LSOLDA_dat <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list()))
 
 #display some results 
 names(LSOLDA_dat)
@@ -62,8 +62,7 @@ summary_prediction_lasso(LSOLDA_dat=LSOLDA_dat, nPredSubpop = 4)
 summary_deviance(LSOLDA_dat)
 
 ```
-#A complete workflow of the scGPS: given an unknown mixed popultation,find clusters 
-#and estimate relationship between clusters 
+#A complete workflow of the scGPS: given an unknown mixed popultation, find clusters and estimate relationship between clusters 
 
 ```{r}
 #given a single cell expression matrix, without clustering information 
@@ -82,13 +81,20 @@ plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster)
 library(cidr)
 t <- CIDR_scGPS(expression.matrix=assay(mixedpop2))
 p2 <-plotReduced_scGPS(t)
+#may need to turn off the R graphic device dev.off() before plotting the following
 plot(p2)
-
-#perform between cluster prediction 
 
 #load gene list (this can be any lists of user selected genes)
 genes <-GeneList
 genes <-genes$Merged_unique
+
+#the gene list can also be generated objectively by differential expression analysis
+DEgenes <- findMarkers_scGPS(expression_matrix=assay(mixedpop2), cluster = mixedpop2@colData$Cluster)
+names(DEgenes)
+#genes <- DEgenes$DE_Subpop1vsRemaining$id; genes <-gsub("_.*", "", genes)
+#users need to check the format of the gene input to make sure they are consistent to 
+#the gene names in the expression matrix 
+
 #add the CORE cluster information into the scGPS object 
 Optimal_index <- which( CORE_cluster$optimalClust$KeyStats$Height == CORE_cluster$optimalClust$OptimalRes)
 
@@ -97,9 +103,10 @@ mixedpop2@colData$Cluster <- unlist(CORE_cluster$Cluster[[Optimal_index]])
 mixedpop2@colData <-mixedpop2@colData[,c(2,1)]
 #select a subpopulation
 c_selectID <- 1
+
 #run the test bootstrap
 
-LSOLDA_dat <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop2, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list())
+suppressWarnings(LSOLDA_dat <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop2, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list()))
 
 #display some results 
 #summary results LDA
