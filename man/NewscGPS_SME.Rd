@@ -18,7 +18,9 @@ you are using in the expression matrix. Other columns contain information about
 the genes, such as their corresponding ENSEMBL transcript identifiers.}
 
 \item{CellMetadata}{A data frame containing cell identifiers (usually barcodes)
-and an integer representing which batch they belong to.}
+and clustering information (the first column of the data frame contains clustering information).
+If clustering information is not available, users can run CORE function and add the information
+to the scGPS before running scGPS prediction (see vignette)}
 }
 \value{
 This function generates an scGPS object belonging to the \linkS4class{SingleCellExperiment}.
