@@ -61,55 +61,55 @@ summary_prediction_lasso(LSOLDA_dat=LSOLDA_dat, nPredSubpop = 4)
 #summary deviance 
 summary_deviance(LSOLDA_dat)
 
+```
+#A complete workflow of the scGPS: given an unknown mixed popultation,find clusters 
+#and estimate relationship between clusters 
+
+```{r}
+#given a single cell expression matrix, without clustering information 
+day5 <- sample2
+cellnames <- colnames(day5$dat5_counts)
+cellnames <-as.data.frame(cellnames)
+colnames(cellnames) <- "cellBarcodes"
+
+mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
+                     CellMetadata = cellnames ) 
+#let's find the clusters
+CORE_cluster <- CORE_scGPS(mixedpop2, remove_outlier = c(0))
+#let's plot all clusters
+plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster)
+#let's compare with other dimensional reduction methods 
+library(cidr)
+t <- CIDR_scGPS(expression.matrix=assay(mixedpop2))
+p2 <-plotReduced_scGPS(t)
+plot(p2)
+
+#perform between cluster prediction 
+
+#load gene list (this can be any lists of user selected genes)
+genes <-GeneList
+genes <-genes$Merged_unique
+#add the CORE cluster information into the scGPS object 
+Optimal_index <- which( CORE_cluster$optimalClust$KeyStats$Height == CORE_cluster$optimalClust$OptimalRes)
+
+mixedpop2@colData$Cluster <- unlist(CORE_cluster$Cluster[[Optimal_index]])
+#change clustering information to the first column
+mixedpop2@colData <-mixedpop2@colData[,c(2,1)]
+#select a subpopulation
+c_selectID <- 1
+#run the test bootstrap
+
+LSOLDA_dat <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop2, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list())
+
+#display some results 
+#summary results LDA
+row_cluster <-length(unique(mixedpop2@colData$Cluster))
+summary_prediction_lda(LSOLDA_dat=LSOLDA_dat, nPredSubpop = row_cluster )
+
+#summary results Lasso
+summary_prediction_lasso(LSOLDA_dat=LSOLDA_dat, nPredSubpop = row_cluster)
+
+#summary deviance 
+summary_deviance(LSOLDA_dat)
 
 ```
-
-# Some references for Vignette documentation (temporarily kept only)
-
-Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
-
-- Never uses retina figures
-- Has a smaller default figure size
-- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
-
-## Vignette Info
-
-Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
-
-## Styles
-
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
-
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
-
-## Figures
-
-The figure sizes have been customised so that you can easily put two images side-by-side. 
-
-```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
-```
-
-You can enable figure captions by `fig_caption: yes` in YAML:
-
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
-
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
-
-## More Examples
-
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
-```
-
-Also a quote using `>`:
-
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))
