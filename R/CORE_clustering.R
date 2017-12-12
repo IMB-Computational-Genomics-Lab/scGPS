@@ -30,7 +30,7 @@ CORE_scGPS <-function(mixedpop = NULL, windows = seq(0.025:1, by=0.025),
   stab_df <- FindStability(list_clusters=cluster_all$list_clusters,
     cluster_ref = cluster_all$cluster_ref)
 
-  optimal_stab <- FindOptimalStability(list_clusters = list_clusters, stab_df)
+  optimal_stab <- FindOptimalStability(list_clusters = cluster_all$list_clusters, stab_df)
 
   return(list("Cluster" = cluster_all$list_clusters,
               "tree" = cluster_all$tree, "optimalClust" = optimal_stab))
@@ -352,8 +352,9 @@ FindOptimalStability <- function(list_clusters, run_RandIdx){
 plot_CORE <-function(original.tree, list_clusters =NULL){
   #-----------------------------------------------------------------------------
   #Function to plot dendrogram and color
-  #The function implemented the code by Steve Horvarth, Peter Langelder, and Tal Galili (used in the WGCNA package, version 1.61)
-  #Customised scripts were used for scGPS object and clustering colors
+  #The plot_CORE function implements the code by Steve Horvarth, Peter Langelder,
+  #and Tal Galili (used in the WGCNA package, version 1.61)
+  #The code were customised to plot scGPS object and clustering colors
   #-----------------------------------------------------------------------------
   col_all <- matrix(unlist(list_clusters), ncol = length(list_clusters))
   col_all <-as.data.frame(col_all)
@@ -575,8 +576,6 @@ plot_CORE <-function(original.tree, list_clusters =NULL){
   }
   colnames(col_all2)<-gsub("V","",colnames(col_all2))
 
-
   plotDendroAndColors(original.tree,col_all2)
-
 
 }
