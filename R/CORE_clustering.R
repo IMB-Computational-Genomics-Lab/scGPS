@@ -263,7 +263,7 @@ FindStability <- function(list_clusters=NULL, cluster_ref =NULL){
 #'                         CellMetadata = day5$dat5_clusters)
 #' cluster_all <-clustering_scGPS(object=mixedpop2)
 #' stab_df <- FindStability(list_clusters=cluster_all$list_clusters, cluster_ref = cluster_all$cluster_ref)
-#' optimal_stab <- FindOptimalStability(list_clusters = list_clusters, stab_df)
+#' optimal_stab <- FindOptimalStability(list_clusters = cluster_all$list_clusters, stab_df)
 #' @export
 #' @author Quan Nguyen, 2017-11-25
 #'
@@ -577,5 +577,80 @@ plot_CORE <-function(original.tree, list_clusters =NULL){
   colnames(col_all2)<-gsub("V","",colnames(col_all2))
 
   plotDendroAndColors(original.tree,col_all2)
+
+}
+
+
+#' plot one single tree with the optimal clustering result
+#'
+#' @description after an optimal cluster has been identified, users may use this
+#' function to plot the resulting dendrogram with the branch colors represent clutering
+#' results
+#' @param original_tree a dendrogram object
+#' @param optimal_cluster a vector of cluster IDs for cells in the dendrogram
+#' @param y_shift a numer specifying the gap between the dendrogram and the colored
+#' bar underneath the dendrogram
+#' @examples
+#' day5 <- sample2
+#' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
+#'                         CellMetadata = day5$dat5_clusters)
+#' cluster_all <-clustering_scGPS(object=mixedpop2)
+#' stab_df <- FindStability(list_clusters=cluster_all$list_clusters, cluster_ref = cluster_all$cluster_ref)
+#' optimal_stab <- FindOptimalStability(list_clusters = cluster_all, list_clusters, stab_df)
+#' CORE_cluster <- CORE_scGPS(mixedpop2, remove_outlier = c(0))
+#' plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster)
+#' optimal_index = which(CORE_cluster$optimalClust$KeyStats$Height == CORE_cluster$optimalClust$OptimalRes)
+#' plot_optimal_CORE(original_tree= CORE_cluster$tree, optimal_cluster = unlist(CORE_cluster$Cluster[optimal_index]), shift = -2000)
+#' @export
+#' @author Quan Nguyen, 2017-11-25
+#'
+
+
+plot_optimal_CORE <-function(original_tree, optimal_cluster =NULL, shift = -100){
+  print("Ordering and assigning labels...")
+  dendro.obj <- as.dendrogram(original_tree)
+
+  # Sort clusters by order in dendrogram
+  ordered.clusters <- optimal_cluster[stats::order.dendrogram(dendro.obj)]
+  # Count table
+  cluster.df <- as.data.frame(table(optimal_cluster))
+
+  # Sort cluster sizes in same order.
+  dendro.labels <- cluster.df$Freq[unique(ordered.clusters)]
+
+  index_labels <-unique(ordered.clusters)
+  #for the first index
+  index_to_overwriteNA  <-c(rep(NA, length(dendro.labels)))
+  index_to_overwriteNA[1] <-c(round( dendro.labels[1]/2))
+  #the loop only uses information from dendro.labels
+  for (i in 2:length(dendro.labels)){
+    index_to_overwriteNA[i] <- sum(dendro.labels[1:i-1]) +
+      round(dendro.labels[i]/2)
+    print(i)
+    print(index_to_overwriteNA)
+  }
+
+  branch_names <-rep(NA, length(optimal_cluster))
+
+  index_labels_cluster_names <-paste0("(C", index_labels, ")")
+  dendro_labels_names <- paste(dendro.labels, index_labels_cluster_names)
+  branch_names[index_to_overwriteNA] <-  dendro_labels_names
+
+  # Apply labels directly to dendrogram
+  coloured.dendro <- dendextend::branches_attr_by_clusters(dendro.obj, clusters = ordered.clusters, attr = 'col')
+  #need to specify the name space dendextend::
+  coloured.dendro <- dendextend::set(coloured.dendro, "labels",  branch_names )
+
+  #make branch lines bigger
+  coloured.dendro <- dendextend::set(coloured.dendro, "branches_lwd", 2)
+  print("Plotting the colored dendrogram now....")
+  plot(coloured.dendro)
+  print("Plotting the bar underneath now....")
+  dendro.colours <- unique(dendextend::get_leaves_branches_col(coloured.dendro))
+  coloured.order <- stats::order.dendrogram(coloured.dendro)
+  sorted.levels <- dendextend::sort_levels_values(as.vector(optimal_cluster)[coloured.order])
+
+  sorted.levels <- sorted.levels[match(seq_along(coloured.order), coloured.order)]
+  dendextend::colored_bars(dendro.colours[sorted.levels], coloured.dendro, rowLabels = "Cluster", y_shift = shift)
 
 }

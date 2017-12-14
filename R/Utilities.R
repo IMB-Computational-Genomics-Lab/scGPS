@@ -117,5 +117,57 @@ findMarkers_scGPS <- function(expression_matrix=NULL, cluster = NULL) {
   return(DE_results)
 }
 
+#' annotate_scGPS functionally annotates the identified clusters
+#'
+#' @description often we need to label clusters with unique biological characters.
+#' One of the common approach to annotate a cluster is to perform functional enrichment
+#' analysis. The annotate_scGPS implements ReactomePA and clusterProfiler for this analysis
+#' type in R. The function require installation of several databases as described below.
+#' @param DEgeneList is a vector of gene symbols, convertable to ENTREZID
 
+
+
+#Installation needed for reactome pathway analysis reactome in R----------------
+#source("https://bioconductor.org/biocLite.R")
+#biocLite("ReactomePA")
+#Package Genome wide annotation for Human http://bioconductor.org/packages/release/data/annotation/html/org.Hs.eg.db.html
+#biocLite("org.Hs.eg.db")
+#biocLite("clusterProfiler")
+#install.packages("xlsx")
+#Note: users may need to download and install clusterProfiler from source clusterProfiler_3.6.0.tgz"
+#use: manual installing install.packages(path_to_file, repos = NULL, type="source")
+#Done installation needed for reactome pathway analysis reactome in R-----------
+
+
+
+annotate_scGPS <-function(DEgenelist, pvalueCutoff=0.05, gene_symbol=TRUE,
+    output_filename = "PathwayEnrichment.xlsx", output_path = NULL ){
+    library(ReactomePA)
+    library(org.Hs.eg.db)
+    library(org.Hs.eg.db)
+    library(xlsx)
+    #assumming the geneList is gene symbol (common for 10X data)
+    if(gene_symbol==TRUE){
+      convert_to_gene_ID = bitr(geneList, fromType="SYMBOL",
+                              toType="ENTREZID", OrgDb="org.Hs.eg.db")
+      print("Orignial gene number in geneList")
+      print(length(geneList))
+      print("Number of genes successfully converted")
+      print(nrow(convert_to_gene_ID))
+      } else {
+        stop("The list must contain gene symbols")
+        }
+
+    Reactome_pathway_test <- enrichPathway(gene=convert_to_gene_ID$ENTREZID,
+                                         pvalueCutoff=0.05, readable=T)
+
+    #plot some results: note Reactome_pathway_test is a reactomePA object
+    #write Reactome_pathway_test results, need to convert to data.frame
+
+    dotplot(Reactome_pathway_test, showCategory=15)
+    barplot(Reactome_pathway_test, showCategory=15)
+    output_df <- as.data.frame(Reactome_pathway_test)
+    write.xlsx(output_df, paste0(output_path, output_filename))
+    return(Reactome_pathway_test)
+}
 
