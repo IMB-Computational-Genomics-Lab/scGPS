@@ -7,7 +7,7 @@ scGPS takes scRNA expression dataset(s) for one more more unknown sample(s) to f
 
  
 <p align="center">
-<img width="300"  src="./packagePlan.png"> <br>
+<img width="450"  src="./packagePlan.png"> <br>
 Figure. scGPS workflow. Yellow boxes show inputs, and green boxes show scGPS analysis functions.  
 </p>
 
