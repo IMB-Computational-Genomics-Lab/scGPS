@@ -4,7 +4,7 @@
 \alias{plot_optimal_CORE}
 \title{plot one single tree with the optimal clustering result}
 \usage{
-plot_optimal_CORE(original_tree, optimal_cluster = NULL, y_shift = -40)
+plot_optimal_CORE(original_tree, optimal_cluster = NULL, shift = -100)
 }
 \arguments{
 \item{original_tree}{a dendrogram object}
@@ -25,7 +25,11 @@ mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day
                         CellMetadata = day5$dat5_clusters)
 cluster_all <-clustering_scGPS(object=mixedpop2)
 stab_df <- FindStability(list_clusters=cluster_all$list_clusters, cluster_ref = cluster_all$cluster_ref)
-optimal_stab <- FindOptimalStability(list_clusters = list_clusters, stab_df)
+optimal_stab <- FindOptimalStability(list_clusters = cluster_all, list_clusters, stab_df)
+CORE_cluster <- CORE_scGPS(mixedpop2, remove_outlier = c(0))
+plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster)
+optimal_index = which(CORE_cluster$optimalClust$KeyStats$Height == CORE_cluster$optimalClust$OptimalRes)
+plot_optimal_CORE(original_tree= CORE_cluster$tree, optimal_cluster = unlist(CORE_cluster$Cluster[optimal_index]), shift = -2000)
 }
 \author{
 Quan Nguyen, 2017-11-25

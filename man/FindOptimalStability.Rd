@@ -24,7 +24,7 @@ mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day
                         CellMetadata = day5$dat5_clusters)
 cluster_all <-clustering_scGPS(object=mixedpop2)
 stab_df <- FindStability(list_clusters=cluster_all$list_clusters, cluster_ref = cluster_all$cluster_ref)
-optimal_stab <- FindOptimalStability(list_clusters = list_clusters, stab_df)
+optimal_stab <- FindOptimalStability(list_clusters = cluster_all$list_clusters, stab_df)
 }
 \author{
 Quan Nguyen, 2017-11-25
