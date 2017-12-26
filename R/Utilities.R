@@ -31,15 +31,33 @@ topvar_scGPS <- function(expression.matrix=NULL,ngenes = 1500){
 #' plot(p2)
 #'
 #'
-plotReduced_scGPS <- function(reduced_dat, dims = c(1,2),
-  dimNames = c("Dim 1", "Dim 2")){
-  reduced_dat_toPlot <-as.data.frame(reduced_dat[,dims])
-  colnames(reduced_dat_toPlot) <- dimNames
-  p <- qplot(reduced_dat[,dims[1]], reduced_dat[,dims[2]], geom = "point")
-  p <- p + ylab(dimNames[1]) + xlab(dimNames[2])
-  return(p)
-}
 
+plotReduced_scGPS <- function(reduced_dat, color_fac =factor(Sample_id),
+    dims = c(1,2),dimNames = c("Dim 1", "Dim 2"), palletes =NULL, legend_title ="Samples" ){
+  library(cowplot)
+  reduced_dat_toPlot <-as.data.frame(reduced_dat[,dims])
+  sample_num <-length(unique(color_fac))
+  colnames(reduced_dat_toPlot) <- dimNames
+  reduced_dat_toPlot$color_fac <-color_fac
+  p <- qplot(reduced_dat[,dims[1]], reduced_dat[,dims[2]], alpha=I(0.7), geom = "point",color=color_fac) +theme_bw()
+  p <- p + ylab(dimNames[1]) + xlab(dimNames[2]) +
+    scale_color_manual(name= legend_title, values=palletes[1:sample_num], limits=as.character(as.vector(unique(color_fac))))
+  p<- p + theme(panel.border = element_rect(colour = "black", fill=NA, size=1.5)) +  theme(legend.position="bottom") +
+    theme(text=element_text(size=20))
+
+  yaxis <- axis_canvas(p, axis="y", coord_flip = TRUE) + geom_density(
+    data=reduced_dat_toPlot, aes(`Dim 2`, ..count.., fill=color_fac), size=.2,
+    alpha=0.7) + coord_flip() + scale_fill_manual(name="Samples",
+     values=palletes[1:sample_num], limits=as.character(as.vector(unique(color_fac))))
+
+  xaxis <- axis_canvas(p,axis="x") + geom_density(data=reduced_dat_toPlot, aes(`Dim 1`, ..count..,  fill=color_fac), size=.4, alpha=0.7) +
+    scale_fill_manual(name="Samples", values=palletes[1:sample_num], limits=as.character(as.vector(unique(color_fac))))
+
+  p1_x <- insert_xaxis_grob(p, xaxis, grid::unit(.2, "null"), position = "top")
+  p1_x_y <- insert_yaxis_grob(p1_x, yaxis, grid::unit(.2, "null"), position = "right")
+  p2 <- ggdraw(p1_x_y)
+  return(p2)
+}
 
 #' build disance matrice V2.0
 #'

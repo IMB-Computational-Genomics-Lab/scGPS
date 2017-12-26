@@ -20,6 +20,8 @@ Imports:
   dplyr,
   parallel,
   Rcpp,
+  RcppParallel,
+  RcppArmadillo,
   cidr
 Suggests:
   Matrix (>= 1.2),
@@ -27,4 +29,7 @@ Suggests:
   knitr,
   rmarkdown
 VignetteBuilder: knitr
-LinkingTo: Rcpp
+LinkingTo: 
+  Rcpp,
+  RcppParallel
+SystemRequirements: GNU make

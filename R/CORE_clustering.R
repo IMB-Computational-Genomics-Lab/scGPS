@@ -3,7 +3,7 @@
 #' @description  CORE is an algorithm to generate reproduciable clustering,
 #' CORE is first implemented in ascend R package. Here, CORE V2.0 introduces several new
 #' functionalities, including three key feature:
-#' fast implementation with C++ and paralellisation options allowing clustering
+#' fast (and more memory efficient) implementation with C++ and paralellisation options allowing clustering
 #' of hundreds of thousands of cells (ongoing development), outlier revomal important if singletons
 #' exist (done), a number of dimensionality reduction methods including the imputation
 #' implementation (CIDR) for confirming clustering results (done), and an option
@@ -349,7 +349,7 @@ FindOptimalStability <- function(list_clusters, run_RandIdx){
 #'
 #' @description This function plots CORE and all clustering results underneath
 
-plot_CORE <-function(original.tree, list_clusters =NULL){
+plot_CORE <- function(original.tree, list_clusters =NULL){
   #-----------------------------------------------------------------------------
   #Function to plot dendrogram and color
   #The plot_CORE function implements the code by Steve Horvarth, Peter Langelder,
@@ -604,7 +604,6 @@ plot_CORE <-function(original.tree, list_clusters =NULL){
 #' @export
 #' @author Quan Nguyen, 2017-11-25
 #'
-
 
 plot_optimal_CORE <-function(original_tree, optimal_cluster =NULL, shift = -100){
   print("Ordering and assigning labels...")

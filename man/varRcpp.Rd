@@ -7,9 +7,9 @@
 varRcpp(x, bias = TRUE)
 }
 \arguments{
-\item{N}{integer.}
+\item{x}{a vector of gene expression.}
 
-\item{thin}{integer}
+\item{bias}{degree of freedom}
 }
 \description{
 Calculate variance
