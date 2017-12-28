@@ -62,7 +62,6 @@ struct EclDistance : public Worker {
   }
 
 
-
 #include <RcppArmadillo.h>
 
   using namespace arma;
@@ -89,6 +88,6 @@ struct EclDistance : public Worker {
 
     return out;
   }
-  *//
+
 
 

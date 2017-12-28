@@ -14,41 +14,45 @@ calcDist <- function(x) {
 #' Used in consmx function
 #'
 #' @param x A numeric matrix.
-ED1 <- function(x) {
-    .Call('_scGPS_ED1', PACKAGE = 'scGPS', x)
-}
-
-rcpp_parallel_distance <- function(mat) {
-    .Call('_scGPS_rcpp_parallel_distance', PACKAGE = 'scGPS', mat)
-}
-
-#' Gibb sampling
-#'
-#' @param N  integer.
-#' @param thin integer
-#' @export gibbs_cpp
-#'
-gibbs_cpp <- function(N, thin) {
-    .Call('_scGPS_gibbs_cpp', PACKAGE = 'scGPS', N, thin)
+calcDistArma <- function(x) {
+    .Call('_scGPS_calcDistArma', PACKAGE = 'scGPS', x)
 }
 
 #' Calculate mean
 #'
 #' @param N  integer.
 #' @param thin integer
-#' @export gibbs_cpp
+#' @export
 #'
-muRcpp <- function(x) {
-    .Call('_scGPS_muRcpp', PACKAGE = 'scGPS', x)
+mean_cpp <- function(x) {
+    .Call('_scGPS_mean_cpp', PACKAGE = 'scGPS', x)
 }
 
 #' Calculate variance
 #'
 #' @param x a vector of gene expression.
 #' @param bias degree of freedom
-#' @export gibbs_cpp
+#' @export
 #'
-varRcpp <- function(x, bias = TRUE) {
-    .Call('_scGPS_varRcpp', PACKAGE = 'scGPS', x, bias)
+var_cpp <- function(x, bias = TRUE) {
+    .Call('_scGPS_var_cpp', PACKAGE = 'scGPS', x, bias)
+}
+
+#' Transpose a matrix
+#'
+#' @param X  an R matrix (expression matrix)
+#' @export
+#'
+tp_cpp <- function(X) {
+    .Call('_scGPS_tp_cpp', PACKAGE = 'scGPS', X)
+}
+
+#' Subset a matrix
+#'
+#' @param X an R matrix (expression matrix)
+#' @export
+#'
+subset_cpp <- function(m1in, rowidx_in, colidx_in) {
+    .Call('_scGPS_subset_cpp', PACKAGE = 'scGPS', m1in, rowidx_in, colidx_in)
 }
 

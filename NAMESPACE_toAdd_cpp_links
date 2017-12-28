@@ -1,0 +1,3 @@
+useDynLib(scGPS)
+importFrom(Rcpp, evalCpp)
+exportPattern("^[[:alpha:]]+")

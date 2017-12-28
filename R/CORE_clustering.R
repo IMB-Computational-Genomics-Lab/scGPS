@@ -64,7 +64,7 @@ clustering_scGPS <- function(object = NULL, windows = seq(0.025:1, by=0.025),
     #Take the top variable genes
     #make a transpose
     exprs_mat_t <-t(exprs_mat_topVar)
-    dist_mat <- dist(exprs_mat_t)
+    dist_mat <- calcDistArma(exprs_mat_t)
     print("Performing hierarchical clustering")
     original.tree <- hclust(dist_mat, method="ward.D2")
     #The original clusters to be used as the reference

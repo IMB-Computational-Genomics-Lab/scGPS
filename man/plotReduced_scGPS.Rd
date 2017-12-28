@@ -4,8 +4,9 @@
 \alias{plotReduced_scGPS}
 \title{plot reduced data}
 \usage{
-plotReduced_scGPS(reduced_dat, dims = c(1, 2), dimNames = c("Dim 1",
-  "Dim 2"))
+plotReduced_scGPS(reduced_dat, color_fac = factor(Sample_id), dims = c(1,
+  2), dimNames = c("Dim 1", "Dim 2"), palletes = NULL,
+  legend_title = "Samples")
 }
 \arguments{
 \item{reduced_dat}{is a matrix with genes in rows and cells in columns}
