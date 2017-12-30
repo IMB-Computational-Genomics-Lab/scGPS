@@ -6,88 +6,99 @@ using namespace RcppParallel;
 
 // [[Rcpp::depends(RcppParallel)]]
 
-
-double dist1 (NumericVector x, NumericVector y){
-  int n = y.length();
-  double total = 0;
-  for (int i = 0; i < n ; ++i) {
-    total += pow(x(i)-y(i),2.0);
-  }
-  total = sqrt(total);
-  return total;
+// helper function for taking the average of two numbers
+inline double average(double val1, double val2) {
+  return (val1 + val2) / 2;
 }
 
-struct EclDistance : public Worker {
+
+// generic function for kl_divergence
+template <typename InputIterator1, typename InputIterator2>
+inline double kl_divergence(InputIterator1 begin1, InputIterator1 end1,
+                            InputIterator2 begin2) {
+
+  // value to return
+  double rval = 0;
+
+  // set iterators to beginning of ranges
+  InputIterator1 it1 = begin1;
+  InputIterator2 it2 = begin2;
+
+  // for each input item
+  while (it1 != end1) {
+
+    // take the value and increment the iterator
+    double d1 = *it1++;
+    double d2 = *it2++;
+
+    // accumulate if appropirate
+    if (d1 > 0 && d2 > 0)
+      rval += std::log(d1 / d2) * d1;
+  }
+  return rval;
+}
+
+// [[Rcpp::depends(RcppParallel)]]
+#include <RcppParallel.h>
+using namespace RcppParallel;
+
+struct JsDistance : public Worker {
+
   // input matrix to read from
   const RMatrix<double> mat;
+
   // output matrix to write to
   RMatrix<double> rmat;
+
   // initialize from Rcpp input and output matrixes (the RMatrix class
   // can be automatically converted to from the Rcpp matrix type)
-  EclDistance(const NumericMatrix mat, NumericMatrix rmat)
+  JsDistance(const NumericMatrix mat, NumericMatrix rmat)
     : mat(mat), rmat(rmat) {}
+
   // function call operator that work for the specified range (begin/end)
   void operator()(std::size_t begin, std::size_t end) {
-    for (std::size_t i = begin; i < end -1; i++) {
-      for (std::size_t j = i+1; j < end ; j++) {
-        // rows we will operate on
+    for (std::size_t i = begin; i < end; i++) {
+      for (std::size_t j = 0; j < i; j++) {
+
+        /* rows we will operate on
         RMatrix<double>::Row row1 = mat.row(i);
-        RMatrix<double>::Row row2= mat.row(j);
+        RMatrix<double>::Row row2 = mat.row(j);
 
+        // compute the average using std::tranform from the STL
+        std::vector<double> avg(row1.length());
+        std::transform(row1.begin(), row1.end(), // input range 1
+                       row2.begin(),             // input range 2
+                       avg.begin(),              // output range
+                       average);                 // function to apply
 
-        double total = dist1(row1.begin(), row1.end(), avg.begin());
-        rmat(j-1,i) = total;
-        rmat(i,j-1)= total;
+        // calculate divergences
+        double d1 = kl_divergence(row1.begin(), row1.end(), avg.begin());
+        double d2 = kl_divergence(row2.begin(), row2.end(), avg.begin());
+
+         write to output matrix
+        rmat(i,j) = sqrt(.5 * (d1 + d2));*/
+        rmat(i,j) = 1;
       }
     }
   }
 };
 
-  // Now that we have the JsDistance function object we can pass it to parallelFor,
-  // specifying an iteration range based on the number of rows in the input matrix:
+// [[Rcpp::export]]
+NumericMatrix rcpp_parallel_js_distance(NumericMatrix mat) {
 
-  // [[Rcpp::export]]
-  NumericMatrix rcpp_parallel_distance(NumericMatrix mat) {
+  // allocate the matrix we will return
+  NumericMatrix rmat(mat.nrow(), mat.nrow());
 
-    // allocate the matrix we will return
-    NumericMatrix rmat(mat.nrow(), mat.nrow());
+  // create the worker
+  JsDistance jsDistance(mat, rmat);
 
-    // create the worker
-    EclDistance EclDistanceFunction(mat, rmat);
+  // call it with parallelFor
+  parallelFor(0, mat.nrow(), jsDistance);
 
-    // call it with parallelFor
-    parallelFor(0, mat.nrow(), EclDistanceFunction); //Quan: parallel for each row (not between rows)
+  return rmat;
+}
 
-    return rmat;
-  }
-
-
-#include <RcppArmadillo.h>
-
-  using namespace arma;
-
-  //' Compute Euclidean distance matrix by rows
-  //'
-  //' Used in consmx function
-  //'
-  //' @param x A numeric matrix.
-  // [[Rcpp::export]]
-  arma::mat ED1(const arma::mat & x) {
-    unsigned int outrows = x.n_rows, i = 0, j = 0;
-    double d;
-    mat out = zeros<mat>(outrows, outrows);
-
-    for (i = 0; i < outrows - 1; i++) {
-      arma::rowvec v1 = x.row(i);
-      for (j = i + 1; j < outrows; j++) {
-        d = sqrt(sum(pow(v1 - x.row(j), 2.0)));
-        out(j, i) = d;
-        out(i, j) = d;
-      }
-    }
-
-    return out;
-  }
-
-
-
+/*** R
+  mat_test <-matrix(rnorm(100),nrow=10)
+rcpp_parallel_js_distance(mat_test)
+    */

@@ -4,8 +4,8 @@
 \alias{clustering_scGPS}
 \title{Iterative HC clustering}
 \usage{
-clustering_scGPS(object = NULL, windows = seq(0.025:1, by = 0.025),
-  remove_outlier = c(0))
+clustering_scGPS(object = NULL, ngenes = 1500, windows = seq(0.025:1, by =
+  0.025), remove_outlier = c(0))
 }
 \arguments{
 \item{remove_outlier}{a vector containing IDs for clusters to be removed

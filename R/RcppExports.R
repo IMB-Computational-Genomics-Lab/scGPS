@@ -11,11 +11,21 @@ calcDist <- function(x) {
 
 #' Compute Euclidean distance matrix by rows
 #'
-#' Used in consmx function
-#'
-#' @param x A numeric matrix.
+#' @param x A numeric matrix
 calcDistArma <- function(x) {
     .Call('_scGPS_calcDistArma', PACKAGE = 'scGPS', x)
+}
+
+rcpp_parallel_distance <- function(mat) {
+    .Call('_scGPS_rcpp_parallel_distance', PACKAGE = 'scGPS', mat)
+}
+
+rcpp_Eucl_distance_NotPar <- function(mat) {
+    .Call('_scGPS_rcpp_Eucl_distance_NotPar', PACKAGE = 'scGPS', mat)
+}
+
+timesTwo <- function(x) {
+    .Call('_scGPS_timesTwo', PACKAGE = 'scGPS', x)
 }
 
 #' Calculate mean
@@ -54,5 +64,16 @@ tp_cpp <- function(X) {
 #'
 subset_cpp <- function(m1in, rowidx_in, colidx_in) {
     .Call('_scGPS_subset_cpp', PACKAGE = 'scGPS', m1in, rowidx_in, colidx_in)
+}
+
+#' Principal component analysis
+#'
+#' @description This function provides significant speed gain if the input matrix
+#' is big
+#' @param X  an R matrix (expression matrix), rows are genes, columns are cells
+#' @export
+#'
+PrinComp_cpp <- function(X) {
+    .Call('_scGPS_PrinComp_cpp', PACKAGE = 'scGPS', X)
 }
 

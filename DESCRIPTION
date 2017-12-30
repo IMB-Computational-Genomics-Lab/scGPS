@@ -21,7 +21,9 @@ Imports:
   parallel,
   Rcpp,
   RcppArmadillo,
-  cidr
+  RcppParallel,
+  cidr,
+  fastcluster
 Suggests:
   Matrix (>= 1.2),
   testthat,
@@ -30,5 +32,6 @@ Suggests:
 VignetteBuilder: knitr
 LinkingTo: 
   Rcpp,
-  RcppArmadillo
+  RcppArmadillo,
+  RcppParallel
 SystemRequirements: GNU make

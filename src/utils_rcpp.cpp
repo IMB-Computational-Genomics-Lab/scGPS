@@ -59,7 +59,7 @@ arma::mat tp_cpp(const arma::mat X) {
 //'
 // [[Rcpp::export]]
 
-arma::mat subset_cpp(NumericMatrix m1in, NumericVector rowidx_in,NumericVector colidx_in){
+arma::mat subset_cpp(NumericMatrix m1in, NumericVector rowidx_in, NumericVector colidx_in){
   mat m1 = Rcpp::as<mat>(m1in);
   uvec rowidx = as<uvec>(rowidx_in) - 1;
   uvec colidx = as<uvec>(colidx_in) - 1;
@@ -68,4 +68,28 @@ arma::mat subset_cpp(NumericMatrix m1in, NumericVector rowidx_in,NumericVector c
 }
 
 
+//' Principal component analysis
+//'
+//' @description This function provides significant speed gain if the input matrix
+//' is big
+//' @param X  an R matrix (expression matrix), rows are genes, columns are cells
+//' @export
+//'
+// [[Rcpp::export]]
+List PrinComp_cpp(const arma::mat X) {
+  arma::mat coeff;
+  arma::mat score;
+  arma::vec latent;
+  arma::princomp(coeff, score, latent, X);
+  return List::create(Named("coefficients") = coeff,
+                      Named("scores")       =  score,
+                      Named("eigenValues")  = latent);
 
+}
+
+/*** R
+
+#mat_test <-matrix(rnbinom(1000000,mu=0.01, size=10),nrow=1000)
+#microbenchmark(PrinComp_cpp(mat_test), prcomp(mat_test), times=3)
+
+*/

@@ -53,20 +53,20 @@ CORE_scGPS <-function(mixedpop = NULL, windows = seq(0.025:1, by=0.025),
 #' @author Quan Nguyen, 2017-11-25
 #'
 
-clustering_scGPS <- function(object = NULL, windows = seq(0.025:1, by=0.025),
+clustering_scGPS <- function(object = NULL, ngenes= 1500, windows = seq(0.025:1, by=0.025),
   remove_outlier = c(0)){
 
   print("Calculating distance matrix")
   #function for the highest resolution clustering (i.e. no window applied)
   firstRoundClustering <- function(object = NULL){
     exprs_mat <- assay(object)
-    exprs_mat_topVar <- topvar_scGPS(exprs_mat, ngenes = 1500)
+    exprs_mat_topVar <- topvar_scGPS(exprs_mat, ngenes = ngenes)
     #Take the top variable genes
     #make a transpose
     exprs_mat_t <-t(exprs_mat_topVar)
-    dist_mat <- calcDistArma(exprs_mat_t)
+    dist_mat <- rcpp_parallel_distance(exprs_mat_t)
     print("Performing hierarchical clustering")
-    original.tree <- hclust(dist_mat, method="ward.D2")
+    original.tree <- fastcluster::hclust(as.dist(dist_mat), method="ward.D2")
     #The original clusters to be used as the reference
     print("Finding clustering information")
     original.clusters <- unname(cutreeDynamic(original.tree, distM=as.matrix(dist_mat), verbose=0))

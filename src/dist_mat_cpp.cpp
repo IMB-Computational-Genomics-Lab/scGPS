@@ -31,9 +31,7 @@ NumericMatrix calcDist(NumericMatrix x){
 
 //' Compute Euclidean distance matrix by rows
 //'
-//' Used in consmx function
-//'
-//' @param x A numeric matrix.
+//' @param x A numeric matrix
 // [[Rcpp::export]]
 arma::mat calcDistArma(const arma::mat & x) {
   unsigned int outrows = x.n_rows, i = 0, j = 0;

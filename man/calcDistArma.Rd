@@ -7,8 +7,8 @@
 calcDistArma(x)
 }
 \arguments{
-\item{x}{A numeric matrix.}
+\item{x}{A numeric matrix}
 }
 \description{
-Used in consmx function
+Compute Euclidean distance matrix by rows
 }
