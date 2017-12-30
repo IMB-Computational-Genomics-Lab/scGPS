@@ -16,10 +16,20 @@ calcDistArma <- function(x) {
     .Call('_scGPS_calcDistArma', PACKAGE = 'scGPS', x)
 }
 
+#' Function to calculate Eucledean distance matrix with paralleled C++
+#'
+#' @param X an R matrix (expression matrix), with cells in rows and genes in columns
+#' @export
+#'
 rcpp_parallel_distance <- function(mat) {
     .Call('_scGPS_rcpp_parallel_distance', PACKAGE = 'scGPS', mat)
 }
 
+#' Function to calculate Eucledean distance matrix without parallelisation
+#'
+#' @param X an R matrix (expression matrix), with cells in rows and genes in columns
+#' @export
+#'
 rcpp_Eucl_distance_NotPar <- function(mat) {
     .Call('_scGPS_rcpp_Eucl_distance_NotPar', PACKAGE = 'scGPS', mat)
 }

@@ -2,11 +2,9 @@
 #include <RcppParallel.h>
 #include <cmath>
 #include <algorithm>
-
 using namespace Rcpp;
 using namespace RcppParallel;
 // [[Rcpp::depends(RcppParallel)]]
-
 
 // generic function for accumulating sum square distance
 template <typename InputIterator1, typename InputIterator2>
@@ -52,6 +50,11 @@ struct EclDistance : public Worker {
   }
 };
 
+//' Function to calculate Eucledean distance matrix with paralleled C++
+//'
+//' @param X an R matrix (expression matrix), with cells in rows and genes in columns
+//' @export
+//'
 // [[Rcpp::export]]
 NumericMatrix rcpp_parallel_distance(NumericMatrix mat) {
 
@@ -69,7 +72,13 @@ NumericMatrix rcpp_parallel_distance(NumericMatrix mat) {
 
 // Non parallel version-------------------------------------------------------
 
+//' Function to calculate Eucledean distance matrix without parallelisation
+//'
+//' @param X an R matrix (expression matrix), with cells in rows and genes in columns
+//' @export
+//'
 // [[Rcpp::export]]
+
 NumericMatrix rcpp_Eucl_distance_NotPar(NumericMatrix mat) {
 
   // allocate the matrix we will return
