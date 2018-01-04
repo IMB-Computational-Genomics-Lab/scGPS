@@ -8,13 +8,13 @@ CORE_scGPS(mixedpop = NULL, windows = seq(0.025:1, by = 0.025),
   remove_outlier = c(0))
 }
 \arguments{
+\item{mixedpop}{is a \linkS4class{SingleCellExperiment} object from the train
+mixed population}
+
 \item{windows}{a numeric specifying the number of windows to test}
 
 \item{remove_outlier}{a vector containing IDs for clusters to be removed
-the default vector contains 0, as 0 is the cluster with singletons}
-
-\item{mixedpop1}{is a \linkS4class{SingleCellExperiment} object from the train
-mixed population}
+the default vector contains 0, as 0 is the cluster with singletons.}
 }
 \value{
 a \code{list} with clustering results of all iterations, and a selected

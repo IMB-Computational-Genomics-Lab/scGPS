@@ -8,11 +8,11 @@
 #' exist (done), a number of dimensionality reduction methods including the imputation
 #' implementation (CIDR) for confirming clustering results (done), and an option
 #' to select the number of optimisation tree height windows for increasing resolution
-#' @param mixedpop1 is a \linkS4class{SingleCellExperiment} object from the train
+#' @param mixedpop is a \linkS4class{SingleCellExperiment} object from the train
 #' mixed population
 #' @param windows a numeric specifying the number of windows to test
 #' @param remove_outlier a vector containing IDs for clusters to be removed
-#' the default vector contains 0, as 0 is the cluster with singletons
+#' the default vector contains 0, as 0 is the cluster with singletons.
 #' @return a \code{list} with clustering results of all iterations, and a selected
 #' optimal resolution
 #' @examples
@@ -29,6 +29,37 @@ CORE_scGPS <-function(mixedpop = NULL, windows = seq(0.025:1, by=0.025),
 
   stab_df <- FindStability(list_clusters=cluster_all$list_clusters,
     cluster_ref = cluster_all$cluster_ref)
+
+  optimal_stab <- FindOptimalStability(list_clusters = cluster_all$list_clusters, stab_df)
+
+  return(list("Cluster" = cluster_all$list_clusters,
+              "tree" = cluster_all$tree, "optimalClust" = optimal_stab))
+}
+
+#' Subclustering (optional) after running CORE
+#'
+#' @description  CORE_Subcluster_scGPS allows re-cluster the CORE clustering result
+#' @param mixedpop is a \linkS4class{SingleCellExperiment} object from the train
+#' mixed population
+#' @param windows a numeric specifying the number of windows to test
+#' @param remove_other_clusters a vector containing IDs for clusters to be removed,
+#' leaving remaining clusters for reclustering
+#' @return a \code{list} with clustering results of all iterations, and a selected
+#' optimal resolution
+#' @examples
+#' day5 <- sample2
+#' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
+#'                          CellMetadata = day5$dat5_clusters)
+#' test <- CORE_scGPS(mixedpop2, remove_other_clusters = c(1))
+#' @export
+#' @author Quan Nguyen, 2017-11-25
+
+CORE_Subcluster_scGPS <-function(mixedpop = NULL, windows = seq(0.025:1, by=0.025),
+                      remove_other_clusters = c(0)){
+  cluster_all <-clustering_scGPS(object=mixedpop, windows = windows, remove_outlier = remove_other_clusters)
+
+  stab_df <- FindStability(list_clusters=cluster_all$list_clusters,
+                           cluster_ref = cluster_all$cluster_ref)
 
   optimal_stab <- FindOptimalStability(list_clusters = cluster_all$list_clusters, stab_df)
 
@@ -78,17 +109,18 @@ clustering_scGPS <- function(object = NULL, ngenes= 1500, windows = seq(0.025:1,
     #check for singletons
     firstRound_out <- firstRoundClustering(object)
     firstRound_cluster <- as.data.frame(table(firstRound_out$cluster_ref))
-    cluster_toRemove <- which(firstRound_out$cluster_ref %in% remove_outlier)
+    cluster_toRemove <- which(firstRound_out$cluster_ref %in% object_rmOutlier)
 
     if(length(cluster_toRemove) > 0){
-      print("Removing outlier clusters...")
+      print(paste0("Removing ", length(cluster_toRemove)," cells as outliers..."))
+      if(length(cluster_toRemove) == ncol(object)){stop("All cells were removed. Check your outliers.")}
       object_rmOutlier <- object[,-cluster_toRemove]
       firstRound_out <- firstRoundClustering(object_rmOutlier)
     }
     return(firstRound_out)
   }
 
-  firstRound_out <- removeOutlierCluster(object, object_rmOutlier)
+  firstRound_out <- removeOutlierCluster(object = object, object_rmOutlier = remove_outlier)
   #return variables for the next step
   original.tree <- firstRound_out$tree
   original.clusters <-firstRound_out$cluster_ref
@@ -178,6 +210,8 @@ FindStability <- function(list_clusters=NULL, cluster_ref =NULL){
       rand
     }
   }
+
+
   #-----------------------------------------------------------------------------
   #End function for calculating randindex
   #-----------------------------------------------------------------------------
@@ -204,40 +238,43 @@ FindStability <- function(list_clusters=NULL, cluster_ref =NULL){
   #-----------------------------------------------------------------------------
 
   #first get the general counter
-  counter=rep(0, length(stability))
+  counter = rep(0, length(stability))
 
   counter[1]=1
   for (i in 2:length(stability)-1){
-    if(stability[i]==stability[i+1]){counter[i+1]<-counter[i]+1} else {
+    if(stability[i] == stability[i+1]){counter[i+1] <- counter[i]+1} else {
       counter[i+1] <- 1}
   }
 
   #second get the counter location where there is no change
   counter_0 = counter
-  index_0 <- which(counter_0 == 0)
 
   for (i in 1:length(counter)){
-    if(counter_0[i] == 1 & counter_0[i+1] == 1){counter_0[i] = 0 }
+    if(counter_0[i] == 1 & counter_0[i+1] == 1){counter_0[i] = 0}
   }
 
+  index_0 <- which(counter_0 == 0)
   #third reset the counter to the count values
   counter_adjusted <- counter
+
   #setup counter 0 on the last right
   if (length(index_0) > 0){
-    if(index_0[1] == 1){counter_adjusted[1] = 1}else{
+    if(index_0[1] == 1){counter_adjusted[1] = 1} else {
     counter_adjusted[1:index_0[1] - 1] <- counter[index_0[1] - 1]
     }
 
   #setup counter 0 on the last left
-  if (index_0[length(index_0)]==length(counter)){
+  if (index_0[length(index_0)] == length(counter)) {
     length_id0 <- length(index_0)
     counter_adjusted[index_0[length_id0]]=1} else {
+    length_id0 <- length(index_0)
     counter_adjusted[(index_0[length_id0]+1):length(counter)] <- counter[length(counter)]
     counter_adjusted[index_0[length_id0]]=1
-    } #to be considered
+    }
+
   #setup counter 0 in the middle
   for (i in 2:length(index_0)-1){
-    counter_adjusted[(index_0[i]+1):(index_0[i+1]-1)]= counter[index_0[i+1]-1]
+    counter_adjusted[(index_0[i]+1):(index_0[i+1]-1)] = counter[index_0[i+1]-1]
     counter_adjusted[index_0[i]]=1
   }
   }
