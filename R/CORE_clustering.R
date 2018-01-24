@@ -17,6 +17,7 @@
 #' optimal resolution
 #' @examples
 #' day5 <- sample2
+#' #day5$dat5_counts needs to be in a matrix format
 #' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
 #'                          CellMetadata = day5$dat5_clusters)
 #' test <- CORE_scGPS(mixedpop2, remove_outlier = c(1))
@@ -33,7 +34,9 @@ CORE_scGPS <-function(mixedpop = NULL, windows = seq(0.025:1, by=0.025),
   optimal_stab <- FindOptimalStability(list_clusters = cluster_all$list_clusters, stab_df)
 
   return(list("Cluster" = cluster_all$list_clusters,
-              "tree" = cluster_all$tree, "optimalClust" = optimal_stab))
+              "tree" = cluster_all$tree, "optimalClust" = optimal_stab,
+              "cellsRemoved" = cluster_all$cellsRemoved,
+              "cellsForClustering" = cluster_all$cellsForClustering))
 }
 
 #' Subclustering (optional) after running CORE
@@ -64,8 +67,11 @@ CORE_Subcluster_scGPS <-function(mixedpop = NULL, windows = seq(0.025:1, by=0.02
   optimal_stab <- FindOptimalStability(list_clusters = cluster_all$list_clusters, stab_df)
 
   return(list("Cluster" = cluster_all$list_clusters,
-              "tree" = cluster_all$tree, "optimalClust" = optimal_stab))
+              "tree" = cluster_all$tree, "optimalClust" = optimal_stab,
+              "cellsRemoved" = cluster_all$cellsRemoved,
+              "cellsForClustering" = cluster_all$cellsForClustering))
 }
+
 
 #' Iterative HC clustering
 #'
@@ -117,10 +123,14 @@ clustering_scGPS <- function(object = NULL, ngenes= 1500, windows = seq(0.025:1,
       object_rmOutlier <- object[,-cluster_toRemove]
       firstRound_out <- firstRoundClustering(object_rmOutlier)
     }
-    return(firstRound_out)
+    return(list("firstRound_out" = firstRound_out,
+                "cellsRemoved" = colnames(object[,cluster_toRemove]),
+                "cellsForClustering" = colnames(object[,-cluster_toRemove]))
+           )
   }
 
-  firstRound_out <- removeOutlierCluster(object = object, object_rmOutlier = remove_outlier)
+  firstRoundPostRemoval <- removeOutlierCluster(object = object, object_rmOutlier = remove_outlier)
+  firstRound_out <-firstRoundPostRemoval$firstRound_out
   #return variables for the next step
   original.tree <- firstRound_out$tree
   original.clusters <-firstRound_out$cluster_ref
@@ -141,7 +151,9 @@ clustering_scGPS <- function(object = NULL, ngenes= 1500, windows = seq(0.025:1,
   names(clustering_param[[i]]) <- "cluster_ref"
   print("Done clustering, moving to stability calculation...")
   return(list("list_clusters" = clustering_param, "tree" = original.tree,
-              "cluster_ref" = original.clusters))
+              "cluster_ref" = original.clusters,
+              "cellsRemoved"= firstRoundPostRemoval$cellsRemoved,
+              "cellsForClustering"= firstRoundPostRemoval$cellsForClustering))
 
 }
 

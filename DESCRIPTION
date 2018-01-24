@@ -17,17 +17,17 @@ Imports:
   glmnet (> 2.0),
   caret (>= 6.0),
   ggplot2 (>= 2.2.1),
+  fastcluster,
   dplyr,
-  parallel,
   Rcpp,
   RcppArmadillo,
-  RcppParallel,
-  cidr,
-  fastcluster
+  RcppParallel
 Suggests:
   Matrix (>= 1.2),
   testthat,
   knitr,
+  cidr,
+  parallel,
   rmarkdown
 VignetteBuilder: knitr
 LinkingTo: 

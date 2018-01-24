@@ -12,7 +12,7 @@
 
 PCA_scGPS <- function(expression.matrix=NULL, ngenes = 1500, scaling = TRUE, npcs=50){
   print(paste0("Preparing PCA inputs using the top ", as.integer(ngenes), " genes ..."))
-  subset.matrix <- topvar_scGPS(expression.matrix=expression.matrix,ngenes = 1500)
+  subset.matrix <- topvar_scGPS(expression.matrix=expression.matrix,ngenes = ngenes)
 
   # transpose to perform pca for cells in rows
   pca.input.matrix <- t(subset.matrix)

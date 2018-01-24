@@ -82,21 +82,15 @@ distance_scGPS <-function(object = NULL){
 
 #' find DE genes
 #'
-#' @description  Calculate distance matrix and perform hclust
+#' @description  Find DE genes from comparing one clust vs remaining
 #' @param expression_matrix is  a normalised expression matrix.
 #' @param cluster corresponding cluster information in the expression_matrix
 #' by going through CORE or from other method).
-#' @return a \code{matrix} with Eucleadean distance used for clustreting
+#' @return a \code{list} containing DE analysis results
 #' @export
 #' @author Quan Nguyen, 2017-11-25
 #'
 
-
-# library(foreach)
-# library(doParallel)
-# no_cores=8
-# cl <- makeCluster(no_cores-1)
-# registerDoParallel(cl)
 
 findMarkers_scGPS <- function(expression_matrix=NULL, cluster = NULL) {
   library(DESeq)
