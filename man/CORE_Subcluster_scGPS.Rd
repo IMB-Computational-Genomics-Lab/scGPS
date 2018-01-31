@@ -5,7 +5,7 @@
 \title{Subclustering (optional) after running CORE}
 \usage{
 CORE_Subcluster_scGPS(mixedpop = NULL, windows = seq(0.025:1, by = 0.025),
-  remove_other_clusters = c(0))
+  select_cell_index = NULL, ngenes = 1500)
 }
 \arguments{
 \item{mixedpop}{is a \linkS4class{SingleCellExperiment} object from the train
@@ -13,8 +13,8 @@ mixed population}
 
 \item{windows}{a numeric specifying the number of windows to test}
 
-\item{remove_other_clusters}{a vector containing IDs for clusters to be removed,
-leaving remaining clusters for reclustering}
+\item{select_cell_index}{a vector containing indexes for cells in selected clusters
+to be reclustered}
 }
 \value{
 a \code{list} with clustering results of all iterations, and a selected
@@ -27,7 +27,7 @@ CORE_Subcluster_scGPS allows re-cluster the CORE clustering result
 day5 <- sample2
 mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
                          CellMetadata = day5$dat5_clusters)
-test <- CORE_scGPS(mixedpop2, remove_other_clusters = c(1))
+test <- CORE_scGPS(mixedpop2,remove_outlier= c(0))
 }
 \author{
 Quan Nguyen, 2017-11-25

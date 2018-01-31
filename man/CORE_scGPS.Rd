@@ -5,7 +5,7 @@
 \title{Main clustering CORE V2.0}
 \usage{
 CORE_scGPS(mixedpop = NULL, windows = seq(0.025:1, by = 0.025),
-  remove_outlier = c(0))
+  remove_outlier = c(0), nRounds = 1)
 }
 \arguments{
 \item{mixedpop}{is a \linkS4class{SingleCellExperiment} object from the train
@@ -32,6 +32,7 @@ to select the number of optimisation tree height windows for increasing resoluti
 }
 \examples{
 day5 <- sample2
+#day5$dat5_counts needs to be in a matrix format
 mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
                          CellMetadata = day5$dat5_clusters)
 test <- CORE_scGPS(mixedpop2, remove_outlier = c(1))

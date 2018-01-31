@@ -2,10 +2,10 @@
 % Please edit documentation in R/CORE_clustering.R
 \name{clustering_scGPS}
 \alias{clustering_scGPS}
-\title{Iterative HC clustering}
+\title{HC clustering for a number of resolutions}
 \usage{
 clustering_scGPS(object = NULL, ngenes = 1500, windows = seq(0.025:1, by =
-  0.025), remove_outlier = c(0))
+  0.025), remove_outlier = c(0), nRounds = 1)
 }
 \arguments{
 \item{remove_outlier}{a vector containing IDs for clusters to be removed
@@ -15,7 +15,7 @@ the default vector contains 0, as 0 is the cluster with singletons}
 train mixed population}
 }
 \value{
-a \code{matrix} with Eucleadean distance used for clustreting
+clustering results
 }
 \description{
 performs 40 clustering runs or more depending on windows

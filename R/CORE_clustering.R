@@ -25,8 +25,8 @@
 #' @author Quan Nguyen, 2017-11-25
 
 CORE_scGPS <-function(mixedpop = NULL, windows = seq(0.025:1, by=0.025),
-                      remove_outlier = c(0)){
-  cluster_all <-clustering_scGPS(object=mixedpop, windows = windows, remove_outlier = remove_outlier)
+                      remove_outlier = c(0), nRounds=1){
+  cluster_all <-clustering_scGPS(object=mixedpop, windows = windows, remove_outlier = remove_outlier, nRounds = nRounds)
 
   stab_df <- FindStability(list_clusters=cluster_all$list_clusters,
     cluster_ref = cluster_all$cluster_ref)
@@ -45,27 +45,28 @@ CORE_scGPS <-function(mixedpop = NULL, windows = seq(0.025:1, by=0.025),
 #' @param mixedpop is a \linkS4class{SingleCellExperiment} object from the train
 #' mixed population
 #' @param windows a numeric specifying the number of windows to test
-#' @param remove_other_clusters a vector containing IDs for clusters to be removed,
-#' leaving remaining clusters for reclustering
+#' @param  select_cell_index a vector containing indexes for cells in selected clusters
+#'  to be reclustered
 #' @return a \code{list} with clustering results of all iterations, and a selected
 #' optimal resolution
 #' @examples
 #' day5 <- sample2
 #' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
 #'                          CellMetadata = day5$dat5_clusters)
-#' test <- CORE_scGPS(mixedpop2, remove_other_clusters = c(1))
+#' test <- CORE_scGPS(mixedpop2,remove_outlier= c(0))
 #' @export
 #' @author Quan Nguyen, 2017-11-25
 
 CORE_Subcluster_scGPS <-function(mixedpop = NULL, windows = seq(0.025:1, by=0.025),
-                      remove_other_clusters = c(0)){
-  cluster_all <-clustering_scGPS(object=mixedpop, windows = windows, remove_outlier = remove_other_clusters)
-
+                                 select_cell_index=NULL, ngenes=1500){
+  cluster_all <-SubClustering_scGPS(object=mixedpop, windows = windows,
+                                    select_cell_index=select_cell_index, ngenes=ngenes)
+  
   stab_df <- FindStability(list_clusters=cluster_all$list_clusters,
                            cluster_ref = cluster_all$cluster_ref)
-
+  
   optimal_stab <- FindOptimalStability(list_clusters = cluster_all$list_clusters, stab_df)
-
+  
   return(list("Cluster" = cluster_all$list_clusters,
               "tree" = cluster_all$tree, "optimalClust" = optimal_stab,
               "cellsRemoved" = cluster_all$cellsRemoved,
@@ -73,14 +74,14 @@ CORE_Subcluster_scGPS <-function(mixedpop = NULL, windows = seq(0.025:1, by=0.02
 }
 
 
-#' Iterative HC clustering
+#' HC clustering for a number of resolutions
 #'
 #' @description  performs 40 clustering runs or more depending on windows
 #' @param mixedpop1 is a \linkS4class{SingleCellExperiment} object from the
 #' train mixed population
 #' @param remove_outlier a vector containing IDs for clusters to be removed
 #' the default vector contains 0, as 0 is the cluster with singletons
-#' @return a \code{matrix} with Eucleadean distance used for clustreting
+#' @return clustering results
 #' @examples
 #' day5 <- sample2
 #' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
@@ -91,45 +92,57 @@ CORE_Subcluster_scGPS <-function(mixedpop = NULL, windows = seq(0.025:1, by=0.02
 #'
 
 clustering_scGPS <- function(object = NULL, ngenes= 1500, windows = seq(0.025:1, by=0.025),
-  remove_outlier = c(0)){
+  remove_outlier = c(0), nRounds=1){
 
   print("Calculating distance matrix")
   #function for the highest resolution clustering (i.e. no window applied)
   firstRoundClustering <- function(object = NULL){
     exprs_mat <- assay(object)
     exprs_mat_topVar <- topvar_scGPS(exprs_mat, ngenes = ngenes)
-    #Take the top variable genes
-    #make a transpose
+    #take the top variable genes
     exprs_mat_t <-t(exprs_mat_topVar)
     dist_mat <- rcpp_parallel_distance(exprs_mat_t)
     print("Performing hierarchical clustering")
     original.tree <- fastcluster::hclust(as.dist(dist_mat), method="ward.D2")
-    #The original clusters to be used as the reference
+    #the original clusters to be used as the reference
     print("Finding clustering information")
     original.clusters <- unname(cutreeDynamic(original.tree, distM=as.matrix(dist_mat), verbose=0))
     original.tree$labels <- original.clusters
     return(list("tree" = original.tree, "cluster_ref" = original.clusters, "dist_mat" = dist_mat))
     }
 
-  removeOutlierCluster <-function(object = NULL,object_rmOutlier = object_rmOutlier){
+  removeOutlierCluster <-function(object = object, remove_outlier = remove_outlier, nRounds=nRounds){
     #check for singletons
-    firstRound_out <- firstRoundClustering(object)
-    firstRound_cluster <- as.data.frame(table(firstRound_out$cluster_ref))
-    cluster_toRemove <- which(firstRound_out$cluster_ref %in% object_rmOutlier)
+    i=1
+    cells_to_remove <-c()
+    while (i <= nRounds){
+      if(length(cells_to_remove)>0){
+        objectTemp <- object[,-cells_to_remove]
+        }else{
+        objectTemp <- object
+        }
+      filter_out <- firstRoundClustering(objectTemp)
+      #filter_cluster <- as.data.frame(table(filter_out$cluster_ref))
+      cluster_toRemove <- which(filter_out$cluster_ref %in% remove_outlier)
 
-    if(length(cluster_toRemove) > 0){
-      print(paste0("Removing ", length(cluster_toRemove)," cells as outliers..."))
-      if(length(cluster_toRemove) == ncol(object)){stop("All cells were removed. Check your outliers.")}
-      object_rmOutlier <- object[,-cluster_toRemove]
-      firstRound_out <- firstRoundClustering(object_rmOutlier)
+      if(length(cluster_toRemove) > 0){
+        print(paste0("Removing ", length(cluster_toRemove),
+                     " cells as outliers at filtering round ", i, " ..."))
+        cells_to_remove <-c(cells_to_remove,cluster_toRemove)
+
+        i <- i+1
+      } else {
+        print(paste0("No more outliers detected after ", i, " filtering round"))
+        i<-nRounds+1
     }
-    return(list("firstRound_out" = firstRound_out,
-                "cellsRemoved" = colnames(object[,cluster_toRemove]),
+    }
+    return(list("firstRound_out" = filter_out,
+                "cellsRemoved" = colnames(object[,cells_to_remove]),
                 "cellsForClustering" = colnames(object[,-cluster_toRemove]))
            )
   }
 
-  firstRoundPostRemoval <- removeOutlierCluster(object = object, object_rmOutlier = remove_outlier)
+  firstRoundPostRemoval <- removeOutlierCluster(object = object, remove_outlier = remove_outlier, nRounds = nRounds)
   firstRound_out <-firstRoundPostRemoval$firstRound_out
   #return variables for the next step
   original.tree <- firstRound_out$tree
@@ -155,6 +168,78 @@ clustering_scGPS <- function(object = NULL, ngenes= 1500, windows = seq(0.025:1,
               "cellsRemoved"= firstRoundPostRemoval$cellsRemoved,
               "cellsForClustering"= firstRoundPostRemoval$cellsForClustering))
 
+}
+
+#' Subclustering for selected cells
+#'
+#' @description  performs 40 clustering runs or more depending on windows
+#' @param object is a \linkS4class{SingleCellExperiment} object from the
+#' train mixed population
+#' @param select_cell_index a vector containing indexes for cells in selected clusters
+#'  to be reclustered
+#' @return clustering resulst 
+#' @export
+#' @author Quan Nguyen, 2018-01-31
+#'
+
+
+SubClustering_scGPS <- function(object = NULL, ngenes= 1500, windows = seq(0.025:1, by=0.025),
+                                select_cell_index=NULL){
+  
+  print("Calculating distance matrix")
+  #function for the highest resolution clustering (i.e. no window applied)
+  Clustering <- function(object = NULL){
+    exprs_mat <- assay(object)
+    exprs_mat_topVar <- topvar_scGPS(exprs_mat, ngenes = ngenes)
+    #take the top variable genes
+    exprs_mat_t <-t(exprs_mat_topVar)
+    dist_mat <- rcpp_parallel_distance(exprs_mat_t)
+    print("Performing hierarchical clustering")
+    original.tree <- fastcluster::hclust(as.dist(dist_mat), method="ward.D2")
+    #the original clusters to be used as the reference
+    print("Finding clustering information")
+    original.clusters <- unname(cutreeDynamic(original.tree, distM=as.matrix(dist_mat), verbose=0))
+    original.tree$labels <- original.clusters
+    return(list("tree" = original.tree, "cluster_ref" = original.clusters, "dist_mat" = dist_mat))
+  }
+  
+  Select_out <- function(object=NULL, select_cell_index = NULL){
+    
+    Clustering_out <- Clustering(object[,select_cell_index])
+    
+    return(list("SubClustering_out" = Clustering_out,
+                "cellsRemoved" = colnames(object[,-select_cell_index]),
+                "cellsForClustering" = colnames(object[,select_cell_index]))
+    )
+  }
+  
+  
+  SelectCluster_out <-Select_out(object = object, select_cell_index=select_cell_index)
+  
+  #return variables for the next step
+  original.tree <- SelectCluster_out$SubClustering_out$tree
+  original.clusters <- SelectCluster_out$SubClustering_out$cluster_ref
+  dist_mat <- SelectCluster_out$SubClustering_out$dist_mat
+  
+  clustering_param <-list()
+  for (i in 1:length(windows)){
+    
+    namelist =paste0("window",windows[i])
+    toadd <-as.vector(cutreeDynamic(original.tree, distM=as.matrix(dist_mat),
+                                    minSplitHeight=windows[i], verbose=0))
+    
+    print(paste0("writing clustering result for run ", i))
+    clustering_param[[i]] <-  list(toadd)
+    names(clustering_param[[i]]) <- namelist
+  }
+  
+  names(clustering_param[[i]]) <- "cluster_ref"
+  print("Done clustering, moving to stability calculation...")
+  return(list("list_clusters" = clustering_param, "tree" = original.tree,
+              "cluster_ref" = original.clusters,
+              "cellsRemoved"= SelectCluster_out$cellsRemoved,
+              "cellsForClustering"= SelectCluster_out$cellsForClustering))
+  
 }
 
 
@@ -334,9 +419,7 @@ FindOptimalStability <- function(list_clusters, run_RandIdx){
                                  run_RandIdx$cluster_index_consec))
 
   colnames(KeyStats) <-c('Height', 'Stability', 'RandIndex', 'ConsecutiveRI')
-  library(ggplot2)
-  library(reshape2)
-
+  
   KeyStats$Height <-as.character(KeyStats$Height)
   day_melt <-melt(KeyStats, id='Height')
   day_melt$Height <-as.numeric(day_melt$Height)
@@ -367,19 +450,25 @@ FindOptimalStability <- function(list_clusters, run_RandIdx){
   St_max_middle <-St_max_middle[which.max(St_max_middle)]
 
   if(St[40] >= St[1]){St_Minus_max =  St - St[40]} else {
-    St_Minus_max =  St_max - St[1]
+    St_Minus_max =  St - St[1]
     }
 
-  if(St[40] > St[1]){ if(St[1] >0.5){optimal_param = 1; break} else {
-    for (i in 2:39){
-      if((St_Minus_max[i] == 0) && ((St_Minus_max[i+1] <0) )) {optimal_param = i; break}
+  if(St[40] > St[1]){
+    if(St[1] >0.5){optimal_param = 1} else {
+      for (i in 2:39){
+        if((St_Minus_max[i] == 0) & ((St_Minus_max[i+1] <0) )) {optimal_param = i; break}
     }}}
-  if(St[1] > St[40]){ if(St[1] >0.5){optimal_param = 1; break} else {
-    for (i in 2:39){
-      if((St_Minus_max[i] == 0) && ((St_Minus_max[i-1] <0) )) {optimal_param = i; break}
+  
+  if(St[1] > St[40]){ 
+    if(St[1] >0.5){optimal_param = 1} else {
+      for (i in 2:39){
+        if((St_Minus_max[i] == 0) & ((St_Minus_max[i-1] <0))) {optimal_param = i; break}
     }}}
 
-  if (optimal_param == 0){ for (i in 2:39){ if (St[i] == St_max_middle) {optimal_param = i; break}}}
+  if (optimal_param == 0){ 
+    for (i in 2:39){ 
+      if (St[i] == St_max_middle) {optimal_param = i; break}
+      }}
 
   print("Done finding optimal clustering...")
   #Final result
@@ -682,7 +771,7 @@ plot_optimal_CORE <-function(original_tree, optimal_cluster =NULL, shift = -100)
 
   index_labels_cluster_names <-paste0("(C", index_labels, ")")
   dendro_labels_names <- paste(dendro.labels, index_labels_cluster_names)
-  branch_names[index_to_overwriteNA] <-  dendro_labels_names
+  branch_names[index_to_overwriteNA] <- dendro_labels_names
 
   # Apply labels directly to dendrogram
   coloured.dendro <- dendextend::branches_attr_by_clusters(dendro.obj, clusters = ordered.clusters, attr = 'col')

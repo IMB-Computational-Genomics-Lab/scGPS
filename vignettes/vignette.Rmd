@@ -16,18 +16,30 @@ knitr::opts_chunk$set(
 )
 ```
 
-#A simple workflow of the scGPS
-```{r, warning = FALSE, message = FALSE}
+```{r}
 
 #Installation instruction
 #Prior to install scGPS you need to install the SummarizedExperiment bioconductor package as the following
 #source("https://bioconductor.org/biocLite.R")
 #biocLite("SummarizedExperiment")
 
-#To install from the development version
-#devtools::install_github("IMB-Computational-Genomics-Lab/scGPS",auth_token = "yourToken")
+#To install from github (Depending on the configuration of the local omputer or HPC, possible C++ compilation errors may happen - see installation troubleshoot below) 
+devtools::install_github("IMB-Computational-Genomics-Lab/scGPS")
 
+#for compilation trouble shoot, manual download and install can be done by:
+#download the package from github
+git clone https://github.com/IMB-Computational-Genomics-Lab/scGPS
+#check in scGPS/src if the compiled scGPS.so file exists and delete it 
+#then manually install and compile in R 
+install.packages("scGPS", repos = NULL, type="source")
+
+#alternatively, with the scGPS as the R working directory, you can use to load the package: 
 devtools::load_all()
+
+```
+#A simple workflow of the scGPS: given a mixed population with known subpopulations, estimate transition scores between these subpopulation 
+
+```{r, warning = FALSE, message = FALSE}
 
 #load mixed population 1 (loaded from sample1 dataset, named it as day2)
 day2 <- sample1
@@ -62,7 +74,7 @@ summary_prediction_lasso(LSOLDA_dat=LSOLDA_dat, nPredSubpop = 4)
 summary_deviance(LSOLDA_dat)
 
 ```
-#A complete workflow of the scGPS: given an unknown mixed popultation, find clusters and estimate relationship between clusters 
+#A complete workflow of the scGPS: given an unknown mixed population, find clusters and estimate relationship between clusters 
 
 ```{r, warning = FALSE, message = FALSE}
 #given a single cell expression matrix, without clustering information 

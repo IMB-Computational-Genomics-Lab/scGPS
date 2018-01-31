@@ -13,10 +13,10 @@ findMarkers_scGPS(expression_matrix = NULL, cluster = NULL)
 by going through CORE or from other method).}
 }
 \value{
-a \code{matrix} with Eucleadean distance used for clustreting
+a \code{list} containing DE analysis results
 }
 \description{
-Calculate distance matrix and perform hclust
+Find DE genes from comparing one clust vs remaining
 }
 \author{
 Quan Nguyen, 2017-11-25
