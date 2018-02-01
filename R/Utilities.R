@@ -102,11 +102,13 @@ findMarkers_scGPS <- function(expression_matrix=NULL, cluster = NULL) {
     #arrange clusters and exprs matrix
     cl_index <- which(as.character(cluster) == as.character(cl_id))
     mainCl_idx <- which(as.character(cluster) != as.character(cl_id))
-    condition_cluster = cluster
-    condition_cluster[mainCl_idx] <- rep("Others", length(mainCl_idx))
-    condition_cluster[cl_index] <- rep(as.character(cl_id), length(cl_index))
-    diff_mat <- DE_exprsMat[,c(mainCl_idx, cl_index)]
+    diff_mat <- DE_exprsMat[,c(mainCl_idx, cl_index)] #this is problematic
     #start DE
+    
+    condition_cluster = cluster
+    condition_cluster[1:length(mainCl_idx)] <- rep("Others", length(mainCl_idx))
+    condition_cluster[(length(mainCl_idx)+1):ncol(diff_mat)] <- rep(as.character(cl_id), length(cl_index))
+    
     print(paste0("Start estimate dispersions for cluster ", as.character(cl_id) , "..."))
     cds = newCountDataSet(diff_mat, condition_cluster)
     cds = estimateSizeFactors( cds )
@@ -121,7 +123,7 @@ findMarkers_scGPS <- function(expression_matrix=NULL, cluster = NULL) {
     #order
     res1_order <- arrange(res1, pval, desc(abs(AdjustedLogFC)))
     #write to list
-    DE_results <- c(DE_results, list(res1))
+    DE_results <- c(DE_results, list(res1_order))
     name_list =paste0("DE_Subpop", cl_id, "vsRemaining")
     names(DE_results)[length(DE_results)] <- name_list
   }
@@ -138,7 +140,6 @@ findMarkers_scGPS <- function(expression_matrix=NULL, cluster = NULL) {
 #' @param DEgeneList is a vector of gene symbols, convertable to ENTREZID
 
 
-
 #Installation needed for reactome pathway analysis reactome in R----------------
 #source("https://bioconductor.org/biocLite.R")
 #biocLite("ReactomePA")
@@ -150,20 +151,18 @@ findMarkers_scGPS <- function(expression_matrix=NULL, cluster = NULL) {
 #use: manual installing install.packages(path_to_file, repos = NULL, type="source")
 #Done installation needed for reactome pathway analysis reactome in R-----------
 
-
-
-annotate_scGPS <-function(DEgenelist, pvalueCutoff=0.05, gene_symbol=TRUE,
+annotate_scGPS <-function(DEgeneList, pvalueCutoff=0.05, gene_symbol=TRUE,
     output_filename = "PathwayEnrichment.xlsx", output_path = NULL ){
     library(ReactomePA)
-    library(org.Hs.eg.db)
+    library(clusterProfiler)
     library(org.Hs.eg.db)
     library(xlsx)
     #assumming the geneList is gene symbol (common for 10X data)
     if(gene_symbol==TRUE){
-      convert_to_gene_ID = bitr(geneList, fromType="SYMBOL",
+      convert_to_gene_ID = bitr(DEgeneList, fromType="SYMBOL",
                               toType="ENTREZID", OrgDb="org.Hs.eg.db")
-      print("Orignial gene number in geneList")
-      print(length(geneList))
+      print("Original gene number in geneList")
+      print(length(DEgeneList))
       print("Number of genes successfully converted")
       print(nrow(convert_to_gene_ID))
       } else {
@@ -175,11 +174,11 @@ annotate_scGPS <-function(DEgenelist, pvalueCutoff=0.05, gene_symbol=TRUE,
 
     #plot some results: note Reactome_pathway_test is a reactomePA object
     #write Reactome_pathway_test results, need to convert to data.frame
-
-    dotplot(Reactome_pathway_test, showCategory=15)
-    barplot(Reactome_pathway_test, showCategory=15)
     output_df <- as.data.frame(Reactome_pathway_test)
     write.xlsx(output_df, paste0(output_path, output_filename))
     return(Reactome_pathway_test)
+    #note can conveniently plot the outputs by running the followings
+    #dotplot(Reactome_pathway_test, showCategory=15)
+    #barplot(Reactome_pathway_test, showCategory=15)
 }
 
