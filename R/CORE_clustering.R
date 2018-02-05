@@ -61,12 +61,12 @@ CORE_Subcluster_scGPS <-function(mixedpop = NULL, windows = seq(0.025:1, by=0.02
                                  select_cell_index=NULL, ngenes=1500){
   cluster_all <-SubClustering_scGPS(object=mixedpop, windows = windows,
                                     select_cell_index=select_cell_index, ngenes=ngenes)
-  
+
   stab_df <- FindStability(list_clusters=cluster_all$list_clusters,
                            cluster_ref = cluster_all$cluster_ref)
-  
+
   optimal_stab <- FindOptimalStability(list_clusters = cluster_all$list_clusters, stab_df)
-  
+
   return(list("Cluster" = cluster_all$list_clusters,
               "tree" = cluster_all$tree, "optimalClust" = optimal_stab,
               "cellsRemoved" = cluster_all$cellsRemoved,
@@ -177,7 +177,7 @@ clustering_scGPS <- function(object = NULL, ngenes= 1500, windows = seq(0.025:1,
 #' train mixed population
 #' @param select_cell_index a vector containing indexes for cells in selected clusters
 #'  to be reclustered
-#' @return clustering resulst 
+#' @return clustering resulst
 #' @export
 #' @author Quan Nguyen, 2018-01-31
 #'
@@ -185,7 +185,7 @@ clustering_scGPS <- function(object = NULL, ngenes= 1500, windows = seq(0.025:1,
 
 SubClustering_scGPS <- function(object = NULL, ngenes= 1500, windows = seq(0.025:1, by=0.025),
                                 select_cell_index=NULL){
-  
+
   print("Calculating distance matrix")
   #function for the highest resolution clustering (i.e. no window applied)
   Clustering <- function(object = NULL){
@@ -202,44 +202,44 @@ SubClustering_scGPS <- function(object = NULL, ngenes= 1500, windows = seq(0.025
     original.tree$labels <- original.clusters
     return(list("tree" = original.tree, "cluster_ref" = original.clusters, "dist_mat" = dist_mat))
   }
-  
+
   Select_out <- function(object=NULL, select_cell_index = NULL){
-    
+
     Clustering_out <- Clustering(object[,select_cell_index])
-    
+
     return(list("SubClustering_out" = Clustering_out,
                 "cellsRemoved" = colnames(object[,-select_cell_index]),
                 "cellsForClustering" = colnames(object[,select_cell_index]))
     )
   }
-  
-  
+
+
   SelectCluster_out <-Select_out(object = object, select_cell_index=select_cell_index)
-  
+
   #return variables for the next step
   original.tree <- SelectCluster_out$SubClustering_out$tree
   original.clusters <- SelectCluster_out$SubClustering_out$cluster_ref
   dist_mat <- SelectCluster_out$SubClustering_out$dist_mat
-  
+
   clustering_param <-list()
   for (i in 1:length(windows)){
-    
+
     namelist =paste0("window",windows[i])
     toadd <-as.vector(cutreeDynamic(original.tree, distM=as.matrix(dist_mat),
                                     minSplitHeight=windows[i], verbose=0))
-    
+
     print(paste0("writing clustering result for run ", i))
     clustering_param[[i]] <-  list(toadd)
     names(clustering_param[[i]]) <- namelist
   }
-  
+
   names(clustering_param[[i]]) <- "cluster_ref"
   print("Done clustering, moving to stability calculation...")
   return(list("list_clusters" = clustering_param, "tree" = original.tree,
               "cluster_ref" = original.clusters,
               "cellsRemoved"= SelectCluster_out$cellsRemoved,
               "cellsForClustering"= SelectCluster_out$cellsForClustering))
-  
+
 }
 
 
@@ -419,7 +419,7 @@ FindOptimalStability <- function(list_clusters, run_RandIdx){
                                  run_RandIdx$cluster_index_consec))
 
   colnames(KeyStats) <-c('Height', 'Stability', 'RandIndex', 'ConsecutiveRI')
-  
+
   KeyStats$Height <-as.character(KeyStats$Height)
   day_melt <-melt(KeyStats, id='Height')
   day_melt$Height <-as.numeric(day_melt$Height)
@@ -458,15 +458,15 @@ FindOptimalStability <- function(list_clusters, run_RandIdx){
       for (i in 2:39){
         if((St_Minus_max[i] == 0) & ((St_Minus_max[i+1] <0) )) {optimal_param = i; break}
     }}}
-  
-  if(St[1] > St[40]){ 
+
+  if(St[1] > St[40]){
     if(St[1] >0.5){optimal_param = 1} else {
       for (i in 2:39){
         if((St_Minus_max[i] == 0) & ((St_Minus_max[i-1] <0))) {optimal_param = i; break}
     }}}
 
-  if (optimal_param == 0){ 
-    for (i in 2:39){ 
+  if (optimal_param == 0){
+    for (i in 2:39){
       if (St[i] == St_max_middle) {optimal_param = i; break}
       }}
 
@@ -486,8 +486,12 @@ FindOptimalStability <- function(list_clusters, run_RandIdx){
 #' Plot dendrogram tree for CORE result
 #'
 #' @description This function plots CORE and all clustering results underneath
+#' @param original.tree the original dendrogram before clustering
+#' @list_clusters a list containing clustering results for each of the resolution run
+#' @param color_branch is a vector containing user-specified colors (the number
+#' of unique colors should be equal or larger the number of clusters )
 
-plot_CORE <- function(original.tree, list_clusters =NULL){
+plot_CORE <- function(original.tree, list_clusters =NULL, color_branch =NULL ){
   #-----------------------------------------------------------------------------
   #Function to plot dendrogram and color
   #The plot_CORE function implements the code by Steve Horvarth, Peter Langelder,
@@ -705,8 +709,8 @@ plot_CORE <- function(original.tree, list_clusters =NULL){
   #-----------------------------------------------------------------------------
 
   #this color range assumes a maximum 15 clusters
-  color_range <- c("#4c7700","#673dc2","#009a15","#c00097","#cda900","#0165c7","#f0760f","#0cabff","#f4215a","#00c9ce","#824f00","#714973","#006837","#ffa5a1","#e4c27f")
-
+  #color_range <- c(,"#f4215a","#00c9ce","#824f00","#714973","#006837","#ffa5a1","#e4c27f")
+  color_range <- color_branch
   number_colors <-length(unique(unlist(col_all)))
   col_all2 <-col_all
   for (i in 1:number_colors){
@@ -726,7 +730,9 @@ plot_CORE <- function(original.tree, list_clusters =NULL){
 #' results
 #' @param original_tree a dendrogram object
 #' @param optimal_cluster a vector of cluster IDs for cells in the dendrogram
-#' @param y_shift a numer specifying the gap between the dendrogram and the colored
+#' @param shift a numer specifying the gap between the dendrogram and the colored
+#' @param values a vector containing color values of the branches and the
+#' colored bar underneath the tree
 #' bar underneath the dendrogram
 #' @examples
 #' day5 <- sample2
@@ -743,7 +749,7 @@ plot_CORE <- function(original.tree, list_clusters =NULL){
 #' @author Quan Nguyen, 2017-11-25
 #'
 
-plot_optimal_CORE <-function(original_tree, optimal_cluster =NULL, shift = -100){
+plot_optimal_CORE <-function(original_tree, optimal_cluster =NULL, shift = -100, values=NULL){
   print("Ordering and assigning labels...")
   dendro.obj <- as.dendrogram(original_tree)
 
@@ -774,7 +780,8 @@ plot_optimal_CORE <-function(original_tree, optimal_cluster =NULL, shift = -100)
   branch_names[index_to_overwriteNA] <- dendro_labels_names
 
   # Apply labels directly to dendrogram
-  coloured.dendro <- dendextend::branches_attr_by_clusters(dendro.obj, clusters = ordered.clusters, attr = 'col')
+  coloured.dendro <- dendextend::branches_attr_by_clusters(dendro.obj,
+    clusters = ordered.clusters, attr = 'col', values = values)
   #need to specify the name space dendextend::
   coloured.dendro <- dendextend::set(coloured.dendro, "labels",  branch_names )
 

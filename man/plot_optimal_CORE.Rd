@@ -4,7 +4,8 @@
 \alias{plot_optimal_CORE}
 \title{plot one single tree with the optimal clustering result}
 \usage{
-plot_optimal_CORE(original_tree, optimal_cluster = NULL, shift = -100)
+plot_optimal_CORE(original_tree, optimal_cluster = NULL, shift = -100,
+  values = NULL)
 }
 \arguments{
 \item{original_tree}{a dendrogram object}

@@ -4,7 +4,11 @@
 \alias{plot_CORE}
 \title{Plot dendrogram tree for CORE result}
 \usage{
-plot_CORE(original.tree, list_clusters = NULL)
+plot_CORE(original.tree, list_clusters = NULL, color_branch = NULL)
+}
+\arguments{
+\item{color_branch}{is a vector containing user-specified colors (the number 
+of unique colors should be equal or larger the number of clusters )}
 }
 \description{
 This function plots CORE and all clustering results underneath
