@@ -23,17 +23,24 @@ knitr::opts_chunk$set(
 #source("https://bioconductor.org/biocLite.R")
 #biocLite("SummarizedExperiment")
 
-#To install from github (Depending on the configuration of the local omputer or HPC, possible C++ compilation errors may happen - see installation troubleshoot below) 
+#R/3.4.1 or above is required 
+
+#To install from github (Depending on the configuration of the local computer or HPC, possible C++ compilation troubleshotings may be required - see installation troubleshoot below) 
 devtools::install_github("IMB-Computational-Genomics-Lab/scGPS")
 
 #for compilation trouble shoot, manual download and install can be done by:
+
 #download the package from github
 git clone https://github.com/IMB-Computational-Genomics-Lab/scGPS
-#check in scGPS/src if the compiled scGPS.so file exists and delete it 
-#then manually install and compile in R 
-install.packages("scGPS", repos = NULL, type="source")
 
-#alternatively, with the scGPS as the R working directory, you can use to load the package: 
+#check in scGPS/src if any of the precompiled (e.g. those with *.so and *.o) files exist and delete them before recompiling
+
+#create a Makevars file in the  scGPS/src with one line: PKG_LIBS = $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
+
+#then with the scGPS as the R working directory manually compile in R, using devtools
+devools::document() 
+
+#and then you can load the package: 
 devtools::load_all()
 
 ```
