@@ -177,7 +177,7 @@ clustering_scGPS <- function(object = NULL, ngenes= 1500, windows = seq(0.025:1,
 #' train mixed population
 #' @param select_cell_index a vector containing indexes for cells in selected clusters
 #'  to be reclustered
-#' @return clustering resulst
+#' @return clustering results
 #' @export
 #' @author Quan Nguyen, 2018-01-31
 #'
