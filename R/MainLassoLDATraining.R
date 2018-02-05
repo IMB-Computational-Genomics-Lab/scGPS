@@ -40,7 +40,7 @@ training_scGPS <-function(genes, mixedpop1 = NULL,
   subpop1_train_indx <-   sample(subpop1cluster_indx, subsampling , replace = F)
   # check if there is a very big cluster present in the dataset
   # C/2 = SubSampling >length(total - C, which is cluster_compare)
-  if (ncol(mixedpop1) > 2*subsampling) {
+  if (length(subremaining1_indx) > subsampling) {
     subremaining1_train_indx <- sample(subremaining1_indx, subsampling, replace = F)
   } else {
     subremaining1_train_indx <- subremaining1_indx
@@ -235,7 +235,7 @@ predicting_scGPS <-function(listData = NULL,  mixedpop2 = NULL, out_idx=NULL){
   cvfit_best <- listData$LassoFit[[out_idx]][[1]]
   fit.lda<- listData$LDAFit[[out_idx]][[1]]
 
-  my.clusters <- colData(mixedpop2)[,1]
+  my.clusters <- colData(mixedpop2)$Cluster
   ori_dat_2 <- assay(mixedpop2)
   names <-elementMetadata(mixedpop2)[,1]
 
