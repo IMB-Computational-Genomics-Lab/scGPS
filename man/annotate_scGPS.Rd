@@ -4,7 +4,7 @@
 \alias{annotate_scGPS}
 \title{annotate_scGPS functionally annotates the identified clusters}
 \usage{
-annotate_scGPS(DEgenelist, pvalueCutoff = 0.05, gene_symbol = TRUE,
+annotate_scGPS(DEgeneList, pvalueCutoff = 0.05, gene_symbol = TRUE,
   output_filename = "PathwayEnrichment.xlsx", output_path = NULL)
 }
 \arguments{
