@@ -39,9 +39,9 @@ plotReduced_scGPS <- function(reduced_dat, color_fac =factor(Sample_id),
   sample_num <-length(unique(color_fac))
   colnames(reduced_dat_toPlot) <- dimNames
   reduced_dat_toPlot$color_fac <-color_fac
-  p <- qplot(reduced_dat[,dims[1]], reduced_dat[,dims[2]], alpha=I(0.7), geom = "point",color=color_fac) +theme_bw()
-  p <- p + ylab(dimNames[1]) + xlab(dimNames[2]) +
-    scale_color_manual(name= legend_title, values=palletes[1:sample_num], limits=as.character(as.vector(unique(color_fac))))
+  p <- qplot(x=reduced_dat[,dims[1]], y=reduced_dat[,dims[2]], alpha=I(0.7), geom = "point",color=color_fac) +theme_bw()
+  p <- p + ylab(dimNames[2]) + xlab(dimNames[1]) +
+    scale_color_manual(name= legend_title, values=palletes[1:sample_num], limits=sort(as.character(as.vector(unique(color_fac)))))
   p<- p + theme(panel.border = element_rect(colour = "black", fill=NA, size=1.5)) +  theme(legend.position="bottom") +
     theme(text=element_text(size=20))
 
