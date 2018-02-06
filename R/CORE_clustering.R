@@ -487,7 +487,7 @@ FindOptimalStability <- function(list_clusters, run_RandIdx){
 #'
 #' @description This function plots CORE and all clustering results underneath
 #' @param original.tree the original dendrogram before clustering
-#' @list_clusters a list containing clustering results for each of the resolution run
+#' @param list_clusters a list containing clustering results for each of the resolution run
 #' @param color_branch is a vector containing user-specified colors (the number
 #' of unique colors should be equal or larger the number of clusters )
 
