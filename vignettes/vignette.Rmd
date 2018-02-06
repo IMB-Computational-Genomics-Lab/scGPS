@@ -25,15 +25,13 @@ knitr::opts_chunk$set(
 
 #R/3.4.1 or above is required 
 
-#To install from github (Depending on the configuration of the local computer or HPC, possible C++ compilation troubleshotings may be required - see installation troubleshoot below) 
+#To install from github (Depending on the configuration of the local computer or HPC, possible custom C++ compilation may be required - see installation trouble-shootings below) 
 devtools::install_github("IMB-Computational-Genomics-Lab/scGPS")
 
-#for compilation trouble shoot, manual download and install can be done by:
-
-#download the package from github
+#for C++ compilation trouble-shooting, manual download and install can be done from github
 git clone https://github.com/IMB-Computational-Genomics-Lab/scGPS
 
-#check in scGPS/src if any of the precompiled (e.g. those with *.so and *.o) files exist and delete them before recompiling
+#then check in scGPS/src if any of the precompiled (e.g. those with *.so and *.o) files exist and delete them before recompiling
 
 #create a Makevars file in the  scGPS/src with one line: PKG_LIBS = $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
 
