@@ -1,10 +1,10 @@
 ---
-title: "scGPS test"
+title: "scGPS introduction"
 author: "Quan Nguyen"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{scGPS introduction}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r}
+```{r, eval = FALSE}
 
 #Installation instruction
 #Prior to install scGPS you need to install the SummarizedExperiment bioconductor package as the following
@@ -85,11 +85,11 @@ summary_deviance(LSOLDA_dat)
 #given a single cell expression matrix, without clustering information 
 day5 <- sample2
 cellnames <- colnames(day5$dat5_counts)
-cellnames <-as.data.frame(cellnames)
-colnames(cellnames) <- "cellBarcodes"
+cluster <-day5$dat5_clusters
+cellnames <-data.frame("Cluster"=cluster, "cellBarcodes" = cellnames)
 
-mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
-                     CellMetadata = cellnames ) 
+mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo, CellMetadata = cellnames ) 
+
 #let's find the clusters
 CORE_cluster <- CORE_scGPS(mixedpop2, remove_outlier = c(0))
 #let's plot all clusters
@@ -97,32 +97,33 @@ plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster)
 
 #let's plot just the optimal clustering result (with colored dendrogram)
 optimal_index = which(CORE_cluster$optimalClust$KeyStats$Height == CORE_cluster$optimalClust$OptimalRes)
-plot_optimal_CORE(original_tree= CORE_cluster$tree, optimal_cluster = unlist(CORE_cluster$Cluster[optimal_index]), shift = -2000)
+dev.off()
+plot_optimal_CORE(original_tree= CORE_cluster$tree, optimal_cluster = unlist(CORE_cluster$Cluster[optimal_index]), shift = -20)
 
 #let's compare with other dimensional reduction methods 
 library(cidr)
 t <- CIDR_scGPS(expression.matrix=assay(mixedpop2))
-p2 <-plotReduced_scGPS(t)
+p2 <-plotReduced_scGPS(t, color_fac = factor(colData(mixedpop2)[,1]),palletes =1:length(unique(colData(mixedpop2)[,1])))
 #may need to turn off the R graphic device dev.off() before plotting the following
 plot(p2)
 
 #load gene list (this can be any lists of user selected genes)
+
 genes <-GeneList
 genes <-genes$Merged_unique
 
 #the gene list can also be generated objectively by differential expression analysis
+#if the cluster information is in the mixedpop2 object, run this (if not run the CORE)
+#as described below 
 DEgenes <- findMarkers_scGPS(expression_matrix=assay(mixedpop2), cluster = mixedpop2@colData$Cluster)
 names(DEgenes)
-#genes <- DEgenes$DE_Subpop1vsRemaining$id; genes <-gsub("_.*", "", genes)
+
 #users need to check the format of the gene input to make sure they are consistent to 
 #the gene names in the expression matrix 
 
 #add the CORE cluster information into the scGPS object 
 Optimal_index <- which( CORE_cluster$optimalClust$KeyStats$Height == CORE_cluster$optimalClust$OptimalRes)
-
 mixedpop2@colData$Cluster <- unlist(CORE_cluster$Cluster[[Optimal_index]])
-#change clustering information to the first column
-mixedpop2@colData <-mixedpop2@colData[,c(2,1)]
 #select a subpopulation
 c_selectID <- 1
 
