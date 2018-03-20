@@ -235,7 +235,7 @@ predicting_scGPS <-function(listData = NULL,  mixedpop2 = NULL, out_idx=NULL){
   cvfit_best <- listData$LassoFit[[out_idx]][[1]]
   fit.lda<- listData$LDAFit[[out_idx]][[1]]
 
-  my.clusters <- colData(mixedpop2)$Cluster
+  my.clusters <- colData(mixedpop2)[,1]
   ori_dat_2 <- assay(mixedpop2)
   names <-elementMetadata(mixedpop2)[,1]
 
