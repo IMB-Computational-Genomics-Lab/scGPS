@@ -2,7 +2,7 @@
 #'
 #' @description  CORE is an algorithm to generate reproduciable clustering,
 #' CORE is first implemented in ascend R package. Here, CORE V2.0 introduces several new
-#' functionalities, including three key feature:
+#' functionalities, including three key features:
 #' fast (and more memory efficient) implementation with C++ and paralellisation options allowing clustering
 #' of hundreds of thousands of cells (ongoing development), outlier revomal important if singletons
 #' exist (done), a number of dimensionality reduction methods including the imputation

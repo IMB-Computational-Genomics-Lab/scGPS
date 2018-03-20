@@ -15,8 +15,8 @@ plot_optimal_CORE(original_tree, optimal_cluster = NULL, shift = -100,
 \item{shift}{a numer specifying the gap between the dendrogram and the colored}
 
 \item{values}{a vector containing color values of the branches and the
-colored bar underneath the tree
-bar underneath the dendrogram}
+colored bar underneath the tree bar underneath the dendrogram. This
+parameter allows better selection of colors for the display.}
 }
 \description{
 after an optimal cluster has been identified, users may use this

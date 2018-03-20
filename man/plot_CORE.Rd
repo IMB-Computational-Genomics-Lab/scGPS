@@ -12,7 +12,8 @@ plot_CORE(original.tree, list_clusters = NULL, color_branch = NULL)
 \item{list_clusters}{a list containing clustering results for each of the resolution run}
 
 \item{color_branch}{is a vector containing user-specified colors (the number
-of unique colors should be equal or larger than the number of clusters )}
+of unique colors should be equal or larger than the number of clusters). This
+parameter allows better selection of colors for the display.}
 }
 \description{
 This function plots CORE and all clustering results underneath
