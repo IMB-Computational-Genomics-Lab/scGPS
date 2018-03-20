@@ -15,7 +15,7 @@ train mixed population}
 to be reclustered}
 }
 \value{
-clustering resulst
+clustering results
 }
 \description{
 performs 40 clustering runs or more depending on windows

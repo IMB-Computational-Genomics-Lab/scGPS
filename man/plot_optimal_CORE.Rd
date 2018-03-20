@@ -12,7 +12,10 @@ plot_optimal_CORE(original_tree, optimal_cluster = NULL, shift = -100,
 
 \item{optimal_cluster}{a vector of cluster IDs for cells in the dendrogram}
 
-\item{y_shift}{a numer specifying the gap between the dendrogram and the colored
+\item{shift}{a numer specifying the gap between the dendrogram and the colored}
+
+\item{values}{a vector containing color values of the branches and the
+colored bar underneath the tree
 bar underneath the dendrogram}
 }
 \description{

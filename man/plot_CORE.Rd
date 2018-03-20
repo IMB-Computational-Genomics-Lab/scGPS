@@ -7,7 +7,11 @@
 plot_CORE(original.tree, list_clusters = NULL, color_branch = NULL)
 }
 \arguments{
-\item{color_branch}{is a vector containing user-specified colors (the number 
+\item{original.tree}{the original dendrogram before clustering}
+
+\item{list_clusters}{a list containing clustering results for each of the resolution run}
+
+\item{color_branch}{is a vector containing user-specified colors (the number
 of unique colors should be equal or larger the number of clusters )}
 }
 \description{
