@@ -403,7 +403,7 @@ FindStability <- function(list_clusters=NULL, cluster_ref =NULL){
 #'
 
 FindOptimalStability <- function(list_clusters, run_RandIdx){
-
+  library(reshape2)
   print("Start finding optimal clustering...")
   #get the number of cluster
   t <-lapply(list_clusters, function(x){length(unique(unlist(x)))})
@@ -489,9 +489,15 @@ FindOptimalStability <- function(list_clusters, run_RandIdx){
 #' @param original.tree the original dendrogram before clustering
 #' @param list_clusters a list containing clustering results for each of the resolution run
 #' @param color_branch is a vector containing user-specified colors (the number
-#' of unique colors should be equal or larger the number of clusters )
+#' of unique colors should be equal or larger than the number of clusters). This
+#' parameter allows better selection of colors for the display.
 
-plot_CORE <- function(original.tree, list_clusters =NULL, color_branch =NULL ){
+plot_CORE <- function(original.tree, list_clusters =NULL, color_branch = NULL){
+  library(RColorBrewer)
+  n <- length(unique(unlist(list_clusters[[1]])))
+  qual_col_pals = brewer.pal.info[brewer.pal.info$category == 'qual',]
+  col_vector = unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals)))
+  if (is.null(color_branch)){color_branch <- col_vector}
   #-----------------------------------------------------------------------------
   #Function to plot dendrogram and color
   #The plot_CORE function implements the code by Steve Horvarth, Peter Langelder,
@@ -732,8 +738,8 @@ plot_CORE <- function(original.tree, list_clusters =NULL, color_branch =NULL ){
 #' @param optimal_cluster a vector of cluster IDs for cells in the dendrogram
 #' @param shift a numer specifying the gap between the dendrogram and the colored
 #' @param values a vector containing color values of the branches and the
-#' colored bar underneath the tree
-#' bar underneath the dendrogram
+#' colored bar underneath the tree bar underneath the dendrogram. This
+#' parameter allows better selection of colors for the display.
 #' @examples
 #' day5 <- sample2
 #' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
@@ -750,9 +756,15 @@ plot_CORE <- function(original.tree, list_clusters =NULL, color_branch =NULL ){
 #'
 
 plot_optimal_CORE <-function(original_tree, optimal_cluster =NULL, shift = -100, values=NULL){
+  if (is.null(values)){
+    library(RColorBrewer)
+    n <- length(unique(optimal_cluster))
+    qual_col_pals = brewer.pal.info[brewer.pal.info$category == 'qual',]
+    col_vector = unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals)))
+    values<- col_vector}
+
   print("Ordering and assigning labels...")
   dendro.obj <- as.dendrogram(original_tree)
-
   # Sort clusters by order in dendrogram
   ordered.clusters <- optimal_cluster[stats::order.dendrogram(dendro.obj)]
   # Count table
