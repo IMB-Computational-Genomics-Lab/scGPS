@@ -15,6 +15,9 @@
 #' the genes, such as their corresponding ENSEMBL transcript identifiers.
 #' @param CellMetadata A data frame containing cell identifiers (usually barcodes)
 #' and an integer representing which batch they belong to.
+#' The column containing clustering information needs to be the first column in the CellMetadata dataframe
+#' If clustering information is not available, users can run CORE function and add the information
+#' to the scGPS before running scGPS prediction
 #' @return This function generates an scGPS object belonging to the \linkS4class{SingleCellExperiment}.
 #' @seealso \linkS4class{SingleCellExperiment}
 #' @export
@@ -51,7 +54,7 @@ NewscGPS <- function(ExpressionMatrix = NULL, GeneMetadata= NULL, CellMetadata =
 
 # Constructor function for the scgps object of the SummarizedExperiment class
 #'
-#' NewscGPS
+#' NewscGPS_SME
 #'
 #' \code{\link{NewscGPS}} generates a scGPS object in the \linkS4class{SingleCellExperiment} class
 #' for use with the scGPS package.This object contains an expression matrix, associated
@@ -67,7 +70,7 @@ NewscGPS <- function(ExpressionMatrix = NULL, GeneMetadata= NULL, CellMetadata =
 #' and clustering information (the first column of the data frame contains clustering information).
 #' The column containing clustering information needs to be named as "Cluster".
 #' If clustering information is not available, users can run CORE function and add the information
-#' to the scGPS before running scGPS prediction (see vignette)
+#' to the scGPS before running scGPS prediction
 #' @return This function generates an scGPS object belonging to the \linkS4class{SingleCellExperiment}.
 #' @seealso \linkS4class{SingleCellExperiment}
 #' @export
