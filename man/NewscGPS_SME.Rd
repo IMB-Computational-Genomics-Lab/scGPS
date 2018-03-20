@@ -2,7 +2,7 @@
 % Please edit documentation in R/scgps_object.R
 \name{NewscGPS_SME}
 \alias{NewscGPS_SME}
-\title{NewscGPS}
+\title{NewscGPS_SME}
 \usage{
 NewscGPS_SME(ExpressionMatrix = NULL, GeneMetadata = NULL,
   CellMetadata = NULL)
@@ -19,8 +19,9 @@ the genes, such as their corresponding ENSEMBL transcript identifiers.}
 
 \item{CellMetadata}{A data frame containing cell identifiers (usually barcodes)
 and clustering information (the first column of the data frame contains clustering information).
+The column containing clustering information needs to be named as "Cluster".
 If clustering information is not available, users can run CORE function and add the information
-to the scGPS before running scGPS prediction (see vignette)}
+to the scGPS before running scGPS prediction}
 }
 \value{
 This function generates an scGPS object belonging to the \linkS4class{SingleCellExperiment}.
