@@ -2,7 +2,10 @@
 title: "scGPS introduction"
 author: "Quan Nguyen"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: 
+  html_document:
+    keep_md: true
+
 vignette: >
   %\VignetteIndexEntry{scGPS introduction}
   %\VignetteEngine{knitr::rmarkdown}
@@ -15,10 +18,12 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
+################################################################################
+##Installation instruction
+################################################################################
 
 ```{r, eval = FALSE}
 
-#Installation instruction
 #Prior to install scGPS you need to install the SummarizedExperiment bioconductor package as the following
 #source("https://bioconductor.org/biocLite.R")
 #biocLite("SummarizedExperiment")
@@ -42,9 +47,10 @@ devools::document()
 devtools::load_all()
 
 ```
-#A simple workflow of the scGPS: given a mixed population with known subpopulations, estimate transition scores between these subpopulation 
+##A simple workflow of the scGPS: given a mixed population with known subpopulations, estimate transition scores between these subpopulation 
 
 ```{r, warning = FALSE, message = FALSE}
+devtools::load_all()
 
 #load mixed population 1 (loaded from sample1 dataset, named it as day2)
 day2 <- sample1
@@ -79,7 +85,9 @@ summary_prediction_lasso(LSOLDA_dat=LSOLDA_dat, nPredSubpop = 4)
 summary_deviance(LSOLDA_dat)
 
 ```
-#A complete workflow of the scGPS: given an unknown mixed population, find clusters and estimate relationship between clusters 
+################################################################################
+##A complete workflow of the scGPS: given an unknown mixed population, find clusters and estimate relationship between clusters 
+################################################################################
 
 ```{r, warning = FALSE, message = FALSE}
 #given a single cell expression matrix, without clustering information 
@@ -97,24 +105,23 @@ plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster)
 
 #let's plot just the optimal clustering result (with colored dendrogram)
 optimal_index = which(CORE_cluster$optimalClust$KeyStats$Height == CORE_cluster$optimalClust$OptimalRes)
-dev.off()
-plot_optimal_CORE(original_tree= CORE_cluster$tree, optimal_cluster = unlist(CORE_cluster$Cluster[optimal_index]), shift = -20)
+
+plot_optimal_CORE(original_tree= CORE_cluster$tree, optimal_cluster = unlist(CORE_cluster$Cluster[optimal_index]), shift = -200)
 
 #let's compare with other dimensional reduction methods 
 library(cidr)
 t <- CIDR_scGPS(expression.matrix=assay(mixedpop2))
 p2 <-plotReduced_scGPS(t, color_fac = factor(colData(mixedpop2)[,1]),palletes =1:length(unique(colData(mixedpop2)[,1])))
 #may need to turn off the R graphic device dev.off() before plotting the following
-plot(p2)
+p2
 
 #load gene list (this can be any lists of user selected genes)
-
 genes <-GeneList
 genes <-genes$Merged_unique
 
 #the gene list can also be generated objectively by differential expression analysis
-#if the cluster information is in the mixedpop2 object, run this (if not run the CORE)
-#as described below 
+#if the cluster information is in the mixedpop2 object, run this (if not run the CORE
+#as described below) 
 DEgenes <- findMarkers_scGPS(expression_matrix=assay(mixedpop2), cluster = mixedpop2@colData$Cluster)
 names(DEgenes)
 
@@ -124,14 +131,15 @@ names(DEgenes)
 #add the CORE cluster information into the scGPS object 
 Optimal_index <- which( CORE_cluster$optimalClust$KeyStats$Height == CORE_cluster$optimalClust$OptimalRes)
 mixedpop2@colData$Cluster <- unlist(CORE_cluster$Cluster[[Optimal_index]])
+
 #select a subpopulation
 c_selectID <- 1
 
-#run the test bootstrap
+#run the test bootstrap with nboots = 2 runs
 
 suppressWarnings(LSOLDA_dat <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop2, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list()))
 
-#display some results 
+#display summary results 
 #summary results LDA
 row_cluster <-length(unique(mixedpop2@colData$Cluster))
 summary_prediction_lda(LSOLDA_dat=LSOLDA_dat, nPredSubpop = row_cluster )
