@@ -2,10 +2,14 @@
 title: "scGPS introduction"
 author: "Quan Nguyen"
 date: "`r Sys.Date()`"
+<<<<<<< HEAD
 output: 
   html_document:
     keep_md: true
 
+=======
+output: html_document
+>>>>>>> cdb969e99f388d57c89d5f3a4ac8a619ce08e95b
 vignette: >
   %\VignetteIndexEntry{scGPS introduction}
   %\VignetteEngine{knitr::rmarkdown}
