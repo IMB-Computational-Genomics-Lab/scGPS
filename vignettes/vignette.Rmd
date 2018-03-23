@@ -2,18 +2,11 @@
 title: "scGPS introduction"
 author: "Quan Nguyen"
 date: "`r Sys.Date()`"
-<<<<<<< HEAD
+
 output: 
   html_document:
     keep_md: true
 
-=======
-output: html_document
->>>>>>> cdb969e99f388d57c89d5f3a4ac8a619ce08e95b
-vignette: >
-  %\VignetteIndexEntry{scGPS introduction}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include = FALSE}
@@ -22,36 +15,36 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
-################################################################################
-##Installation instruction
-################################################################################
+
+####**Installation instruction**
 
 ```{r, eval = FALSE}
 
-#Prior to install scGPS you need to install the SummarizedExperiment bioconductor package as the following
+#Prior to installing scGPS you need to install the SummarizedExperiment bioconductor package as the following
 #source("https://bioconductor.org/biocLite.R")
 #biocLite("SummarizedExperiment")
 
 #R/3.4.1 or above is required 
 
-#To install from github (Depending on the configuration of the local computer or HPC, possible custom C++ compilation may be required - see installation trouble-shootings below) 
+#To install scGPS from github (Depending on the configuration of the local computer or HPC, possible custom C++ compilation may be required - see installation trouble-shootings below) 
 devtools::install_github("IMB-Computational-Genomics-Lab/scGPS")
 
-#for C++ compilation trouble-shooting, manual download and install can be done from github
+#for C++ compilation trouble-shooting, manual download and installation can be done from github
 git clone https://github.com/IMB-Computational-Genomics-Lab/scGPS
 
 #then check in scGPS/src if any of the precompiled (e.g. those with *.so and *.o) files exist and delete them before recompiling
 
 #create a Makevars file in the  scGPS/src with one line: PKG_LIBS = $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
 
-#then with the scGPS as the R working directory manually compile in R, using devtools
+#then with the scGPS as the R working directory, manually recompile scGPS in R using devtools
 devools::document() 
 
 #and then you can load the package: 
 devtools::load_all()
 
 ```
-##A simple workflow of the scGPS: given a mixed population with known subpopulations, estimate transition scores between these subpopulation 
+
+####**A simple workflow of the scGPS: given a mixed population with known subpopulations, estimate transition scores between these subpopulation**
 
 ```{r, warning = FALSE, message = FALSE}
 devtools::load_all()
@@ -89,9 +82,9 @@ summary_prediction_lasso(LSOLDA_dat=LSOLDA_dat, nPredSubpop = 4)
 summary_deviance(LSOLDA_dat)
 
 ```
-################################################################################
-##A complete workflow of the scGPS: given an unknown mixed population, find clusters and estimate relationship between clusters 
-################################################################################
+
+####**A complete workflow of the scGPS: given an unknown mixed population, find clusters and estimate relationship between clusters** 
+
 
 ```{r, warning = FALSE, message = FALSE}
 #given a single cell expression matrix, without clustering information 
@@ -107,17 +100,27 @@ CORE_cluster <- CORE_scGPS(mixedpop2, remove_outlier = c(0))
 #let's plot all clusters
 plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster)
 
-#let's plot just the optimal clustering result (with colored dendrogram)
+```
+
+  
+  #####Let's plot just the optimal clustering result (with colored dendrogram)
+```{r}
 optimal_index = which(CORE_cluster$optimalClust$KeyStats$Height == CORE_cluster$optimalClust$OptimalRes)
 
 plot_optimal_CORE(original_tree= CORE_cluster$tree, optimal_cluster = unlist(CORE_cluster$Cluster[optimal_index]), shift = -200)
-
-#let's compare with other dimensional reduction methods 
+```
+  
+  #####Let's compare with other dimensional reduction methods 
+```{r}
 library(cidr)
 t <- CIDR_scGPS(expression.matrix=assay(mixedpop2))
 p2 <-plotReduced_scGPS(t, color_fac = factor(colData(mixedpop2)[,1]),palletes =1:length(unique(colData(mixedpop2)[,1])))
 #may need to turn off the R graphic device dev.off() before plotting the following
 p2
+```
+  
+  #####Find gene markers and annotate clusters 
+```{r}
 
 #load gene list (this can be any lists of user selected genes)
 genes <-GeneList
@@ -129,6 +132,16 @@ genes <-genes$Merged_unique
 DEgenes <- findMarkers_scGPS(expression_matrix=assay(mixedpop2), cluster = mixedpop2@colData$Cluster)
 names(DEgenes)
 
+#you can annotate the identified clusters 
+DEgeneList_3vsOthers <- DEgenes$DE_Subpop3vsRemaining$id
+#format to ensembl genes 
+DEgeneList_3vsOthers <-gsub("_.*", "", DEgeneList_3vsOthers )
+head(DEgeneList_3vsOthers)
+#the following command saves the file "PathwayEnrichment.xlsx" to the working dir
+enrichment_test <- annotate_scGPS(DEgeneList_3vsOthers, pvalueCutoff=0.05, gene_symbol=TRUE,output_filename = "PathwayEnrichment.xlsx", output_path = NULL )
+#note can conveniently plot the enrichment outputs by running the followings
+dotplot(enrichment_test, showCategory=15)
+
 #users need to check the format of the gene input to make sure they are consistent to 
 #the gene names in the expression matrix 
 
@@ -136,11 +149,11 @@ names(DEgenes)
 Optimal_index <- which( CORE_cluster$optimalClust$KeyStats$Height == CORE_cluster$optimalClust$OptimalRes)
 mixedpop2@colData$Cluster <- unlist(CORE_cluster$Cluster[[Optimal_index]])
 
+
 #select a subpopulation
 c_selectID <- 1
 
 #run the test bootstrap with nboots = 2 runs
-
 suppressWarnings(LSOLDA_dat <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop2, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list()))
 
 #display summary results 
@@ -155,3 +168,4 @@ summary_prediction_lasso(LSOLDA_dat=LSOLDA_dat, nPredSubpop = row_cluster)
 summary_deviance(LSOLDA_dat)
 
 ```
+
