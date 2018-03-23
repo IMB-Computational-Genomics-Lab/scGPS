@@ -33,7 +33,7 @@ topvar_scGPS <- function(expression.matrix=NULL,ngenes = 1500){
 #'
 
 plotReduced_scGPS <- function(reduced_dat, color_fac =factor(Sample_id),
-    dims = c(1,2),dimNames = c("Dim 1", "Dim 2"), palletes =NULL, legend_title ="Samples" ){
+    dims = c(1,2),dimNames = c("Dim 1", "Dim 2"), palletes =NULL, legend_title ="Cluster" ){
   library(cowplot)
   reduced_dat_toPlot <-as.data.frame(reduced_dat[,dims])
   sample_num <-length(unique(color_fac))
@@ -59,7 +59,7 @@ plotReduced_scGPS <- function(reduced_dat, color_fac =factor(Sample_id),
   return(p2)
 }
 
-#' build disance matrice V2.0
+#' build disance matrix V2.0
 #'
 #' @description  Calculate distance matrix and perform hclust
 #' @param mixedpop1 is a \linkS4class{SingleCellExperiment} object from the train mixed population
@@ -71,26 +71,24 @@ plotReduced_scGPS <- function(reduced_dat, color_fac =factor(Sample_id),
 distance_scGPS <-function(object = NULL){
   print("Calculating distance matrix")
   exprs_mat <- assay(object)
-  exprs_mat_topVar <- topvar_scGPS(exprs_mat, ngenes = 1500)
   #Take the top variable genes
-  #make a transpose
+  exprs_mat_topVar <- topvar_scGPS(exprs_mat, ngenes = 1500)
   exprs_mat_t <-t(exprs_mat_topVar)
   dist_mat <- dist(exprs_mat_t)
   print("Performing hierarchical clustering")
   return(list("tree"=original.tree, "ref_clust" = original.clusters))
 }
 
-#' find DE genes
+#' find marker genes
 #'
 #' @description  Find DE genes from comparing one clust vs remaining
 #' @param expression_matrix is  a normalised expression matrix.
 #' @param cluster corresponding cluster information in the expression_matrix
-#' by going through CORE or from other method).
+#' by running CORE clustering or using other methods.
 #' @return a \code{list} containing DE analysis results
 #' @export
 #' @author Quan Nguyen, 2017-11-25
 #'
-
 
 findMarkers_scGPS <- function(expression_matrix=NULL, cluster = NULL) {
   library(DESeq)
@@ -104,11 +102,11 @@ findMarkers_scGPS <- function(expression_matrix=NULL, cluster = NULL) {
     mainCl_idx <- which(as.character(cluster) != as.character(cl_id))
     diff_mat <- DE_exprsMat[,c(mainCl_idx, cl_index)] #this is problematic
     #start DE
-    
+
     condition_cluster = cluster
     condition_cluster[1:length(mainCl_idx)] <- rep("Others", length(mainCl_idx))
     condition_cluster[(length(mainCl_idx)+1):ncol(diff_mat)] <- rep(as.character(cl_id), length(cl_index))
-    
+
     print(paste0("Start estimate dispersions for cluster ", as.character(cl_id) , "..."))
     cds = newCountDataSet(diff_mat, condition_cluster)
     cds = estimateSizeFactors( cds )
