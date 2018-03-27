@@ -6,7 +6,8 @@ using namespace arma;
 //'
 //' @param N  integer.
 //' @param thin integer
-//' @export
+//' @examples
+//' mean_cpp(c(1:10^6))
 //'
 // [[Rcpp::export]]
 double mean_cpp(NumericVector x){
@@ -25,7 +26,8 @@ double mean_cpp(NumericVector x){
 //'
 //' @param x a vector of gene expression.
 //' @param bias degree of freedom
-//' @export
+//' @examples
+//'var_cpp(c(1:10^6))
 //'
 // [[Rcpp::export]]
 
@@ -44,8 +46,9 @@ double var_cpp(NumericVector x, bool bias = true){
 //' Transpose a matrix
 //'
 //' @param X  an R matrix (expression matrix)
-//' @export
-//'
+//' @examples
+//' mat_test <-matrix(rnbinom(1000000,mu=0.01, size=10),nrow=100)
+//' tp_mat <- tp_cpp(mat_test)
 // [[Rcpp::export]]
 arma::mat tp_cpp(const arma::mat X) {
   return arma::trans(X);
@@ -55,8 +58,10 @@ arma::mat tp_cpp(const arma::mat X) {
 //' Subset a matrix
 //'
 //' @param X an R matrix (expression matrix)
-//' @export
-//'
+//' @examples
+//' mat_test <-matrix(rnbinom(1000000,mu=0.01, size=10),nrow=100)
+//' subset_mat <- subset_cpp(mat_test, rowidx_in=c(1:10), colidx_in=c(100:500))
+//' dim(subset_mat)
 // [[Rcpp::export]]
 
 arma::mat subset_cpp(NumericMatrix m1in, NumericVector rowidx_in, NumericVector colidx_in){
@@ -73,8 +78,10 @@ arma::mat subset_cpp(NumericMatrix m1in, NumericVector rowidx_in, NumericVector 
 //' @description This function provides significant speed gain if the input matrix
 //' is big
 //' @param X  an R matrix (expression matrix), rows are genes, columns are cells
-//' @export
-//'
+//' @examples
+//' mat_test <-matrix(rnbinom(1000000,mu=0.01, size=10),nrow=1000)
+//' library(microbenchmark)
+//' microbenchmark(PrinComp_cpp(mat_test), prcomp(mat_test), times=3)
 // [[Rcpp::export]]
 List PrinComp_cpp(const arma::mat X) {
   arma::mat coeff;

@@ -1,3 +1,12 @@
 useDynLib(scGPS)
 importFrom(Rcpp, evalCpp)
 exportPattern("^[[:alpha:]]+")
+import(SingleCellExperiment)
+import(glmnet)
+import(caret)
+import(dplyr)
+import(dynamicTreeCut)
+import(ggplot2)
+import(RcppArmadillo)
+import(RcppParallel)
+

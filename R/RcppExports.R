@@ -16,10 +16,14 @@ calcDistArma <- function(x) {
     .Call('_scGPS_calcDistArma', PACKAGE = 'scGPS', x)
 }
 
-#' Function to calculate Eucledean distance matrix with paralleled C++
+#' distance matrix using C++
 #'
-#' @param X an R matrix (expression matrix), with cells in rows and genes in columns
-#' @export
+#' @description This function provides fast and memory efficient distance matrix calculation
+#' @param X an R matrix (expression matrix), rows are genes, columns are cells
+#' @examples
+#' mat_test <-matrix(rnbinom(1000000,mu=0.01, size=10),nrow=10000)
+#' library(microbenchmark)
+#' microbenchmark(rcpp_parallel_distance(mat_test), dist(mat_test), times=3)
 #'
 rcpp_parallel_distance <- function(mat) {
     .Call('_scGPS_rcpp_parallel_distance', PACKAGE = 'scGPS', mat)
@@ -28,21 +32,21 @@ rcpp_parallel_distance <- function(mat) {
 #' Function to calculate Eucledean distance matrix without parallelisation
 #'
 #' @param X an R matrix (expression matrix), with cells in rows and genes in columns
-#' @export
+#' @examples
+#' mat_test <-matrix(rnbinom(100000,mu=0.01, size=10),nrow=1000)
+#' library(microbenchmark)
+#' microbenchmark(rcpp_Eucl_distance_NotPar(mat_test), dist(mat_test), times=3)
 #'
 rcpp_Eucl_distance_NotPar <- function(mat) {
     .Call('_scGPS_rcpp_Eucl_distance_NotPar', PACKAGE = 'scGPS', mat)
-}
-
-timesTwo <- function(x) {
-    .Call('_scGPS_timesTwo', PACKAGE = 'scGPS', x)
 }
 
 #' Calculate mean
 #'
 #' @param N  integer.
 #' @param thin integer
-#' @export
+#' @examples
+#' mean_cpp(c(1:10^6))
 #'
 mean_cpp <- function(x) {
     .Call('_scGPS_mean_cpp', PACKAGE = 'scGPS', x)
@@ -52,7 +56,8 @@ mean_cpp <- function(x) {
 #'
 #' @param x a vector of gene expression.
 #' @param bias degree of freedom
-#' @export
+#' @examples
+#'var_cpp(c(1:10^6))
 #'
 var_cpp <- function(x, bias = TRUE) {
     .Call('_scGPS_var_cpp', PACKAGE = 'scGPS', x, bias)
@@ -61,8 +66,9 @@ var_cpp <- function(x, bias = TRUE) {
 #' Transpose a matrix
 #'
 #' @param X  an R matrix (expression matrix)
-#' @export
-#'
+#' @examples
+#' mat_test <-matrix(rnbinom(1000000,mu=0.01, size=10),nrow=100)
+#' tp_mat <- tp_cpp(mat_test)
 tp_cpp <- function(X) {
     .Call('_scGPS_tp_cpp', PACKAGE = 'scGPS', X)
 }
@@ -70,8 +76,10 @@ tp_cpp <- function(X) {
 #' Subset a matrix
 #'
 #' @param X an R matrix (expression matrix)
-#' @export
-#'
+#' @examples
+#' mat_test <-matrix(rnbinom(1000000,mu=0.01, size=10),nrow=100)
+#' subset_mat <- subset_cpp(mat_test, rowidx_in=c(1:10), colidx_in=c(100:500))
+#' dim(subset_mat)
 subset_cpp <- function(m1in, rowidx_in, colidx_in) {
     .Call('_scGPS_subset_cpp', PACKAGE = 'scGPS', m1in, rowidx_in, colidx_in)
 }
@@ -81,8 +89,10 @@ subset_cpp <- function(m1in, rowidx_in, colidx_in) {
 #' @description This function provides significant speed gain if the input matrix
 #' is big
 #' @param X  an R matrix (expression matrix), rows are genes, columns are cells
-#' @export
-#'
+#' @examples
+#' mat_test <-matrix(rnbinom(1000000,mu=0.01, size=10),nrow=1000)
+#' library(microbenchmark)
+#' microbenchmark(PrinComp_cpp(mat_test), prcomp(mat_test), times=3)
 PrinComp_cpp <- function(X) {
     .Call('_scGPS_PrinComp_cpp', PACKAGE = 'scGPS', X)
 }

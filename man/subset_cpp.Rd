@@ -12,3 +12,8 @@ subset_cpp(m1in, rowidx_in, colidx_in)
 \description{
 Subset a matrix
 }
+\examples{
+mat_test <-matrix(rnbinom(1000000,mu=0.01, size=10),nrow=100)
+subset_mat <- subset_cpp(mat_test, rowidx_in=c(1:10), colidx_in=c(100:500))
+dim(subset_mat)
+}

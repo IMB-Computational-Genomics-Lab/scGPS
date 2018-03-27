@@ -14,3 +14,7 @@ var_cpp(x, bias = TRUE)
 \description{
 Calculate variance
 }
+\examples{
+var_cpp(c(1:10^6))
+
+}

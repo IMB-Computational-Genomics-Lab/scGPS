@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-####**Installation instruction**
+**Installation instruction**
 
 ```{r, eval = FALSE}
 
@@ -44,7 +44,7 @@ devtools::load_all()
 
 ```
 
-####**A simple workflow of the scGPS: given a mixed population with known subpopulations, estimate transition scores between these subpopulation**
+**A simple workflow of the scGPS: given a mixed population with known subpopulations, estimate transition scores between these subpopulation**
 
 ```{r, warning = FALSE, message = FALSE}
 devtools::load_all()
@@ -83,7 +83,7 @@ summary_deviance(LSOLDA_dat)
 
 ```
 
-####**A complete workflow of the scGPS: given an unknown mixed population, find clusters and estimate relationship between clusters** 
+**A complete workflow of the scGPS: given an unknown mixed population, find clusters and estimate relationship between clusters** 
 
 
 ```{r, warning = FALSE, message = FALSE}
@@ -119,7 +119,7 @@ p2 <-plotReduced_scGPS(t, color_fac = factor(colData(mixedpop2)[,1]),palletes =1
 p2
 ```
   
-  #####Find gene markers and annotate clusters 
+  Find gene markers and annotate clusters 
 ```{r}
 
 #load gene list (this can be any lists of user selected genes)

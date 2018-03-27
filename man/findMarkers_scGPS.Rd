@@ -2,7 +2,7 @@
 % Please edit documentation in R/Utilities.R
 \name{findMarkers_scGPS}
 \alias{findMarkers_scGPS}
-\title{find DE genes}
+\title{find marker genes}
 \usage{
 findMarkers_scGPS(expression_matrix = NULL, cluster = NULL)
 }
@@ -10,13 +10,20 @@ findMarkers_scGPS(expression_matrix = NULL, cluster = NULL)
 \item{expression_matrix}{is  a normalised expression matrix.}
 
 \item{cluster}{corresponding cluster information in the expression_matrix
-by going through CORE or from other method).}
+by running CORE clustering or using other methods.}
 }
 \value{
-a \code{list} containing DE analysis results
+a \code{list} containing sorted DESeq analysis results
 }
 \description{
 Find DE genes from comparing one clust vs remaining
+}
+\examples{
+day2 <- sample1
+mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day2$dat2geneInfo,
+                    CellMetadata = day2$dat2_clusters)
+DEgenes <- findMarkers_scGPS(expression_matrix=assay(mixedpop1), cluster = colData(mixedpop1)[,1])
+names(DEgenes)
 }
 \author{
 Quan Nguyen, 2017-11-25

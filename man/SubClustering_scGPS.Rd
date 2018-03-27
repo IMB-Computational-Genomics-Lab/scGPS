@@ -20,6 +20,12 @@ clustering results
 \description{
 performs 40 clustering runs or more depending on windows
 }
+\examples{
+day5 <- sample2
+mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
+                         CellMetadata = day5$dat5_clusters)
+test_SubClustering <-SubClustering_scGPS(mixedpop2, select_cell_index = c(1:100))
+}
 \author{
 Quan Nguyen, 2018-01-31
 }

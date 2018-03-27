@@ -2,13 +2,19 @@
 % Please edit documentation in R/RcppExports.R
 \name{rcpp_parallel_distance}
 \alias{rcpp_parallel_distance}
-\title{Function to calculate Eucledean distance matrix with paralleled C++}
+\title{distance matrix using C++}
 \usage{
 rcpp_parallel_distance(mat)
 }
 \arguments{
-\item{X}{an R matrix (expression matrix), with cells in rows and genes in columns}
+\item{X}{an R matrix (expression matrix), rows are genes, columns are cells}
 }
 \description{
-Function to calculate Eucledean distance matrix with paralleled C++
+This function provides fast and memory efficient distance matrix calculation
+}
+\examples{
+mat_test <-matrix(rnbinom(1000000,mu=0.01, size=10),nrow=10000)
+library(microbenchmark)
+microbenchmark(rcpp_parallel_distance(mat_test), dist(mat_test), times=3)
+
 }

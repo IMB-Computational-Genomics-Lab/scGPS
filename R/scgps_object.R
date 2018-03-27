@@ -27,27 +27,28 @@
 #' colData(t); show(t); colnames(t)
 #' @author Quan Nguyen, 2017-11-25
 #'
-NewscGPS <- function(ExpressionMatrix = NULL, GeneMetadata= NULL, CellMetadata = NULL) {
-  # Check that we have the essential arguments - an expression matrix
-  arg.check <- list(ExpressionMatrix = missing(ExpressionMatrix),
-                    GeneMetadata =  missing(GeneMetadata),
-                    CellMetadata = missing(CellMetadata))
-  if (any(arg.check == TRUE)) {
-    missing.args <- names(which(arg.check == TRUE))
-    msg <- sprintf("Please supply the following arguments: %s\n", as.character(unlist(missing.args)))
-    stop(msg)
-  }
-
-  # Check data formats (to do: can add a series of checking here)
-  if (is.data.frame(ExpressionMatrix) == FALSE & is.matrix(ExpressionMatrix) == FALSE) {
-    stop("Please supply an expression matrix in one of the following formats: data.frame or matrix")
-  }
-
-  # Create a new scGPS object.
-  scGPSset <- SingleCellExperiment(assays = list(ExpressionMatrix), rowData = GeneMetadata, colData = CellMetadata)
-
-  # All clear, return the object
-  return(scGPSset)
+NewscGPS <- function(ExpressionMatrix = NULL, GeneMetadata = NULL, CellMetadata = NULL) {
+    # Check that we have the essential arguments - an expression matrix
+    arg.check <- list(ExpressionMatrix = missing(ExpressionMatrix), GeneMetadata = missing(GeneMetadata), 
+        CellMetadata = missing(CellMetadata))
+    if (any(arg.check == TRUE)) {
+        missing.args <- names(which(arg.check == TRUE))
+        msg <- sprintf("Please supply the following arguments: %s\n", as.character(unlist(missing.args)))
+        stop(msg)
+    }
+    
+    # Check data formats (to do: can add a series of checking here)
+    if (is.data.frame(ExpressionMatrix) == FALSE & is.matrix(ExpressionMatrix) == 
+        FALSE) {
+        stop("Please supply an expression matrix in one of the following formats: data.frame or matrix")
+    }
+    
+    # Create a new scGPS object.
+    scGPSset <- SingleCellExperiment(assays = list(ExpressionMatrix), rowData = GeneMetadata, 
+        colData = CellMetadata)
+    
+    # All clear, return the object
+    return(scGPSset)
 }
 
 
@@ -68,7 +69,7 @@ NewscGPS <- function(ExpressionMatrix = NULL, GeneMetadata= NULL, CellMetadata =
 #' the genes, such as their corresponding ENSEMBL transcript identifiers.
 #' @param CellMetadata A data frame containing cell identifiers (usually barcodes)
 #' and clustering information (the first column of the data frame contains clustering information).
-#' The column containing clustering information needs to be named as "Cluster".
+#' The column containing clustering information needs to be named as 'Cluster'.
 #' If clustering information is not available, users can run CORE function and add the information
 #' to the scGPS before running scGPS prediction
 #' @return This function generates an scGPS object belonging to the \linkS4class{SingleCellExperiment}.
@@ -82,26 +83,27 @@ NewscGPS <- function(ExpressionMatrix = NULL, GeneMetadata= NULL, CellMetadata =
 #'
 #'
 #'
-NewscGPS_SME <- function(ExpressionMatrix = NULL, GeneMetadata= NULL, CellMetadata = NULL) {
-  # Check that we have the essential arguments - an expression matrix
-  arg.check <- list(ExpressionMatrix = missing(ExpressionMatrix),
-                    GeneMetadata =  missing(GeneMetadata),
-                    CellMetadata = missing(CellMetadata))
-  if (any(arg.check == TRUE)) {
-    missing.args <- names(which(arg.check == TRUE))
-    msg <- sprintf("Please supply the following arguments: %s\n", as.character(unlist(missing.args)))
-    stop(msg)
-  }
-
-  # Check data formats (to do: can add a series of checking here)
-  if (is.data.frame(ExpressionMatrix) == FALSE & is.matrix(ExpressionMatrix) == FALSE) {
-    stop("Please supply an expression matrix in one of the following formats: data.frame or matrix")
-  }
-
-  # Create a new scGPS object.
-  scGPSset <- SummarizedExperiment(assays = list(ExpressionMatrix), rowData = GeneMetadata, colData = CellMetadata)
-
-  # All clear, return the object
-  return(scGPSset)
+NewscGPS_SME <- function(ExpressionMatrix = NULL, GeneMetadata = NULL, CellMetadata = NULL) {
+    # Check that we have the essential arguments - an expression matrix
+    arg.check <- list(ExpressionMatrix = missing(ExpressionMatrix), GeneMetadata = missing(GeneMetadata), 
+        CellMetadata = missing(CellMetadata))
+    if (any(arg.check == TRUE)) {
+        missing.args <- names(which(arg.check == TRUE))
+        msg <- sprintf("Please supply the following arguments: %s\n", as.character(unlist(missing.args)))
+        stop(msg)
+    }
+    
+    # Check data formats (to do: can add a series of checking here)
+    if (is.data.frame(ExpressionMatrix) == FALSE & is.matrix(ExpressionMatrix) == 
+        FALSE) {
+        stop("Please supply an expression matrix in one of the following formats: data.frame or matrix")
+    }
+    
+    # Create a new scGPS object.
+    scGPSset <- SummarizedExperiment(assays = list(ExpressionMatrix), rowData = GeneMetadata, 
+        colData = CellMetadata)
+    
+    # All clear, return the object
+    return(scGPSset)
 }
 

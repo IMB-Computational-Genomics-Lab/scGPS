@@ -21,10 +21,12 @@
 #' @author Quan Nguyen, 2017-11-25
 
 
-summary_accuracy <-function(object=LSOLDA_dat){
-  acc_inacc <- object$Accuracy
-  pcAcc <-as.vector(unlist(lapply(acc_inacc, function(x){x[[1]][[1]]/(x[[1]][[1]] +x[[1]][[2]])*100})))
-  return(pcAcc)
+summary_accuracy <- function(object = LSOLDA_dat) {
+    acc_inacc <- object$Accuracy
+    pcAcc <- as.vector(unlist(lapply(acc_inacc, function(x) {
+        x[[1]][[1]]/(x[[1]][[1]] + x[[1]][[2]]) * 100
+    })))
+    return(pcAcc)
 }
 
 #' @name summary_deviance
@@ -53,19 +55,18 @@ summary_accuracy <-function(object=LSOLDA_dat){
 #' summary_deviance(LSOLDA_dat)
 #' @author Quan Nguyen, 2017-11-25
 
-summary_deviance <-function(object=LSOLDA_dat){
-  deviDat <- object$Deviance
-  deviVec <-as.vector(unlist(lapply(deviDat, function(x){
-    temp <- x[[1]]$Deviance
-    temp_max <-temp[length(temp)-1]}
-    )))
-  deviVec_max <- which(deviVec== max(deviVec,na.rm = T))
-  #get gene info
-  genesSig <- LSOLDA_dat$LassoGenes
+summary_deviance <- function(object = LSOLDA_dat) {
+    deviDat <- object$Deviance
+    deviVec <- as.vector(unlist(lapply(deviDat, function(x) {
+        temp <- x[[1]]$Deviance
+        temp_max <- temp[length(temp) - 1]
+    })))
+    deviVec_max <- which(deviVec == max(deviVec, na.rm = TRUE))
+    # get gene info
+    genesSig <- LSOLDA_dat$LassoGenes
 
-  GeneNames_max <- genesSig[[deviVec_max]][[1]]
-  return(list("allDeviance" = deviVec, "DeviMax" = deviDat[[deviVec_max]][[1]],
-              "LassoGenesMax" = GeneNames_max))
+    GeneNames_max <- genesSig[[deviVec_max]][[1]]
+    return(list(allDeviance = deviVec, DeviMax = deviDat[[deviVec_max]][[1]], LassoGenesMax = GeneNames_max))
 }
 
 
@@ -93,32 +94,32 @@ summary_deviance <-function(object=LSOLDA_dat){
 #' summary_prediction_lasso(LSOLDA_dat=LSOLDA_dat, nPredSubpop=4)
 
 
-summary_prediction_lasso <-function(LSOLDA_dat=NULL, nPredSubpop=NULL){
-  pred_lasso <- LSOLDA_dat$LassoPredict
-  for(i in 1:length(pred_lasso)) {
-    for(j in 1:length(pred_lasso[[i]])){
-      if(identical(pred_lasso[[i]][[j]], numeric(0))){
-        pred_lasso[[i]][[j]] <-"NA"
-      }
+summary_prediction_lasso <- function(LSOLDA_dat = NULL, nPredSubpop = NULL) {
+    pred_lasso <- LSOLDA_dat$LassoPredict
+    for (i in 1:length(pred_lasso)) {
+        for (j in 1:length(pred_lasso[[i]])) {
+            if (identical(pred_lasso[[i]][[j]], numeric(0))) {
+                pred_lasso[[i]][[j]] <- "NA"
+            }
+        }
     }
-  }
 
-  pred_lasso_tranformed <- as.vector(unlist(pred_lasso))
+    pred_lasso_tranformed <- as.vector(unlist(pred_lasso))
 
 
-  toremove <- grep("target", pred_lasso_tranformed)
+    toremove <- grep("target", pred_lasso_tranformed)
 
-  pred_lasso_percentOnly <- pred_lasso_tranformed[-toremove]
+    pred_lasso_percentOnly <- pred_lasso_tranformed[-toremove]
 
-  pred_lasso_mtrx <-matrix(pred_lasso_percentOnly, nrow=nPredSubpop, byrow=F)
+    pred_lasso_mtrx <- matrix(pred_lasso_percentOnly, nrow = nPredSubpop, byrow = FALSE)
 
-  row_names <- pred_lasso_tranformed[toremove[c(1:nPredSubpop)]]
+    row_names <- pred_lasso_tranformed[toremove[c(1:nPredSubpop)]]
 
-  pred_lasso_mtrx <-as.data.frame(pred_lasso_mtrx)
+    pred_lasso_mtrx <- as.data.frame(pred_lasso_mtrx)
 
-  pred_lasso_mtrx$names <-row_names
+    pred_lasso_mtrx$names <- row_names
 
-  return(pred_lasso_mtrx)
+    return(pred_lasso_mtrx)
 }
 
 #' @name summary_prediction_lda
@@ -146,31 +147,31 @@ summary_prediction_lasso <-function(LSOLDA_dat=NULL, nPredSubpop=NULL){
 #' summary_prediction_lda(LSOLDA_dat=LSOLDA_dat, nPredSubpop=4)
 #'
 
-summary_prediction_lda <-function(LSOLDA_dat=NULL, nPredSubpop=NULL){
-  pred_lda <- LSOLDA_dat$LDAPredict
-  for(i in 1:length(pred_lda)) {
-    for(j in 1:length(pred_lda[[i]])){
-      if(identical(pred_lda[[i]][[j]], numeric(0))){
-        pred_lda[[i]][[j]] <-"NA"
-      }
+summary_prediction_lda <- function(LSOLDA_dat = NULL, nPredSubpop = NULL) {
+    pred_lda <- LSOLDA_dat$LDAPredict
+    for (i in 1:length(pred_lda)) {
+        for (j in 1:length(pred_lda[[i]])) {
+            if (identical(pred_lda[[i]][[j]], numeric(0))) {
+                pred_lda[[i]][[j]] <- "NA"
+            }
+        }
     }
-  }
 
-  pred_lda_tranformed <- as.vector(unlist(pred_lda))
+    pred_lda_tranformed <- as.vector(unlist(pred_lda))
 
-  toremove <- grep("target", pred_lda_tranformed)
+    toremove <- grep("target", pred_lda_tranformed)
 
-  pred_lda_percentOnly <- pred_lda_tranformed[-toremove]
+    pred_lda_percentOnly <- pred_lda_tranformed[-toremove]
 
-  pred_lda_mtrx <-matrix(pred_lda_percentOnly, nrow=nPredSubpop, byrow=F)
+    pred_lda_mtrx <- matrix(pred_lda_percentOnly, nrow = nPredSubpop, byrow = FALSE)
 
-  row_names <- pred_lda_tranformed[toremove[c(1:nPredSubpop)]]
+    row_names <- pred_lda_tranformed[toremove[c(1:nPredSubpop)]]
 
-  pred_lda_mtrx <-as.data.frame(pred_lda_mtrx)
+    pred_lda_mtrx <- as.data.frame(pred_lda_mtrx)
 
-  pred_lda_mtrx$names <-row_names
+    pred_lda_mtrx$names <- row_names
 
-  return(pred_lda_mtrx)
+    return(pred_lda_mtrx)
 }
 
 

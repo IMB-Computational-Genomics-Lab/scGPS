@@ -5,7 +5,7 @@
 \title{Main training function for a subpopulation}
 \usage{
 training_scGPS(genes, mixedpop1 = NULL, mixedpop2 = NULL, c_selectID,
-  listData = list(), out_idx)
+  listData = list(), out_idx = NULL)
 }
 \arguments{
 \item{genes}{a vector of gene names (for LASSO shrinkage); gene symbols must be

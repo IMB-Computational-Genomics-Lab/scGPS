@@ -62,17 +62,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// timesTwo
-NumericVector timesTwo(NumericVector x);
-RcppExport SEXP _scGPS_timesTwo(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(timesTwo(x));
-    return rcpp_result_gen;
-END_RCPP
-}
 // mean_cpp
 double mean_cpp(NumericVector x);
 RcppExport SEXP _scGPS_mean_cpp(SEXP xSEXP) {
@@ -138,7 +127,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_scGPS_calcDistArma", (DL_FUNC) &_scGPS_calcDistArma, 1},
     {"_scGPS_rcpp_parallel_distance", (DL_FUNC) &_scGPS_rcpp_parallel_distance, 1},
     {"_scGPS_rcpp_Eucl_distance_NotPar", (DL_FUNC) &_scGPS_rcpp_Eucl_distance_NotPar, 1},
-    {"_scGPS_timesTwo", (DL_FUNC) &_scGPS_timesTwo, 1},
     {"_scGPS_mean_cpp", (DL_FUNC) &_scGPS_mean_cpp, 1},
     {"_scGPS_var_cpp", (DL_FUNC) &_scGPS_var_cpp, 2},
     {"_scGPS_tp_cpp", (DL_FUNC) &_scGPS_tp_cpp, 1},

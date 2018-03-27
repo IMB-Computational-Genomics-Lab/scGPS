@@ -4,6 +4,7 @@
 #include <algorithm>
 using namespace Rcpp;
 using namespace RcppParallel;
+
 // [[Rcpp::depends(RcppParallel)]]
 
 // generic function for accumulating sum square distance
@@ -50,12 +51,17 @@ struct EclDistance : public Worker {
   }
 };
 
-//' Function to calculate Eucledean distance matrix with paralleled C++
+//' distance matrix using C++
 //'
-//' @param X an R matrix (expression matrix), with cells in rows and genes in columns
-//' @export
+//' @description This function provides fast and memory efficient distance matrix calculation
+//' @param X an R matrix (expression matrix), rows are genes, columns are cells
+//' @examples
+//' mat_test <-matrix(rnbinom(1000000,mu=0.01, size=10),nrow=10000)
+//' library(microbenchmark)
+//' microbenchmark(rcpp_parallel_distance(mat_test), dist(mat_test), times=3)
 //'
 // [[Rcpp::export]]
+
 NumericMatrix rcpp_parallel_distance(NumericMatrix mat) {
 
   NumericMatrix rmat(mat.nrow(), mat.nrow());
@@ -75,7 +81,10 @@ NumericMatrix rcpp_parallel_distance(NumericMatrix mat) {
 //' Function to calculate Eucledean distance matrix without parallelisation
 //'
 //' @param X an R matrix (expression matrix), with cells in rows and genes in columns
-//' @export
+//' @examples
+//' mat_test <-matrix(rnbinom(100000,mu=0.01, size=10),nrow=1000)
+//' library(microbenchmark)
+//' microbenchmark(rcpp_Eucl_distance_NotPar(mat_test), dist(mat_test), times=3)
 //'
 // [[Rcpp::export]]
 

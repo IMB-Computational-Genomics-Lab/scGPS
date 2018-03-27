@@ -34,6 +34,7 @@ CORE_cluster <- CORE_scGPS(mixedpop2, remove_outlier = c(0))
 plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster)
 optimal_index = which(CORE_cluster$optimalClust$KeyStats$Height == CORE_cluster$optimalClust$OptimalRes)
 plot_optimal_CORE(original_tree= CORE_cluster$tree, optimal_cluster = unlist(CORE_cluster$Cluster[optimal_index]), shift = -2000)
+
 }
 \author{
 Quan Nguyen, 2017-11-25

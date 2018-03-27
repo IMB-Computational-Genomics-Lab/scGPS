@@ -12,3 +12,7 @@ tp_cpp(X)
 \description{
 Transpose a matrix
 }
+\examples{
+mat_test <-matrix(rnbinom(1000000,mu=0.01, size=10),nrow=100)
+tp_mat <- tp_cpp(mat_test)
+}

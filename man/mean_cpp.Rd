@@ -14,3 +14,7 @@ mean_cpp(x)
 \description{
 Calculate mean
 }
+\examples{
+mean_cpp(c(1:10^6))
+
+}

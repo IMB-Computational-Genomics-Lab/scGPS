@@ -27,6 +27,20 @@ a \code{list} with prediction results written in to the index \code{out_idx}
 \description{
 same as bootstrap_scGPS, but with an multicore option
 }
+\examples{
+day2 <- sample1
+mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day2$dat2geneInfo,
+                    CellMetadata = day2$dat2_clusters)
+day5 <- sample2
+mixedpop2 <-NewscGPS(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
+                    CellMetadata = day5$dat5_clusters)
+genes <-GeneList
+genes <-genes$Merged_unique
+prl_boots <- bootstrap_scGPS_parallel(ncores = 4, nboots = 2, genes=genes, mixedpop1 = mixedpop2, mixedpop2 = mixedpop2,  c_selectID=1, listData =list())
+prl_boots[[1]]$LassoPredict
+prl_boots[[1]]$LDAPredict
+
+}
 \author{
 Quan Nguyen, 2017-11-25
 }

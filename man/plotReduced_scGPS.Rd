@@ -6,10 +6,13 @@
 \usage{
 plotReduced_scGPS(reduced_dat, color_fac = factor(Sample_id), dims = c(1,
   2), dimNames = c("Dim 1", "Dim 2"), palletes = NULL,
-  legend_title = "Samples")
+  legend_title = "Cluster")
 }
 \arguments{
 \item{reduced_dat}{is a matrix with genes in rows and cells in columns}
+}
+\value{
+a matrix with the top 20 CIDR dimensions
 }
 \description{
 plot PCA, tSNE, and CIDR reduced datasets
