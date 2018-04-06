@@ -3,6 +3,7 @@
 #' @description Select top variable genes and perform prcomp
 #' @param expression_matrix An expression matrix, with genes in rows
 #' @export
+#' @return a list containing PCA results and variance explained
 #' @examples
 #' day2 <- sample1
 #' mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day2$dat2geneInfo,
@@ -35,6 +36,7 @@ PCA_scGPS <- function(expression.matrix = NULL, ngenes = 1500, scaling = TRUE, n
 #'
 #' @description calculate CIDR using top variable genes
 #' @param expression_matrix An expression matrix, with genes in rows
+#' @return a CIDR reduced matrix for the top 20 components
 #' @export
 #' @examples
 #' day2 <- sample1
@@ -68,6 +70,7 @@ CIDR_scGPS <- function(expression.matrix = NULL, ngenes = 1500, scaling = TRUE, 
 #' @description calculate tSNE from top variable genes
 #' @param expression_matrix An expression matrix, with genes in rows
 #' @export
+#' @return a tSNE reduced matrix containing three tSNE dimensions
 #' @examples
 #' day2 <- sample1
 #' mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day2$dat2geneInfo,

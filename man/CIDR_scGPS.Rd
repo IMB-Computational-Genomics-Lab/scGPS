@@ -10,6 +10,9 @@ CIDR_scGPS(expression.matrix = NULL, ngenes = 1500, scaling = TRUE,
 \arguments{
 \item{expression_matrix}{An expression matrix, with genes in rows}
 }
+\value{
+a CIDR reduced matrix for the top 20 components
+}
 \description{
 calculate CIDR using top variable genes
 }

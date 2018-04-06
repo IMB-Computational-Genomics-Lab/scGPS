@@ -9,6 +9,9 @@ tp_cpp(X)
 \arguments{
 \item{X}{an R matrix (expression matrix)}
 }
+\value{
+a transposed matrix
+}
 \description{
 Transpose a matrix
 }

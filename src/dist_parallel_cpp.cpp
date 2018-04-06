@@ -55,6 +55,7 @@ struct EclDistance : public Worker {
 //'
 //' @description This function provides fast and memory efficient distance matrix calculation
 //' @param X an R matrix (expression matrix), rows are genes, columns are cells
+//' @return a distance matrix
 //' @examples
 //' mat_test <-matrix(rnbinom(1000000,mu=0.01, size=10),nrow=10000)
 //' library(microbenchmark)
@@ -81,6 +82,7 @@ NumericMatrix rcpp_parallel_distance(NumericMatrix mat) {
 //' Function to calculate Eucledean distance matrix without parallelisation
 //'
 //' @param X an R matrix (expression matrix), with cells in rows and genes in columns
+//' @return a distance matrix
 //' @examples
 //' mat_test <-matrix(rnbinom(100000,mu=0.01, size=10),nrow=1000)
 //' library(microbenchmark)

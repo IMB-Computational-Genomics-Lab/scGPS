@@ -9,6 +9,9 @@ rcpp_parallel_distance(mat)
 \arguments{
 \item{X}{an R matrix (expression matrix), rows are genes, columns are cells}
 }
+\value{
+a distance matrix
+}
 \description{
 This function provides fast and memory efficient distance matrix calculation
 }

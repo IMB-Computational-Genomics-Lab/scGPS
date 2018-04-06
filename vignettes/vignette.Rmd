@@ -19,28 +19,32 @@ knitr::opts_chunk$set(
 **Installation instruction**
 
 ```{r, eval = FALSE}
+# Prior to installing scGPS you need to install the SummarizedExperiment
+# bioconductor package as the following
+# source('https://bioconductor.org/biocLite.R') biocLite('SummarizedExperiment')
 
-#Prior to installing scGPS you need to install the SummarizedExperiment bioconductor package as the following
-#source("https://bioconductor.org/biocLite.R")
-#biocLite("SummarizedExperiment")
+# R/3.4.1 or above is required
 
-#R/3.4.1 or above is required 
-
-#To install scGPS from github (Depending on the configuration of the local computer or HPC, possible custom C++ compilation may be required - see installation trouble-shootings below) 
+# To install scGPS from github (Depending on the configuration of the local
+# computer or HPC, possible custom C++ compilation may be required - see
+# installation trouble-shootings below)
 devtools::install_github("IMB-Computational-Genomics-Lab/scGPS")
 
-#for C++ compilation trouble-shooting, manual download and installation can be done from github
-git clone https://github.com/IMB-Computational-Genomics-Lab/scGPS
+# for C++ compilation trouble-shooting, manual download and installation can be
+# done from github
 
-#then check in scGPS/src if any of the precompiled (e.g. those with *.so and *.o) files exist and delete them before recompiling
+# git clone https://github.com/IMB-Computational-Genomics-Lab/scGPS
 
-#create a Makevars file in the  scGPS/src with one line: PKG_LIBS = $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
+# then check in scGPS/src if any of the precompiled (e.g.  those with *.so and
+# *.o) files exist and delete them before recompiling
 
-#then with the scGPS as the R working directory, manually recompile scGPS in R using devtools
-devools::document() 
+# create a Makevars file in the scGPS/src with one line: PKG_LIBS =
+# $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
 
-#and then you can load the package: 
-devtools::load_all()
+# then with the scGPS as the R working directory, manually recompile scGPS in R
+# using devtools
+devools::document()
+
 
 ```
 
@@ -49,37 +53,37 @@ devtools::load_all()
 ```{r, warning = FALSE, message = FALSE}
 devtools::load_all()
 
-#load mixed population 1 (loaded from sample1 dataset, named it as day2)
+# load mixed population 1 (loaded from sample1 dataset, named it as day2)
 day2 <- sample1
-mixedpop1 <-NewscGPS_SME(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day2$dat2geneInfo,
-                     CellMetadata = day2$dat2_clusters)
-#load mixed population 2 (loaded from sample2 dataset, named it as day5)
+mixedpop1 <- NewscGPS_SME(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day2$dat2geneInfo, 
+    CellMetadata = day2$dat2_clusters)
+# load mixed population 2 (loaded from sample2 dataset, named it as day5)
 day5 <- sample2
-mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
-                     CellMetadata = day5$dat5_clusters)
-#load gene list (this can be any lists of user selected genes)
-genes <-GeneList
-genes <-genes$Merged_unique
+mixedpop2 <- NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo, 
+    CellMetadata = day5$dat5_clusters)
+# load gene list (this can be any lists of user selected genes)
+genes <- GeneList
+genes <- genes$Merged_unique
 
-#select a subpopulation
+# select a subpopulation
 c_selectID <- 1
 
-#run the test bootstrap
-suppressWarnings(LSOLDA_dat <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list()))
+# run the test bootstrap
+suppressWarnings(LSOLDA_dat <- bootstrap_scGPS(nboots = 2, mixedpop1 = mixedpop1, 
+    mixedpop2 = mixedpop2, genes = genes, c_selectID, listData = list()))
 
-#display some results 
+# display some results
 names(LSOLDA_dat)
 LSOLDA_dat$LassoPredict
 LSOLDA_dat$LDAPredict
 
-#summary results LDA
-summary_prediction_lda(LSOLDA_dat=LSOLDA_dat, nPredSubpop = 4)
+# summary results LDA
+summary_prediction_lda(LSOLDA_dat = LSOLDA_dat, nPredSubpop = 4)
 
-#summary results Lasso
-summary_prediction_lasso(LSOLDA_dat=LSOLDA_dat, nPredSubpop = 4)
+# summary results Lasso
+summary_prediction_lasso(LSOLDA_dat = LSOLDA_dat, nPredSubpop = 4)
 
-#summary deviance 
-summary_deviance(LSOLDA_dat)
+# summary deviance
 
 ```
 
@@ -129,7 +133,7 @@ genes <-genes$Merged_unique
 #the gene list can also be generated objectively by differential expression analysis
 #if the cluster information is in the mixedpop2 object, run this (if not run the CORE
 #as described below) 
-DEgenes <- findMarkers_scGPS(expression_matrix=assay(mixedpop2), cluster = mixedpop2@colData$Cluster)
+DEgenes <- findMarkers_scGPS(expression_matrix=assay(mixedpop2), cluster = colData(mixedpop2)[,1])
 names(DEgenes)
 
 #you can annotate the identified clusters 
@@ -147,7 +151,7 @@ dotplot(enrichment_test, showCategory=15)
 
 #add the CORE cluster information into the scGPS object 
 Optimal_index <- which( CORE_cluster$optimalClust$KeyStats$Height == CORE_cluster$optimalClust$OptimalRes)
-mixedpop2@colData$Cluster <- unlist(CORE_cluster$Cluster[[Optimal_index]])
+colData(mixedpop2)[,1] <- unlist(CORE_cluster$Cluster[[Optimal_index]])
 
 
 #select a subpopulation
@@ -158,7 +162,7 @@ suppressWarnings(LSOLDA_dat <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop2,
 
 #display summary results 
 #summary results LDA
-row_cluster <-length(unique(mixedpop2@colData$Cluster))
+row_cluster <-length(unique(colData(mixedpop2)[,1]))
 summary_prediction_lda(LSOLDA_dat=LSOLDA_dat, nPredSubpop = row_cluster )
 
 #summary results Lasso

@@ -9,6 +9,15 @@ calcDistArma(x)
 \arguments{
 \item{x}{A numeric matrix}
 }
+\value{
+a distance matrix
+}
 \description{
 Compute Euclidean distance matrix by rows
+}
+\examples{
+mat_test <-matrix(rnbinom(100000,mu=0.01, size=10),nrow=1000)
+library(microbenchmark)
+microbenchmark(calcDistArma(mat_test), dist(mat_test), times=3)
+
 }

@@ -10,6 +10,9 @@ tSNE_scGPS(expression.matrix = NULL, ngenes = 1500, scaling = TRUE,
 \arguments{
 \item{expression_matrix}{An expression matrix, with genes in rows}
 }
+\value{
+a tSNE reduced matrix containing three tSNE dimensions
+}
 \description{
 calculate tSNE from top variable genes
 }

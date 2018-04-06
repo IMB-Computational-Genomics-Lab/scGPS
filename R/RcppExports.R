@@ -12,6 +12,12 @@ calcDist <- function(x) {
 #' Compute Euclidean distance matrix by rows
 #'
 #' @param x A numeric matrix
+#' @return a distance matrix
+#' @examples
+#' mat_test <-matrix(rnbinom(100000,mu=0.01, size=10),nrow=1000)
+#' library(microbenchmark)
+#' microbenchmark(calcDistArma(mat_test), dist(mat_test), times=3)
+#'
 calcDistArma <- function(x) {
     .Call('_scGPS_calcDistArma', PACKAGE = 'scGPS', x)
 }
@@ -20,6 +26,7 @@ calcDistArma <- function(x) {
 #'
 #' @description This function provides fast and memory efficient distance matrix calculation
 #' @param X an R matrix (expression matrix), rows are genes, columns are cells
+#' @return a distance matrix
 #' @examples
 #' mat_test <-matrix(rnbinom(1000000,mu=0.01, size=10),nrow=10000)
 #' library(microbenchmark)
@@ -32,6 +39,7 @@ rcpp_parallel_distance <- function(mat) {
 #' Function to calculate Eucledean distance matrix without parallelisation
 #'
 #' @param X an R matrix (expression matrix), with cells in rows and genes in columns
+#' @return a distance matrix
 #' @examples
 #' mat_test <-matrix(rnbinom(100000,mu=0.01, size=10),nrow=1000)
 #' library(microbenchmark)
@@ -45,6 +53,7 @@ rcpp_Eucl_distance_NotPar <- function(mat) {
 #'
 #' @param N  integer.
 #' @param thin integer
+#' @return a mean value
 #' @examples
 #' mean_cpp(c(1:10^6))
 #'
@@ -56,6 +65,7 @@ mean_cpp <- function(x) {
 #'
 #' @param x a vector of gene expression.
 #' @param bias degree of freedom
+#' @return a variance value
 #' @examples
 #'var_cpp(c(1:10^6))
 #'
@@ -66,6 +76,7 @@ var_cpp <- function(x, bias = TRUE) {
 #' Transpose a matrix
 #'
 #' @param X  an R matrix (expression matrix)
+#' @return a transposed matrix
 #' @examples
 #' mat_test <-matrix(rnbinom(1000000,mu=0.01, size=10),nrow=100)
 #' tp_mat <- tp_cpp(mat_test)
@@ -76,6 +87,7 @@ tp_cpp <- function(X) {
 #' Subset a matrix
 #'
 #' @param X an R matrix (expression matrix)
+#' @return a subsetted matrix
 #' @examples
 #' mat_test <-matrix(rnbinom(1000000,mu=0.01, size=10),nrow=100)
 #' subset_mat <- subset_cpp(mat_test, rowidx_in=c(1:10), colidx_in=c(100:500))
@@ -89,6 +101,7 @@ subset_cpp <- function(m1in, rowidx_in, colidx_in) {
 #' @description This function provides significant speed gain if the input matrix
 #' is big
 #' @param X  an R matrix (expression matrix), rows are genes, columns are cells
+#' @return a list with three list pca lists
 #' @examples
 #' mat_test <-matrix(rnbinom(1000000,mu=0.01, size=10),nrow=1000)
 #' library(microbenchmark)

@@ -32,6 +32,12 @@ NumericMatrix calcDist(NumericMatrix x){
 //' Compute Euclidean distance matrix by rows
 //'
 //' @param x A numeric matrix
+//' @return a distance matrix
+//' @examples
+//' mat_test <-matrix(rnbinom(100000,mu=0.01, size=10),nrow=1000)
+//' library(microbenchmark)
+//' microbenchmark(calcDistArma(mat_test), dist(mat_test), times=3)
+//'
 // [[Rcpp::export]]
 arma::mat calcDistArma(const arma::mat & x) {
   unsigned int outrows = x.n_rows, i = 0, j = 0;

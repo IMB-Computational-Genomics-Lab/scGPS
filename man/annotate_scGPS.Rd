@@ -10,6 +10,9 @@ annotate_scGPS(DEgeneList, pvalueCutoff = 0.05, gene_symbol = TRUE,
 \arguments{
 \item{DEgeneList}{is a vector of gene symbols, convertable to ENTREZID}
 }
+\value{
+write enrichment test output to a file and an enrichment test object for plotting
+}
 \description{
 often we need to label clusters with unique biological characters.
 One of the common approach to annotate a cluster is to perform functional enrichment

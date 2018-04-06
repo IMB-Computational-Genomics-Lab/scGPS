@@ -11,6 +11,9 @@ var_cpp(x, bias = TRUE)
 
 \item{bias}{degree of freedom}
 }
+\value{
+a variance value
+}
 \description{
 Calculate variance
 }

@@ -9,6 +9,9 @@ subset_cpp(m1in, rowidx_in, colidx_in)
 \arguments{
 \item{X}{an R matrix (expression matrix)}
 }
+\value{
+a subsetted matrix
+}
 \description{
 Subset a matrix
 }

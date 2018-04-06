@@ -9,6 +9,9 @@ rcpp_Eucl_distance_NotPar(mat)
 \arguments{
 \item{X}{an R matrix (expression matrix), with cells in rows and genes in columns}
 }
+\value{
+a distance matrix
+}
 \description{
 Function to calculate Eucledean distance matrix without parallelisation
 }

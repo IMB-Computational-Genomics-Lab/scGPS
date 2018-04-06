@@ -15,6 +15,9 @@ plot_CORE(original.tree, list_clusters = NULL, color_branch = NULL)
 of unique colors should be equal or larger than the number of clusters). This
 parameter allows better selection of colors for the display.}
 }
+\value{
+a plot with clustering bars underneath the tree
+}
 \description{
 This function plots CORE and all clustering results underneath
 }

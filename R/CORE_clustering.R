@@ -516,6 +516,7 @@ FindOptimalStability <- function(list_clusters, run_RandIdx) {
 #' @param color_branch is a vector containing user-specified colors (the number
 #' of unique colors should be equal or larger than the number of clusters). This
 #' parameter allows better selection of colors for the display.
+#' @return a plot with clustering bars underneath the tree
 #' @examples
 #' day5 <- sample2
 #' cellnames <- colnames(day5$dat5_counts)
@@ -755,6 +756,7 @@ plot_CORE <- function(original.tree, list_clusters = NULL, color_branch = NULL) 
 #' colored bar underneath the tree bar underneath the dendrogram. This
 #' parameter allows better selection of colors for the display.
 #' @export
+#' @return a plot with colored braches and bars for the optimal clustering result
 #' @author Quan Nguyen, 2017-11-25
 #' @examples
 #' day5 <- sample2

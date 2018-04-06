@@ -6,6 +6,7 @@ using namespace arma;
 //'
 //' @param N  integer.
 //' @param thin integer
+//' @return a mean value
 //' @examples
 //' mean_cpp(c(1:10^6))
 //'
@@ -26,6 +27,7 @@ double mean_cpp(NumericVector x){
 //'
 //' @param x a vector of gene expression.
 //' @param bias degree of freedom
+//' @return a variance value
 //' @examples
 //'var_cpp(c(1:10^6))
 //'
@@ -46,6 +48,7 @@ double var_cpp(NumericVector x, bool bias = true){
 //' Transpose a matrix
 //'
 //' @param X  an R matrix (expression matrix)
+//' @return a transposed matrix
 //' @examples
 //' mat_test <-matrix(rnbinom(1000000,mu=0.01, size=10),nrow=100)
 //' tp_mat <- tp_cpp(mat_test)
@@ -58,6 +61,7 @@ arma::mat tp_cpp(const arma::mat X) {
 //' Subset a matrix
 //'
 //' @param X an R matrix (expression matrix)
+//' @return a subsetted matrix
 //' @examples
 //' mat_test <-matrix(rnbinom(1000000,mu=0.01, size=10),nrow=100)
 //' subset_mat <- subset_cpp(mat_test, rowidx_in=c(1:10), colidx_in=c(100:500))
@@ -78,6 +82,7 @@ arma::mat subset_cpp(NumericMatrix m1in, NumericVector rowidx_in, NumericVector 
 //' @description This function provides significant speed gain if the input matrix
 //' is big
 //' @param X  an R matrix (expression matrix), rows are genes, columns are cells
+//' @return a list with three list pca lists
 //' @examples
 //' mat_test <-matrix(rnbinom(1000000,mu=0.01, size=10),nrow=1000)
 //' library(microbenchmark)

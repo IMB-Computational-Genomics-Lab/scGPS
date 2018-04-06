@@ -9,6 +9,9 @@ PrinComp_cpp(X)
 \arguments{
 \item{X}{an R matrix (expression matrix), rows are genes, columns are cells}
 }
+\value{
+a list with three list pca lists
+}
 \description{
 This function provides significant speed gain if the input matrix
 is big

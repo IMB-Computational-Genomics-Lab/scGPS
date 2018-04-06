@@ -11,6 +11,9 @@ mean_cpp(x)
 
 \item{thin}{integer}
 }
+\value{
+a mean value
+}
 \description{
 Calculate mean
 }

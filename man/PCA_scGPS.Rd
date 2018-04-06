@@ -10,6 +10,9 @@ PCA_scGPS(expression.matrix = NULL, ngenes = 1500, scaling = TRUE,
 \arguments{
 \item{expression_matrix}{An expression matrix, with genes in rows}
 }
+\value{
+a list containing PCA results and variance explained
+}
 \description{
 Select top variable genes and perform prcomp
 }

@@ -134,6 +134,7 @@ findMarkers_scGPS <- function(expression_matrix = NULL, cluster = NULL) {
 #' analysis. The annotate_scGPS implements ReactomePA and clusterProfiler for this analysis
 #' type in R. The function require installation of several databases as described below.
 #' @param DEgeneList is a vector of gene symbols, convertable to ENTREZID
+#' @return write enrichment test output to a file and an enrichment test object for plotting
 #' @examples
 #' genes <-GeneList
 #' genes <-genes$Merged_unique

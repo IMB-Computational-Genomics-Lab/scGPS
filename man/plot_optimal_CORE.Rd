@@ -18,6 +18,9 @@ plot_optimal_CORE(original_tree, optimal_cluster = NULL, shift = -100,
 colored bar underneath the tree bar underneath the dendrogram. This
 parameter allows better selection of colors for the display.}
 }
+\value{
+a plot with colored braches and bars for the optimal clustering result
+}
 \description{
 after an optimal cluster has been identified, users may use this
 function to plot the resulting dendrogram with the branch colors represent clutering
