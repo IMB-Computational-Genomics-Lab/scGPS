@@ -2,7 +2,7 @@
 % Please edit documentation in R/CORE_clustering.R
 \name{CORE_scGPS}
 \alias{CORE_scGPS}
-\title{Main clustering CORE V2.0}
+\title{Main clustering CORE V2.0 updated}
 \usage{
 CORE_scGPS(mixedpop = NULL, windows = seq(0.025:1, by = 0.025),
   remove_outlier = c(0), nRounds = 1)

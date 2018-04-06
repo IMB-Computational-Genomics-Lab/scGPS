@@ -45,6 +45,7 @@ rcpp_parallel_distance <- function(mat) {
 #' library(microbenchmark)
 #' microbenchmark(rcpp_Eucl_distance_NotPar(mat_test), dist(mat_test), times=3)
 #'
+#'
 rcpp_Eucl_distance_NotPar <- function(mat) {
     .Call('_scGPS_rcpp_Eucl_distance_NotPar', PACKAGE = 'scGPS', mat)
 }

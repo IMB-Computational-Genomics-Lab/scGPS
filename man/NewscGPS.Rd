@@ -40,5 +40,5 @@ colData(t); show(t); colnames(t)
 \linkS4class{SingleCellExperiment}
 }
 \author{
-Quan Nguyen, 2017-11-25
+Quan Nguyen, 2018-04-06
 }

@@ -25,4 +25,5 @@ genes <-genes$Merged_unique
 LSOLDA_dat <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list())
 enrichment_test <- annotate_scGPS(genes$Merged_unique, pvalueCutoff=0.05, gene_symbol=TRUE,output_filename = "PathwayEnrichment.xlsx", output_path = NULL )
 dotplot(enrichment_test, showCategory=15)
+
 }

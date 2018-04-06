@@ -25,28 +25,29 @@
 #' day2 <- sample1
 #' t <-NewscGPS(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
 #' colData(t); show(t); colnames(t)
-#' @author Quan Nguyen, 2017-11-25
+#' @author Quan Nguyen, 2018-04-06
+#'
 #'
 NewscGPS <- function(ExpressionMatrix = NULL, GeneMetadata = NULL, CellMetadata = NULL) {
     # Check that we have the essential arguments - an expression matrix
-    arg.check <- list(ExpressionMatrix = missing(ExpressionMatrix), GeneMetadata = missing(GeneMetadata), 
+    arg.check <- list(ExpressionMatrix = missing(ExpressionMatrix), GeneMetadata = missing(GeneMetadata),
         CellMetadata = missing(CellMetadata))
     if (any(arg.check == TRUE)) {
         missing.args <- names(which(arg.check == TRUE))
         msg <- sprintf("Please supply the following arguments: %s\n", as.character(unlist(missing.args)))
         stop(msg)
     }
-    
+
     # Check data formats (to do: can add a series of checking here)
-    if (is.data.frame(ExpressionMatrix) == FALSE & is.matrix(ExpressionMatrix) == 
+    if (is.data.frame(ExpressionMatrix) == FALSE & is.matrix(ExpressionMatrix) ==
         FALSE) {
         stop("Please supply an expression matrix in one of the following formats: data.frame or matrix")
     }
-    
+
     # Create a new scGPS object.
-    scGPSset <- SingleCellExperiment(assays = list(ExpressionMatrix), rowData = GeneMetadata, 
+    scGPSset <- SingleCellExperiment(assays = list(ExpressionMatrix), rowData = GeneMetadata,
         colData = CellMetadata)
-    
+
     # All clear, return the object
     return(scGPSset)
 }
@@ -85,24 +86,24 @@ NewscGPS <- function(ExpressionMatrix = NULL, GeneMetadata = NULL, CellMetadata 
 #'
 NewscGPS_SME <- function(ExpressionMatrix = NULL, GeneMetadata = NULL, CellMetadata = NULL) {
     # Check that we have the essential arguments - an expression matrix
-    arg.check <- list(ExpressionMatrix = missing(ExpressionMatrix), GeneMetadata = missing(GeneMetadata), 
+    arg.check <- list(ExpressionMatrix = missing(ExpressionMatrix), GeneMetadata = missing(GeneMetadata),
         CellMetadata = missing(CellMetadata))
     if (any(arg.check == TRUE)) {
         missing.args <- names(which(arg.check == TRUE))
         msg <- sprintf("Please supply the following arguments: %s\n", as.character(unlist(missing.args)))
         stop(msg)
     }
-    
+
     # Check data formats (to do: can add a series of checking here)
-    if (is.data.frame(ExpressionMatrix) == FALSE & is.matrix(ExpressionMatrix) == 
+    if (is.data.frame(ExpressionMatrix) == FALSE & is.matrix(ExpressionMatrix) ==
         FALSE) {
         stop("Please supply an expression matrix in one of the following formats: data.frame or matrix")
     }
-    
+
     # Create a new scGPS object.
-    scGPSset <- SummarizedExperiment(assays = list(ExpressionMatrix), rowData = GeneMetadata, 
+    scGPSset <- SummarizedExperiment(assays = list(ExpressionMatrix), rowData = GeneMetadata,
         colData = CellMetadata)
-    
+
     # All clear, return the object
     return(scGPSset)
 }

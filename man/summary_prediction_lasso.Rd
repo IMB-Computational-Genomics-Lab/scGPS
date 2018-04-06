@@ -32,4 +32,5 @@ genes <-GeneList
 genes <-genes$Merged_unique
 LSOLDA_dat <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list())
 summary_prediction_lasso(LSOLDA_dat=LSOLDA_dat, nPredSubpop=4)
+
 }

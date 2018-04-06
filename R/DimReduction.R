@@ -9,6 +9,7 @@
 #' mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day2$dat2geneInfo,
 #'                     CellMetadata = day2$dat2_clusters)
 #' t <-PCA_scGPS(expression.matrix=assay(mixedpop1))
+#'
 
 
 PCA_scGPS <- function(expression.matrix = NULL, ngenes = 1500, scaling = TRUE, npcs = 50) {

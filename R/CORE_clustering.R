@@ -1,4 +1,4 @@
-#' Main clustering CORE V2.0
+#' Main clustering CORE V2.0 updated
 #'
 #' @description  CORE is an algorithm to generate reproduciable clustering,
 #' CORE is first implemented in ascend R package. Here, CORE V2.0 introduces several new
