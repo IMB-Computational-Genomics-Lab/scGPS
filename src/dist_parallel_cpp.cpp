@@ -77,8 +77,7 @@ NumericMatrix rcpp_parallel_distance(NumericMatrix mat) {
 }
 
 
-// Non parallel version-------------------------------------------------------
-
+// This is a non parallel version-------------------------------------------------------
 //' Function to calculate Eucledean distance matrix without parallelisation
 //'
 //' @param X an R matrix (expression matrix), with cells in rows and genes in columns

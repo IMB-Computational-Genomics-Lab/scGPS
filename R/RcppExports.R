@@ -18,6 +18,7 @@ calcDist <- function(x) {
 #' library(microbenchmark)
 #' microbenchmark(calcDistArma(mat_test), dist(mat_test), times=3)
 #'
+#'
 calcDistArma <- function(x) {
     .Call('_scGPS_calcDistArma', PACKAGE = 'scGPS', x)
 }
@@ -44,7 +45,6 @@ rcpp_parallel_distance <- function(mat) {
 #' mat_test <-matrix(rnbinom(100000,mu=0.01, size=10),nrow=1000)
 #' library(microbenchmark)
 #' microbenchmark(rcpp_Eucl_distance_NotPar(mat_test), dist(mat_test), times=3)
-#'
 #'
 rcpp_Eucl_distance_NotPar <- function(mat) {
     .Call('_scGPS_rcpp_Eucl_distance_NotPar', PACKAGE = 'scGPS', mat)
@@ -107,6 +107,7 @@ subset_cpp <- function(m1in, rowidx_in, colidx_in) {
 #' mat_test <-matrix(rnbinom(1000000,mu=0.01, size=10),nrow=1000)
 #' library(microbenchmark)
 #' microbenchmark(PrinComp_cpp(mat_test), prcomp(mat_test), times=3)
+#'
 PrinComp_cpp <- function(X) {
     .Call('_scGPS_PrinComp_cpp', PACKAGE = 'scGPS', X)
 }

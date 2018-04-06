@@ -38,6 +38,7 @@ NumericMatrix calcDist(NumericMatrix x){
 //' library(microbenchmark)
 //' microbenchmark(calcDistArma(mat_test), dist(mat_test), times=3)
 //'
+//'
 // [[Rcpp::export]]
 arma::mat calcDistArma(const arma::mat & x) {
   unsigned int outrows = x.n_rows, i = 0, j = 0;
