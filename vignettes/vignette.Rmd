@@ -6,8 +6,8 @@ date: "`r Sys.Date()`"
 output: 
   html_document:
     keep_md: true
-    theme: united
-    highlight: tango
+    toc: true
+    toc_float: true
 
 ---
 
@@ -90,6 +90,7 @@ summary_prediction_lasso(LSOLDA_dat = LSOLDA_dat, nPredSubpop = 4)
 
 #A complete workflow of the scGPS: given an unknown mixed population, find clusters and estimate relationship between clusters
 
+##Let's find clustering information
 ```{r, warning = FALSE, message = FALSE}
 #given a single cell expression matrix, without clustering information
 day5 <- sample2

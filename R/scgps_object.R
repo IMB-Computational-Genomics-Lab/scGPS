@@ -10,7 +10,7 @@
 #' Rows should represent a transcript and its normalised counts,
 #' while columns should represent individual cells.
 #' @param GeneMetadata A data frame or vector containing gene identifiers used in
-#' the expression matrix. The first column should hold the cell identifiers
+#' the expression matrix. The first column should hold the gene identifiers
 #' you are using in the expression matrix. Other columns contain information about
 #' the genes, such as their corresponding ENSEMBL transcript identifiers.
 #' @param CellMetadata A data frame containing cell identifiers (usually barcodes)
@@ -38,7 +38,6 @@ NewscGPS <- function(ExpressionMatrix = NULL, GeneMetadata = NULL, CellMetadata 
         stop(msg)
     }
 
-    # Check data formats (to do: can add a series of checking here)
     if (is.data.frame(ExpressionMatrix) == FALSE & is.matrix(ExpressionMatrix) ==
         FALSE) {
         stop("Please supply an expression matrix in one of the following formats: data.frame or matrix")

@@ -1,461 +1,416 @@
 ---
 title: "scGPS introduction"
 author: "Quan Nguyen"
-date: "2018-03-23"
+date: "2018-04-08"
 
 output: 
   html_document:
-    keep_md: true
+    keep_md: TRUE
+    theme: united
+    highlight: tango
 
 ---
 
 
 
-####**Installation instruction**
+#Installation instruction
 
 
 ```r
+# Prior to installing scGPS you need to install the SummarizedExperiment
+# bioconductor package as the following
+# source('https://bioconductor.org/biocLite.R') biocLite('SummarizedExperiment')
 
-#Prior to installing scGPS you need to install the SummarizedExperiment bioconductor package as the following
-#source("https://bioconductor.org/biocLite.R")
-#biocLite("SummarizedExperiment")
+# R/3.4.1 or above is required
 
-#R/3.4.1 or above is required 
-
-#To install scGPS from github (Depending on the configuration of the local computer or HPC, possible custom C++ compilation may be required - see installation trouble-shootings below) 
+# To install scGPS from github (Depending on the configuration of the local
+# computer or HPC, possible custom C++ compilation may be required - see
+# installation trouble-shootings below)
 devtools::install_github("IMB-Computational-Genomics-Lab/scGPS")
 
-#for C++ compilation trouble-shooting, manual download and installation can be done from github
-git clone https://github.com/IMB-Computational-Genomics-Lab/scGPS
+# for C++ compilation trouble-shooting, manual download and installation can be
+# done from github
 
-#then check in scGPS/src if any of the precompiled (e.g. those with *.so and *.o) files exist and delete them before recompiling
+# git clone https://github.com/IMB-Computational-Genomics-Lab/scGPS
 
-#create a Makevars file in the  scGPS/src with one line: PKG_LIBS = $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
+# then check in scGPS/src if any of the precompiled (e.g.  those with *.so and
+# *.o) files exist and delete them before recompiling
 
-#then with the scGPS as the R working directory, manually recompile scGPS in R using devtools
-devools::document() 
+# create a Makevars file in the scGPS/src with one line: PKG_LIBS =
+# $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
 
-#and then you can load the package: 
-devtools::load_all()
+# then with the scGPS as the R working directory, manually recompile scGPS in R
+# using devtools
+devools::document()
 
 ```
 
-####**A simple workflow of the scGPS: given a mixed population with known subpopulations, estimate transition scores between these subpopulation**
+#A simple workflow of the scGPS: given a mixed population with known subpopulations, estimate transition scores between these subpopulation
 
 
 ```r
 devtools::load_all()
 
-#load mixed population 1 (loaded from sample1 dataset, named it as day2)
+# load mixed population 1 (loaded from sample1 dataset, named it as day2)
 day2 <- sample1
-mixedpop1 <-NewscGPS_SME(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day2$dat2geneInfo,
-                     CellMetadata = day2$dat2_clusters)
-#load mixed population 2 (loaded from sample2 dataset, named it as day5)
+mixedpop1 <- NewscGPS_SME(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day2$dat2geneInfo, 
+    CellMetadata = day2$dat2_clusters)
+# load mixed population 2 (loaded from sample2 dataset, named it as day5)
 day5 <- sample2
-mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
-                     CellMetadata = day5$dat5_clusters)
-#load gene list (this can be any lists of user selected genes)
-genes <-GeneList
-genes <-genes$Merged_unique
+mixedpop2 <- NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo, 
+    CellMetadata = day5$dat5_clusters)
+# load gene list (this can be any lists of user selected genes)
+genes <- GeneList
+genes <- genes$Merged_unique
 
-#select a subpopulation
+# select a subpopulation
 c_selectID <- 1
 
-#run the test bootstrap
-suppressWarnings(LSOLDA_dat <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list()))
+# run the test bootstrap
+suppressWarnings(LSOLDA_dat <- bootstrap_scGPS(nboots = 2, mixedpop1 = mixedpop1, 
+    mixedpop2 = mixedpop2, genes = genes, c_selectID, listData = list()))
 #> 
 #> Call:  glmnet(x = t(predictor_S1), y = y_cat, family = "binomial") 
 #> 
 #>        Df       %Dev    Lambda
-#>   [1,]  0 -2.563e-15 2.674e-01
-#>   [2,]  1  3.515e-02 2.437e-01
-#>   [3,]  2  7.249e-02 2.220e-01
-#>   [4,]  2  1.076e-01 2.023e-01
-#>   [5,]  2  1.380e-01 1.843e-01
-#>   [6,]  2  1.647e-01 1.679e-01
-#>   [7,]  2  1.884e-01 1.530e-01
-#>   [8,]  3  2.134e-01 1.394e-01
-#>   [9,]  3  2.358e-01 1.270e-01
-#>  [10,]  4  2.570e-01 1.158e-01
-#>  [11,]  5  2.795e-01 1.055e-01
-#>  [12,]  7  3.006e-01 9.610e-02
-#>  [13,]  7  3.202e-01 8.757e-02
-#>  [14,]  7  3.378e-01 7.979e-02
-#>  [15,]  7  3.536e-01 7.270e-02
-#>  [16,] 10  3.695e-01 6.624e-02
-#>  [17,] 10  3.865e-01 6.036e-02
-#>  [18,] 11  4.020e-01 5.499e-02
-#>  [19,] 14  4.168e-01 5.011e-02
-#>  [20,] 16  4.328e-01 4.566e-02
-#>  [21,] 21  4.530e-01 4.160e-02
-#>  [22,] 23  4.734e-01 3.791e-02
-#>  [23,] 23  4.919e-01 3.454e-02
-#>  [24,] 24  5.093e-01 3.147e-02
-#>  [25,] 24  5.249e-01 2.867e-02
-#>  [26,] 29  5.414e-01 2.613e-02
-#>  [27,] 31  5.596e-01 2.381e-02
-#>  [28,] 37  5.791e-01 2.169e-02
-#>  [29,] 38  5.990e-01 1.976e-02
-#>  [30,] 40  6.181e-01 1.801e-02
-#>  [31,] 41  6.358e-01 1.641e-02
-#>  [32,] 41  6.520e-01 1.495e-02
-#>  [33,] 43  6.669e-01 1.362e-02
-#>  [34,] 44  6.817e-01 1.241e-02
-#>  [35,] 48  6.959e-01 1.131e-02
-#>  [36,] 48  7.097e-01 1.030e-02
-#>  [37,] 50  7.227e-01 9.389e-03
-#>  [38,] 50  7.354e-01 8.555e-03
-#>  [39,] 50  7.473e-01 7.795e-03
-#>  [40,] 50  7.586e-01 7.103e-03
-#>  [41,] 53  7.694e-01 6.472e-03
-#>  [42,] 56  7.804e-01 5.897e-03
-#>  [43,] 57  7.912e-01 5.373e-03
-#>  [44,] 56  8.013e-01 4.896e-03
-#>  [45,] 56  8.107e-01 4.461e-03
-#>  [46,] 57  8.195e-01 4.064e-03
-#>  [47,] 58  8.284e-01 3.703e-03
-#>  [48,] 61  8.369e-01 3.374e-03
-#>  [49,] 62  8.452e-01 3.075e-03
-#>  [50,] 67  8.538e-01 2.801e-03
-#>  [51,] 68  8.623e-01 2.553e-03
-#>  [52,] 68  8.705e-01 2.326e-03
-#>  [53,] 71  8.785e-01 2.119e-03
-#>  [54,] 72  8.865e-01 1.931e-03
-#>  [55,] 72  8.944e-01 1.759e-03
-#>  [56,] 72  9.020e-01 1.603e-03
-#>  [57,] 72  9.093e-01 1.461e-03
-#>  [58,] 73  9.162e-01 1.331e-03
-#>  [59,] 73  9.228e-01 1.213e-03
-#>  [60,] 73  9.290e-01 1.105e-03
-#>  [61,] 73  9.349e-01 1.007e-03
-#>  [62,] 73  9.403e-01 9.174e-04
-#>  [63,] 74  9.454e-01 8.359e-04
-#>  [64,] 74  9.502e-01 7.616e-04
-#>  [65,] 74  9.546e-01 6.939e-04
-#>  [66,] 74  9.588e-01 6.323e-04
-#>  [67,] 74  9.625e-01 5.761e-04
-#>  [68,] 74  9.658e-01 5.249e-04
-#>  [69,] 75  9.689e-01 4.783e-04
-#>  [70,] 75  9.717e-01 4.358e-04
-#>  [71,] 75  9.743e-01 3.971e-04
-#>  [72,] 75  9.766e-01 3.618e-04
-#>  [73,] 75  9.788e-01 3.297e-04
-#>  [74,] 75  9.807e-01 3.004e-04
-#>  [75,] 75  9.824e-01 2.737e-04
-#>  [76,] 75  9.840e-01 2.494e-04
-#>  [77,] 75  9.855e-01 2.272e-04
-#>  [78,] 75  9.868e-01 2.070e-04
-#>  [79,] 75  9.880e-01 1.887e-04
-#>  [80,] 75  9.890e-01 1.719e-04
-#>  [81,] 75  9.900e-01 1.566e-04
-#>  [82,] 75  9.909e-01 1.427e-04
-#>  [83,] 75  9.917e-01 1.300e-04
-#>  [84,] 75  9.925e-01 1.185e-04
-#>  [85,] 75  9.931e-01 1.080e-04
-#>  [86,] 75  9.937e-01 9.836e-05
-#>  [87,] 75  9.943e-01 8.963e-05
-#>  [88,] 75  9.948e-01 8.166e-05
-#>  [89,] 75  9.953e-01 7.441e-05
-#>  [90,] 75  9.957e-01 6.780e-05
-#>  [91,] 75  9.961e-01 6.178e-05
-#>  [92,] 75  9.964e-01 5.629e-05
-#>  [93,] 75  9.967e-01 5.129e-05
-#>  [94,] 75  9.970e-01 4.673e-05
-#>  [95,] 75  9.973e-01 4.258e-05
-#>  [96,] 75  9.975e-01 3.880e-05
-#>  [97,] 75  9.977e-01 3.535e-05
-#>  [98,] 76  9.979e-01 3.221e-05
-#>  [99,] 76  9.981e-01 2.935e-05
-#> [100,] 75  9.983e-01 2.674e-05
+#>   [1,]  0 -2.563e-15 2.802e-01
+#>   [2,]  1  3.866e-02 2.553e-01
+#>   [3,]  2  7.328e-02 2.326e-01
+#>   [4,]  3  1.166e-01 2.119e-01
+#>   [5,]  4  1.587e-01 1.931e-01
+#>   [6,]  4  2.009e-01 1.760e-01
+#>   [7,]  4  2.378e-01 1.603e-01
+#>   [8,]  5  2.718e-01 1.461e-01
+#>   [9,]  6  3.046e-01 1.331e-01
+#>  [10,]  7  3.347e-01 1.213e-01
+#>  [11,]  7  3.617e-01 1.105e-01
+#>  [12,]  8  3.865e-01 1.007e-01
+#>  [13,]  9  4.097e-01 9.174e-02
+#>  [14,]  9  4.313e-01 8.359e-02
+#>  [15,]  9  4.506e-01 7.617e-02
+#>  [16,]  9  4.678e-01 6.940e-02
+#>  [17,]  9  4.832e-01 6.323e-02
+#>  [18,]  9  4.969e-01 5.762e-02
+#>  [19,]  9  5.092e-01 5.250e-02
+#>  [20,] 12  5.212e-01 4.783e-02
+#>  [21,] 14  5.355e-01 4.358e-02
+#>  [22,] 16  5.502e-01 3.971e-02
+#>  [23,] 19  5.643e-01 3.618e-02
+#>  [24,] 19  5.778e-01 3.297e-02
+#>  [25,] 23  5.919e-01 3.004e-02
+#>  [26,] 27  6.059e-01 2.737e-02
+#>  [27,] 29  6.197e-01 2.494e-02
+#>  [28,] 31  6.338e-01 2.273e-02
+#>  [29,] 33  6.483e-01 2.071e-02
+#>  [30,] 36  6.628e-01 1.887e-02
+#>  [31,] 40  6.781e-01 1.719e-02
+#>  [32,] 41  6.937e-01 1.566e-02
+#>  [33,] 41  7.084e-01 1.427e-02
+#>  [34,] 42  7.220e-01 1.300e-02
+#>  [35,] 44  7.349e-01 1.185e-02
+#>  [36,] 45  7.476e-01 1.080e-02
+#>  [37,] 47  7.594e-01 9.837e-03
+#>  [38,] 49  7.706e-01 8.963e-03
+#>  [39,] 49  7.813e-01 8.167e-03
+#>  [40,] 52  7.919e-01 7.441e-03
+#>  [41,] 51  8.018e-01 6.780e-03
+#>  [42,] 52  8.111e-01 6.178e-03
+#>  [43,] 53  8.198e-01 5.629e-03
+#>  [44,] 53  8.281e-01 5.129e-03
+#>  [45,] 54  8.359e-01 4.673e-03
+#>  [46,] 55  8.435e-01 4.258e-03
+#>  [47,] 58  8.521e-01 3.880e-03
+#>  [48,] 58  8.608e-01 3.535e-03
+#>  [49,] 59  8.695e-01 3.221e-03
+#>  [50,] 62  8.781e-01 2.935e-03
+#>  [51,] 62  8.866e-01 2.674e-03
+#>  [52,] 63  8.949e-01 2.437e-03
+#>  [53,] 62  9.030e-01 2.220e-03
+#>  [54,] 62  9.106e-01 2.023e-03
+#>  [55,] 62  9.179e-01 1.843e-03
+#>  [56,] 63  9.247e-01 1.680e-03
+#>  [57,] 63  9.311e-01 1.530e-03
+#>  [58,] 64  9.372e-01 1.394e-03
+#>  [59,] 63  9.426e-01 1.271e-03
+#>  [60,] 64  9.478e-01 1.158e-03
+#>  [61,] 64  9.525e-01 1.055e-03
+#>  [62,] 63  9.568e-01 9.611e-04
+#>  [63,] 63  9.607e-01 8.757e-04
+#>  [64,] 63  9.642e-01 7.979e-04
+#>  [65,] 62  9.675e-01 7.270e-04
+#>  [66,] 62  9.704e-01 6.624e-04
+#>  [67,] 62  9.730e-01 6.036e-04
+#>  [68,] 61  9.755e-01 5.500e-04
+#>  [69,] 62  9.777e-01 5.011e-04
+#>  [70,] 62  9.797e-01 4.566e-04
+#>  [71,] 62  9.815e-01 4.160e-04
+#>  [72,] 62  9.832e-01 3.791e-04
+#>  [73,] 63  9.847e-01 3.454e-04
+#>  [74,] 63  9.860e-01 3.147e-04
+#>  [75,] 63  9.873e-01 2.868e-04
+#>  [76,] 64  9.884e-01 2.613e-04
+#>  [77,] 64  9.895e-01 2.381e-04
+#>  [78,] 64  9.904e-01 2.169e-04
+#>  [79,] 64  9.913e-01 1.977e-04
+#>  [80,] 64  9.920e-01 1.801e-04
+#>  [81,] 65  9.927e-01 1.641e-04
+#>  [82,] 65  9.934e-01 1.495e-04
+#>  [83,] 65  9.940e-01 1.362e-04
+#>  [84,] 65  9.945e-01 1.241e-04
+#>  [85,] 65  9.950e-01 1.131e-04
+#>  [86,] 65  9.954e-01 1.031e-04
+#>  [87,] 65  9.958e-01 9.390e-05
+#>  [88,] 65  9.962e-01 8.556e-05
+#>  [89,] 65  9.965e-01 7.796e-05
+#>  [90,] 65  9.969e-01 7.103e-05
+#>  [91,] 65  9.971e-01 6.472e-05
+#>  [92,] 66  9.974e-01 5.897e-05
+#>  [93,] 66  9.976e-01 5.373e-05
+#>  [94,] 66  9.978e-01 4.896e-05
+#>  [95,] 66  9.980e-01 4.461e-05
+#>  [96,] 66  9.982e-01 4.065e-05
+#>  [97,] 66  9.983e-01 3.704e-05
+#>  [98,] 66  9.985e-01 3.375e-05
+#>  [99,] 66  9.986e-01 3.075e-05
+#> [100,] 66  9.987e-01 2.802e-05
 #> [1] "done 1"
 #> 
 #> Call:  glmnet(x = t(predictor_S1), y = y_cat, family = "binomial") 
 #> 
 #>        Df       %Dev    Lambda
-#>   [1,]  0 -2.563e-15 2.505e-01
-#>   [2,]  3  3.763e-02 2.282e-01
-#>   [3,]  3  7.982e-02 2.079e-01
-#>   [4,]  3  1.159e-01 1.895e-01
-#>   [5,]  3  1.470e-01 1.726e-01
-#>   [6,]  3  1.741e-01 1.573e-01
-#>   [7,]  5  2.046e-01 1.433e-01
-#>   [8,]  6  2.330e-01 1.306e-01
-#>   [9,]  6  2.590e-01 1.190e-01
-#>  [10,]  6  2.818e-01 1.084e-01
-#>  [11,]  8  3.052e-01 9.879e-02
-#>  [12,]  9  3.297e-01 9.001e-02
-#>  [13,]  9  3.519e-01 8.201e-02
-#>  [14,]  9  3.716e-01 7.473e-02
-#>  [15,]  9  3.892e-01 6.809e-02
-#>  [16,]  9  4.050e-01 6.204e-02
-#>  [17,] 11  4.201e-01 5.653e-02
-#>  [18,] 14  4.361e-01 5.151e-02
-#>  [19,] 15  4.519e-01 4.693e-02
-#>  [20,] 18  4.690e-01 4.276e-02
-#>  [21,] 21  4.865e-01 3.896e-02
-#>  [22,] 25  5.037e-01 3.550e-02
-#>  [23,] 26  5.223e-01 3.235e-02
-#>  [24,] 26  5.397e-01 2.947e-02
-#>  [25,] 30  5.592e-01 2.686e-02
-#>  [26,] 33  5.792e-01 2.447e-02
-#>  [27,] 35  5.984e-01 2.230e-02
-#>  [28,] 37  6.161e-01 2.032e-02
-#>  [29,] 40  6.331e-01 1.851e-02
-#>  [30,] 47  6.518e-01 1.687e-02
-#>  [31,] 48  6.696e-01 1.537e-02
-#>  [32,] 49  6.859e-01 1.400e-02
-#>  [33,] 52  7.016e-01 1.276e-02
-#>  [34,] 51  7.161e-01 1.163e-02
-#>  [35,] 53  7.298e-01 1.059e-02
-#>  [36,] 54  7.428e-01 9.651e-03
-#>  [37,] 56  7.550e-01 8.794e-03
-#>  [38,] 57  7.665e-01 8.013e-03
-#>  [39,] 58  7.774e-01 7.301e-03
-#>  [40,] 58  7.876e-01 6.652e-03
-#>  [41,] 60  7.972e-01 6.061e-03
-#>  [42,] 61  8.068e-01 5.523e-03
-#>  [43,] 60  8.159e-01 5.032e-03
-#>  [44,] 60  8.244e-01 4.585e-03
-#>  [45,] 62  8.326e-01 4.178e-03
-#>  [46,] 63  8.406e-01 3.807e-03
-#>  [47,] 65  8.486e-01 3.469e-03
-#>  [48,] 66  8.566e-01 3.160e-03
-#>  [49,] 68  8.649e-01 2.880e-03
-#>  [50,] 67  8.731e-01 2.624e-03
-#>  [51,] 67  8.808e-01 2.391e-03
-#>  [52,] 67  8.882e-01 2.178e-03
-#>  [53,] 70  8.954e-01 1.985e-03
-#>  [54,] 70  9.024e-01 1.808e-03
-#>  [55,] 71  9.092e-01 1.648e-03
-#>  [56,] 71  9.158e-01 1.501e-03
-#>  [57,] 72  9.221e-01 1.368e-03
-#>  [58,] 73  9.281e-01 1.247e-03
-#>  [59,] 73  9.340e-01 1.136e-03
-#>  [60,] 75  9.395e-01 1.035e-03
-#>  [61,] 74  9.448e-01 9.430e-04
-#>  [62,] 74  9.496e-01 8.592e-04
-#>  [63,] 73  9.541e-01 7.829e-04
-#>  [64,] 72  9.581e-01 7.133e-04
-#>  [65,] 72  9.618e-01 6.499e-04
-#>  [66,] 71  9.652e-01 5.922e-04
-#>  [67,] 71  9.683e-01 5.396e-04
-#>  [68,] 72  9.712e-01 4.917e-04
-#>  [69,] 72  9.738e-01 4.480e-04
-#>  [70,] 73  9.762e-01 4.082e-04
-#>  [71,] 73  9.783e-01 3.719e-04
-#>  [72,] 73  9.802e-01 3.389e-04
-#>  [73,] 73  9.820e-01 3.088e-04
-#>  [74,] 73  9.836e-01 2.813e-04
-#>  [75,] 73  9.851e-01 2.563e-04
-#>  [76,] 74  9.864e-01 2.336e-04
-#>  [77,] 74  9.877e-01 2.128e-04
-#>  [78,] 74  9.888e-01 1.939e-04
-#>  [79,] 73  9.898e-01 1.767e-04
-#>  [80,] 73  9.907e-01 1.610e-04
-#>  [81,] 74  9.915e-01 1.467e-04
-#>  [82,] 74  9.923e-01 1.337e-04
-#>  [83,] 74  9.930e-01 1.218e-04
-#>  [84,] 74  9.936e-01 1.110e-04
-#>  [85,] 74  9.942e-01 1.011e-04
-#>  [86,] 74  9.947e-01 9.213e-05
-#>  [87,] 74  9.952e-01 8.394e-05
-#>  [88,] 74  9.956e-01 7.649e-05
-#>  [89,] 74  9.960e-01 6.969e-05
-#>  [90,] 74  9.963e-01 6.350e-05
-#>  [91,] 74  9.966e-01 5.786e-05
-#>  [92,] 74  9.969e-01 5.272e-05
-#>  [93,] 74  9.972e-01 4.804e-05
-#>  [94,] 75  9.975e-01 4.377e-05
-#>  [95,] 74  9.977e-01 3.988e-05
-#>  [96,] 74  9.979e-01 3.634e-05
-#>  [97,] 74  9.981e-01 3.311e-05
-#>  [98,] 74  9.982e-01 3.017e-05
-#>  [99,] 74  9.984e-01 2.749e-05
-#> [100,] 74  9.985e-01 2.505e-05
+#>   [1,]  0 -2.563e-15 2.711e-01
+#>   [2,]  2  4.118e-02 2.470e-01
+#>   [3,]  2  8.227e-02 2.251e-01
+#>   [4,]  2  1.175e-01 2.051e-01
+#>   [5,]  2  1.479e-01 1.869e-01
+#>   [6,]  3  1.753e-01 1.703e-01
+#>   [7,]  4  2.025e-01 1.551e-01
+#>   [8,]  5  2.317e-01 1.413e-01
+#>   [9,]  5  2.578e-01 1.288e-01
+#>  [10,]  6  2.810e-01 1.173e-01
+#>  [11,]  6  3.029e-01 1.069e-01
+#>  [12,]  8  3.230e-01 9.743e-02
+#>  [13,]  8  3.448e-01 8.877e-02
+#>  [14,]  9  3.644e-01 8.088e-02
+#>  [15,]  9  3.819e-01 7.370e-02
+#>  [16,] 10  3.986e-01 6.715e-02
+#>  [17,] 11  4.141e-01 6.119e-02
+#>  [18,] 11  4.284e-01 5.575e-02
+#>  [19,] 11  4.412e-01 5.080e-02
+#>  [20,] 14  4.543e-01 4.629e-02
+#>  [21,] 15  4.681e-01 4.217e-02
+#>  [22,] 18  4.838e-01 3.843e-02
+#>  [23,] 20  5.016e-01 3.501e-02
+#>  [24,] 20  5.201e-01 3.190e-02
+#>  [25,] 21  5.370e-01 2.907e-02
+#>  [26,] 23  5.539e-01 2.649e-02
+#>  [27,] 30  5.713e-01 2.413e-02
+#>  [28,] 34  5.889e-01 2.199e-02
+#>  [29,] 34  6.057e-01 2.004e-02
+#>  [30,] 38  6.214e-01 1.826e-02
+#>  [31,] 40  6.379e-01 1.663e-02
+#>  [32,] 42  6.533e-01 1.516e-02
+#>  [33,] 43  6.676e-01 1.381e-02
+#>  [34,] 46  6.813e-01 1.258e-02
+#>  [35,] 50  6.951e-01 1.147e-02
+#>  [36,] 50  7.087e-01 1.045e-02
+#>  [37,] 51  7.216e-01 9.519e-03
+#>  [38,] 51  7.337e-01 8.673e-03
+#>  [39,] 53  7.452e-01 7.902e-03
+#>  [40,] 53  7.560e-01 7.200e-03
+#>  [41,] 56  7.667e-01 6.561e-03
+#>  [42,] 57  7.780e-01 5.978e-03
+#>  [43,] 58  7.887e-01 5.447e-03
+#>  [44,] 60  7.995e-01 4.963e-03
+#>  [45,] 61  8.104e-01 4.522e-03
+#>  [46,] 61  8.209e-01 4.120e-03
+#>  [47,] 62  8.309e-01 3.754e-03
+#>  [48,] 61  8.407e-01 3.421e-03
+#>  [49,] 61  8.502e-01 3.117e-03
+#>  [50,] 63  8.596e-01 2.840e-03
+#>  [51,] 64  8.687e-01 2.588e-03
+#>  [52,] 64  8.776e-01 2.358e-03
+#>  [53,] 65  8.861e-01 2.148e-03
+#>  [54,] 65  8.947e-01 1.958e-03
+#>  [55,] 67  9.029e-01 1.784e-03
+#>  [56,] 67  9.111e-01 1.625e-03
+#>  [57,] 67  9.186e-01 1.481e-03
+#>  [58,] 69  9.257e-01 1.349e-03
+#>  [59,] 68  9.323e-01 1.229e-03
+#>  [60,] 68  9.383e-01 1.120e-03
+#>  [61,] 68  9.439e-01 1.021e-03
+#>  [62,] 68  9.489e-01 9.300e-04
+#>  [63,] 66  9.534e-01 8.474e-04
+#>  [64,] 66  9.576e-01 7.721e-04
+#>  [65,] 66  9.615e-01 7.035e-04
+#>  [66,] 66  9.650e-01 6.410e-04
+#>  [67,] 66  9.681e-01 5.841e-04
+#>  [68,] 66  9.710e-01 5.322e-04
+#>  [69,] 66  9.736e-01 4.849e-04
+#>  [70,] 66  9.760e-01 4.418e-04
+#>  [71,] 66  9.782e-01 4.026e-04
+#>  [72,] 65  9.801e-01 3.668e-04
+#>  [73,] 65  9.819e-01 3.342e-04
+#>  [74,] 65  9.835e-01 3.045e-04
+#>  [75,] 66  9.850e-01 2.775e-04
+#>  [76,] 67  9.863e-01 2.528e-04
+#>  [77,] 66  9.876e-01 2.304e-04
+#>  [78,] 66  9.887e-01 2.099e-04
+#>  [79,] 66  9.897e-01 1.913e-04
+#>  [80,] 67  9.906e-01 1.743e-04
+#>  [81,] 67  9.914e-01 1.588e-04
+#>  [82,] 67  9.922e-01 1.447e-04
+#>  [83,] 67  9.929e-01 1.318e-04
+#>  [84,] 67  9.935e-01 1.201e-04
+#>  [85,] 67  9.941e-01 1.094e-04
+#>  [86,] 67  9.946e-01 9.972e-05
+#>  [87,] 67  9.951e-01 9.086e-05
+#>  [88,] 67  9.955e-01 8.279e-05
+#>  [89,] 67  9.959e-01 7.543e-05
+#>  [90,] 67  9.963e-01 6.873e-05
+#>  [91,] 67  9.966e-01 6.263e-05
+#>  [92,] 67  9.969e-01 5.706e-05
+#>  [93,] 67  9.972e-01 5.199e-05
+#>  [94,] 67  9.974e-01 4.737e-05
+#>  [95,] 67  9.977e-01 4.317e-05
+#>  [96,] 67  9.979e-01 3.933e-05
+#>  [97,] 67  9.980e-01 3.584e-05
+#>  [98,] 67  9.982e-01 3.265e-05
+#>  [99,] 67  9.984e-01 2.975e-05
+#> [100,] 69  9.985e-01 2.711e-05
 #> [1] "done 2"
 
-#display some results 
+# display some results
 names(LSOLDA_dat)
 #> [1] "Accuracy"     "LassoGenes"   "Deviance"     "LassoFit"    
 #> [5] "LDAFit"       "predictor_S1" "LassoPredict" "LDAPredict"
 LSOLDA_dat$LassoPredict
 #> [[1]]
 #> [[1]][[1]]
-#> [1] "LASSO for subpop2 in target mixedpop2"
-#> 
-#> [[1]][[2]]
-#> [1] 93.04029
-#> 
-#> [[1]][[3]]
-#> [1] "LASSO for subpop3 in target mixedpop2"
-#> 
-#> [[1]][[4]]
-#> [1] 10.97561
-#> 
-#> [[1]][[5]]
 #> [1] "LASSO for subpop1 in target mixedpop2"
 #> 
+#> [[1]][[2]]
+#> [1] 70.05348
+#> 
+#> [[1]][[3]]
+#> [1] "LASSO for subpop2 in target mixedpop2"
+#> 
+#> [[1]][[4]]
+#> [1] 96.42857
+#> 
+#> [[1]][[5]]
+#> [1] "LASSO for subpop3 in target mixedpop2"
+#> 
 #> [[1]][[6]]
-#> [1] 37.15847
+#> [1] 46.61654
 #> 
 #> [[1]][[7]]
 #> [1] "LASSO for subpop4 in target mixedpop2"
 #> 
 #> [[1]][[8]]
-#> [1] 56.12245
+#> [1] 67.5
 #> 
 #> 
 #> [[2]]
 #> [[2]][[1]]
-#> [1] "LASSO for subpop2 in target mixedpop2"
-#> 
-#> [[2]][[2]]
-#> [1] 58.97436
-#> 
-#> [[2]][[3]]
-#> [1] "LASSO for subpop3 in target mixedpop2"
-#> 
-#> [[2]][[4]]
-#> [1] 31.70732
-#> 
-#> [[2]][[5]]
 #> [1] "LASSO for subpop1 in target mixedpop2"
 #> 
+#> [[2]][[2]]
+#> [1] 67.91444
+#> 
+#> [[2]][[3]]
+#> [1] "LASSO for subpop2 in target mixedpop2"
+#> 
+#> [[2]][[4]]
+#> [1] 93.57143
+#> 
+#> [[2]][[5]]
+#> [1] "LASSO for subpop3 in target mixedpop2"
+#> 
 #> [[2]][[6]]
-#> [1] 50.27322
+#> [1] 45.86466
 #> 
 #> [[2]][[7]]
 #> [1] "LASSO for subpop4 in target mixedpop2"
 #> 
 #> [[2]][[8]]
-#> [1] 34.69388
+#> [1] 60
 LSOLDA_dat$LDAPredict
 #> [[1]]
 #> [[1]][[1]]
-#> [1] "LDA for subpop 2 in target mixedpop2"
-#> 
-#> [[1]][[2]]
-#> [1] 46.52015
-#> 
-#> [[1]][[3]]
-#> [1] "LDA for subpop 3 in target mixedpop2"
-#> 
-#> [[1]][[4]]
-#> [1] 7.317073
-#> 
-#> [[1]][[5]]
 #> [1] "LDA for subpop 1 in target mixedpop2"
 #> 
+#> [[1]][[2]]
+#> [1] 16.04278
+#> 
+#> [[1]][[3]]
+#> [1] "LDA for subpop 2 in target mixedpop2"
+#> 
+#> [[1]][[4]]
+#> [1] 43.57143
+#> 
+#> [[1]][[5]]
+#> [1] "LDA for subpop 3 in target mixedpop2"
+#> 
 #> [[1]][[6]]
-#> [1] 12.02186
+#> [1] 9.774436
 #> 
 #> [[1]][[7]]
 #> [1] "LDA for subpop 4 in target mixedpop2"
 #> 
 #> [[1]][[8]]
-#> [1] 21.42857
+#> [1] 27.5
 #> 
 #> 
 #> [[2]]
 #> [[2]][[1]]
-#> [1] "LDA for subpop 2 in target mixedpop2"
-#> 
-#> [[2]][[2]]
-#> [1] 40.29304
-#> 
-#> [[2]][[3]]
-#> [1] "LDA for subpop 3 in target mixedpop2"
-#> 
-#> [[2]][[4]]
-#> [1] 8.943089
-#> 
-#> [[2]][[5]]
 #> [1] "LDA for subpop 1 in target mixedpop2"
 #> 
+#> [[2]][[2]]
+#> [1] 98.39572
+#> 
+#> [[2]][[3]]
+#> [1] "LDA for subpop 2 in target mixedpop2"
+#> 
+#> [[2]][[4]]
+#> [1] 77.85714
+#> 
+#> [[2]][[5]]
+#> [1] "LDA for subpop 3 in target mixedpop2"
+#> 
 #> [[2]][[6]]
-#> [1] 4.918033
+#> [1] 97.74436
 #> 
 #> [[2]][[7]]
 #> [1] "LDA for subpop 4 in target mixedpop2"
 #> 
 #> [[2]][[8]]
-#> [1] 8.163265
+#> [1] 82.5
 
-#summary results LDA
-summary_prediction_lda(LSOLDA_dat=LSOLDA_dat, nPredSubpop = 4)
+# summary results LDA
+summary_prediction_lda(LSOLDA_dat = LSOLDA_dat, nPredSubpop = 4)
 #>                 V1               V2                                names
-#> 1 46.5201465201465 40.2930402930403 LDA for subpop 2 in target mixedpop2
-#> 2 7.31707317073171 8.94308943089431 LDA for subpop 3 in target mixedpop2
-#> 3 12.0218579234973 4.91803278688525 LDA for subpop 1 in target mixedpop2
-#> 4 21.4285714285714 8.16326530612245 LDA for subpop 4 in target mixedpop2
+#> 1 16.0427807486631 98.3957219251337 LDA for subpop 1 in target mixedpop2
+#> 2 43.5714285714286 77.8571428571429 LDA for subpop 2 in target mixedpop2
+#> 3 9.77443609022556 97.7443609022556 LDA for subpop 3 in target mixedpop2
+#> 4             27.5             82.5 LDA for subpop 4 in target mixedpop2
 
-#summary results Lasso
-summary_prediction_lasso(LSOLDA_dat=LSOLDA_dat, nPredSubpop = 4)
+# summary results Lasso
+summary_prediction_lasso(LSOLDA_dat = LSOLDA_dat, nPredSubpop = 4)
 #>                 V1               V2                                 names
-#> 1  93.040293040293  58.974358974359 LASSO for subpop2 in target mixedpop2
-#> 2 10.9756097560976 31.7073170731707 LASSO for subpop3 in target mixedpop2
-#> 3 37.1584699453552 50.2732240437158 LASSO for subpop1 in target mixedpop2
-#> 4 56.1224489795918 34.6938775510204 LASSO for subpop4 in target mixedpop2
+#> 1 70.0534759358289 67.9144385026738 LASSO for subpop1 in target mixedpop2
+#> 2 96.4285714285714 93.5714285714286 LASSO for subpop2 in target mixedpop2
+#> 3 46.6165413533835 45.8646616541353 LASSO for subpop3 in target mixedpop2
+#> 4             67.5               60 LASSO for subpop4 in target mixedpop2
 
-#summary deviance 
-summary_deviance(LSOLDA_dat)
-#> $allDeviance
-#> [1] "0.4919" "0.5397"
-#> 
-#> $DeviMax
-#>          Dfd   Deviance        DEgenes
-#> 1          0 -2.563e-15 genes_cluster1
-#> 2          3     0.1741 genes_cluster1
-#> 3          5     0.2046 genes_cluster1
-#> 4          6     0.2818 genes_cluster1
-#> 5          8     0.3052 genes_cluster1
-#> 6          9      0.405 genes_cluster1
-#> 7         11     0.4201 genes_cluster1
-#> 8         14     0.4361 genes_cluster1
-#> 9         15     0.4519 genes_cluster1
-#> 10        18      0.469 genes_cluster1
-#> 11        21     0.4865 genes_cluster1
-#> 12        25     0.5037 genes_cluster1
-#> 13        26     0.5397 genes_cluster1
-#> 14 remaining          1        DEgenes
-#> 
-#> $LassoGenesMax
-#>                                   1                   name
-#> (Intercept)             0.703693814            (Intercept)
-#> NPPB_ENSG00000120937    1.906902170   NPPB_ENSG00000120937
-#> TPM3_ENSG00000143549    0.064487180   TPM3_ENSG00000143549
-#> CXCR4_ENSG00000121966  -0.105050497  CXCR4_ENSG00000121966
-#> TTN_ENSG00000155657     1.149149641    TTN_ENSG00000155657
-#> FN1_ENSG00000115414    -0.044602262    FN1_ENSG00000115414
-#> CLDN1_ENSG00000163347   0.344129424  CLDN1_ENSG00000163347
-#> PDGFRA_ENSG00000134853  0.190914737 PDGFRA_ENSG00000134853
-#> FOXC1_ENSG00000054598   0.080904513  FOXC1_ENSG00000054598
-#> POU5F1_ENSG00000204531 -0.024385118 POU5F1_ENSG00000204531
-#> GJA1_ENSG00000152661   -0.176438370   GJA1_ENSG00000152661
-#> T_ENSG00000164458       0.241162180      T_ENSG00000164458
-#> MYL7_ENSG00000106631    0.103592680   MYL7_ENSG00000106631
-#> SNAI2_ENSG00000019549   0.255299986  SNAI2_ENSG00000019549
-#> SOX17_ENSG00000164736  -0.007471097  SOX17_ENSG00000164736
-#> HEY1_ENSG00000164683   -0.267241112   HEY1_ENSG00000164683
-#> MYC_ENSG00000136997     0.047296408    MYC_ENSG00000136997
-#> ZBTB16_ENSG00000109906  0.946598990 ZBTB16_ENSG00000109906
-#> NODAL_ENSG00000156574   0.043598868  NODAL_ENSG00000156574
-#> COL2A1_ENSG00000139219 -0.069607726 COL2A1_ENSG00000139219
-#> FOXA1_ENSG00000129514  -0.395261449  FOXA1_ENSG00000129514
-#> TPM1_ENSG00000140416   -0.059937858   TPM1_ENSG00000140416
-#> MESP1_ENSG00000166823   0.057196801  MESP1_ENSG00000166823
-#> FOXF1_ENSG00000103241   0.804699956  FOXF1_ENSG00000103241
-#> FOXA2_ENSG00000125798  -0.441158964  FOXA2_ENSG00000125798
-#> SNAI1_ENSG00000124216   0.274275947  SNAI1_ENSG00000124216
-#> FOXA3_ENSG00000170608  -0.114814811  FOXA3_ENSG00000170608
+# summary deviance
 ```
 
-####**A complete workflow of the scGPS: given an unknown mixed population, find clusters and estimate relationship between clusters** 
-
+#A complete workflow of the scGPS: given an unknown mixed population, find clusters and estimate relationship between clusters
 
 
 ```r
-#given a single cell expression matrix, without clustering information 
+#given a single cell expression matrix, without clustering information
 day5 <- sample2
 cellnames <- colnames(day5$dat5_counts)
 cluster <-day5$dat5_clusters
@@ -519,20 +474,18 @@ plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster)
 
 ![](vignette_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
 
+##Let's plot just the optimal clustering result (with colored dendrogram)
   
-  #####Let's plot just the optimal clustering result (with colored dendrogram)
 
 ```r
 optimal_index = which(CORE_cluster$optimalClust$KeyStats$Height == CORE_cluster$optimalClust$OptimalRes)
 
-plot_optimal_CORE(original_tree= CORE_cluster$tree, optimal_cluster = unlist(CORE_cluster$Cluster[optimal_index]), shift = -200)
+plot_optimal_CORE(original_tree= CORE_cluster$tree, optimal_cluster = unlist(CORE_cluster$Cluster[optimal_index]), shift = -1500)
 #> [1] "Ordering and assigning labels..."
 #> [1] 2
-#> [1] 204 424  NA  NA
+#> [1] 128 270  NA
 #> [1] 3
-#> [1] 204 424 536  NA
-#> [1] 4
-#> [1] 204 424 536 808
+#> [1] 128 270 393
 #> [1] "Plotting the colored dendrogram now...."
 ```
 
@@ -543,7 +496,8 @@ plot_optimal_CORE(original_tree= CORE_cluster$tree, optimal_cluster = unlist(COR
 #> [1] "Users are required to check cluster labels...."
 ```
   
-  #####Let's compare with other dimensional reduction methods 
+##Let's compare with other dimensional reduction methods 
+
 
 ```r
 library(cidr)
@@ -567,7 +521,8 @@ p2
 
 ![](vignette_files/figure-html/unnamed-chunk-5-2.png)<!-- -->
   
-  #####Find gene markers and annotate clusters 
+##Find gene markers and annotate clusters
+
 
 ```r
 
@@ -578,7 +533,11 @@ genes <-genes$Merged_unique
 #the gene list can also be generated objectively by differential expression analysis
 #if the cluster information is in the mixedpop2 object, run this (if not run the CORE
 #as described below) 
-DEgenes <- findMarkers_scGPS(expression_matrix=assay(mixedpop2), cluster = mixedpop2@colData$Cluster)
+DEgenes <- findMarkers_scGPS(expression_matrix=assay(mixedpop2), cluster = colData(mixedpop2)[,1])
+#> [1] "Start estimate dispersions for cluster 1..."
+#> [1] "Done estimate dispersions. Start nbinom test for cluster 1..."
+#> [1] "Done nbinom test for cluster 1 ..."
+#> [1] "Adjust foldchange by subtracting basemean to 1..."
 #> [1] "Start estimate dispersions for cluster 2..."
 #> [1] "Done estimate dispersions. Start nbinom test for cluster 2..."
 #> [1] "Done nbinom test for cluster 2 ..."
@@ -587,16 +546,12 @@ DEgenes <- findMarkers_scGPS(expression_matrix=assay(mixedpop2), cluster = mixed
 #> [1] "Done estimate dispersions. Start nbinom test for cluster 3..."
 #> [1] "Done nbinom test for cluster 3 ..."
 #> [1] "Adjust foldchange by subtracting basemean to 1..."
-#> [1] "Start estimate dispersions for cluster 1..."
-#> [1] "Done estimate dispersions. Start nbinom test for cluster 1..."
-#> [1] "Done nbinom test for cluster 1 ..."
-#> [1] "Adjust foldchange by subtracting basemean to 1..."
 #> [1] "Start estimate dispersions for cluster 4..."
 #> [1] "Done estimate dispersions. Start nbinom test for cluster 4..."
 #> [1] "Done nbinom test for cluster 4 ..."
 #> [1] "Adjust foldchange by subtracting basemean to 1..."
 names(DEgenes)
-#> [1] "DE_Subpop2vsRemaining" "DE_Subpop3vsRemaining" "DE_Subpop1vsRemaining"
+#> [1] "DE_Subpop1vsRemaining" "DE_Subpop2vsRemaining" "DE_Subpop3vsRemaining"
 #> [4] "DE_Subpop4vsRemaining"
 
 #you can annotate the identified clusters 
@@ -604,7 +559,7 @@ DEgeneList_3vsOthers <- DEgenes$DE_Subpop3vsRemaining$id
 #format to ensembl genes 
 DEgeneList_3vsOthers <-gsub("_.*", "", DEgeneList_3vsOthers )
 head(DEgeneList_3vsOthers)
-#> [1] "TTR"       "SERPINE2"  "APOA1"     "H2AFZ"     "APOA2"     "LINC01356"
+#> [1] "TTR"       "SERPINE2"  "APOA1"     "APOA2"     "H2AFZ"     "LINC01356"
 #the following command saves the file "PathwayEnrichment.xlsx" to the working dir
 enrichment_test <- annotate_scGPS(DEgeneList_3vsOthers, pvalueCutoff=0.05, gene_symbol=TRUE,output_filename = "PathwayEnrichment.xlsx", output_path = NULL )
 #> 'select()' returned 1:many mapping between keys and columns
@@ -627,354 +582,377 @@ dotplot(enrichment_test, showCategory=15)
 
 #add the CORE cluster information into the scGPS object 
 Optimal_index <- which( CORE_cluster$optimalClust$KeyStats$Height == CORE_cluster$optimalClust$OptimalRes)
-mixedpop2@colData$Cluster <- unlist(CORE_cluster$Cluster[[Optimal_index]])
+colData(mixedpop2)[,1] <- unlist(CORE_cluster$Cluster[[Optimal_index]])
+```
 
+##Start the prediction
+
+
+```r
 
 #select a subpopulation
 c_selectID <- 1
 
 #run the test bootstrap with nboots = 2 runs
-suppressWarnings(LSOLDA_dat <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop2, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list()))
+LSOLDA_dat <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop2, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list())
 #> 
 #> Call:  glmnet(x = t(predictor_S1), y = y_cat, family = "binomial") 
 #> 
-#>         Df       %Dev    Lambda
-#>   [1,]   0 -2.883e-15 2.444e-01
-#>   [2,]   2  3.887e-02 2.227e-01
-#>   [3,]   3  7.612e-02 2.029e-01
-#>   [4,]   4  1.092e-01 1.849e-01
-#>   [5,]   5  1.421e-01 1.685e-01
-#>   [6,]   6  1.715e-01 1.535e-01
-#>   [7,]   6  1.979e-01 1.399e-01
-#>   [8,]   7  2.214e-01 1.274e-01
-#>   [9,]   7  2.423e-01 1.161e-01
-#>  [10,]   7  2.608e-01 1.058e-01
-#>  [11,]   9  2.782e-01 9.640e-02
-#>  [12,]   9  2.958e-01 8.784e-02
-#>  [13,]  10  3.125e-01 8.003e-02
-#>  [14,]  10  3.278e-01 7.292e-02
-#>  [15,]  12  3.420e-01 6.645e-02
-#>  [16,]  13  3.549e-01 6.054e-02
-#>  [17,]  15  3.696e-01 5.516e-02
-#>  [18,]  18  3.856e-01 5.026e-02
-#>  [19,]  21  4.009e-01 4.580e-02
-#>  [20,]  22  4.155e-01 4.173e-02
-#>  [21,]  22  4.296e-01 3.802e-02
-#>  [22,]  23  4.429e-01 3.464e-02
-#>  [23,]  23  4.550e-01 3.157e-02
-#>  [24,]  25  4.666e-01 2.876e-02
-#>  [25,]  29  4.780e-01 2.621e-02
-#>  [26,]  32  4.904e-01 2.388e-02
-#>  [27,]  37  5.033e-01 2.176e-02
-#>  [28,]  41  5.159e-01 1.982e-02
-#>  [29,]  43  5.286e-01 1.806e-02
-#>  [30,]  48  5.408e-01 1.646e-02
-#>  [31,]  54  5.530e-01 1.500e-02
-#>  [32,]  57  5.650e-01 1.366e-02
-#>  [33,]  60  5.763e-01 1.245e-02
-#>  [34,]  63  5.868e-01 1.134e-02
-#>  [35,]  67  5.968e-01 1.034e-02
-#>  [36,]  71  6.062e-01 9.418e-03
-#>  [37,]  73  6.152e-01 8.582e-03
-#>  [38,]  76  6.237e-01 7.819e-03
-#>  [39,]  78  6.322e-01 7.125e-03
-#>  [40,]  81  6.405e-01 6.492e-03
-#>  [41,]  82  6.482e-01 5.915e-03
-#>  [42,]  84  6.553e-01 5.390e-03
-#>  [43,]  84  6.625e-01 4.911e-03
-#>  [44,]  87  6.693e-01 4.475e-03
-#>  [45,]  88  6.764e-01 4.077e-03
-#>  [46,]  92  6.839e-01 3.715e-03
-#>  [47,]  95  6.909e-01 3.385e-03
-#>  [48,]  95  6.975e-01 3.084e-03
-#>  [49,]  96  7.039e-01 2.810e-03
-#>  [50,]  98  7.107e-01 2.560e-03
-#>  [51,]  99  7.181e-01 2.333e-03
-#>  [52,] 100  7.256e-01 2.126e-03
-#>  [53,] 101  7.330e-01 1.937e-03
-#>  [54,] 103  7.402e-01 1.765e-03
-#>  [55,] 104  7.469e-01 1.608e-03
-#>  [56,] 105  7.534e-01 1.465e-03
-#>  [57,] 105  7.596e-01 1.335e-03
-#>  [58,] 105  7.654e-01 1.216e-03
-#>  [59,] 105  7.708e-01 1.108e-03
-#>  [60,] 105  7.759e-01 1.010e-03
-#>  [61,] 105  7.807e-01 9.202e-04
-#>  [62,] 106  7.852e-01 8.384e-04
-#>  [63,] 107  7.895e-01 7.640e-04
-#>  [64,] 105  7.936e-01 6.961e-04
-#>  [65,] 106  7.975e-01 6.343e-04
-#>  [66,] 107  8.012e-01 5.779e-04
-#>  [67,] 107  8.047e-01 5.266e-04
-#>  [68,] 109  8.079e-01 4.798e-04
-#>  [69,] 109  8.112e-01 4.372e-04
-#>  [70,] 109  8.144e-01 3.983e-04
-#>  [71,] 109  8.172e-01 3.629e-04
-#>  [72,] 111  8.200e-01 3.307e-04
-#>  [73,] 112  8.226e-01 3.013e-04
-#>  [74,] 112  8.250e-01 2.746e-04
-#>  [75,] 113  8.271e-01 2.502e-04
-#>  [76,] 113  8.291e-01 2.279e-04
-#>  [77,] 113  8.311e-01 2.077e-04
-#>  [78,] 113  8.329e-01 1.892e-04
-#>  [79,] 112  8.346e-01 1.724e-04
-#>  [80,] 112  8.362e-01 1.571e-04
-#>  [81,] 112  8.379e-01 1.432e-04
-#>  [82,] 111  8.396e-01 1.304e-04
-#>  [83,] 110  8.413e-01 1.188e-04
-#>  [84,] 110  8.428e-01 1.083e-04
-#>  [85,] 107  8.443e-01 9.867e-05
-#>  [86,] 107  8.454e-01 8.990e-05
-#>  [87,] 106  8.466e-01 8.192e-05
-#>  [88,] 107  8.479e-01 7.464e-05
-#>  [89,] 107  8.492e-01 6.801e-05
-#>  [90,] 109  8.503e-01 6.197e-05
-#>  [91,] 109  8.515e-01 5.646e-05
-#>  [92,] 109  8.526e-01 5.145e-05
-#>  [93,] 109  8.533e-01 4.688e-05
-#>  [94,] 111  8.544e-01 4.271e-05
-#>  [95,] 111  8.549e-01 3.892e-05
-#>  [96,] 111  8.559e-01 3.546e-05
-#>  [97,] 111  8.562e-01 3.231e-05
-#>  [98,] 111  8.571e-01 2.944e-05
-#>  [99,] 110  8.573e-01 2.682e-05
-#> [100,] 111  8.579e-01 2.444e-05
+#>        Df       %Dev    Lambda
+#>   [1,]  0 -1.922e-15 2.653e-01
+#>   [2,]  1  3.460e-02 2.418e-01
+#>   [3,]  1  6.389e-02 2.203e-01
+#>   [4,]  4  9.254e-02 2.007e-01
+#>   [5,]  4  1.248e-01 1.829e-01
+#>   [6,]  4  1.528e-01 1.666e-01
+#>   [7,]  5  1.781e-01 1.518e-01
+#>   [8,]  5  2.024e-01 1.383e-01
+#>   [9,]  5  2.238e-01 1.261e-01
+#>  [10,]  5  2.427e-01 1.149e-01
+#>  [11,]  5  2.595e-01 1.046e-01
+#>  [12,]  5  2.744e-01 9.535e-02
+#>  [13,]  5  2.876e-01 8.688e-02
+#>  [14,]  5  2.993e-01 7.916e-02
+#>  [15,]  7  3.117e-01 7.213e-02
+#>  [16,]  8  3.237e-01 6.572e-02
+#>  [17,] 12  3.368e-01 5.988e-02
+#>  [18,] 12  3.500e-01 5.456e-02
+#>  [19,] 13  3.640e-01 4.972e-02
+#>  [20,] 17  3.781e-01 4.530e-02
+#>  [21,] 23  3.925e-01 4.128e-02
+#>  [22,] 26  4.128e-01 3.761e-02
+#>  [23,] 28  4.311e-01 3.427e-02
+#>  [24,] 29  4.479e-01 3.122e-02
+#>  [25,] 33  4.656e-01 2.845e-02
+#>  [26,] 34  4.847e-01 2.592e-02
+#>  [27,] 41  5.039e-01 2.362e-02
+#>  [28,] 44  5.235e-01 2.152e-02
+#>  [29,] 48  5.423e-01 1.961e-02
+#>  [30,] 50  5.614e-01 1.787e-02
+#>  [31,] 51  5.792e-01 1.628e-02
+#>  [32,] 52  5.957e-01 1.483e-02
+#>  [33,] 54  6.117e-01 1.352e-02
+#>  [34,] 56  6.280e-01 1.232e-02
+#>  [35,] 58  6.438e-01 1.122e-02
+#>  [36,] 62  6.593e-01 1.022e-02
+#>  [37,] 63  6.744e-01 9.316e-03
+#>  [38,] 65  6.889e-01 8.488e-03
+#>  [39,] 66  7.027e-01 7.734e-03
+#>  [40,] 67  7.158e-01 7.047e-03
+#>  [41,] 69  7.288e-01 6.421e-03
+#>  [42,] 72  7.415e-01 5.851e-03
+#>  [43,] 73  7.543e-01 5.331e-03
+#>  [44,] 76  7.669e-01 4.857e-03
+#>  [45,] 78  7.791e-01 4.426e-03
+#>  [46,] 80  7.911e-01 4.033e-03
+#>  [47,] 80  8.024e-01 3.674e-03
+#>  [48,] 80  8.132e-01 3.348e-03
+#>  [49,] 80  8.233e-01 3.051e-03
+#>  [50,] 81  8.330e-01 2.780e-03
+#>  [51,] 81  8.424e-01 2.533e-03
+#>  [52,] 82  8.512e-01 2.308e-03
+#>  [53,] 84  8.597e-01 2.103e-03
+#>  [54,] 84  8.679e-01 1.916e-03
+#>  [55,] 85  8.757e-01 1.746e-03
+#>  [56,] 86  8.833e-01 1.591e-03
+#>  [57,] 88  8.909e-01 1.449e-03
+#>  [58,] 88  8.980e-01 1.321e-03
+#>  [59,] 88  9.048e-01 1.203e-03
+#>  [60,] 89  9.114e-01 1.096e-03
+#>  [61,] 90  9.177e-01 9.989e-04
+#>  [62,] 89  9.238e-01 9.102e-04
+#>  [63,] 88  9.296e-01 8.293e-04
+#>  [64,] 87  9.351e-01 7.557e-04
+#>  [65,] 87  9.403e-01 6.885e-04
+#>  [66,] 85  9.451e-01 6.274e-04
+#>  [67,] 84  9.496e-01 5.716e-04
+#>  [68,] 85  9.538e-01 5.208e-04
+#>  [69,] 85  9.578e-01 4.746e-04
+#>  [70,] 85  9.615e-01 4.324e-04
+#>  [71,] 84  9.649e-01 3.940e-04
+#>  [72,] 84  9.680e-01 3.590e-04
+#>  [73,] 83  9.708e-01 3.271e-04
+#>  [74,] 83  9.735e-01 2.980e-04
+#>  [75,] 83  9.759e-01 2.716e-04
+#>  [76,] 83  9.780e-01 2.474e-04
+#>  [77,] 84  9.800e-01 2.255e-04
+#>  [78,] 84  9.818e-01 2.054e-04
+#>  [79,] 83  9.834e-01 1.872e-04
+#>  [80,] 84  9.849e-01 1.706e-04
+#>  [81,] 85  9.863e-01 1.554e-04
+#>  [82,] 85  9.875e-01 1.416e-04
+#>  [83,] 85  9.886e-01 1.290e-04
+#>  [84,] 85  9.896e-01 1.176e-04
+#>  [85,] 85  9.905e-01 1.071e-04
+#>  [86,] 85  9.914e-01 9.760e-05
+#>  [87,] 84  9.921e-01 8.893e-05
+#>  [88,] 84  9.928e-01 8.103e-05
+#>  [89,] 84  9.935e-01 7.383e-05
+#>  [90,] 84  9.940e-01 6.727e-05
+#>  [91,] 85  9.946e-01 6.129e-05
+#>  [92,] 84  9.950e-01 5.585e-05
+#>  [93,] 83  9.955e-01 5.089e-05
+#>  [94,] 83  9.959e-01 4.637e-05
+#>  [95,] 83  9.962e-01 4.225e-05
+#>  [96,] 84  9.965e-01 3.849e-05
+#>  [97,] 84  9.968e-01 3.507e-05
+#>  [98,] 83  9.971e-01 3.196e-05
+#>  [99,] 84  9.974e-01 2.912e-05
+#> [100,] 84  9.976e-01 2.653e-05
 #> [1] "done 1"
 #> 
 #> Call:  glmnet(x = t(predictor_S1), y = y_cat, family = "binomial") 
 #> 
 #>         Df       %Dev    Lambda
-#>   [1,]   0 -2.883e-15 2.506e-01
-#>   [2,]   1  3.096e-02 2.284e-01
-#>   [3,]   3  6.789e-02 2.081e-01
-#>   [4,]   4  1.030e-01 1.896e-01
-#>   [5,]   4  1.367e-01 1.728e-01
-#>   [6,]   4  1.660e-01 1.574e-01
-#>   [7,]   4  1.917e-01 1.434e-01
-#>   [8,]   5  2.148e-01 1.307e-01
-#>   [9,]   5  2.371e-01 1.191e-01
-#>  [10,]   6  2.567e-01 1.085e-01
-#>  [11,]   9  2.759e-01 9.886e-02
-#>  [12,]  10  2.940e-01 9.008e-02
-#>  [13,]  10  3.111e-01 8.207e-02
-#>  [14,]  11  3.262e-01 7.478e-02
-#>  [15,]  12  3.396e-01 6.814e-02
-#>  [16,]  12  3.520e-01 6.209e-02
-#>  [17,]  13  3.635e-01 5.657e-02
-#>  [18,]  14  3.740e-01 5.155e-02
-#>  [19,]  15  3.844e-01 4.697e-02
-#>  [20,]  17  3.941e-01 4.279e-02
-#>  [21,]  19  4.044e-01 3.899e-02
-#>  [22,]  24  4.157e-01 3.553e-02
-#>  [23,]  24  4.273e-01 3.237e-02
-#>  [24,]  26  4.387e-01 2.950e-02
-#>  [25,]  28  4.501e-01 2.688e-02
-#>  [26,]  32  4.615e-01 2.449e-02
-#>  [27,]  35  4.730e-01 2.231e-02
-#>  [28,]  36  4.835e-01 2.033e-02
-#>  [29,]  39  4.934e-01 1.852e-02
-#>  [30,]  42  5.024e-01 1.688e-02
-#>  [31,]  43  5.110e-01 1.538e-02
-#>  [32,]  49  5.195e-01 1.401e-02
-#>  [33,]  54  5.295e-01 1.277e-02
-#>  [34,]  57  5.392e-01 1.163e-02
-#>  [35,]  62  5.495e-01 1.060e-02
-#>  [36,]  64  5.602e-01 9.659e-03
-#>  [37,]  65  5.705e-01 8.801e-03
-#>  [38,]  67  5.801e-01 8.019e-03
-#>  [39,]  70  5.890e-01 7.306e-03
-#>  [40,]  72  5.972e-01 6.657e-03
-#>  [41,]  75  6.049e-01 6.066e-03
-#>  [42,]  73  6.118e-01 5.527e-03
-#>  [43,]  76  6.182e-01 5.036e-03
-#>  [44,]  79  6.241e-01 4.589e-03
-#>  [45,]  81  6.298e-01 4.181e-03
-#>  [46,]  86  6.355e-01 3.810e-03
-#>  [47,]  88  6.410e-01 3.471e-03
-#>  [48,]  91  6.461e-01 3.163e-03
-#>  [49,]  93  6.510e-01 2.882e-03
-#>  [50,]  94  6.556e-01 2.626e-03
-#>  [51,]  94  6.598e-01 2.393e-03
-#>  [52,]  97  6.635e-01 2.180e-03
-#>  [53,]  97  6.670e-01 1.986e-03
-#>  [54,]  96  6.702e-01 1.810e-03
-#>  [55,]  98  6.732e-01 1.649e-03
-#>  [56,]  99  6.759e-01 1.503e-03
-#>  [57,] 100  6.784e-01 1.369e-03
-#>  [58,] 104  6.808e-01 1.247e-03
-#>  [59,] 105  6.831e-01 1.137e-03
-#>  [60,] 107  6.853e-01 1.036e-03
-#>  [61,] 108  6.874e-01 9.437e-04
-#>  [62,] 109  6.895e-01 8.598e-04
-#>  [63,] 109  6.914e-01 7.834e-04
-#>  [64,] 111  6.931e-01 7.138e-04
-#>  [65,] 111  6.946e-01 6.504e-04
-#>  [66,] 111  6.961e-01 5.926e-04
-#>  [67,] 110  6.973e-01 5.400e-04
-#>  [68,] 110  6.984e-01 4.920e-04
-#>  [69,] 109  6.994e-01 4.483e-04
-#>  [70,] 108  7.003e-01 4.085e-04
-#>  [71,] 110  7.010e-01 3.722e-04
-#>  [72,] 112  7.017e-01 3.391e-04
-#>  [73,] 112  7.023e-01 3.090e-04
-#>  [74,] 114  7.028e-01 2.816e-04
-#>  [75,] 114  7.033e-01 2.565e-04
-#>  [76,] 114  7.037e-01 2.338e-04
-#>  [77,] 114  7.041e-01 2.130e-04
-#>  [78,] 115  7.044e-01 1.941e-04
-#>  [79,] 115  7.047e-01 1.768e-04
-#>  [80,] 115  7.049e-01 1.611e-04
-#>  [81,] 115  7.052e-01 1.468e-04
-#>  [82,] 115  7.054e-01 1.338e-04
-#>  [83,] 115  7.055e-01 1.219e-04
-#>  [84,] 115  7.057e-01 1.111e-04
-#>  [85,] 115  7.058e-01 1.012e-04
-#>  [86,] 115  7.059e-01 9.220e-05
-#>  [87,] 115  7.060e-01 8.401e-05
-#>  [88,] 115  7.061e-01 7.654e-05
-#>  [89,] 115  7.061e-01 6.974e-05
-#>  [90,] 115  7.062e-01 6.355e-05
-#>  [91,] 115  7.063e-01 5.790e-05
-#>  [92,] 115  7.063e-01 5.276e-05
-#>  [93,] 115  7.063e-01 4.807e-05
-#>  [94,] 115  7.064e-01 4.380e-05
-#>  [95,] 115  7.064e-01 3.991e-05
-#>  [96,] 115  7.064e-01 3.636e-05
-#>  [97,] 116  7.065e-01 3.313e-05
-#>  [98,] 116  7.065e-01 3.019e-05
-#>  [99,] 117  7.065e-01 2.751e-05
-#> [100,] 117  7.065e-01 2.506e-05
+#>   [1,]   0 -1.922e-15 2.687e-01
+#>   [2,]   2  3.739e-02 2.448e-01
+#>   [3,]   2  7.869e-02 2.230e-01
+#>   [4,]   2  1.139e-01 2.032e-01
+#>   [5,]   4  1.464e-01 1.852e-01
+#>   [6,]   4  1.760e-01 1.687e-01
+#>   [7,]   4  2.017e-01 1.537e-01
+#>   [8,]   5  2.249e-01 1.401e-01
+#>   [9,]   5  2.458e-01 1.276e-01
+#>  [10,]   5  2.641e-01 1.163e-01
+#>  [11,]   5  2.801e-01 1.060e-01
+#>  [12,]   6  2.946e-01 9.655e-02
+#>  [13,]   6  3.078e-01 8.797e-02
+#>  [14,]   6  3.193e-01 8.016e-02
+#>  [15,]   7  3.309e-01 7.304e-02
+#>  [16,]   9  3.444e-01 6.655e-02
+#>  [17,]  10  3.582e-01 6.064e-02
+#>  [18,]  10  3.707e-01 5.525e-02
+#>  [19,]  11  3.819e-01 5.034e-02
+#>  [20,]  14  3.957e-01 4.587e-02
+#>  [21,]  17  4.100e-01 4.179e-02
+#>  [22,]  21  4.237e-01 3.808e-02
+#>  [23,]  23  4.375e-01 3.470e-02
+#>  [24,]  26  4.525e-01 3.162e-02
+#>  [25,]  27  4.661e-01 2.881e-02
+#>  [26,]  29  4.787e-01 2.625e-02
+#>  [27,]  31  4.915e-01 2.392e-02
+#>  [28,]  34  5.042e-01 2.179e-02
+#>  [29,]  36  5.167e-01 1.986e-02
+#>  [30,]  38  5.289e-01 1.809e-02
+#>  [31,]  45  5.408e-01 1.648e-02
+#>  [32,]  44  5.520e-01 1.502e-02
+#>  [33,]  50  5.632e-01 1.369e-02
+#>  [34,]  51  5.748e-01 1.247e-02
+#>  [35,]  55  5.867e-01 1.136e-02
+#>  [36,]  58  5.979e-01 1.035e-02
+#>  [37,]  62  6.093e-01 9.433e-03
+#>  [38,]  64  6.202e-01 8.595e-03
+#>  [39,]  64  6.301e-01 7.831e-03
+#>  [40,]  64  6.390e-01 7.136e-03
+#>  [41,]  67  6.471e-01 6.502e-03
+#>  [42,]  71  6.551e-01 5.924e-03
+#>  [43,]  73  6.631e-01 5.398e-03
+#>  [44,]  73  6.704e-01 4.918e-03
+#>  [45,]  77  6.775e-01 4.481e-03
+#>  [46,]  79  6.847e-01 4.083e-03
+#>  [47,]  83  6.921e-01 3.721e-03
+#>  [48,]  83  7.000e-01 3.390e-03
+#>  [49,]  84  7.074e-01 3.089e-03
+#>  [50,]  84  7.143e-01 2.814e-03
+#>  [51,]  87  7.208e-01 2.564e-03
+#>  [52,]  91  7.271e-01 2.337e-03
+#>  [53,]  94  7.332e-01 2.129e-03
+#>  [54,]  95  7.390e-01 1.940e-03
+#>  [55,]  94  7.443e-01 1.768e-03
+#>  [56,]  94  7.491e-01 1.611e-03
+#>  [57,]  94  7.534e-01 1.467e-03
+#>  [58,]  94  7.573e-01 1.337e-03
+#>  [59,]  94  7.609e-01 1.218e-03
+#>  [60,]  97  7.646e-01 1.110e-03
+#>  [61,]  97  7.687e-01 1.011e-03
+#>  [62,]  97  7.728e-01 9.216e-04
+#>  [63,]  96  7.768e-01 8.397e-04
+#>  [64,]  97  7.805e-01 7.651e-04
+#>  [65,]  99  7.844e-01 6.972e-04
+#>  [66,] 100  7.884e-01 6.352e-04
+#>  [67,] 101  7.927e-01 5.788e-04
+#>  [68,] 101  7.972e-01 5.274e-04
+#>  [69,] 100  8.020e-01 4.805e-04
+#>  [70,]  98  8.070e-01 4.378e-04
+#>  [71,]  98  8.123e-01 3.989e-04
+#>  [72,]  97  8.178e-01 3.635e-04
+#>  [73,] 100  8.243e-01 3.312e-04
+#>  [74,] 101  8.316e-01 3.018e-04
+#>  [75,] 100  8.392e-01 2.750e-04
+#>  [76,]  99  8.464e-01 2.505e-04
+#>  [77,]  99  8.549e-01 2.283e-04
+#>  [78,]  99  8.644e-01 2.080e-04
+#>  [79,]  99  8.775e-01 1.895e-04
+#>  [80,]  99  8.888e-01 1.727e-04
+#>  [81,]  98  8.993e-01 1.574e-04
+#>  [82,]  98  9.089e-01 1.434e-04
+#>  [83,]  97  9.175e-01 1.306e-04
+#>  [84,]  98  9.253e-01 1.190e-04
+#>  [85,]  99  9.329e-01 1.085e-04
+#>  [86,]  98  9.396e-01 9.882e-05
+#>  [87,]  98  9.453e-01 9.004e-05
+#>  [88,]  98  9.505e-01 8.204e-05
+#>  [89,]  98  9.551e-01 7.475e-05
+#>  [90,]  98  9.593e-01 6.811e-05
+#>  [91,]  98  9.630e-01 6.206e-05
+#>  [92,]  98  9.663e-01 5.655e-05
+#>  [93,]  97  9.695e-01 5.153e-05
+#>  [94,]  97  9.721e-01 4.695e-05
+#>  [95,]  97  9.744e-01 4.278e-05
+#>  [96,]  98  9.764e-01 3.898e-05
+#>  [97,]  99  9.782e-01 3.551e-05
+#>  [98,]  99  9.800e-01 3.236e-05
+#>  [99,]  98  9.817e-01 2.948e-05
+#> [100,]  98  9.832e-01 2.687e-05
 #> [1] "done 2"
+```
 
-#display summary results 
+##Display summary results for the prediction
+
+
+```r
 #summary results LDA
-row_cluster <-length(unique(mixedpop2@colData$Cluster))
+row_cluster <-length(unique(colData(mixedpop2)[,1]))
 summary_prediction_lda(LSOLDA_dat=LSOLDA_dat, nPredSubpop = row_cluster )
 #>                 V1               V2                                names
-#> 1 81.3725490196078 81.8627450980392 LDA for subpop 1 in target mixedpop2
-#> 2 17.4285714285714 15.4285714285714 LDA for subpop 2 in target mixedpop2
-#> 3 13.4715025906736 13.9896373056995 LDA for subpop 3 in target mixedpop2
-#> 4               25           21.875 LDA for subpop 4 in target mixedpop2
+#> 1        78.515625          76.5625 LDA for subpop 1 in target mixedpop2
+#> 2 17.2093023255814 15.8139534883721 LDA for subpop 2 in target mixedpop2
+#> 3 17.2413793103448 13.7931034482759 LDA for subpop 3 in target mixedpop2
 
 #summary results Lasso
 summary_prediction_lasso(LSOLDA_dat=LSOLDA_dat, nPredSubpop = row_cluster)
 #>                 V1               V2                                 names
-#> 1 81.8627450980392 81.1274509803922 LASSO for subpop1 in target mixedpop2
-#> 2 15.1428571428571 12.8571428571429 LASSO for subpop2 in target mixedpop2
-#> 3  10.880829015544 11.9170984455959 LASSO for subpop3 in target mixedpop2
-#> 4            18.75           21.875 LASSO for subpop4 in target mixedpop2
+#> 1        78.515625           78.125 LASSO for subpop1 in target mixedpop2
+#> 2 18.1395348837209 19.0697674418605 LASSO for subpop2 in target mixedpop2
+#> 3 27.5862068965517 24.1379310344828 LASSO for subpop3 in target mixedpop2
 
 #summary deviance 
 summary_deviance(LSOLDA_dat)
 #> $allDeviance
-#> [1] "0.6062" "0.374" 
+#> [1] "0.2876" "0.3078"
 #> 
 #> $DeviMax
-#>          Dfd   Deviance        DEgenes
-#> 1          0 -2.883e-15 genes_cluster1
-#> 2          2    0.03887 genes_cluster1
-#> 3          3    0.07612 genes_cluster1
-#> 4          4     0.1092 genes_cluster1
-#> 5          5     0.1421 genes_cluster1
-#> 6          6     0.1979 genes_cluster1
-#> 7          7     0.2608 genes_cluster1
-#> 8          9     0.2958 genes_cluster1
-#> 9         10     0.3278 genes_cluster1
-#> 10        12      0.342 genes_cluster1
-#> 11        13     0.3549 genes_cluster1
-#> 12        15     0.3696 genes_cluster1
-#> 13        18     0.3856 genes_cluster1
-#> 14        21     0.4009 genes_cluster1
-#> 15        22     0.4296 genes_cluster1
-#> 16        23      0.455 genes_cluster1
-#> 17        25     0.4666 genes_cluster1
-#> 18        29      0.478 genes_cluster1
-#> 19        32     0.4904 genes_cluster1
-#> 20        37     0.5033 genes_cluster1
-#> 21        41     0.5159 genes_cluster1
-#> 22        43     0.5286 genes_cluster1
-#> 23        48     0.5408 genes_cluster1
-#> 24        54      0.553 genes_cluster1
-#> 25        57      0.565 genes_cluster1
-#> 26        60     0.5763 genes_cluster1
-#> 27        63     0.5868 genes_cluster1
-#> 28        67     0.5968 genes_cluster1
-#> 29        71     0.6062 genes_cluster1
-#> 30 remaining          1        DEgenes
+#>         Dfd   Deviance        DEgenes
+#> 1         0 -1.922e-15 genes_cluster1
+#> 2         2     0.1139 genes_cluster1
+#> 3         4     0.2017 genes_cluster1
+#> 4         5     0.2801 genes_cluster1
+#> 5         6     0.3078 genes_cluster1
+#> 6 remaining          1        DEgenes
 #> 
 #> $LassoGenesMax
-#>                                     1                    name
-#> (Intercept)             -4.630438e-01             (Intercept)
-#> NPPA_ENSG00000175206    -4.125500e-01    NPPA_ENSG00000175206
-#> NPPB_ENSG00000120937     3.443263e-05    NPPB_ENSG00000120937
-#> FCN3_ENSG00000142748     5.777290e-02    FCN3_ENSG00000142748
-#> TAL1_ENSG00000162367     1.112969e-01    TAL1_ENSG00000162367
-#> TPM3_ENSG00000143549    -2.111942e-01    TPM3_ENSG00000143549
-#> RGS4_ENSG00000117152     3.626504e-02    RGS4_ENSG00000117152
-#> NR5A2_ENSG00000116833    6.976268e-01   NR5A2_ENSG00000116833
-#> TNNI1_ENSG00000159173    7.518817e-03   TNNI1_ENSG00000159173
-#> CD34_ENSG00000174059    -1.295037e-02    CD34_ENSG00000174059
-#> CXCR4_ENSG00000121966   -3.114906e-01   CXCR4_ENSG00000121966
-#> MYO3B_ENSG00000071909    3.491400e-01   MYO3B_ENSG00000071909
-#> FN1_ENSG00000115414      1.627898e-02     FN1_ENSG00000115414
-#> EOMES_ENSG00000163508   -4.489676e-01   EOMES_ENSG00000163508
-#> TNNC1_ENSG00000114854   -7.221320e-02   TNNC1_ENSG00000114854
-#> HESX1_ENSG00000163666   -2.362801e-02   HESX1_ENSG00000163666
-#> SST_ENSG00000157005     -2.418495e+00     SST_ENSG00000157005
-#> MSX1_ENSG00000163132    -3.549699e-02    MSX1_ENSG00000163132
-#> PDGFRA_ENSG00000134853   1.715565e-01  PDGFRA_ENSG00000134853
-#> ODAM_ENSG00000109205     6.509572e-02    ODAM_ENSG00000109205
-#> AFP_ENSG00000081051     -1.302778e+00     AFP_ENSG00000081051
-#> CXCL5_ENSG00000163735   -7.453958e-01   CXCL5_ENSG00000163735
-#> HAND2_ENSG00000164107    2.810149e-01   HAND2_ENSG00000164107
-#> IRX2_ENSG00000170561     1.257410e+00    IRX2_ENSG00000170561
-#> IRX1_ENSG00000170549    -3.219266e-01    IRX1_ENSG00000170549
-#> IL6ST_ENSG00000134352   -1.725337e-01   IL6ST_ENSG00000134352
-#> MEF2C_ENSG00000081189   -9.763946e-02   MEF2C_ENSG00000081189
-#> HAND1_ENSG00000113196    4.749478e-02   HAND1_ENSG00000113196
-#> POU5F1_ENSG00000204531  -1.543094e-01  POU5F1_ENSG00000204531
-#> SRF_ENSG00000112658      4.702787e-01     SRF_ENSG00000112658
-#> GJA1_ENSG00000152661    -2.305091e-01    GJA1_ENSG00000152661
-#> T_ENSG00000164458       -1.153808e+00       T_ENSG00000164458
-#> TBX20_ENSG00000164532    1.893405e-01   TBX20_ENSG00000164532
-#> GATA4_ENSG00000136574    7.958437e-02   GATA4_ENSG00000136574
-#> SNAI2_ENSG00000019549    6.275557e-04   SNAI2_ENSG00000019549
-#> SOX17_ENSG00000164736   -6.226182e-01   SOX17_ENSG00000164736
-#> HEY1_ENSG00000164683     2.727922e-01    HEY1_ENSG00000164683
-#> SDC2_ENSG00000169439    -1.870796e-01    SDC2_ENSG00000169439
-#> MYC_ENSG00000136997      8.570504e-01     MYC_ENSG00000136997
-#> THY1_ENSG00000154096     9.837578e-02    THY1_ENSG00000154096
-#> VIM_ENSG00000026025      9.650017e-03     VIM_ENSG00000026025
-#> NODAL_ENSG00000156574    1.568184e-01   NODAL_ENSG00000156574
-#> HHEX_ENSG00000152804    -6.586621e-02    HHEX_ENSG00000152804
-#> CACNA1C_ENSG00000151067  2.328150e-01 CACNA1C_ENSG00000151067
-#> CD9_ENSG00000010278     -2.449195e-01     CD9_ENSG00000010278
-#> NANOG_ENSG00000111704    1.687831e-01   NANOG_ENSG00000111704
-#> ATP2A2_ENSG00000174437   1.758317e-01  ATP2A2_ENSG00000174437
-#> TBX3_ENSG00000135111    -1.746431e-01    TBX3_ENSG00000135111
-#> CDX2_ENSG00000165556    -6.426846e-03    CDX2_ENSG00000165556
-#> KLF5_ENSG00000102554    -2.093684e+00    KLF5_ENSG00000102554
-#> PAPLN_ENSG00000100767   -1.627414e-01   PAPLN_ENSG00000100767
-#> GSC_ENSG00000133937     -1.102509e-01     GSC_ENSG00000133937
-#> ACTC1_ENSG00000159251    1.717451e-02   ACTC1_ENSG00000159251
-#> MEIS2_ENSG00000134138    6.218361e-02   MEIS2_ENSG00000134138
-#> MESP1_ENSG00000166823    7.269706e-01   MESP1_ENSG00000166823
-#> MESP2_ENSG00000188095    9.588729e-02   MESP2_ENSG00000188095
-#> NR2F2_ENSG00000185551    4.783700e-01   NR2F2_ENSG00000185551
-#> CDH5_ENSG00000179776    -2.673434e-01    CDH5_ENSG00000179776
-#> FOXF1_ENSG00000103241   -2.367287e+00   FOXF1_ENSG00000103241
-#> FOXC2_ENSG00000176692   -1.564603e-01   FOXC2_ENSG00000176692
-#> NOS2_ENSG00000007171     2.392834e-02    NOS2_ENSG00000007171
-#> VTN_ENSG00000109072     -2.571607e-02     VTN_ENSG00000109072
-#> HNF1B_ENSG00000275410   -3.970306e-01   HNF1B_ENSG00000275410
-#> MYL4_ENSG00000198336     3.121863e-02    MYL4_ENSG00000198336
-#> GATA6_ENSG00000141448   -2.946932e-02   GATA6_ENSG00000141448
-#> FOXA2_ENSG00000125798   -1.187547e+00   FOXA2_ENSG00000125798
-#> HNF4A_ENSG00000101076   -1.200698e-01   HNF4A_ENSG00000101076
-#> SNAI1_ENSG00000124216   -5.598797e-01   SNAI1_ENSG00000124216
-#> LYL1_ENSG00000104903    -2.004452e-02    LYL1_ENSG00000104903
-#> PLVAP_ENSG00000130300   -1.769311e-01   PLVAP_ENSG00000130300
-#> FOXA3_ENSG00000170608   -2.928374e-01   FOXA3_ENSG00000170608
-#> TNNT1_ENSG00000105048   -8.181756e-02   TNNT1_ENSG00000105048
+#>                                   1                   name
+#> (Intercept)            -1.090622240            (Intercept)
+#> TNNI1_ENSG00000159173   0.008930123  TNNI1_ENSG00000159173
+#> VIM_ENSG00000026025     0.015868582    VIM_ENSG00000026025
+#> HHEX_ENSG00000152804   -0.065894344   HHEX_ENSG00000152804
+#> TPM1_ENSG00000140416    0.010002491   TPM1_ENSG00000140416
+#> TMEM88_ENSG00000167874  0.033797085 TMEM88_ENSG00000167874
+#> MYL4_ENSG00000198336    0.003407876   MYL4_ENSG00000198336
+```
+##R Setting Information
+
+```r
+sessionInfo()
+#> R version 3.4.2 (2017-09-28)
+#> Platform: x86_64-apple-darwin15.6.0 (64-bit)
+#> Running under: OS X El Capitan 10.11.6
+#> 
+#> Matrix products: default
+#> BLAS: /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib
+#> LAPACK: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRlapack.dylib
+#> 
+#> locale:
+#> [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+#> 
+#> attached base packages:
+#> [1] stats4    parallel  stats     graphics  grDevices utils     datasets 
+#> [8] methods   base     
+#> 
+#> other attached packages:
+#>  [1] scGPS_0.1.0                xlsx_0.5.7                
+#>  [3] xlsxjars_0.6.1             rJava_0.9-9               
+#>  [5] org.Hs.eg.db_3.5.0         AnnotationDbi_1.40.0      
+#>  [7] clusterProfiler_3.6.0      ReactomePA_1.22.0         
+#>  [9] DOSE_3.4.0                 bindrcpp_0.2              
+#> [11] DESeq_1.30.0               locfit_1.5-9.1            
+#> [13] cowplot_0.9.1              cidr_0.1.5                
+#> [15] RColorBrewer_1.1-2         reshape2_1.4.3            
+#> [17] rmarkdown_1.8              dynamicTreeCut_1.63-1     
+#> [19] dplyr_0.7.4                caret_6.0-79              
+#> [21] ggplot2_2.2.1              lattice_0.20-35           
+#> [23] glmnet_2.0-16              foreach_1.4.4             
+#> [25] Matrix_1.2-12              SingleCellExperiment_1.0.0
+#> [27] SummarizedExperiment_1.8.1 DelayedArray_0.4.1        
+#> [29] matrixStats_0.52.2         GenomicRanges_1.30.1      
+#> [31] GenomeInfoDb_1.14.0        IRanges_2.12.0            
+#> [33] S4Vectors_0.16.0           Biobase_2.38.0            
+#> [35] BiocGenerics_0.24.0       
+#> 
+#> loaded via a namespace (and not attached):
+#>   [1] backports_1.1.2           fastmatch_1.1-0          
+#>   [3] RcppEigen_0.3.3.3.1       igraph_1.1.2             
+#>   [5] plyr_1.8.4                lazyeval_0.2.1           
+#>   [7] splines_3.4.2             BiocParallel_1.12.0      
+#>   [9] digest_0.6.12             GOSemSim_2.4.0           
+#>  [11] htmltools_0.3.6           GO.db_3.5.0              
+#>  [13] viridis_0.4.0             checkmate_1.8.5          
+#>  [15] magrittr_1.5              memoise_1.1.0            
+#>  [17] cluster_2.0.6             sfsmisc_1.1-2            
+#>  [19] recipes_0.1.2             fastcluster_1.1.24       
+#>  [21] annotate_1.56.1           gower_0.1.2              
+#>  [23] RcppParallel_4.4.0        dimRed_0.1.0             
+#>  [25] colorspace_1.3-2          rappdirs_0.3.1           
+#>  [27] blob_1.1.0                crayon_1.3.4             
+#>  [29] RCurl_1.95-4.8            RcppArmadillo_0.8.400.0.0
+#>  [31] graph_1.56.0              roxygen2_6.0.1           
+#>  [33] genefilter_1.60.0         bindr_0.1                
+#>  [35] survival_2.41-3           iterators_1.0.9          
+#>  [37] glue_1.2.0                DRR_0.0.2                
+#>  [39] gtable_0.2.0              ipred_0.9-6              
+#>  [41] zlibbioc_1.24.0           XVector_0.18.0           
+#>  [43] graphite_1.24.0           kernlab_0.9-25           
+#>  [45] ddalpha_1.3.1.1           prabclus_2.2-6           
+#>  [47] DEoptimR_1.0-8            scales_0.5.0             
+#>  [49] mvtnorm_1.0-6             DBI_0.7                  
+#>  [51] Rcpp_0.12.16              viridisLite_0.2.0        
+#>  [53] xtable_1.8-2              reactome.db_1.62.0       
+#>  [55] bit_1.1-12                foreign_0.8-69           
+#>  [57] mclust_5.4                lava_1.5.1               
+#>  [59] prodlim_1.6.1             httr_1.3.1               
+#>  [61] fgsea_1.4.0               fpc_2.1-10               
+#>  [63] clusterCrit_1.2.7         modeltools_0.2-21        
+#>  [65] pkgconfig_2.0.1           XML_3.98-1.9             
+#>  [67] flexmix_2.3-14            nnet_7.3-12              
+#>  [69] tidyselect_0.2.4          labeling_0.3             
+#>  [71] rlang_0.2.0               munsell_0.4.3            
+#>  [73] tools_3.4.2               RSQLite_2.0              
+#>  [75] ade4_1.7-8                devtools_1.13.4          
+#>  [77] broom_0.4.4               evaluate_0.10.1          
+#>  [79] stringr_1.3.0             yaml_2.1.18              
+#>  [81] bit64_0.9-7               ModelMetrics_1.1.0       
+#>  [83] knitr_1.20                robustbase_0.92-8        
+#>  [85] purrr_0.2.4               dendextend_1.6.0         
+#>  [87] nlme_3.1-131              whisker_0.3-2            
+#>  [89] RcppRoll_0.2.2            DO.db_2.9                
+#>  [91] xml2_1.1.1                compiler_3.4.2           
+#>  [93] rstudioapi_0.7            e1071_1.6-8              
+#>  [95] testthat_1.0.2            geneplotter_1.56.0       
+#>  [97] tibble_1.4.2              stringi_1.1.7            
+#>  [99] desc_1.1.1                trimcluster_0.1-2        
+#> [101] commonmark_1.4            psych_1.8.3.3            
+#> [103] pillar_1.2.1              data.table_1.10.4-3      
+#> [105] bitops_1.0-6              qvalue_2.10.0            
+#> [107] R6_2.2.2                  gridExtra_2.3            
+#> [109] codetools_0.2-15          MASS_7.3-47              
+#> [111] assertthat_0.2.0          CVST_0.2-1               
+#> [113] rprojroot_1.3-2           minpack.lm_1.2-1         
+#> [115] withr_2.1.2               mnormt_1.5-5             
+#> [117] GenomeInfoDbData_0.99.1   diptest_0.75-7           
+#> [119] grid_3.4.2                rpart_4.1-11             
+#> [121] timeDate_3043.102         tidyr_0.8.0              
+#> [123] NbClust_3.0               class_7.3-14             
+#> [125] rvcheck_0.0.9             lubridate_1.7.3
+#render("/Users/quan.nguyen/Documents/Powell_group_MacQuan/AllCodes/scGPS/vignettes/vignette.Rmd","all")
 ```
 
