@@ -6,6 +6,8 @@ date: "`r Sys.Date()`"
 output: 
   html_document:
     keep_md: true
+    theme: united
+    highlight: tango
 
 ---
 
@@ -16,7 +18,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-**Installation instruction**
+#Installation instruction
 
 ```{r, eval = FALSE}
 # Prior to installing scGPS you need to install the SummarizedExperiment
@@ -45,10 +47,9 @@ devtools::install_github("IMB-Computational-Genomics-Lab/scGPS")
 # using devtools
 devools::document()
 
-
 ```
 
-**A simple workflow of the scGPS: given a mixed population with known subpopulations, estimate transition scores between these subpopulation**
+#A simple workflow of the scGPS: given a mixed population with known subpopulations, estimate transition scores between these subpopulation
 
 ```{r, warning = FALSE, message = FALSE}
 devtools::load_all()
@@ -87,8 +88,7 @@ summary_prediction_lasso(LSOLDA_dat = LSOLDA_dat, nPredSubpop = 4)
 
 ```
 
-**A complete workflow of the scGPS: given an unknown mixed population, find clusters and estimate relationship between clusters** 
-
+#A complete workflow of the scGPS: given an unknown mixed population, find clusters and estimate relationship between clusters
 
 ```{r, warning = FALSE, message = FALSE}
 #given a single cell expression matrix, without clustering information
@@ -105,14 +105,17 @@ CORE_cluster <- CORE_scGPS(mixedpop2, remove_outlier = c(0))
 plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster)
 
 ```
-  *Let's plot just the optimal clustering result (with colored dendrogram)*
+
+##Let's plot just the optimal clustering result (with colored dendrogram)
+  
 ```{r}
 optimal_index = which(CORE_cluster$optimalClust$KeyStats$Height == CORE_cluster$optimalClust$OptimalRes)
 
-plot_optimal_CORE(original_tree= CORE_cluster$tree, optimal_cluster = unlist(CORE_cluster$Cluster[optimal_index]), shift = -300)
+plot_optimal_CORE(original_tree= CORE_cluster$tree, optimal_cluster = unlist(CORE_cluster$Cluster[optimal_index]), shift = -1500)
 ```
   
-  *Let's compare with other dimensional reduction methods* 
+##Let's compare with other dimensional reduction methods 
+
 ```{r}
 library(cidr)
 t <- CIDR_scGPS(expression.matrix=assay(mixedpop2))
@@ -121,7 +124,8 @@ p2 <-plotReduced_scGPS(t, color_fac = factor(colData(mixedpop2)[,1]),palletes =1
 p2
 ```
   
-  *Find gene markers and annotate clusters* 
+##Find gene markers and annotate clusters
+
 ```{r}
 
 #load gene list (this can be any lists of user selected genes)
@@ -151,7 +155,9 @@ dotplot(enrichment_test, showCategory=15)
 Optimal_index <- which( CORE_cluster$optimalClust$KeyStats$Height == CORE_cluster$optimalClust$OptimalRes)
 colData(mixedpop2)[,1] <- unlist(CORE_cluster$Cluster[[Optimal_index]])
 ```
-  *Start the prediction*
+
+##Start the prediction
+
 ```{r, warning = FALSE, message = FALSE}
 
 #select a subpopulation
@@ -162,7 +168,7 @@ LSOLDA_dat <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop2, mixedpop2 = mixe
 
 ```
 
-  *Display summary results for the prediction*
+##Display summary results for the prediction
 
 ```{r}
 #summary results LDA
@@ -176,8 +182,9 @@ summary_prediction_lasso(LSOLDA_dat=LSOLDA_dat, nPredSubpop = row_cluster)
 summary_deviance(LSOLDA_dat)
 
 ```
-  *R Setting Information*
+##R Setting Information
 ```{r}
 sessionInfo()
+#render("/Users/quan.nguyen/Documents/Powell_group_MacQuan/AllCodes/scGPS/vignettes/vignette.Rmd",html_document(toc = TRUE, toc_depth = 3))
 ```
 
