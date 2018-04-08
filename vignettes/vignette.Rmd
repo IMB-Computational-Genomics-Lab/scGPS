@@ -91,7 +91,7 @@ summary_prediction_lasso(LSOLDA_dat = LSOLDA_dat, nPredSubpop = 4)
 
 
 ```{r, warning = FALSE, message = FALSE}
-#given a single cell expression matrix, without clustering information dsd
+#given a single cell expression matrix, without clustering information
 day5 <- sample2
 cellnames <- colnames(day5$dat5_counts)
 cluster <-day5$dat5_clusters
@@ -105,16 +105,14 @@ CORE_cluster <- CORE_scGPS(mixedpop2, remove_outlier = c(0))
 plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster)
 
 ```
-
-  
-  #####Let's plot just the optimal clustering result (with colored dendrogram)
+  *Let's plot just the optimal clustering result (with colored dendrogram)*
 ```{r}
 optimal_index = which(CORE_cluster$optimalClust$KeyStats$Height == CORE_cluster$optimalClust$OptimalRes)
 
-plot_optimal_CORE(original_tree= CORE_cluster$tree, optimal_cluster = unlist(CORE_cluster$Cluster[optimal_index]), shift = -200)
+plot_optimal_CORE(original_tree= CORE_cluster$tree, optimal_cluster = unlist(CORE_cluster$Cluster[optimal_index]), shift = -300)
 ```
   
-  #####Let's compare with other dimensional reduction methods 
+  *Let's compare with other dimensional reduction methods* 
 ```{r}
 library(cidr)
 t <- CIDR_scGPS(expression.matrix=assay(mixedpop2))
@@ -123,7 +121,7 @@ p2 <-plotReduced_scGPS(t, color_fac = factor(colData(mixedpop2)[,1]),palletes =1
 p2
 ```
   
-  Find gene markers and annotate clusters 
+  *Find gene markers and annotate clusters* 
 ```{r}
 
 #load gene list (this can be any lists of user selected genes)
@@ -152,15 +150,21 @@ dotplot(enrichment_test, showCategory=15)
 #add the CORE cluster information into the scGPS object 
 Optimal_index <- which( CORE_cluster$optimalClust$KeyStats$Height == CORE_cluster$optimalClust$OptimalRes)
 colData(mixedpop2)[,1] <- unlist(CORE_cluster$Cluster[[Optimal_index]])
-
+```
+  *Start the prediction*
+```{r, warning = FALSE, message = FALSE}
 
 #select a subpopulation
 c_selectID <- 1
 
 #run the test bootstrap with nboots = 2 runs
-suppressWarnings(LSOLDA_dat <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop2, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list()))
+LSOLDA_dat <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop2, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list())
 
-#display summary results 
+```
+
+  *Display summary results for the prediction*
+
+```{r}
 #summary results LDA
 row_cluster <-length(unique(colData(mixedpop2)[,1]))
 summary_prediction_lda(LSOLDA_dat=LSOLDA_dat, nPredSubpop = row_cluster )
@@ -171,5 +175,9 @@ summary_prediction_lasso(LSOLDA_dat=LSOLDA_dat, nPredSubpop = row_cluster)
 #summary deviance 
 summary_deviance(LSOLDA_dat)
 
+```
+  *R Setting Information*
+```{r}
+sessionInfo()
 ```
 

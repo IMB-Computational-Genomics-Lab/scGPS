@@ -453,7 +453,11 @@ FindOptimalStability <- function(list_clusters, run_RandIdx) {
     St_max <- St[which.max(St)]
 
     St_max_middle <- St_unique[-which(St_unique == St[1])]
-    St_max_middle <- St_max_middle[-which(St_max_middle == St[40])]
+
+    if(St[1] != St[40]){
+      St_max_middle <- St_max_middle[-which(St_max_middle == St[40])]
+    }
+
     St_max_middle <- St_max_middle[which.max(St_max_middle)]
 
     if (St[40] >= St[1]) {
