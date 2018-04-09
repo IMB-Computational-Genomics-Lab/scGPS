@@ -44,8 +44,11 @@ devtools::install_github("IMB-Computational-Genomics-Lab/scGPS")
 # $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
 
 # then with the scGPS as the R working directory, manually recompile scGPS in R
-# using devtools
-devools::document()
+# using devtools to load and install functions
+devtools::document()
+# update the NAMESPACE using the update_NAMESPACE.sh 
+sh update_NAMESPACE.sh 
+#for window system, to update the NAMESPACE: copy and paste the content of the file NAMESPACE_toAdd_cpp_links to end of the file NAMESPACE 
 
 ```
 

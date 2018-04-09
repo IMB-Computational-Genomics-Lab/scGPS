@@ -60,7 +60,7 @@ NewscGPS <- function(ExpressionMatrix = NULL, GeneMetadata = NULL, CellMetadata 
 #' \code{\link{NewscGPS}} generates a scGPS object in the \linkS4class{SingleCellExperiment} class
 #' for use with the scGPS package.This object contains an expression matrix, associated
 #' metadata (cells, genes, clusters). The data are expected to be normalised counts.
-#' @param ExpressionMatrix An expression matrix in data.frame or matrix format.
+#' @param ExpressionMatrix An expression dataset in matrix format.
 #' Rows should represent a transcript and its normalised counts,
 #' while columns should represent individual cells.
 #' @param GeneMetadata A data frame or vector containing gene identifiers used in
@@ -94,9 +94,9 @@ NewscGPS_SME <- function(ExpressionMatrix = NULL, GeneMetadata = NULL, CellMetad
     }
 
     # Check data formats (to do: can add a series of checking here)
-    if (is.data.frame(ExpressionMatrix) == FALSE & is.matrix(ExpressionMatrix) ==
+    if (is.matrix(ExpressionMatrix) ==
         FALSE) {
-        stop("Please supply an expression matrix in one of the following formats: data.frame or matrix")
+        stop("Please supply an expression data in the matrix format")
     }
 
     # Create a new scGPS object.
