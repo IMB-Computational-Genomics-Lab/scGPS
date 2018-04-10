@@ -5,7 +5,8 @@
 \title{Main clustering CORE V2.0 updated}
 \usage{
 CORE_scGPS(mixedpop = NULL, windows = seq(0.025:1, by = 0.025),
-  remove_outlier = c(0), nRounds = 1)
+  remove_outlier = c(0), nRounds = 1, PCA = TRUE, nPCs = 10,
+  ngenes = 1500)
 }
 \arguments{
 \item{mixedpop}{is a \linkS4class{SingleCellExperiment} object from the train
@@ -15,6 +16,8 @@ mixed population}
 
 \item{remove_outlier}{a vector containing IDs for clusters to be removed
 the default vector contains 0, as 0 is the cluster with singletons.}
+
+\item{PCA}{logical specifying if PCA is used before calculating distance matrix}
 }
 \value{
 a \code{list} with clustering results of all iterations, and a selected
@@ -35,7 +38,7 @@ day5 <- sample2
 #day5$dat5_counts needs to be in a matrix format
 mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
                          CellMetadata = day5$dat5_clusters)
-test <- CORE_scGPS(mixedpop2, remove_outlier = c(1))
+test <- CORE_scGPS(mixedpop2, remove_outlier = c(1), PCA=TRUE, nPCs=10, ngenes=1500)
 }
 \author{
 Quan Nguyen, 2017-11-25

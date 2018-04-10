@@ -13,6 +13,7 @@
 #' @param windows a numeric specifying the number of windows to test
 #' @param remove_outlier a vector containing IDs for clusters to be removed
 #' the default vector contains 0, as 0 is the cluster with singletons.
+#' @param PCA logical specifying if PCA is used before calculating distance matrix
 #' @return a \code{list} with clustering results of all iterations, and a selected
 #' optimal resolution
 #' @examples
@@ -20,14 +21,14 @@
 #' #day5$dat5_counts needs to be in a matrix format
 #' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
 #'                          CellMetadata = day5$dat5_clusters)
-#' test <- CORE_scGPS(mixedpop2, remove_outlier = c(1))
+#' test <- CORE_scGPS(mixedpop2, remove_outlier = c(1), PCA=TRUE, nPCs=10, ngenes=1500)
 #' @export
 #' @author Quan Nguyen, 2017-11-25
 
 CORE_scGPS <- function(mixedpop = NULL, windows = seq(0.025:1, by = 0.025), remove_outlier = c(0),
-    nRounds = 1) {
+    nRounds = 1, PCA=TRUE, nPCs=10, ngenes=1500) {
     cluster_all <- clustering_scGPS(object = mixedpop, windows = windows, remove_outlier = remove_outlier,
-        nRounds = nRounds)
+        nRounds = nRounds,PCA=PCA, nPCs=nPCs)
 
     stab_df <- FindStability(list_clusters = cluster_all$list_clusters, cluster_ref = cluster_all$cluster_ref)
 
@@ -78,6 +79,9 @@ CORE_Subcluster_scGPS <- function(mixedpop = NULL, windows = seq(0.025:1, by = 0
 #' train mixed population
 #' @param remove_outlier a vector containing IDs for clusters to be removed
 #' the default vector contains 0, as 0 is the cluster with singletons
+#' @param ngenes number of top variable genes to be used
+#' @param nPCs number of principal components from PCA dimensional reduction to be used
+#' @param nRounds number of iterations to remove a selected clusters
 #' @return clustering results
 #' @export
 #' @author Quan Nguyen, 2017-11-25
@@ -88,16 +92,27 @@ CORE_Subcluster_scGPS <- function(mixedpop = NULL, windows = seq(0.025:1, by = 0
 #' test <-clustering_scGPS(mixedpop2, remove_outlier = c(1))
 
 clustering_scGPS <- function(object = NULL, ngenes = 1500, windows = seq(0.025:1,
-    by = 0.025), remove_outlier = c(0), nRounds = 1) {
+    by = 0.025), remove_outlier = c(0), nRounds = 1, PCA=TRUE, nPCs=10) {
 
-    print("Calculating distance matrix")
+
     # function for the highest resolution clustering (i.e. no window applied)
     firstRoundClustering <- function(object = NULL) {
         exprs_mat <- assay(object)
-        exprs_mat_topVar <- topvar_scGPS(exprs_mat, ngenes = ngenes)
         # take the top variable genes
+        print("Identifying top variable genes")
+        exprs_mat_topVar <- topvar_scGPS(exprs_mat, ngenes = ngenes)
+        #-------------------------------------Work in progress--------#
+        # perform PCA dimensionality reduction
+        #scale works with columns
+        print("Performing PCA analysis (Note: the variance for each cell needs to be >0)")
+        exprs_mat_topVar_PCA <-PrinComp_cpp(exprs_mat_topVar)$coefficients
+        # tranpose so that cells are in rows
         exprs_mat_t <- t(exprs_mat_topVar)
+        # calculate distance matrix for the rows
+        print("Calculating distance matrix")
         dist_mat <- rcpp_parallel_distance(exprs_mat_t)
+        #-------------------------------------Work in progress--------#
+
         print("Performing hierarchical clustering")
         original.tree <- fastcluster::hclust(as.dist(dist_mat), method = "ward.D2")
         # the original clusters to be used as the reference
