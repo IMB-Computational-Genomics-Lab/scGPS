@@ -101,13 +101,18 @@ clustering_scGPS <- function(object = NULL, ngenes = 1500, windows = seq(0.025:1
         # take the top variable genes
         print("Identifying top variable genes")
         exprs_mat_topVar <- topvar_scGPS(exprs_mat, ngenes = ngenes)
-        #-------------------------------------Work in progress--------#
-        # perform PCA dimensionality reduction
-        #scale works with columns
-        print("Performing PCA analysis (Note: the variance for each cell needs to be >0)")
-        exprs_mat_topVar_PCA <-PrinComp_cpp(exprs_mat_topVar)$coefficients
         # tranpose so that cells are in rows
         exprs_mat_t <- t(exprs_mat_topVar)
+        #-------------------------------------Work in progress--------#
+        if(PCA==TRUE){
+          # perform PCA dimensionality reduction
+          print("Performing PCA analysis (Note: the variance for each cell needs to be >0)")
+          exprs_mat_topVar_PCA <-PrinComp_cpp(exprs_mat_topVar)$coefficients
+          exprs_mat_t <- exprs_mat_topVar_PCA[,1:nPCs]
+
+        }else{exprs_mat_t <- t(exprs_mat_topVar)}
+
+
         # calculate distance matrix for the rows
         print("Calculating distance matrix")
         dist_mat <- rcpp_parallel_distance(exprs_mat_t)
