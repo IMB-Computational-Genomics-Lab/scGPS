@@ -13,7 +13,7 @@ Rows should represent a transcript and its normalised counts,
 while columns should represent individual cells.}
 
 \item{GeneMetadata}{A data frame or vector containing gene identifiers used in
-the expression matrix. The first column should hold the cell identifiers
+the expression matrix. The first column should hold the gene identifiers
 you are using in the expression matrix. Other columns contain information about
 the genes, such as their corresponding ENSEMBL transcript identifiers.}
 

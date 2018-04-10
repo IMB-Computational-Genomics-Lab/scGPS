@@ -8,7 +8,7 @@ NewscGPS_SME(ExpressionMatrix = NULL, GeneMetadata = NULL,
   CellMetadata = NULL)
 }
 \arguments{
-\item{ExpressionMatrix}{An expression matrix in data.frame or matrix format.
+\item{ExpressionMatrix}{An expression dataset in matrix format.
 Rows should represent a transcript and its normalised counts,
 while columns should represent individual cells.}
 
