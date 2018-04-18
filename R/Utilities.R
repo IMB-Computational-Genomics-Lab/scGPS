@@ -74,6 +74,7 @@ plotReduced_scGPS <- function(reduced_dat, color_fac = factor(Sample_id), dims =
 #' @param expression_matrix is  a normalised expression matrix.
 #' @param cluster corresponding cluster information in the expression_matrix
 #' by running CORE clustering or using other methods.
+#' @param selected_cluster a vector of unique cluster ids to calculate
 #' @return a \code{list} containing sorted DESeq analysis results
 #' @export
 #' @author Quan Nguyen, 2017-11-25
@@ -85,20 +86,20 @@ plotReduced_scGPS <- function(reduced_dat, color_fac = factor(Sample_id), dims =
 #' names(DEgenes)
 
 
-findMarkers_scGPS <- function(expression_matrix = NULL, cluster = NULL) {
+findMarkers_scGPS <- function(expression_matrix = NULL, cluster = NULL, selected_cluster = NULL) {
     library(DESeq)
 
     DE_exprsMat <- round(expression_matrix + 1)
 
     DE_results <- list()
-    for (cl_id in unique(cluster)) {
+    for (cl_id in unique(selected_cluster)) {
         # arrange clusters and exprs matrix
         cl_index <- which(as.character(cluster) == as.character(cl_id))
         mainCl_idx <- which(as.character(cluster) != as.character(cl_id))
-        diff_mat <- DE_exprsMat[, c(mainCl_idx, cl_index)]  #this is problematic
+        diff_mat <- DE_exprsMat[, c(mainCl_idx, cl_index)]
         # start DE
 
-        condition_cluster = cluster
+        condition_cluster = as.vector(cluster)
         condition_cluster[1:length(mainCl_idx)] <- rep("Others", length(mainCl_idx))
         condition_cluster[(length(mainCl_idx) + 1):ncol(diff_mat)] <- rep(as.character(cl_id),
             length(cl_index))

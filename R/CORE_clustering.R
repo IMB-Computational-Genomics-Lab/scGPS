@@ -21,12 +21,12 @@
 #' #day5$dat5_counts needs to be in a matrix format
 #' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
 #'                          CellMetadata = day5$dat5_clusters)
-#' test <- CORE_scGPS(mixedpop2, remove_outlier = c(1), PCA=TRUE, nPCs=10, ngenes=1500)
+#' test <- CORE_scGPS(mixedpop2, remove_outlier = c(1), PCA=FALSE, nPCs=20, ngenes=1500)
 #' @export
 #' @author Quan Nguyen, 2017-11-25
 
 CORE_scGPS <- function(mixedpop = NULL, windows = seq(0.025:1, by = 0.025), remove_outlier = c(0),
-    nRounds = 1, PCA=TRUE, nPCs=10, ngenes=1500) {
+    nRounds = 1, PCA=FALSE, nPCs=20, ngenes=1500) {
     cluster_all <- clustering_scGPS(object = mixedpop, windows = windows, remove_outlier = remove_outlier,
         nRounds = nRounds,PCA=PCA, nPCs=nPCs)
 
@@ -92,7 +92,7 @@ CORE_Subcluster_scGPS <- function(mixedpop = NULL, windows = seq(0.025:1, by = 0
 #' test <-clustering_scGPS(mixedpop2, remove_outlier = c(1))
 
 clustering_scGPS <- function(object = NULL, ngenes = 1500, windows = seq(0.025:1,
-    by = 0.025), remove_outlier = c(0), nRounds = 1, PCA=TRUE, nPCs=10) {
+    by = 0.025), remove_outlier = c(0), nRounds = 1, PCA=FALSE, nPCs=20) {
 
 
     # function for the highest resolution clustering (i.e. no window applied)
