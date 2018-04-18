@@ -102,20 +102,20 @@ clustering_scGPS <- function(object = NULL, ngenes = 1500, windows = seq(0.025:1
         print("Identifying top variable genes")
         exprs_mat_topVar <- topvar_scGPS(exprs_mat, ngenes = ngenes)
         # tranpose so that cells are in rows
-        exprs_mat_t <- t(exprs_mat_topVar)
+        #exprs_mat_t <- t(exprs_mat_topVar)
         #-------------------------------------Work in progress--------#
         if(PCA==TRUE){
           # perform PCA dimensionality reduction
           print("Performing PCA analysis (Note: the variance for each cell needs to be >0)")
-          exprs_mat_topVar_PCA <-PrinComp_cpp(exprs_mat_topVar)$coefficients
-          exprs_mat_t <- exprs_mat_topVar_PCA[,1:nPCs]
+          exprs_mat_topVar_PCA <-prcomp(exprs_mat_topVar)
+          exprs_mat_t <- as.data.frame(exprs_mat_topVar_PCA$x[,1:nPCs])
 
         }else{exprs_mat_t <- t(exprs_mat_topVar)}
 
 
         # calculate distance matrix for the rows
         print("Calculating distance matrix")
-        dist_mat <- rcpp_parallel_distance(exprs_mat_t)
+        dist_mat <- rcpp_parallel_distance(as.matrix(exprs_mat_t))
         #-------------------------------------Work in progress--------#
 
         print("Performing hierarchical clustering")
@@ -828,9 +828,9 @@ plot_optimal_CORE <- function(original_tree, optimal_cluster = NULL, shift = -10
 
     branch_names <- rep(NA, length(optimal_cluster))
 
-    index_labels_cluster_names <- paste0("(C", index_labels, ")")
-    dendro_labels_names <- paste(dendro.labels, index_labels_cluster_names)
-    branch_names[index_to_overwriteNA] <- dendro_labels_names
+    #index_labels_cluster_names <- paste0("C", index_labels,)
+    #not dendro_labels_names <- paste( dendro.labels,index_labels_cluster_names)
+    #branch_names[index_to_overwriteNA] <- index_labels_cluster_names
 
     # Apply labels directly to dendrogram
     coloured.dendro <- dendextend::branches_attr_by_clusters(dendro.obj, clusters = ordered.clusters,
@@ -843,7 +843,6 @@ plot_optimal_CORE <- function(original_tree, optimal_cluster = NULL, shift = -10
     print("Plotting the colored dendrogram now....")
     plot(coloured.dendro)
     print("Plotting the bar underneath now....")
-    print("Users are required to check cluster labels....")
     dendro.colours <- unique(dendextend::get_leaves_branches_col(coloured.dendro))
     coloured.order <- stats::order.dendrogram(coloured.dendro)
     sorted.levels <- dendextend::sort_levels_values(as.vector(optimal_cluster)[coloured.order])
