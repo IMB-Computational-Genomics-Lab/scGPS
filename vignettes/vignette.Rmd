@@ -104,9 +104,11 @@ cellnames <-data.frame("Cluster"=cluster, "cellBarcodes" = cellnames)
 mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo, CellMetadata = cellnames ) 
 
 #let's find the clusters
-CORE_cluster <- CORE_scGPS(mixedpop2, remove_outlier = c(0))
+CORE_cluster <- CORE_scGPS(mixedpop2, remove_outlier = c(0), PCA=FALSE)
 #let's plot all clusters
 plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster)
+#you can customise the cluster color bars
+plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster, color_branch = color_all <-c("#208eb7", "#6ce9d3", "#1c5e39", "#8fca40", "#154975", "#b1c8eb", "#7a79db", "#6f1996", "#e061be", "#f1b3e3", "#894b67", "#f62ef3", "#a1085c", "#0df38f", "#4fa075"))
 
 ```
 
@@ -115,7 +117,7 @@ plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster)
 ```{r}
 optimal_index = which(CORE_cluster$optimalClust$KeyStats$Height == CORE_cluster$optimalClust$OptimalRes)
 
-plot_optimal_CORE(original_tree= CORE_cluster$tree, optimal_cluster = unlist(CORE_cluster$Cluster[optimal_index]), shift = -1500)
+plot_optimal_CORE(original_tree= CORE_cluster$tree, optimal_cluster = unlist(CORE_cluster$Cluster[optimal_index]), shift = -400)
 ```
   
 ##Let's compare with other dimensional reduction methods 
