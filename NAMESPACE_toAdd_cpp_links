@@ -1,7 +1,6 @@
 useDynLib(scGPS)
 importFrom(Rcpp, evalCpp)
 exportPattern("^[[:alpha:]]+")
-import(SingleCellExperiment)
 import(glmnet)
 import(caret)
 import(dplyr)
