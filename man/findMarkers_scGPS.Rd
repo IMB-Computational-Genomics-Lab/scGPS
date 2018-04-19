@@ -4,13 +4,16 @@
 \alias{findMarkers_scGPS}
 \title{find marker genes}
 \usage{
-findMarkers_scGPS(expression_matrix = NULL, cluster = NULL)
+findMarkers_scGPS(expression_matrix = NULL, cluster = NULL,
+  selected_cluster = NULL)
 }
 \arguments{
 \item{expression_matrix}{is  a normalised expression matrix.}
 
 \item{cluster}{corresponding cluster information in the expression_matrix
 by running CORE clustering or using other methods.}
+
+\item{selected_cluster}{a vector of unique cluster ids to calculate}
 }
 \value{
 a \code{list} containing sorted DESeq analysis results
