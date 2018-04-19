@@ -345,7 +345,7 @@ bootstrap_scGPS <- function(nboots = 1, genes = genes, mixedpop1 = mixedpop1, mi
     for (out_idx in 1:nboots) {
         listData <- training_scGPS(genes = genes, mixedpop1 = mixedpop1, mixedpop2 = mixedpop2,
             c_selectID, listData = listData, out_idx = out_idx)
-        print(paste0("done ", out_idx))
+        print(paste0("done bootstrap ", out_idx))
         listData <- predicting_scGPS(listData = listData, mixedpop2 = mixedpop2,
             out_idx = out_idx)
     }
