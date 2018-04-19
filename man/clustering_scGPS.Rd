@@ -5,7 +5,7 @@
 \title{HC clustering for a number of resolutions}
 \usage{
 clustering_scGPS(object = NULL, ngenes = 1500, windows = seq(0.025:1, by =
-  0.025), remove_outlier = c(0), nRounds = 1, PCA = TRUE, nPCs = 10)
+  0.025), remove_outlier = c(0), nRounds = 1, PCA = FALSE, nPCs = 20)
 }
 \arguments{
 \item{ngenes}{number of top variable genes to be used}
