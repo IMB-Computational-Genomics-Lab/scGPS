@@ -59,16 +59,11 @@ sh update_NAMESPACE.sh
 
 ```
 
-<<<<<<< HEAD
+
 #2. A simple workflow of the scGPS: 
 *The purpose of this workflow is to solve the following task: given a mixed population with known subpopulations, estimate transition scores between these subpopulation*
 
 ##2.1 Setup scGPS objects
-=======
-#A simple workflow of the scGPS: 
-##*Given a mixed population with known subpopulations, estimate transition scores between these subpopulation*
->>>>>>> b014878f4093bfe55c362cb3ba47d409d691eb7d
-
 ```{r, warning = FALSE, message = FALSE}
 devtools::load_all()
 
@@ -94,20 +89,17 @@ c_selectID <- 1
 ##2.2 Run predictions
 ```{r}
 # run the test bootstrap
-<<<<<<< HEAD
+
 LSOLDA_dat <- bootstrap_scGPS(nboots = 2, mixedpop1 = mixedpop1, 
     mixedpop2 = mixedpop2, genes = genes, c_selectID, listData = list())
 
 ```
 ##2.3 Summarise results 
 ```{r}
-=======
-sink("temp")
+
 LSOLDA_dat <- bootstrap_scGPS(nboots = 2, mixedpop1 = mixedpop1, 
     mixedpop2 = mixedpop2, genes = genes, c_selectID, listData = list())
-sink()
 
->>>>>>> b014878f4093bfe55c362cb3ba47d409d691eb7d
 # display the list of result information in the LASOLDA_dat object 
 names(LSOLDA_dat)
 LSOLDA_dat$LassoPredict
@@ -123,27 +115,20 @@ summary_prediction_lasso(LSOLDA_dat = LSOLDA_dat, nPredSubpop = 4)
 summary_deviance(object = LSOLDA_dat)
 ```
 
-<<<<<<< HEAD
 #3. A complete workflow of the scGPS: 
 *The purpose of this workflow is to solve the following task: given an unknown mixed population, find clusters and estimate relationship between clusters*
 
 ##3.1 Identify clusters in a  using CORE
 *(skip this step if clusters are known)*
 ```{r, warning = FALSE, message = FALSE}
-#Let's find clustering information in an expresion data
-=======
-#A complete workflow of the scGPS: 
-##*Given an unknown mixed population, find clusters and estimate relationship between clusters*
 
-```{r, warning = FALSE, message = FALSE}
-#Let's find clustering information using CORE (skip this if clusters are known)
->>>>>>> b014878f4093bfe55c362cb3ba47d409d691eb7d
+#Let's find clustering information in an expresion data
 day5 <- sample2
 cellnames <- colnames(day5$dat5_counts)
 cluster <-day5$dat5_clusters
 cellnames <-data.frame("Cluster"=cluster, "cellBarcodes" = cellnames)
 mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo, CellMetadata = cellnames ) 
-<<<<<<< HEAD
+
 CORE_cluster <- CORE_scGPS(mixedpop2, remove_outlier = c(0), PCA=FALSE)
 
 ```
@@ -151,7 +136,6 @@ CORE_cluster <- CORE_scGPS(mixedpop2, remove_outlier = c(0), PCA=FALSE)
 ```{r}
 #plot with default colors
 plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster)
-=======
 
 #let's find the CORE clusters
 CORE_cluster <- CORE_scGPS(mixedpop2, remove_outlier = c(0), PCA=FALSE)
@@ -161,7 +145,6 @@ plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster)
 
 #you can customise the cluster color bars (provide color_branch values)
 plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster, color_branch = c("#208eb7", "#6ce9d3", "#1c5e39", "#8fca40", "#154975", "#b1c8eb"))
->>>>>>> b014878f4093bfe55c362cb3ba47d409d691eb7d
 
 #you can customise the cluster color bars (provide color_branch values)
 plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster, color_branch = c("#208eb7", "#6ce9d3", "#1c5e39", "#8fca40", "#154975", "#b1c8eb"))
@@ -172,20 +155,12 @@ plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster, color_branch = c("#208eb7", "
 ```{r}
 #extract optimal index identified by CORE_scGPS
 optimal_index = which(CORE_cluster$optimalClust$KeyStats$Height == CORE_cluster$optimalClust$OptimalRes)
-<<<<<<< HEAD
+
 #plot the optimal result
 plot_optimal_CORE(original_tree= CORE_cluster$tree, optimal_cluster = unlist(CORE_cluster$Cluster[optimal_index]), shift = -100)
 ```
   
 ##3.4 Compare clustering results with other dimensional reduction methods (e.g., CIDR)
-=======
-
-plot_optimal_CORE(original_tree= CORE_cluster$tree, optimal_cluster = unlist(CORE_cluster$Cluster[optimal_index]), shift = -100)
-```
-  
-##Let's compare clustering results with other dimensional reduction methods (e.g., CIDR)
->>>>>>> b014878f4093bfe55c362cb3ba47d409d691eb7d
-
 ```{r}
 library(cidr)
 t <- CIDR_scGPS(expression.matrix=assay(mixedpop2))
@@ -237,14 +212,12 @@ dotplot(enrichment_test, showCategory=15)
 
 ```
 
-<<<<<<< HEAD
 #4. Relationship between clusters within one sample or between two samples
 *The purpose of this workflow is to solve the following task: given one or two unknown mixed population(s) and clusters in each mixed population, estimate and visualise relationship between clusters*
 
 ##4.1Start the scGPS prediction to find relationship between clusters
-=======
+
 ##Start the scGPS prediction to find relationship between clusters
->>>>>>> b014878f4093bfe55c362cb3ba47d409d691eb7d
 
 ```{r, warning = FALSE, message = FALSE}
 
@@ -278,11 +251,11 @@ summary_deviance(LSOLDA_dat)
 
 ```
 
-<<<<<<< HEAD
+
 ##4.3 Plot the relationship between clusters 
 =======
 #Relationship between clusters within one sample or between two samples
->>>>>>> b014878f4093bfe55c362cb3ba47d409d691eb7d
+
 
 ```{r,warning = FALSE, message = FALSE}
 #run prediction for 3 clusters 
@@ -290,36 +263,20 @@ summary_deviance(LSOLDA_dat)
 c_selectID <- 1
 genes = DEgenes$DE_Subpop1vsRemaining$id[1:200] #top 200 gene markers distinguishing cluster 1 
 genes <- gsub("_.*", "", genes)
-<<<<<<< HEAD
-LSOLDA_dat1 <- bootstrap_scGPS(nboots = 1,mixedpop1 = mixedpop2, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list())
-=======
 
-sink("temp")
 LSOLDA_dat1 <- bootstrap_scGPS(nboots = 1,mixedpop1 = mixedpop2, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list())
-sink()
->>>>>>> b014878f4093bfe55c362cb3ba47d409d691eb7d
+
 
 c_selectID <- 2
 genes = DEgenes$DE_Subpop2vsRemaining$id[1:200]
 genes <- gsub("_.*", "", genes)
-<<<<<<< HEAD
 LSOLDA_dat2 <- bootstrap_scGPS(nboots = 1,mixedpop1 = mixedpop2, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list())
-=======
-sink("temp")
-LSOLDA_dat2 <- bootstrap_scGPS(nboots = 1,mixedpop1 = mixedpop2, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list())
-sink()
 
->>>>>>> b014878f4093bfe55c362cb3ba47d409d691eb7d
 
 c_selectID <- 3
 genes = DEgenes$DE_Subpop3vsRemaining$id[1:200]
 genes <- gsub("_.*", "", genes)
-sink("temp")
 LSOLDA_dat3 <- bootstrap_scGPS(nboots = 1,mixedpop1 = mixedpop2, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list())
-<<<<<<< HEAD
-=======
-sink()
->>>>>>> b014878f4093bfe55c362cb3ba47d409d691eb7d
 
 #prepare table input for sankey plot 
 
