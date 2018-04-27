@@ -57,6 +57,8 @@ devtools::document()
 sh update_NAMESPACE.sh 
 #for window system, to update the NAMESPACE: copy and paste the content of the file NAMESPACE_toAdd_cpp_links to end of the file NAMESPACE 
 
+#load the package to the workspace 
+devtools::load_all()
 ```
 
 
@@ -65,7 +67,6 @@ sh update_NAMESPACE.sh
 
 ##2.1 Setup scGPS objects
 ```{r, warning = FALSE, message = FALSE}
-devtools::load_all()
 
 # load mixed population 1 (loaded from sample1 dataset, named it as day2)
 day2 <- sample1
@@ -215,9 +216,7 @@ dotplot(enrichment_test, showCategory=15)
 #4. Relationship between clusters within one sample or between two samples
 *The purpose of this workflow is to solve the following task: given one or two unknown mixed population(s) and clusters in each mixed population, estimate and visualise relationship between clusters*
 
-##4.1Start the scGPS prediction to find relationship between clusters
-
-##Start the scGPS prediction to find relationship between clusters
+##4.1 Start the scGPS prediction to find relationship between clusters
 
 ```{r, warning = FALSE, message = FALSE}
 
@@ -251,11 +250,8 @@ summary_deviance(LSOLDA_dat)
 
 ```
 
-
 ##4.3 Plot the relationship between clusters 
-=======
-#Relationship between clusters within one sample or between two samples
-
+*Here we look at one example use case to find relationship between clusters within one sample or between two sample*
 
 ```{r,warning = FALSE, message = FALSE}
 #run prediction for 3 clusters 
