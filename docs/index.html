@@ -9,7 +9,8 @@
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="jquery.sticky-kit.min.js"></script><script src="pkgdown.js"></script><meta property="og:title" content="An implementation of clustering and subpopulation relationship analysis (scGPS = single cell Global Predictions of Subpopulation)">
+<script src="jquery.sticky-kit.min.js"></script><script src="pkgdown.js"></script><link href="extra.css" rel="stylesheet">
+<script src="extra.js"></script><meta property="og:title" content="An implementation of clustering and subpopulation relationship analysis (scGPS = single cell Global Predictions of Subpopulation)">
 <meta property="og:description" content="The package implements two main algorithms to answer two key questions: a CORE (Clustering at Optimal REsolution) to find subpopulations, followed by scGPS to investigate the relationships between subpopulations. A compatible software that can run CORE is ascend R package.">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
@@ -75,12 +76,13 @@
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#scgps-general-description" class="anchor"></a>scGPS general description</h1></div>
 <p>A complete single cell RNA analysis framework to answer the common question: how to decompose a mixed population into clusters (CORE) and to analyse the relationship between clusters (scGPS).</p>
+<p>The webpage version of this package is available at: <a href="https://imb-computational-genomics-lab.github.io/scGPS/index.html" class="uri">https://imb-computational-genomics-lab.github.io/scGPS/index.html</a></p>
 <div id="scgps-workflow" class="section level2">
 <h2 class="hasAnchor">
 <a href="#scgps-workflow" class="anchor"></a>scGPS workflow</h2>
 <p>scGPS takes scRNA expression dataset(s) for one or more unknown sample(s) to find subpopulations and relationship between these subpopulations. The input dataset(s) contains mixed, heterogeous cells. scGPS first uses CORE (V2.0) to identify homogenous subpopulations. scGPS contains a number of functions to verify the subpopulations identified by CORE (e.g. functions to compare with results from PCA, tSNE and the imputation method CIDR). scGPS also has options to find gene markers that distinguish a subpopulation from the remaining cells. In the second stage, scGPS applies a machine learning procedure to select optimal gene predictors and to build prediction models that can estimate between-subpopulation transition scores, which are the probability of cells from one subpopulation that can likely transition to the other subpopulation.</p>
 <p align="center">
-    <img src="./man/figures/packagePlan.png"><br>
+    <img src="reference/figures/packagePlan.png"><br>
 Figure1. scGPS workflow. Yellow boxes show inputs, and green boxes show main scGPS analysis.  
 </p>
 </div>

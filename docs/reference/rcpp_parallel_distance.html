@@ -28,6 +28,8 @@
 
 
 
+  <link href="../extra.css" rel="stylesheet">
+  <script src="../extra.js"></script>
 <meta property="og:title" content="distance matrix using C++ — rcpp_parallel_distance" />
 
 <meta property="og:description" content="This function provides fast and memory efficient distance matrix calculation" />
@@ -135,12 +137,12 @@
     <pre class="examples"><div class='input'><span class='no'>mat_test</span> <span class='kw'>&lt;-</span><span class='fu'>matrix</span>(<span class='fu'>rnbinom</span>(<span class='fl'>1000000</span>,<span class='kw'>mu</span><span class='kw'>=</span><span class='fl'>0.01</span>, <span class='kw'>size</span><span class='kw'>=</span><span class='fl'>10</span>),<span class='kw'>nrow</span><span class='kw'>=</span><span class='fl'>10000</span>)
 <span class='fu'>library</span>(<span class='no'>microbenchmark</span>)
 <span class='fu'><a href='http://www.rdocumentation.org/packages/microbenchmark/topics/microbenchmark'>microbenchmark</a></span>(<span class='fu'>rcpp_parallel_distance</span>(<span class='no'>mat_test</span>), <span class='fu'>dist</span>(<span class='no'>mat_test</span>), <span class='kw'>times</span><span class='kw'>=</span><span class='fl'>3</span>)</div><div class='output co'>#&gt; Unit: seconds
-#&gt;                              expr       min       lq      mean    median
-#&gt;  rcpp_parallel_distance(mat_test)  6.807792  7.40854  7.812456  8.009289
-#&gt;                    dist(mat_test) 17.556605 17.65374 17.779946 17.750883
-#&gt;         uq       max neval cld
-#&gt;   8.314789  8.620288     3  a 
-#&gt;  17.891616 18.032349     3   b</div><div class='input'>
+#&gt;                              expr       min        lq      mean    median
+#&gt;  rcpp_parallel_distance(mat_test)  7.258379  7.478518  8.409194  7.698657
+#&gt;                    dist(mat_test) 18.045149 18.212670 18.755430 18.380191
+#&gt;         uq      max neval cld
+#&gt;   8.984602 10.27055     3  a 
+#&gt;  19.110570 19.84095     3   b</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

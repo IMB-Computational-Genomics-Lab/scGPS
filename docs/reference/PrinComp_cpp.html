@@ -28,6 +28,8 @@
 
 
 
+  <link href="../extra.css" rel="stylesheet">
+  <script src="../extra.js"></script>
 <meta property="og:title" content="Principal component analysis — PrinComp_cpp" />
 
 <meta property="og:description" content="This function provides significant speed gain if the input matrix
@@ -137,12 +139,12 @@ is big</p>
     <pre class="examples"><div class='input'><span class='no'>mat_test</span> <span class='kw'>&lt;-</span><span class='fu'>matrix</span>(<span class='fu'>rnbinom</span>(<span class='fl'>1000000</span>,<span class='kw'>mu</span><span class='kw'>=</span><span class='fl'>0.01</span>, <span class='kw'>size</span><span class='kw'>=</span><span class='fl'>10</span>),<span class='kw'>nrow</span><span class='kw'>=</span><span class='fl'>1000</span>)
 <span class='fu'>library</span>(<span class='no'>microbenchmark</span>)
 <span class='fu'><a href='http://www.rdocumentation.org/packages/microbenchmark/topics/microbenchmark'>microbenchmark</a></span>(<span class='fu'>PrinComp_cpp</span>(<span class='no'>mat_test</span>), <span class='fu'>prcomp</span>(<span class='no'>mat_test</span>), <span class='kw'>times</span><span class='kw'>=</span><span class='fl'>3</span>)</div><div class='output co'>#&gt; Unit: milliseconds
-#&gt;                    expr       min        lq      mean    median        uq
-#&gt;  PrinComp_cpp(mat_test)  799.7742  830.4229  843.4128  861.0716  865.2321
-#&gt;        prcomp(mat_test) 4734.2022 4776.0636 4840.4783 4817.9250 4893.6164
-#&gt;        max neval cld
-#&gt;   869.3926     3  a 
-#&gt;  4969.3077     3   b</div><div class='input'>
+#&gt;                    expr       min       lq     mean    median        uq
+#&gt;  PrinComp_cpp(mat_test)  810.4861  814.773  845.069  819.0599  862.3605
+#&gt;        prcomp(mat_test) 4748.6499 4762.546 4876.567 4776.4417 4940.5254
+#&gt;       max neval cld
+#&gt;   905.661     3  a 
+#&gt;  5104.609     3   b</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

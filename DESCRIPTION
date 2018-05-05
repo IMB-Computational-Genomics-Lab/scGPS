@@ -11,6 +11,7 @@ Encoding: UTF-8
 LazyData: true
 License: GPL-3
 BugReports:  https://github.com/IMB-Computational-Genomics-Lab/scGPS/issues
+url:  https://github.com/IMB-Computational-Genomics-Lab/scGPS/
 RoxygenNote: 6.0.1
 Depends: R (>= 3.4), SummarizedExperiment, dynamicTreeCut
 biocViews: SingleCell, Clustering, DataImport

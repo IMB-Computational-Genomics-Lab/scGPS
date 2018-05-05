@@ -2,7 +2,7 @@
 % Please edit documentation in R/CORE_clustering.R
 \name{CORE_Subcluster_scGPS}
 \alias{CORE_Subcluster_scGPS}
-\title{Subclustering (optional) after running CORE}
+\title{Subclustering (optional) after running CORE "test"}
 \usage{
 CORE_Subcluster_scGPS(mixedpop = NULL, windows = seq(0.025:1, by = 0.025),
   select_cell_index = NULL, ngenes = 1500)

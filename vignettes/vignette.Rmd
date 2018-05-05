@@ -69,7 +69,6 @@ sh update_NAMESPACE.sh
 devtools::load_all()
 ```
 
-
 #2. A simple workflow of the scGPS: 
 *The purpose of this workflow is to solve the following task: given a mixed population with known subpopulations, estimate transition scores between these subpopulation*
 
@@ -77,7 +76,7 @@ devtools::load_all()
 ```{r, warning = FALSE, message = FALSE}
 
 # load mixed population 1 (loaded from sample1 dataset, named it as day2)
-devtools::load_all()
+devtools::load_all() 
 
 day2 <- sample1
 
@@ -98,7 +97,7 @@ c_selectID <- 1
 
 ```
 ##2.2 Run predictions
-```{r}
+```{r, warning = FALSE, message = FALSE}
 # run the test bootstrap
 
 LSOLDA_dat <- bootstrap_scGPS(nboots = 2, mixedpop1 = mixedpop1, 
@@ -106,7 +105,7 @@ LSOLDA_dat <- bootstrap_scGPS(nboots = 2, mixedpop1 = mixedpop1,
 
 ```
 ##2.3 Summarise results 
-```{r}
+```{r, warning = FALSE, message = FALSE}
 
 LSOLDA_dat <- bootstrap_scGPS(nboots = 2, mixedpop1 = mixedpop1, 
     mixedpop2 = mixedpop2, genes = genes, c_selectID, listData = list())
@@ -150,13 +149,19 @@ plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster)
 
 #let's find the CORE clusters
 CORE_cluster <- CORE_scGPS(mixedpop2, remove_outlier = c(0), PCA=FALSE)
+```
 
+```{r}
 #let's plot all clusters
 plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster)
+```
 
+```{r}
 #you can customise the cluster color bars (provide color_branch values)
 plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster, color_branch = c("#208eb7", "#6ce9d3", "#1c5e39", "#8fca40", "#154975", "#b1c8eb"))
+```
 
+```{r}
 #you can customise the cluster color bars (provide color_branch values)
 plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster, color_branch = c("#208eb7", "#6ce9d3", "#1c5e39", "#8fca40", "#154975", "#b1c8eb"))
 ```
@@ -353,13 +358,6 @@ p1
 #sessionInfo()
 #rmarkdown::render("/Users/quan.nguyen/Documents/Powell_group_MacQuan/AllCodes/scGPS/vignettes/vignette.Rmd",html_document(toc = TRUE, toc_depth = 3))
 #rmarkdown::render("/Users/quan.nguyen/Documents/Powell_group_MacQuan/AllCodes/scGPS/vignettes/vignette.Rmd",pdf_document(toc = TRUE, toc_depth = 3))
-
-```
-
-
-```{r, eval = FALSE}
-# Install release version from CRAN
-#install.packages("pkgdown")
 
 ```
 
