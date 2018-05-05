@@ -39,7 +39,7 @@ CORE_scGPS <- function(mixedpop = NULL, windows = seq(0.025:1, by = 0.025), remo
         cellsRemoved = cluster_all$cellsRemoved, cellsForClustering = cluster_all$cellsForClustering))
 }
 
-#' Subclustering (optional) after running CORE
+#' Subclustering (optional) after running CORE "test"
 #'
 #' @description  CORE_Subcluster_scGPS allows re-cluster the CORE clustering result
 #' @param mixedpop is a \linkS4class{SingleCellExperiment} object from the train

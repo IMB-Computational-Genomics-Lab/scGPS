@@ -18,13 +18,21 @@ output:
     %\VignetteEngine{knitr::multiformat}
 ---
 
-```{r setup, include = FALSE}
+```{r setup, out.width = '100%', include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  fig.path = "man/figures/"
 )
-owd = setwd('/Users/quan.nguyen/Documents/Powell_group_MacQuan/AllCodes/scGPS/vignettes/')
-setwd(owd)
+#Homepage 
+knitr::include_graphics("./docs/reference/figures/packagePlan.png")
+
+#knitr::opts_chunk$set(
+#  fig.path = "./docs/reference/figures/"
+#)
+
+#owd = setwd('/Users/quan.nguyen/Documents/Powell_group_MacQuan/AllCodes/scGPS/vignettes/')
+#setwd(owd)
 ```
 
 #1. Installation instruction
@@ -69,6 +77,8 @@ devtools::load_all()
 ```{r, warning = FALSE, message = FALSE}
 
 # load mixed population 1 (loaded from sample1 dataset, named it as day2)
+devtools::load_all()
+
 day2 <- sample1
 
 mixedpop1 <- NewscGPS_SME(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day2$dat2geneInfo, 
@@ -346,4 +356,10 @@ p1
 
 ```
 
+
+```{r, eval = FALSE}
+# Install release version from CRAN
+#install.packages("pkgdown")
+
+```
 
