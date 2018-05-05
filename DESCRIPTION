@@ -1,7 +1,7 @@
 Package: scGPS
 Type: Package
 Title: An implementation of clustering and subpopulation relationship analysis (scGPS = single cell Global Predictions of Subpopulation)
-Version: 0.99
+Version: 0.9.9
 Authors@R: c(
     person("Quan", "Nguyen", email="quan.nguyen@uq.edu.au", role=c("aut", "cre")),
     person("Anne", "Asenbouth",role=c("aut"))
