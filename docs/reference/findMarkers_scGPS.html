@@ -60,7 +60,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scGPS</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.99</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.9</span>
       </span>
     </div>
 
@@ -146,7 +146,13 @@ by running CORE clustering or using other methods.</p></td>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>day2</span> <span class='kw'>&lt;-</span> <span class='no'>sample1</span>
 <span class='no'>mixedpop1</span> <span class='kw'>&lt;-</span><span class='fu'><a href='NewscGPS.html'>NewscGPS</a></span>(<span class='kw'>ExpressionMatrix</span> <span class='kw'>=</span> <span class='no'>day2</span>$<span class='no'>dat2_counts</span>, <span class='kw'>GeneMetadata</span> <span class='kw'>=</span> <span class='no'>day2</span>$<span class='no'>dat2geneInfo</span>,
-                    <span class='kw'>CellMetadata</span> <span class='kw'>=</span> <span class='no'>day2</span>$<span class='no'>dat2_clusters</span>)</div><div class='output co'>#&gt; <span class='error'>Error in SingleCellExperiment(assays = list(ExpressionMatrix), rowData = GeneMetadata,     colData = CellMetadata): could not find function "SingleCellExperiment"</span></div><div class='input'><span class='no'>DEgenes</span> <span class='kw'>&lt;-</span> <span class='fu'>findMarkers_scGPS</span>(<span class='kw'>expression_matrix</span><span class='kw'>=</span><span class='fu'>assay</span>(<span class='no'>mixedpop1</span>), <span class='kw'>cluster</span> <span class='kw'>=</span> <span class='fu'>colData</span>(<span class='no'>mixedpop1</span>)[,<span class='fl'>1</span>])</div><div class='output co'>#&gt; <span class='error'>Error in assay(mixedpop1): object 'mixedpop1' not found</span></div><div class='input'><span class='fu'>names</span>(<span class='no'>DEgenes</span>)</div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): object 'DEgenes' not found</span></div></pre>
+                    <span class='kw'>CellMetadata</span> <span class='kw'>=</span> <span class='no'>day2</span>$<span class='no'>dat2_clusters</span>)</div><div class='output co'>#&gt; <span class='error'>Error in SingleCellExperiment(assays = list(ExpressionMatrix), rowData = GeneMetadata,     colData = CellMetadata): could not find function "SingleCellExperiment"</span></div><div class='input'><span class='no'>DEgenes</span> <span class='kw'>&lt;-</span> <span class='fu'>findMarkers_scGPS</span>(<span class='kw'>expression_matrix</span><span class='kw'>=</span><span class='fu'>assay</span>(<span class='no'>mixedpop1</span>), <span class='kw'>cluster</span> <span class='kw'>=</span> <span class='fu'>colData</span>(<span class='no'>mixedpop1</span>)[,<span class='fl'>1</span>])</div><div class='output co'>#&gt; <span class='message'>Loading required package: locfit</span></div><div class='output co'>#&gt; <span class='message'>locfit 1.5-9.1 	 2013-03-22</span></div><div class='output co'>#&gt; <span class='message'>Loading required package: lattice</span></div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Attaching package: ‘lattice’</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:clusterProfiler’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    dotplot</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:DOSE’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    dotplot</span></div><div class='output co'>#&gt; <span class='message'>    Welcome to 'DESeq'. For improved performance, usability and</span>
+#&gt; <span class='message'>    functionality, please consider migrating to 'DESeq2'.</span></div><div class='output co'>#&gt; <span class='error'>Error in assay(mixedpop1): object 'mixedpop1' not found</span></div><div class='input'><span class='fu'>names</span>(<span class='no'>DEgenes</span>)</div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): object 'DEgenes' not found</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

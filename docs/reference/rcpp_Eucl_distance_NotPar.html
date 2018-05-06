@@ -60,7 +60,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scGPS</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.99</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.9</span>
       </span>
     </div>
 
@@ -137,12 +137,12 @@
     <pre class="examples"><div class='input'><span class='no'>mat_test</span> <span class='kw'>&lt;-</span><span class='fu'>matrix</span>(<span class='fu'>rnbinom</span>(<span class='fl'>100000</span>,<span class='kw'>mu</span><span class='kw'>=</span><span class='fl'>0.01</span>, <span class='kw'>size</span><span class='kw'>=</span><span class='fl'>10</span>),<span class='kw'>nrow</span><span class='kw'>=</span><span class='fl'>1000</span>)
 <span class='fu'>library</span>(<span class='no'>microbenchmark</span>)
 <span class='fu'><a href='http://www.rdocumentation.org/packages/microbenchmark/topics/microbenchmark'>microbenchmark</a></span>(<span class='fu'>rcpp_Eucl_distance_NotPar</span>(<span class='no'>mat_test</span>), <span class='fu'>dist</span>(<span class='no'>mat_test</span>), <span class='kw'>times</span><span class='kw'>=</span><span class='fl'>3</span>)</div><div class='output co'>#&gt; Unit: milliseconds
-#&gt;                                 expr       min        lq     mean    median
-#&gt;  rcpp_Eucl_distance_NotPar(mat_test)  84.44402  85.88948 115.6650  87.33494
-#&gt;                       dist(mat_test) 112.94069 117.71129 120.7809 122.48189
-#&gt;        uq     max neval cld
-#&gt;  131.2755 175.216     3   a
-#&gt;  124.7010 126.920     3   a</div><div class='input'>
+#&gt;                                 expr      min        lq      mean   median
+#&gt;  rcpp_Eucl_distance_NotPar(mat_test) 73.01076  74.14618  78.55052  75.2816
+#&gt;                       dist(mat_test) 99.38015 100.99657 102.22735 102.6130
+#&gt;        uq      max neval cld
+#&gt;   81.3204  87.3592     3  a 
+#&gt;  103.6509 104.6889     3   b</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

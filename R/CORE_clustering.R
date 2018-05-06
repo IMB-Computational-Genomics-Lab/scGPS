@@ -107,7 +107,7 @@ clustering_scGPS <- function(object = NULL, ngenes = 1500, windows = seq(0.025:1
         if(PCA==TRUE){
           # perform PCA dimensionality reduction
           print("Performing PCA analysis (Note: the variance for each cell needs to be >0)")
-          exprs_mat_topVar_PCA <-prcomp(exprs_mat_topVar)
+          exprs_mat_topVar_PCA <-prcomp(t(exprs_mat_topVar))
           exprs_mat_t <- as.data.frame(exprs_mat_topVar_PCA$x[,1:nPCs])
 
         }else{exprs_mat_t <- t(exprs_mat_topVar)}
@@ -377,32 +377,32 @@ FindStability <- function(list_clusters = NULL, cluster_ref = NULL) {
     # third reset the counter to the count values
     counter_adjusted <- counter
 
-    # setup counter 0 on the last right
+    # set counter_0 on the last right or left or middle
     if (length(index_0) > 0) {
-        if (index_0[1] == 1) {
-            counter_adjusted[1] = 1
-        } else {
-            counter_adjusted[1:index_0[1] - 1] <- counter[index_0[1] - 1]
-        }
-
-        # setup counter 0 on the last left
-        if (index_0[length(index_0)] == length(counter)) {
-            length_id0 <- length(index_0)
-            counter_adjusted[index_0[length_id0]] = 1
-        } else {
-            length_id0 <- length(index_0)
-            counter_adjusted[(index_0[length_id0] + 1):length(counter)] <- counter[length(counter)]
-            counter_adjusted[index_0[length_id0]] = 1
-        }
-
-        # setup counter 0 in the middle
+      # setup counter 0 on the last right
+      if (index_0[1] == 1) {
+        counter_adjusted[1] = 1
+      } else {
+        counter_adjusted[1:index_0[1] - 1] <- counter[index_0[1] - 1]
+      }
+      # setup counter 0 on the last left
+      if (index_0[length(index_0)] == length(counter)) {
+        length_id0 <- length(index_0)
+        counter_adjusted[index_0[length_id0]] = 1
+      } else {
+        length_id0 <- length(index_0)
+        counter_adjusted[(index_0[length_id0] + 1):length(counter)] <- counter[length(counter)]
+        counter_adjusted[index_0[length_id0]] = 1
+      }
+      # setup counter 0 in the middle
+      if(length(index_0) > 3){
         for (i in 2:length(index_0) - 1) {
-            counter_adjusted[(index_0[i] + 1):(index_0[i + 1] - 1)] = counter[index_0[i +
-                1] - 1]
-            counter_adjusted[index_0[i]] = 1
+          counter_adjusted[(index_0[i] + 1):(index_0[i + 1] - 1)] = counter[index_0[i +
+                                                                                      1] - 1]
+          counter_adjusted[index_0[i]] = 1
         }
+      }
     }
-
     run_RandIdx$stability_count <- counter_adjusted
     print("Done calculating stability...")
     return(run_RandIdx)

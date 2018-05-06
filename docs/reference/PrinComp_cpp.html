@@ -61,7 +61,7 @@ is big" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scGPS</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.99</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.9</span>
       </span>
     </div>
 
@@ -137,14 +137,13 @@ is big</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>mat_test</span> <span class='kw'>&lt;-</span><span class='fu'>matrix</span>(<span class='fu'>rnbinom</span>(<span class='fl'>1000000</span>,<span class='kw'>mu</span><span class='kw'>=</span><span class='fl'>0.01</span>, <span class='kw'>size</span><span class='kw'>=</span><span class='fl'>10</span>),<span class='kw'>nrow</span><span class='kw'>=</span><span class='fl'>1000</span>)
-<span class='fu'>library</span>(<span class='no'>microbenchmark</span>)
-<span class='fu'><a href='http://www.rdocumentation.org/packages/microbenchmark/topics/microbenchmark'>microbenchmark</a></span>(<span class='fu'>PrinComp_cpp</span>(<span class='no'>mat_test</span>), <span class='fu'>prcomp</span>(<span class='no'>mat_test</span>), <span class='kw'>times</span><span class='kw'>=</span><span class='fl'>3</span>)</div><div class='output co'>#&gt; Unit: milliseconds
-#&gt;                    expr       min       lq     mean    median        uq
-#&gt;  PrinComp_cpp(mat_test)  810.4861  814.773  845.069  819.0599  862.3605
-#&gt;        prcomp(mat_test) 4748.6499 4762.546 4876.567 4776.4417 4940.5254
+<span class='fu'>library</span>(<span class='no'>microbenchmark</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: package ‘microbenchmark’ was built under R version 3.4.3</span></div><div class='input'><span class='fu'><a href='http://www.rdocumentation.org/packages/microbenchmark/topics/microbenchmark'>microbenchmark</a></span>(<span class='fu'>PrinComp_cpp</span>(<span class='no'>mat_test</span>), <span class='fu'>prcomp</span>(<span class='no'>mat_test</span>), <span class='kw'>times</span><span class='kw'>=</span><span class='fl'>3</span>)</div><div class='output co'>#&gt; Unit: milliseconds
+#&gt;                    expr       min        lq      mean    median        uq
+#&gt;  PrinComp_cpp(mat_test)  964.0099  966.1512  979.6076  968.2925  987.4064
+#&gt;        prcomp(mat_test) 4699.9210 4750.1399 4790.8917 4800.3588 4836.3771
 #&gt;       max neval cld
-#&gt;   905.661     3  a 
-#&gt;  5104.609     3   b</div><div class='input'>
+#&gt;  1006.520     3  a 
+#&gt;  4872.395     3   b</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
