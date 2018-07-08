@@ -31,9 +31,9 @@ CORE_scGPS <- function(mixedpop = NULL, windows = seq(0.025:1, by = 0.025), remo
         nRounds = nRounds,PCA=PCA, nPCs=nPCs)
 
     stab_df <- FindStability(list_clusters = cluster_all$list_clusters, cluster_ref = cluster_all$cluster_ref)
-
     optimal_stab <- FindOptimalStability(list_clusters = cluster_all$list_clusters,
         stab_df)
+    #optimal_stab <- FindOptimalStabilityBagging(list_clusters = cluster_all$list_clusters, run_RandIdx = stab_df)
 
     return(list(Cluster = cluster_all$list_clusters, tree = cluster_all$tree, optimalClust = optimal_stab,
         cellsRemoved = cluster_all$cellsRemoved, cellsForClustering = cluster_all$cellsForClustering))
@@ -93,69 +93,82 @@ CORE_Subcluster_scGPS <- function(mixedpop = NULL, windows = seq(0.025:1, by = 0
 
 clustering_scGPS <- function(object = NULL, ngenes = 1500, windows = seq(0.025:1,
     by = 0.025), remove_outlier = c(0), nRounds = 1, PCA=FALSE, nPCs=20) {
-
-
-    # function for the highest resolution clustering (i.e. no window applied)
+        
+    # function for the highest resolution clustering (i.e. no window applied,
+    # no cell removal)
     firstRoundClustering <- function(object = NULL) {
         exprs_mat <- assay(object)
         # take the top variable genes
         print("Identifying top variable genes")
         exprs_mat_topVar <- topvar_scGPS(exprs_mat, ngenes = ngenes)
-        # tranpose so that cells are in rows
-        #exprs_mat_t <- t(exprs_mat_topVar)
-        #-------------------------------------Work in progress--------#
+        # exprs_mat_t <- t(exprs_mat_topVar)
         if(PCA==TRUE){
           # perform PCA dimensionality reduction
           print("Performing PCA analysis (Note: the variance for each cell needs to be >0)")
           exprs_mat_topVar_PCA <-prcomp(t(exprs_mat_topVar))
           exprs_mat_t <- as.data.frame(exprs_mat_topVar_PCA$x[,1:nPCs])
 
-        }else{exprs_mat_t <- t(exprs_mat_topVar)}
-
+        }else{exprs_mat_t <- t(exprs_mat_topVar)} # tranpose so that cells are in rows
 
         # calculate distance matrix for the rows
         print("Calculating distance matrix")
         dist_mat <- rcpp_parallel_distance(as.matrix(exprs_mat_t))
-        #-------------------------------------Work in progress--------#
-
         print("Performing hierarchical clustering")
         original.tree <- fastcluster::hclust(as.dist(dist_mat), method = "ward.D2")
         # the original clusters to be used as the reference
         print("Finding clustering information")
         original.clusters <- unname(cutreeDynamic(original.tree, distM = as.matrix(dist_mat),
-            verbose = 0))
+            verbose = 0, minClusterSize = round(ncol(dist_mat)/100))
+            )
         original.tree$labels <- original.clusters
         return(list(tree = original.tree, cluster_ref = original.clusters, dist_mat = dist_mat))
     }
 
     removeOutlierCluster <- function(object = object, remove_outlier = remove_outlier,
         nRounds = nRounds) {
-        # check for singletons
+        # first run, for all cases, no filtering yet 
+        filter_out <- firstRoundClustering(object)
+        cluster_toRemove <- which(filter_out$cluster_ref %in% remove_outlier)
+        print(paste0("Found ", length(cluster_toRemove), " cells as outliers at the first round check"))
+        cells_to_remove <- cluster_toRemove
         i = 1
-        cells_to_remove <- c()
+        
+        #filtering for n rounds 
         while (i <= nRounds) {
             if (length(cells_to_remove) > 0) {
                 objectTemp <- object[, -cells_to_remove]
-            } else {
-                objectTemp <- object
-            }
+            
+            #objectTemp with removed cells 
+            print(paste0("Filtering ", length(cells_to_remove)," cells at round ", i," ..."))
             filter_out <- firstRoundClustering(objectTemp)
-            # filter_cluster <- as.data.frame(table(filter_out$cluster_ref))
+            #cells for next round 
             cluster_toRemove <- which(filter_out$cluster_ref %in% remove_outlier)
-
             if (length(cluster_toRemove) > 0) {
-                print(paste0("Removing ", length(cluster_toRemove), " cells as outliers at filtering round ",
-                  i, " ..."))
+                print(paste0("Found ", length(cluster_toRemove), " cells as outliers remaining at round ",
+                  i+1, " ..."))
+              #update cells_to_remove for the next round 
                 cells_to_remove <- c(cells_to_remove, cluster_toRemove)
-
                 i <- i + 1
             } else {
                 print(paste0("No more outliers detected after ", i, " filtering round"))
                 i <- nRounds + 1
+                filter_out <-filter_out
+            }
+            } else {
+          print(paste0("No more outliers detected after ", i, " filtering round"))
+          i <- nRounds + 1
+          filter_out <-filter_out
             }
         }
-        return(list(firstRound_out = filter_out, cellsRemoved = colnames(object[,
-            cells_to_remove]), cellsForClustering = colnames(object[, -cluster_toRemove])))
+        if(length(cells_to_remove) > 0){
+          output <- list(firstRound_out = filter_out, cellsRemoved = colnames(object[,cells_to_remove]),
+                       cellsForClustering = colnames(object[, -cells_to_remove]))
+        }else{
+          output <- list(firstRound_out = filter_out, cellsRemoved = c("No outliers found"),
+                              cellsForClustering = "All cells are kept for clustering")
+        }
+        
+        return(output)
     }
 
     firstRoundPostRemoval <- removeOutlierCluster(object = object, remove_outlier = remove_outlier,
@@ -259,6 +272,69 @@ SubClustering_scGPS <- function(object = NULL, ngenes = 1500, windows = seq(0.02
 }
 
 
+#' Calculate rand index
+#'
+#' @description  Comparing clustering results Function for calculating randindex (adapted from
+# the function by Steve Horvath and Luohua Jiang, UCLA, 2003)
+#' @param tab a table containing different clustering results in rows
+#' @return a randIndex value
+#' @examples
+#' day5 <- sample2
+#' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
+#'                         CellMetadata = day5$dat5_clusters)
+#' cluster_all <-clustering_scGPS(object=mixedpop2)
+#'
+#' randIndex(table(unlist(cluster_all$list_clusters[[1]]), cluster_all$cluster_ref))
+#'
+#' @export
+#' @author Quan Nguyen and Michael Thompson, 2018-05-11
+#'
+
+
+randIndex <- function(tab, adjust = TRUE) {
+  choosenew <- function(n, k) {
+    n <- c(n)
+    out1 <- rep(0, length(n))
+    for (i in c(1:length(n))) {
+      if (n[i] < k) {
+        out1[i] <- 0
+      } else {
+        out1[i] <- choose(n[i], k)
+      }
+    }
+    out1
+  }
+  a <- 0
+  b <- 0
+  c <- 0
+  d <- 0
+  nn <- 0
+  m <- nrow(tab)
+  n <- ncol(tab)
+  for (i in 1:m) {
+    c <- 0
+    for (j in 1:n) {
+      a <- a + choosenew(tab[i, j], 2)
+      nj <- sum(tab[, j])
+      c <- c + choosenew(nj, 2)
+    }
+    ni <- sum(tab[i, ])
+    b <- b + choosenew(ni, 2)
+    nn <- nn + ni
+  }
+  if (adjust) {
+    d <- choosenew(nn, 2)
+    adrand <- (a - (b * c)/d)/(0.5 * (b + c) - (b * c)/d)
+    adrand
+  } else {
+    b <- b - a
+    c <- c - a
+    d <- choosenew(nn, 2) - a - b - c
+    rand <- (a + d)/(a + b + c + d)
+    rand
+  }
+}
+
 #' Calculate stability index
 #'
 #' @description  from clustering results, compare similarity between clusters by
@@ -277,55 +353,6 @@ SubClustering_scGPS <- function(object = NULL, ngenes = 1500, windows = seq(0.02
 #'
 
 FindStability <- function(list_clusters = NULL, cluster_ref = NULL) {
-    choosenew <- function(n, k) {
-        n <- c(n)
-        out1 <- rep(0, length(n))
-        for (i in c(1:length(n))) {
-            if (n[i] < k) {
-                out1[i] <- 0
-            } else {
-                out1[i] <- choose(n[i], k)
-            }
-        }
-        out1
-    }
-    #-----------------------------------------------------------------------------
-    # Comparing clustering results Function for calculating randindex (adapted from
-    # the function by Steve Horvath and Luohua Jiang, UCLA, 2003)
-    #-----------------------------------------------------------------------------
-
-    randIndex <- function(tab, adjust = TRUE) {
-        a <- 0
-        b <- 0
-        c <- 0
-        d <- 0
-        nn <- 0
-        m <- nrow(tab)
-        n <- ncol(tab)
-        for (i in 1:m) {
-            c <- 0
-            for (j in 1:n) {
-                a <- a + choosenew(tab[i, j], 2)
-                nj <- sum(tab[, j])
-                c <- c + choosenew(nj, 2)
-            }
-            ni <- sum(tab[i, ])
-            b <- b + choosenew(ni, 2)
-            nn <- nn + ni
-        }
-        if (adjust) {
-            d <- choosenew(nn, 2)
-            adrand <- (a - (b * c)/d)/(0.5 * (b + c) - (b * c)/d)
-            adrand
-        } else {
-            b <- b - a
-            c <- c - a
-            d <- choosenew(nn, 2) - a - b - c
-            rand <- (a + d)/(a + b + c + d)
-            rand
-        }
-    }
-
 
     #-----------------------------------------------------------------------------
     # End function for calculating randindex
@@ -367,7 +394,7 @@ FindStability <- function(list_clusters = NULL, cluster_ref = NULL) {
     # second get the counter location where there is no change
     counter_0 = counter
 
-    for (i in 1:length(counter)) {
+    for (i in 1:(length(counter)-1)) {
         if (counter_0[i] == 1 & counter_0[i + 1] == 1) {
             counter_0[i] = 0
         }
@@ -379,12 +406,14 @@ FindStability <- function(list_clusters = NULL, cluster_ref = NULL) {
 
     # set counter_0 on the last right or left or middle
     if (length(index_0) > 0) {
+
       # setup counter 0 on the last right
       if (index_0[1] == 1) {
         counter_adjusted[1] = 1
       } else {
         counter_adjusted[1:index_0[1] - 1] <- counter[index_0[1] - 1]
       }
+
       # setup counter 0 on the last left
       if (index_0[length(index_0)] == length(counter)) {
         length_id0 <- length(index_0)
@@ -394,15 +423,23 @@ FindStability <- function(list_clusters = NULL, cluster_ref = NULL) {
         counter_adjusted[(index_0[length_id0] + 1):length(counter)] <- counter[length(counter)]
         counter_adjusted[index_0[length_id0]] = 1
       }
-      # setup counter 0 in the middle
-      if(length(index_0) > 3){
-        for (i in 2:length(index_0) - 1) {
-          counter_adjusted[(index_0[i] + 1):(index_0[i + 1] - 1)] = counter[index_0[i +
-                                                                                      1] - 1]
-          counter_adjusted[index_0[i]] = 1
+
+      # setup counter 0 in the middle (index_0 >=3)
+      if(length(index_0) > 2){
+        for (i in 1:(length(index_0) - 1)) {
+          if(index_0[i+1] - index_0[i] >1){
+            counter_adjusted[(index_0[i] + 1):(index_0[i + 1] -1)]=
+              counter[index_0[i + 1] - 1] #assign value to the last count
+            counter_adjusted[index_0[i]] = 1 #reset
+          } else {
+            counter_adjusted[(index_0[i] + 1)]=1
+          }
         }
       }
+
     }
+
+
     run_RandIdx$stability_count <- counter_adjusted
     print("Done calculating stability...")
     return(run_RandIdx)
@@ -434,7 +471,7 @@ FindOptimalStability <- function(list_clusters, run_RandIdx) {
     print("Start finding optimal clustering...")
     # get the number of cluster
     t <- lapply(list_clusters, function(x) {
-        length(unique(unlist(x)))
+      length(unique(unlist(x)))
     })
     run_RandIdx$cluster_count <- as.vector(as.numeric(t))
 
@@ -444,7 +481,7 @@ FindOptimalStability <- function(list_clusters, run_RandIdx) {
     run_RandIdx$stability_count <- run_RandIdx$stability_count/40
 
     KeyStats <- as.data.frame(cbind(as.numeric(run_RandIdx$order) * 0.025, run_RandIdx$stability_count,
-        run_RandIdx$cluster_index_ref, run_RandIdx$cluster_index_consec))
+                                    run_RandIdx$cluster_index_ref, run_RandIdx$cluster_index_consec))
 
     colnames(KeyStats) <- c("Height", "Stability", "RandIndex", "ConsecutiveRI")
 
