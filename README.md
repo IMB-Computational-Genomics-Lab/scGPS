@@ -1,6 +1,6 @@
 # scGPS - Single Cell Global fate Potential of Subpopulations 
 <p align="center">
-	<img src="man/figures/scGPSlogo.pdf">
+	<img src="man/figures/scGPSlogo.png" width="200px">
 </p>
 
 
