@@ -1,4 +1,10 @@
-# scGPS general description
+# scGPS - Single Cell Global fate Potential of Subpopulations 
+<p align="center">
+	<img src="man/figures/scGPSlogo.pdf">
+</p>
+
+
+## scGPS general description
 A complete  single cell RNA analysis framework to answer the common question: how to decompose a mixed population into clusters (CORE) and to analyse the relationship between clusters (scGPS). 
 
 The scGPS package website is available at: https://imb-computational-genomics-lab.github.io/scGPS/index.html 
