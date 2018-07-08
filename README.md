@@ -3,11 +3,10 @@
 	<img src="man/figures/scGPSlogo.png" width="200px">
 </p>
 
+The scGPS package website is available at: https://imb-computational-genomics-lab.github.io/scGPS/index.html 
 
 ## scGPS general description
 A complete  single cell RNA analysis framework to answer the common question: how to decompose a mixed population into clusters (CORE) and to analyse the relationship between clusters (scGPS). 
-
-The scGPS package website is available at: https://imb-computational-genomics-lab.github.io/scGPS/index.html 
 
 ## scGPS workflow
 
