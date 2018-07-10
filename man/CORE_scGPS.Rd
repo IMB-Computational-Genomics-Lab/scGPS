@@ -36,6 +36,9 @@ to select the number of optimisation tree height windows for increasing resoluti
 \examples{
 day5 <- sample2
 #day5$dat5_counts needs to be in a matrix format
+cellnames <- colnames(day5$dat5_counts)
+cluster <-day5$dat5_clusters
+cellnames <-data.frame("Cluster"=cluster, "cellBarcodes" = cellnames)
 mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
                          CellMetadata = day5$dat5_clusters)
 test <- CORE_scGPS(mixedpop2, remove_outlier = c(1), PCA=FALSE, nPCs=20, ngenes=1500)

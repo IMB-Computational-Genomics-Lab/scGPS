@@ -4,7 +4,7 @@
 \alias{FindOptimalStability}
 \title{Find the optimal cluster}
 \usage{
-FindOptimalStability(list_clusters, run_RandIdx)
+FindOptimalStability(list_clusters, run_RandIdx, bagging = FALSE)
 }
 \arguments{
 \item{list_clusters}{is a \code{list} object containing 40 clustering results}
