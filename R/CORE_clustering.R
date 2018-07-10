@@ -19,6 +19,9 @@
 #' @examples
 #' day5 <- sample2
 #' #day5$dat5_counts needs to be in a matrix format
+#' cellnames <- colnames(day5$dat5_counts)
+#' cluster <-day5$dat5_clusters
+#' cellnames <-data.frame("Cluster"=cluster, "cellBarcodes" = cellnames)
 #' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
 #'                          CellMetadata = day5$dat5_clusters)
 #' test <- CORE_scGPS(mixedpop2, remove_outlier = c(1), PCA=FALSE, nPCs=20, ngenes=1500)
@@ -124,42 +127,43 @@ clustering_scGPS <- function(object = NULL, ngenes = 1500, windows = seq(0.025:1
         return(list(tree = original.tree, cluster_ref = original.clusters, dist_mat = dist_mat))
     }
 
+
     removeOutlierCluster <- function(object = object, remove_outlier = remove_outlier,
         nRounds = nRounds) {
-        # first run, for all cases, no filtering yet 
-        filter_out <- firstRoundClustering(object)
-        cluster_toRemove <- which(filter_out$cluster_ref %in% remove_outlier)
-        print(paste0("Found ", length(cluster_toRemove), " cells as outliers at the first round check"))
-        cells_to_remove <- cluster_toRemove
+
+        # Initial Message to the user
+        if (nRounds == 1) {
+        print(paste0("Performing ", nRounds, " round of filtering"))
+        } else {
+        	print(paste0("Performing ", nRounds, " rounds of filtering"))
+        }
+
+        # loop for the number of filtering rounds
         i = 1
-        
-        #filtering for n rounds 
+        objectTemp <- object
+        cells_to_remove <- c()
+
         while (i <= nRounds) {
-            if (length(cells_to_remove) > 0) {
-                objectTemp <- object[, -cells_to_remove]
-            
-            #objectTemp with removed cells 
-            print(paste0("Filtering ", length(cells_to_remove)," cells at round ", i," ..."))
             filter_out <- firstRoundClustering(objectTemp)
-            #cells for next round 
             cluster_toRemove <- which(filter_out$cluster_ref %in% remove_outlier)
             if (length(cluster_toRemove) > 0) {
-                print(paste0("Found ", length(cluster_toRemove), " cells as outliers remaining at round ",
-                  i+1, " ..."))
-              #update cells_to_remove for the next round 
+                print(paste0("Found ", length(cluster_toRemove), " cells as outliers at round ",  i, " ..."))
                 cells_to_remove <- c(cells_to_remove, cluster_toRemove)
+                objectTemp <- object[, -cells_to_remove]
                 i <- i + 1
             } else {
-                print(paste0("No more outliers detected after ", i, " filtering round"))
+                print(paste0("No more outliers detected in filtering round ", i))
                 i <- nRounds + 1
-                filter_out <-filter_out
-            }
-            } else {
-          print(paste0("No more outliers detected after ", i, " filtering round"))
-          i <- nRounds + 1
-          filter_out <-filter_out
             }
         }
+
+        filter_out <- firstRoundClustering(objectTemp)
+        cluster_toRemove <- which(filter_out$cluster_ref %in% remove_outlier)
+        if (length(cluster_toRemove) > 0) {
+			print(paste0("Found ", length(cluster_toRemove), " cells as outliers at round ",  i, " ..."))
+            print(paste0("Select ", i , " removal rounds if you want to remove these cells"))
+        }
+
         if(length(cells_to_remove) > 0){
           output <- list(firstRound_out = filter_out, cellsRemoved = colnames(object[,cells_to_remove]),
                        cellsForClustering = colnames(object[, -cells_to_remove]))
@@ -167,9 +171,9 @@ clustering_scGPS <- function(object = NULL, ngenes = 1500, windows = seq(0.025:1
           output <- list(firstRound_out = filter_out, cellsRemoved = c("No outliers found"),
                               cellsForClustering = "All cells are kept for clustering")
         }
-        
         return(output)
     }
+
 
     firstRoundPostRemoval <- removeOutlierCluster(object = object, remove_outlier = remove_outlier,
         nRounds = nRounds)
@@ -466,7 +470,7 @@ FindStability <- function(list_clusters = NULL, cluster_ref = NULL) {
 #' optimal_stab <- FindOptimalStability(list_clusters = cluster_all$list_clusters, stab_df)
 
 
-FindOptimalStability <- function(list_clusters, run_RandIdx) {
+FindOptimalStability <- function(list_clusters, run_RandIdx, bagging  = FALSE) {
     library(reshape2)
     print("Start finding optimal clustering...")
     # get the number of cluster
@@ -558,10 +562,20 @@ FindOptimalStability <- function(list_clusters, run_RandIdx) {
         }
     }
 
-    print("Done finding optimal clustering...")
-    # Final result
-    return(list(StabilityPlot = p, KeyStats = KeyStats, OptimalRes = KeyStats$Height[optimal_param],
-        OptimalClust = KeyStats$Cluster_count[optimal_param]))
+
+    if (bagging == TRUE) {
+    	output <- list(HighestRes = KeyStats$Cluster_count[1],
+              OptimalClust = KeyStats$Cluster_count[optimal_param],  KeyStats = KeyStats)
+    }
+
+    else {
+    	print("Done finding optimal clustering...")
+    	# Final result
+    	output <- list(StabilityPlot = p, KeyStats = KeyStats, OptimalRes = KeyStats$Height[optimal_param],
+        	OptimalClust = KeyStats$Cluster_count[optimal_param])
+	}
+
+	return(output)
     #-----------------------------------------------------------------------------
     # Done finding the optimal parameter for clustering
     #-----------------------------------------------------------------------------
