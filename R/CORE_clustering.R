@@ -36,7 +36,6 @@ CORE_scGPS <- function(mixedpop = NULL, windows = seq(0.025:1, by = 0.025), remo
     stab_df <- FindStability(list_clusters = cluster_all$list_clusters, cluster_ref = cluster_all$cluster_ref)
     optimal_stab <- FindOptimalStability(list_clusters = cluster_all$list_clusters,
         stab_df)
-    #optimal_stab <- FindOptimalStabilityBagging(list_clusters = cluster_all$list_clusters, run_RandIdx = stab_df)
 
     return(list(Cluster = cluster_all$list_clusters, tree = cluster_all$tree, optimalClust = optimal_stab,
         cellsRemoved = cluster_all$cellsRemoved, cellsForClustering = cluster_all$cellsForClustering))
@@ -127,7 +126,7 @@ clustering_scGPS <- function(object = NULL, ngenes = 1500, windows = seq(0.025:1
         return(list(tree = original.tree, cluster_ref = original.clusters, dist_mat = dist_mat))
     }
 
-
+    # function to remove outlier clusters
     removeOutlierCluster <- function(object = object, remove_outlier = remove_outlier,
         nRounds = nRounds) {
 
@@ -458,7 +457,9 @@ FindStability <- function(list_clusters = NULL, cluster_ref = NULL) {
 #' clustering run, find the resolution (window), where the stability is the highest
 #' @param run_RandIdx is a \code{data frame} object from iterative clustering runs
 #' @param list_clusters is a \code{list} object containing 40 clustering results
-#' @return a \code{list} with optimal stability, cluster count and summary stats
+#' @param bagging is a logical that is true if bagging is to be performed, changes return
+#' @return bagging == FALSE => a \code{list} with optimal stability, cluster count and summary stats
+#' baggign == TRUE => a \code{list} with high res cluster count, optimal cluster count and keystats
 #' @export
 #' @author Quan Nguyen, 2017-11-25
 #' @examples
@@ -467,7 +468,7 @@ FindStability <- function(list_clusters = NULL, cluster_ref = NULL) {
 #'                         CellMetadata = day5$dat5_clusters)
 #' cluster_all <-clustering_scGPS(object=mixedpop2)
 #' stab_df <- FindStability(list_clusters=cluster_all$list_clusters, cluster_ref = cluster_all$cluster_ref)
-#' optimal_stab <- FindOptimalStability(list_clusters = cluster_all$list_clusters, stab_df)
+#' optimal_stab <- FindOptimalStability(list_clusters = cluster_all$list_clusters, stab_df, bagging = FALSE)
 
 
 FindOptimalStability <- function(list_clusters, run_RandIdx, bagging  = FALSE) {
