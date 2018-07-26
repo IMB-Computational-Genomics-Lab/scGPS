@@ -44,10 +44,10 @@ CORE_scGPS_bagging <- function(mixedpop = NULL, bagging_run = 10, subsample_prop
   # find the optimal stability for each of the bagging runs
   optimal_stab <- list()
   for(i in 1:bagging_run){
-  	stab_df <- FindStability(list_clusters = cluster_all$bootstrap_clusters[[i]][[2]],
-  	                         cluster_ref = unname(unlist(cluster_all$bootstrap_clusters[[i]][[2]][[1]])))
+  	stab_df <- FindStability(list_clusters = cluster_all$bootstrap_clusters[[i]][[1]],
+  	                         cluster_ref = unname(unlist(cluster_all$bootstrap_clusters[[i]][[1]][[1]])))
 
-    optimal_stab[[i]] <- FindOptimalStability(list_clusters = cluster_all$bootstrap_clusters[[i]][[2]], stab_df, bagging = TRUE)
+    optimal_stab[[i]] <- FindOptimalStability(list_clusters = cluster_all$bootstrap_clusters[[i]][[1]], stab_df, bagging = TRUE)
   }
 
   # record the optimal and highest resolutions
@@ -235,7 +235,7 @@ clustering_scGPS_bagging <- function(object = NULL, ngenes = 1500, bagging_run =
     # tempoarily store clustering results for each run
     iter_tree <- fastcluster::hclust(as.dist(dist_mat_bootstrap), method = "ward.D2")
     iter_temp <- clustering_windows(tree=iter_tree, dist_mat=dist_mat_bootstrap)
-    iter_write <-list(cellnames,iter_temp)
+    iter_write <-list(iter_temp)
     bootstrap_list[[i]] <- iter_write
   }
 
