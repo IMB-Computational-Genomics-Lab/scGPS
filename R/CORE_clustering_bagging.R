@@ -47,7 +47,7 @@ CORE_scGPS_bagging <- function(mixedpop = NULL, bagging_run = 10, subsample_prop
   	stab_df <- FindStability(list_clusters = cluster_all$bootstrap_clusters[[i]][[1]],
   	                         cluster_ref = unname(unlist(cluster_all$bootstrap_clusters[[i]][[1]][[1]])))
 
-    optimal_stab[[i]] <- FindOptimalStability(list_clusters = cluster_all$bootstrap_clusters[[i]][[1]], stab_df, bagging = TRUE)
+    optimal_stab[[i]] <- FindOptimalStability(list_clusters = cluster_all$bootstrap_clusters[[i]][[1]], stab_df, bagging = TRUE, windows = windows)
   }
 
   # record the optimal and highest resolutions
@@ -70,7 +70,27 @@ CORE_scGPS_bagging <- function(mixedpop = NULL, bagging_run = 10, subsample_prop
   for(i in 1:length(windows)) {
     NumberClusters[i] <- max(unlist(cluster_all$clustering_param[[i]]))
   }
+
+
+  #Check to see if the optimal is valid in the original tree
+  if(!(OptimalCluster_bagging_count %in% NumberClusters)) {
+  	if(OptimalCluster_bagging_count > max(NumberClusters)) {
+  	  OptimalCluster_bagging_count <- max(NumberClusters)
+  	} else {
+  	  above <- OptimalCluster_bagging_count + 1
+  	  below <- OptimalCluster_bagging_count - 1 #potentially add loop here if both above and below don't yield a result
+  	  above_count <- length(which(NumberClusters == above))
+  	  below_count <- length(which(NumberClusters == below))
+  	  if(above_count >= below_count) {
+  	    OptimalCluster_bagging_count <- above
+  	  } else {
+  	    OptimalCluster_bagging_count <- below
+  	  }
+  	}
+  }
+
   optimal_index <- which(NumberClusters == OptimalCluster_bagging_count)[1]
+
 
   return(list(Cluster = cluster_all$clustering_param, tree = cluster_all$tree, optimalClust = OptimalCluster_bagging,
               cellsRemoved = cluster_all$cellsRemoved, cellsForClustering = cluster_all$cellsForClustering,
@@ -235,7 +255,7 @@ clustering_scGPS_bagging <- function(object = NULL, ngenes = 1500, bagging_run =
     # tempoarily store clustering results for each run
     iter_tree <- fastcluster::hclust(as.dist(dist_mat_bootstrap), method = "ward.D2")
     iter_temp <- clustering_windows(tree=iter_tree, dist_mat=dist_mat_bootstrap)
-    iter_write <-list(iter_temp)
+    iter_write <-list(iter_temp)	#NEED TO PARSE CELLNAMES TO HERE
     bootstrap_list[[i]] <- iter_write
   }
 
