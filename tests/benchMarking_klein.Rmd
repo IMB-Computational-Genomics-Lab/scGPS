@@ -110,7 +110,7 @@ start_time <- Sys.time()
 #Run sc3 with an estimation for k
 sce <- sc3_prepare(sce, n_cores = 1, gene_filter = TRUE)
 sce <- sc3_estimate_k(sce)
-SC3_k_estimate <- as.integer(unlist(metadata(sce)$sc3))
+SC3_k_estimate <- as.integer(unlist(metadata(sce)$sc3$k_estimation))
 sce <- sc3(sce, ks = SC3_k_estimate, biology = FALSE, gene_filter = TRUE, n_cores = 1, kmeans_nstart = 50)#Here we changed to 50 as there are over 2000 cells
 
 #Stop the time here
