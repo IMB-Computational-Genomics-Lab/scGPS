@@ -34,9 +34,7 @@ CORE_scGPS <- function(mixedpop = NULL, windows = seq(0.025:1, by = 0.025), remo
         nRounds = nRounds,PCA=PCA, nPCs=nPCs)
 
     stab_df <- FindStability(list_clusters = cluster_all$list_clusters, cluster_ref = cluster_all$cluster_ref)
-    optimal_stab <- FindOptimalStability(list_clusters = cluster_all$list_clusters,
-        stab_df)
-    #optimal_stab <- FindOptimalStabilityBagging(list_clusters = cluster_all$list_clusters, run_RandIdx = stab_df)
+    optimal_stab <- FindOptimalStability(list_clusters = cluster_all$list_clusters, stab_df, windows = windows)
 
     return(list(Cluster = cluster_all$list_clusters, tree = cluster_all$tree, optimalClust = optimal_stab,
         cellsRemoved = cluster_all$cellsRemoved, cellsForClustering = cluster_all$cellsForClustering))
@@ -127,7 +125,7 @@ clustering_scGPS <- function(object = NULL, ngenes = 1500, windows = seq(0.025:1
         return(list(tree = original.tree, cluster_ref = original.clusters, dist_mat = dist_mat))
     }
 
-
+    # function to remove outlier clusters
     removeOutlierCluster <- function(object = object, remove_outlier = remove_outlier,
         nRounds = nRounds) {
 
@@ -458,7 +456,9 @@ FindStability <- function(list_clusters = NULL, cluster_ref = NULL) {
 #' clustering run, find the resolution (window), where the stability is the highest
 #' @param run_RandIdx is a \code{data frame} object from iterative clustering runs
 #' @param list_clusters is a \code{list} object containing 40 clustering results
-#' @return a \code{list} with optimal stability, cluster count and summary stats
+#' @param bagging is a logical that is true if bagging is to be performed, changes return
+#' @return bagging == FALSE => a \code{list} with optimal stability, cluster count and summary stats
+#' baggign == TRUE => a \code{list} with high res cluster count, optimal cluster count and keystats
 #' @export
 #' @author Quan Nguyen, 2017-11-25
 #' @examples
@@ -467,12 +467,15 @@ FindStability <- function(list_clusters = NULL, cluster_ref = NULL) {
 #'                         CellMetadata = day5$dat5_clusters)
 #' cluster_all <-clustering_scGPS(object=mixedpop2)
 #' stab_df <- FindStability(list_clusters=cluster_all$list_clusters, cluster_ref = cluster_all$cluster_ref)
-#' optimal_stab <- FindOptimalStability(list_clusters = cluster_all$list_clusters, stab_df)
+#' optimal_stab <- FindOptimalStability(list_clusters = cluster_all$list_clusters, stab_df, bagging = FALSE)
 
 
-FindOptimalStability <- function(list_clusters, run_RandIdx, bagging  = FALSE) {
+FindOptimalStability <- function(list_clusters, run_RandIdx, bagging  = FALSE, windows = seq(0.025:1, by = 0.025)) { #ADD windows
     library(reshape2)
     print("Start finding optimal clustering...")
+    
+    window_param <- length(windows)  ###ADDED THIS TO CHANGE WINDOWS
+
     # get the number of cluster
     t <- lapply(list_clusters, function(x) {
       length(unique(unlist(x)))
@@ -482,9 +485,12 @@ FindOptimalStability <- function(list_clusters, run_RandIdx, bagging  = FALSE) {
     #-----------------------------------------------------------------------------
     # Diagnostic plot for comparing clustering results
     #-----------------------------------------------------------------------------
-    run_RandIdx$stability_count <- run_RandIdx$stability_count/40
+    run_RandIdx$stability_count <- run_RandIdx$stability_count/window_param
 
-    KeyStats <- as.data.frame(cbind(as.numeric(run_RandIdx$order) * 0.025, run_RandIdx$stability_count,
+
+
+    #CHANGED HERE FOR  .025 -->> based on the seq
+    KeyStats <- as.data.frame(cbind(as.numeric(run_RandIdx$order) * windows[1], run_RandIdx$stability_count,
                                     run_RandIdx$cluster_index_ref, run_RandIdx$cluster_index_consec))
 
     colnames(KeyStats) <- c("Height", "Stability", "RandIndex", "ConsecutiveRI")
@@ -507,61 +513,27 @@ FindOptimalStability <- function(list_clusters, run_RandIdx, bagging  = FALSE) {
     # Find the optimal parameter for clustering
     #-----------------------------------------------------------------------------
 
+    #------NEW OPTIMAL METHOD ALLOWING FOR MAX RESOLUTION-------------------------
     KeyStats$Cluster_count <- run_RandIdx$cluster_count
-    optimal_param = 0
+    Cluster_count <- KeyStats$Cluster_count
+    optimal_param  = 1
     St <- KeyStats$Stability
-    St_unique <- unique(St)
     St_max <- St[which.max(St)]
 
-    St_max_middle <- St_unique[-which(St_unique == St[1])]
-
-    if(St[1] != St[40]){
-      St_max_middle <- St_max_middle[-which(St_max_middle == St[40])]
-    }
-
-    St_max_middle <- St_max_middle[which.max(St_max_middle)]
-
-    if (St[40] >= St[1]) {
-        St_Minus_max = St - St[40]
+    if((St[window_param] > .5) && (St[window_param] == St_max)) {
+        optimal_param = window_param    #Edit to find the first of the smallest cluster (prob use Cluster_count)
     } else {
-        St_Minus_max = St - St[1]
-    }
-
-    if (St[40] > St[1]) {
-        if (St[1] > 0.5) {
-            optimal_param = 1
-        } else {
-            for (i in 2:39) {
-                if ((St_Minus_max[i] == 0) & ((St_Minus_max[i + 1] < 0))) {
-                  optimal_param = i
-                  break
-                }
+        concat_St <- vector()   #Concatenated vector
+        for (i in 1:window_param) {
+            if (Cluster_count[i] != min(Cluster_count)) {    #If we are not using last lot remove them don't add to new St vector
+                concat_St <- c(concat_St, St[i])
             }
         }
-    }
-
-    if (St[1] > St[40]) {
-        if (St[1] > 0.5) {
-            optimal_param = 1
-        } else {
-            for (i in 2:39) {
-                if ((St_Minus_max[i] == 0) & ((St_Minus_max[i - 1] < 0))) {
-                  optimal_param = i
-                  break
-                }
-            }
+        optimal_param = which.max(concat_St)[1] #Choose the optimal parameter from new vector
+        if (optimal_param != 1) {
+            optimal_param = optimal_param - 1
         }
     }
-
-    if (optimal_param == 0) {
-        for (i in 2:39) {
-            if (St[i] == St_max_middle) {
-                optimal_param = i
-                break
-            }
-        }
-    }
-
 
     if (bagging == TRUE) {
     	output <- list(HighestRes = KeyStats$Cluster_count[1],
