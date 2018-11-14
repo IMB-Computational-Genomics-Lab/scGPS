@@ -4,15 +4,19 @@
 \alias{FindOptimalStability}
 \title{Find the optimal cluster}
 \usage{
-FindOptimalStability(list_clusters, run_RandIdx, bagging = FALSE)
+FindOptimalStability(list_clusters, run_RandIdx, bagging = FALSE,
+  windows = seq(0.025:1, by = 0.025))
 }
 \arguments{
 \item{list_clusters}{is a \code{list} object containing 40 clustering results}
 
 \item{run_RandIdx}{is a \code{data frame} object from iterative clustering runs}
+
+\item{bagging}{is a logical that is true if bagging is to be performed, changes return}
 }
 \value{
-a \code{list} with optimal stability, cluster count and summary stats
+bagging == FALSE => a \code{list} with optimal stability, cluster count and summary stats
+baggign == TRUE => a \code{list} with high res cluster count, optimal cluster count and keystats
 }
 \description{
 from calculated stability based on Rand indexes for consecutive
@@ -24,7 +28,7 @@ mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day
                         CellMetadata = day5$dat5_clusters)
 cluster_all <-clustering_scGPS(object=mixedpop2)
 stab_df <- FindStability(list_clusters=cluster_all$list_clusters, cluster_ref = cluster_all$cluster_ref)
-optimal_stab <- FindOptimalStability(list_clusters = cluster_all$list_clusters, stab_df)
+optimal_stab <- FindOptimalStability(list_clusters = cluster_all$list_clusters, stab_df, bagging = FALSE)
 }
 \author{
 Quan Nguyen, 2017-11-25

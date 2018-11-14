@@ -8,7 +8,7 @@ training_scGPS(genes, mixedpop1 = NULL, mixedpop2 = NULL, c_selectID,
   listData = list(), out_idx = NULL)
 }
 \arguments{
-\item{genes}{a vector of gene names (for LASSO shrinkage); gene symbols must be
+\item{genes}{a vector of gene names (for ElasticNet shrinkage); gene symbols must be
 in the same format with gene names in subpop2. Note that genes are listed by the order
 of importance, e.g. differentially expressed genes that are most significan, so that
 if the gene list contains too many genes, only the top 500 genes are used.}
@@ -26,7 +26,7 @@ This is needed for running bootstrap.}
 a \code{list} with prediction results written in to the index \code{out_idx}
 }
 \description{
-Training a haft of all cells to find optimal LASSO and LDA
+Training a haft of all cells to find optimal ElasticNet and LDA
 models to predict a subpopulation
 }
 \examples{

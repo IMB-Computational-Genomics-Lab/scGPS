@@ -11,9 +11,9 @@ Description: The package implements two main algorithms to answer two key questi
 Encoding: UTF-8
 LazyData: true
 License: GPL-3
-BugReports:  https://github.com/IMB-Computational-Genomics-Lab/scGPS/issues
-url:  https://github.com/IMB-Computational-Genomics-Lab/scGPS/
-RoxygenNote: 6.0.1
+BugReports: https://github.com/IMB-Computational-Genomics-Lab/scGPS/issues
+url: https://github.com/IMB-Computational-Genomics-Lab/scGPS/
+RoxygenNote: 6.1.0
 Depends: R (>= 3.4), SummarizedExperiment, dynamicTreeCut
 biocViews: SingleCell, Clustering, DataImport
 Imports:

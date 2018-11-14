@@ -10,12 +10,26 @@ CORE_scGPS_bagging(mixedpop = NULL, bagging_run = 10,
   ngenes = 1500)
 }
 \arguments{
-\item{windows}{a numeric specifying the number of windows to test}
+\item{mixedpop}{is a \linkS4class{SingleCellExperiment} object from the train
+mixed population.}
+
+\item{bagging_run}{an integer specifying the number of bagging runs to be computed.}
+
+\item{subsample_proportion}{a numeric specifying the proportion 
+of the tree to be chosen in subsampling.}
+
+\item{windows}{a numeric vector specifying the ranges of each window.}
 
 \item{remove_outlier}{a vector containing IDs for clusters to be removed
 the default vector contains 0, as 0 is the cluster with singletons.}
 
-\item{PCA}{logical specifying if PCA is used before calculating distance matrix}
+\item{nRounds}{an integer specifying the number rounds to attempt to remove outliers.}
+
+\item{PCA}{logical specifying if PCA is used before calculating distance matrix.}
+
+\item{nPCs}{an integer specifying the number of principal components to use.}
+
+\item{ngenes}{number of genes used for clustering calculations.}
 }
 \value{
 a \code{list} with clustering results of all iterations, and a selected
@@ -24,7 +38,7 @@ optimal resolution
 \description{
 CORE is an algorithm to generate reproduciable clustering,
 CORE is first implemented in ascend R package. Here, CORE V2.0 uses bagging analysis
-to find a stable clustering result and detect rare clusters mixed population
+to find a stable clustering result and detect rare clusters mixed population.
 }
 \examples{
 day5 <- sample2
@@ -35,7 +49,8 @@ cellnames <- data.frame("cluster" = cluster, "cellBarcodes" = cellnames)
 mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
                          CellMetadata = day5$dat5_clusters)
 test <- CORE_scGPS_bagging(mixedpop2, remove_outlier = c(1), PCA=FALSE, bagging_run = 20, subsample_proportion = .8)
-plot_CORE(test$tree, list_clusters = test$clustering_param)
+plot_CORE(test$tree, list_clusters = test$Cluster)
+plot_optimal_CORE(original_tree= test$tree, optimal_cluster = unlist(test$Cluster[test$optimal_index]), shift = -100)
 
 }
 \author{

@@ -22,7 +22,7 @@ bootstrap_scGPS(nboots = 1, genes = genes, mixedpop1 = mixedpop1,
 a \code{list} with prediction results written in to the index \code{out_idx}
 }
 \description{
-LASSO and LDA prediction for each of all the subpopulations in
+ElasticNet and LDA prediction for each of all the subpopulations in
 the new mixed population after training the model for a subpopulation in the
 first mixed population. The number of bootstraps to be run can be specified.
 }
@@ -37,7 +37,7 @@ genes <-GeneList
 genes <-genes$Merged_unique
 test <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, genes=genes, c_selectID=1, listData =list())
 names(test)
-test$LassoPredict
+test$ElasticNetPredict
 test$LDAPredict
 }
 \seealso{

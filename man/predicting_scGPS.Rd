@@ -2,7 +2,7 @@
 % Please edit documentation in R/MainLassoLDATraining.R
 \name{predicting_scGPS}
 \alias{predicting_scGPS}
-\title{Main prediction function applying the optimal LASSO and LDA models}
+\title{Main prediction function applying the optimal ElasticNet and LDA models}
 \usage{
 predicting_scGPS(listData = NULL, mixedpop2 = NULL, out_idx = NULL)
 }

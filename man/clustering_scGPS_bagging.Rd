@@ -4,34 +4,44 @@
 \alias{clustering_scGPS_bagging}
 \title{HC clustering for a number of resolutions}
 \usage{
-clustering_scGPS_bagging(object = NULL, ngenes = 1500, bagging_run = 10,
-  subsample_proportion = 0.1, windows = seq(0.025:1, by = 0.025),
-  remove_outlier = c(0), nRounds = 1, PCA = FALSE, nPCs = 20)
+clustering_scGPS_bagging(object = NULL, ngenes = 1500,
+  bagging_run = 20, subsample_proportion = 0.8,
+  windows = seq(0.025:1, by = 0.025), remove_outlier = c(0),
+  nRounds = 1, PCA = FALSE, nPCs = 20)
 }
 \arguments{
-\item{ngenes}{number of top variable genes to be used}
+\item{object}{is a \linkS4class{SingleCellExperiment} object from the train
+mixed population.}
+
+\item{ngenes}{number of genes used for clustering calculations.}
+
+\item{bagging_run}{an integer specifying the number of bagging runs to be computed.}
+
+\item{subsample_proportion}{a numeric specifying the proportion of the tree to be chosen in subsampling.}
+
+\item{windows}{a numeric vector specifying the rages of each window.}
 
 \item{remove_outlier}{a vector containing IDs for clusters to be removed
-the default vector contains 0, as 0 is the cluster with singletons}
+the default vector contains 0, as 0 is the cluster with singletons.}
 
-\item{nRounds}{number of iterations to remove a selected clusters}
+\item{nRounds}{a integer specifying the number rounds to attempt to remove outliers.}
 
-\item{nPCs}{number of principal components from PCA dimensional reduction to be used}
+\item{PCA}{logical specifying if PCA is used before calculating distance matrix.}
 
-\item{mixedpop1}{is a \linkS4class{SingleCellExperiment} object from the
-train mixed population}
+\item{nPCs}{an integer specifying the number of principal components to use.}
 }
 \value{
-clustering results
+a list of clustering results containing each bagging run
+as well as the clustering of the original tree and the tree itself.
 }
 \description{
-performs 40 clustering runs or more depending on windows
+subsamples cells for each bagging run and performs 40 clustering runs or more depending on windows.
 }
 \examples{
 day5 <- sample2
 mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
                          CellMetadata = day5$dat5_clusters)
-test <-clustering_scGPS(mixedpop2, remove_outlier = c(1))
+test <-clustering_scGPS_bagging(mixedpop2, remove_outlier = c(1), bagging_run = 20, subsample_proportion = .8)
 }
 \author{
 Quan Nguyen, 2017-11-25

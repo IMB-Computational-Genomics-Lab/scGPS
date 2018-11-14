@@ -4,8 +4,8 @@
 \alias{SubClustering_scGPS}
 \title{Subclustering for selected cells}
 \usage{
-SubClustering_scGPS(object = NULL, ngenes = 1500, windows = seq(0.025:1,
-  by = 0.025), select_cell_index = NULL)
+SubClustering_scGPS(object = NULL, ngenes = 1500,
+  windows = seq(0.025:1, by = 0.025), select_cell_index = NULL)
 }
 \arguments{
 \item{object}{is a \linkS4class{SingleCellExperiment} object from the

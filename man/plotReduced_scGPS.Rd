@@ -4,8 +4,8 @@
 \alias{plotReduced_scGPS}
 \title{plot reduced data}
 \usage{
-plotReduced_scGPS(reduced_dat, color_fac = factor(Sample_id), dims = c(1,
-  2), dimNames = c("Dim 1", "Dim 2"), palletes = NULL,
+plotReduced_scGPS(reduced_dat, color_fac = factor(Sample_id),
+  dims = c(1, 2), dimNames = c("Dim 1", "Dim 2"), palletes = NULL,
   legend_title = "Cluster")
 }
 \arguments{
