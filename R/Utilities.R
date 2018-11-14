@@ -38,33 +38,38 @@ topvar_scGPS <- function(expression.matrix = NULL, ngenes = 1500) {
 #' plot(p2)
 #'
 #'
-
 plotReduced_scGPS <- function(reduced_dat, color_fac = factor(Sample_id), dims = c(1,
-    2), dimNames = c("Dim 1", "Dim 2"), palletes = NULL, legend_title = "Cluster") {
-    library(cowplot)
-    reduced_dat_toPlot <- as.data.frame(reduced_dat[, dims])
-    sample_num <- length(unique(color_fac))
-    colnames(reduced_dat_toPlot) <- dimNames
-    reduced_dat_toPlot$color_fac <- color_fac
-    p <- qplot(x = reduced_dat[, dims[1]], y = reduced_dat[, dims[2]], alpha = I(0.7),
-        geom = "point", color = color_fac) + theme_bw()
-    p <- p + ylab(dimNames[2]) + xlab(dimNames[1]) + scale_color_manual(name = legend_title,
-        values = palletes[1:sample_num], limits = sort(as.character(as.vector(unique(color_fac)))))
-    p <- p + theme(panel.border = element_rect(colour = "black", fill = NA, size = 1.5)) +
-        theme(legend.position = "bottom") + theme(text = element_text(size = 20))
-
-    yaxis <- axis_canvas(p, axis = "y", coord_flip = TRUE) + geom_density(data = reduced_dat_toPlot,
-        aes(`Dim 2`, ..count.., fill = color_fac), size = 0.2, alpha = 0.7) + coord_flip() +
-        scale_fill_manual(name = "Samples", values = palletes[1:sample_num], limits = as.character(as.vector(unique(color_fac))))
-
-    xaxis <- axis_canvas(p, axis = "x") + geom_density(data = reduced_dat_toPlot,
-        aes(`Dim 1`, ..count.., fill = color_fac), size = 0.4, alpha = 0.7) + scale_fill_manual(name = "Samples",
-        values = palletes[1:sample_num], limits = as.character(as.vector(unique(color_fac))))
-
-    p1_x <- insert_xaxis_grob(p, xaxis, grid::unit(0.2, "null"), position = "top")
-    p1_x_y <- insert_yaxis_grob(p1_x, yaxis, grid::unit(0.2, "null"), position = "right")
-    p2 <- ggdraw(p1_x_y)
-    return(p2)
+  2), dimNames = c("Dim 1", "Dim 2"), palletes = NULL, legend_title = "Cluster") {
+  library(cowplot)
+  library(RColorBrewer)
+  reduced_dat_toPlot <- as.data.frame(reduced_dat[, dims])
+  sample_num <- length(unique(color_fac))
+  if(is.null(palletes)){
+    palletes <- colorRampPalette(brewer.pal(sample_num, "Set1"))(sample_num)
+  }
+  reduced_dat_toPlot <- as.data.frame(reduced_dat[, dims])
+  sample_num <- length(unique(color_fac))
+  colnames(reduced_dat_toPlot) <- dimNames
+  reduced_dat_toPlot$color_fac <- color_fac
+  p <- qplot(x = reduced_dat[, dims[1]], y = reduced_dat[, dims[2]], alpha = I(0.7),
+             geom = "point", color = color_fac) + theme_bw()
+  p <- p + ylab(dimNames[2]) + xlab(dimNames[1]) + scale_color_manual(name = legend_title,
+                                                                      values = palletes[1:sample_num], limits = sort(as.character(as.vector(unique(color_fac)))))
+  p <- p + theme(panel.border = element_rect(colour = "black", fill = NA, size = 1.5)) +
+    theme(legend.position = "bottom") + theme(text = element_text(size = 20))
+  
+  yaxis <- axis_canvas(p, axis = "y", coord_flip = TRUE) + geom_density(data = reduced_dat_toPlot,
+                                                                        aes(`Dim 2`, ..count.., fill = color_fac), size = 0.2, alpha = 0.7) + coord_flip() +
+    scale_fill_manual(name = "Samples", values = palletes[1:sample_num], limits = sort(as.character(as.vector(unique(color_fac)))))
+  
+  xaxis <- axis_canvas(p, axis = "x") + geom_density(data = reduced_dat_toPlot,
+                                                     aes(`Dim 1`, ..count.., fill = color_fac), size = 0.4, alpha = 0.7) + scale_fill_manual(name = "Samples",
+                                                                                                                                             values = palletes[1:sample_num], limits = sort(as.character(as.vector(unique(color_fac)))))
+  
+  p1_x <- insert_xaxis_grob(p, xaxis, grid::unit(0.2, "null"), position = "top")
+  p1_x_y <- insert_yaxis_grob(p1_x, yaxis, grid::unit(0.2, "null"), position = "right")
+  p2 <- ggdraw(p1_x_y)
+  return(p2)
 }
 
 
@@ -75,6 +80,7 @@ plotReduced_scGPS <- function(reduced_dat, color_fac = factor(Sample_id), dims =
 #' @param cluster corresponding cluster information in the expression_matrix
 #' by running CORE clustering or using other methods.
 #' @param selected_cluster a vector of unique cluster ids to calculate
+#' @param fitType string specifying "local" or "parametric" for DEseq dispersion estimation
 #' @return a \code{list} containing sorted DESeq analysis results
 #' @export
 #' @author Quan Nguyen, 2017-11-25
@@ -86,7 +92,7 @@ plotReduced_scGPS <- function(reduced_dat, color_fac = factor(Sample_id), dims =
 #' names(DEgenes)
 
 
-findMarkers_scGPS <- function(expression_matrix = NULL, cluster = NULL, selected_cluster = NULL) {
+findMarkers_scGPS <- function(expression_matrix = NULL, cluster = NULL, selected_cluster = NULL, fitType="local") {
     library(DESeq)
 
     DE_exprsMat <- round(expression_matrix + 1)
@@ -108,7 +114,7 @@ findMarkers_scGPS <- function(expression_matrix = NULL, cluster = NULL, selected
             "..."))
         cds = newCountDataSet(diff_mat, condition_cluster)
         cds = estimateSizeFactors(cds)
-        cds = estimateDispersions(cds, method = "per-condition", fitType = "local")
+        cds = estimateDispersions(cds, method = "per-condition", fitType = fitType)
         print(paste0("Done estimate dispersions. Start nbinom test for cluster ",
             as.character(cl_id), "..."))
         res1 = nbinomTest(cds, "Others", as.character(cl_id))
