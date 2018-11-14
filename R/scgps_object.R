@@ -44,7 +44,7 @@ NewscGPS <- function(ExpressionMatrix = NULL, GeneMetadata = NULL, CellMetadata 
     }
 
     # Create a new scGPS object.
-    scGPSset <- SingleCellExperiment(assays = list(ExpressionMatrix), rowData = GeneMetadata,
+    scGPSset <- SingleCellExperiment(assays = list(counts=ExpressionMatrix), rowData = GeneMetadata,
         colData = CellMetadata)
 
     # All clear, return the object
