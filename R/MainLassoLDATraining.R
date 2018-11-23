@@ -32,14 +32,14 @@
 #' names(listData)
 #' listData$Accuracy
 
-training_scGPS <- function(genes, cluster_mixedpop1 = NULL, mixedpop1 = NULL, mixedpop2 = NULL, c_selectID =NULL,
-    listData = list(), out_idx = 1, standardize = TRUE) {
+training_scGPS <- function(genes = NULL, cluster_mixedpop1 = NULL, mixedpop1 = NULL, mixedpop2 = NULL, c_selectID =NULL,
+    listData = list(), out_idx = 1, standardize = TRUE, trainset_ratio = 0.5) {
     # subsammpling-----------------------------------------------------------------
-    # taking a subsampling size of 50% of the cluster_select out for training
-    subpop1cluster_indx <- which(cluster_mixedpop1 == c_selectID)
-    subremaining1_indx <- which(cluster_mixedpop1 != c_selectID)
+    # taking a subsampling size of trainset_ratio of the cluster_select out for training
+    subpop1cluster_indx <- which(cluster_mixedpop1 == c_selectID) #class 1 
+    subremaining1_indx <- which(cluster_mixedpop1 != c_selectID) #remaining class 
 
-    subsampling <- round(length(subpop1cluster_indx)/2)
+    subsampling <- round(length(subpop1cluster_indx) * trainset_ratio )
     subpop1_train_indx <- sample(subpop1cluster_indx, subsampling, replace = FALSE)
     # check if there is a very big cluster present in the dataset C/2 = SubSampling
     # >length(total - C, which is cluster_compare)
@@ -66,7 +66,7 @@ training_scGPS <- function(genes, cluster_mixedpop1 = NULL, mixedpop1 = NULL, mi
 
     # prepare ElasticNet training matrices---------------------------------------------
 
-    # prepare predictor matrix containing both clutering classes
+    # prepare predictor matrix containing both clustering classes
     predictor_S1 <- mixedpop1[genes_in_both_idx1, c(subpop1_train_indx, subremaining1_train_indx)]
     predictor_S1 <- assay(predictor_S1)
     
@@ -95,7 +95,7 @@ training_scGPS <- function(genes, cluster_mixedpop1 = NULL, mixedpop1 = NULL, mi
     # prepare LDA training matrices------------------------------------------------
     # fitting with lda, also with cross validation
     # scaled and centered data before training 
-    #standardizing data (centered and scaled) - this step is not necessary in the function glmnet 
+    # standardizing data (centered and scaled) - this step is not necessary in the function glmnet 
     standardizing <-function(X){X <- X-mean(X); X <- X/sd(X); return(X)} 
     
 
@@ -112,7 +112,7 @@ training_scGPS <- function(genes, cluster_mixedpop1 = NULL, mixedpop1 = NULL, mi
       dataset <- t(apply(dataset,1, standardizing)) #dataset is transposed after standardised and scaled
     }
     dataset <- as.data.frame(dataset)    
-    dataset$Cluster_class <- as.character(y_cat)
+    dataset$Cluster_class <- as.character(as.vector(y_cat))
     # Done LDA training matrices---------------------------------------------------
     
     # Fit the ElasticNet and LDA models--------------------------------------------
@@ -158,18 +158,27 @@ training_scGPS <- function(genes, cluster_mixedpop1 = NULL, mixedpop1 = NULL, mi
 
     cluster_select_indx_Round2 <- subpop1cluster_indx[-which(subpop1cluster_indx %in%
         subpop1_train_indx)]
+    
+    #subremaining1_train_indx is the index for remaining class, in contrast to class 1 
+    subremaining1_train_order <- which(subremaining1_indx %in% subremaining1_train_indx) #to remove remaininng class already used for training 
 
-    subremaining1_train_order <- which(subremaining1_indx %in% subremaining1_train_indx)
-
-    # Check the SubSampling for the target population
+    # Select cluster_compare_indx_Round2 as the remaining cells in class 2 (opposite to class 1) 
     if (length(subremaining1_indx) - length(subremaining1_train_indx) > subsampling) {
         cluster_compare_indx_Round2 <- sample(subremaining1_indx[-subremaining1_train_order],
             subsampling, replace = FALSE)
     } else {
-        cluster_compare_indx_Round2 <- subremaining1_indx[-subremaining1_train_order]
+        cluster_compare_indx_Round2 <- subremaining1_indx[-subremaining1_train_order] #use all of the class 2 cells after taken those for training 
     }
-
-    temp_S2 <- mixedpop1[genes_in_both_idx1, c(cluster_select_indx_Round2, cluster_compare_indx_Round2)]
+    
+    #select common genes again because genes with no variation are removed before standardization 
+    genes_in_trainset <- row.names(cvfit$glmnet.fit$beta) 
+    genes_in_trainset_idx <- match( genes_in_trainset, rownames(mixedpop1[genes_in_both_idx1,]))
+    genes_in_trainset_idx_ordered <- genes_in_both_idx1[genes_in_trainset_idx]
+    
+    #the cells present in select (class 1) vs compare (remaining class, i.e. class 2)
+    #c(cluster_select_indx_Round2, cluster_compare_indx_Round2)
+    #use the leave-out dataset in mixed pop1 to evaluate the model
+    temp_S2 <- mixedpop1[genes_in_trainset_idx_ordered, c(cluster_select_indx_Round2, cluster_compare_indx_Round2)] 
     temp_S2 <- assay(temp_S2)
     predictor_S2 <- t(temp_S2)
     
@@ -346,7 +355,7 @@ predicting_scGPS <- function(listData = NULL, cluster_mixedpop2 = NULL, mixedpop
 #' @param mixedpop2 a \linkS4class{SingleCellExperiment} object from a target mixed population for prediction
 #' @param cluster_mixedpop1 a vector of cluster assignment for mixedpop1 
 #' @param cluster_mixedpop2 a vector of cluster assignment for mixedpop2 
-#' @param c_selectID the root cluster in mixedpop1 to becompared to clusters in mixedpop2  
+#' @param c_selectID the root cluster in mixedpop1 to becompared to clusters in mixedpop2 
 #' @param genes a gene list to build the model
 #' @param nboots a number specifying how many bootstraps to be run
 #' @return a \code{list} with prediction results written in to the index \code{out_idx}
@@ -360,6 +369,8 @@ predicting_scGPS <- function(listData = NULL, cluster_mixedpop2 = NULL, mixedpop
 #' mixedpop2 <-NewscGPS(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
 #'                      CellMetadata = day5$dat5_clusters)
 #' genes <-GeneList
+#' cluster_mixedpop1 <- colData(mixedpop1)[,1]
+#' cluster_mixedpop2 <- colData(mixedpop2)[,1]
 #' test <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, genes=genes, c_selectID=1, listData =list(), cluster_mixedpop1 = cluster_mixedpop1, cluster_mixedpop2=cluster_mixedpop2)
 #' names(test)
 #' test$ElasticNetPredict
