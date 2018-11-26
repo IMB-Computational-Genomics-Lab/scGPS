@@ -30,7 +30,7 @@ dim(klein_dat)
 
 #Use scran normalisation
 klein_dat <- computeSumFactors(klein_dat)
-klein_dat <- normalise(klein_dat)
+klein_dat <- normalize(klein_dat)
 
 #Create a count per million assay
 cpm(klein_dat) <- calculateCPM(klein_dat)

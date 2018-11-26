@@ -50,7 +50,7 @@ SCE <- SCE[keep_features, ]
 
 #Use this for scran normalisation
 SCE <- computeSumFactors(SCE)
-SCE <- normalise(SCE, exprs_values = "counts", 
+SCE <- normalize(SCE, exprs_values = "counts", 
                  return_log = TRUE)
 
 #Create a count per million assay
@@ -139,7 +139,7 @@ keep_features <- rowSums(counts(SCE) > 0) > 0
 SCE <- SCE[keep_features, ]
 
 #Create "logcounts" assays
-SCE <- normalise(SCE, exprs_values = "counts", return_log = TRUE)
+SCE <- normalize(SCE, exprs_values = "counts", return_log = TRUE)
 
 #Remove the spikes
 is.spike <-grepl("^ERCC", rownames(SCE))

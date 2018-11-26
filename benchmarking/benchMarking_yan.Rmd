@@ -1,0 +1,130 @@
+---
+title: "benchMark"
+author: "Quan and Michael"
+date: "1/3/2018"
+output: html_document
+---
+
+#using scMAP dataset - yan et al 2013 
+```{r}
+#Load everyting for scGPS
+
+#Github Installation
+devtools::install_github("IMB-Computational-Genomics-Lab/scGPS")
+
+#Manual Installation with scGPS in working directory
+#devtools::load_all()
+
+library(scater)
+library(scran)
+
+#Retrieve the dataset
+yan_dat <- readRDS(url("https://scrnaseq-public-datasets.s3.amazonaws.com/scater-objects/yan.rds"))
+
+#Find the genes with all zero entries and remove
+keep_features <- rowSums(assays(yan_dat)[["normcounts"]] > 0) > 0
+yan_dat <- yan_dat[keep_features, ]
+table(keep_features)
+
+#Use scran normalisation
+computeSumFactors(yan_dat, assay.type = "normcounts")
+normalize(yan_dat, exprs_values = "normcounts")
+
+#Remove spikes
+is.spike <-grepl("^ERCC", rownames(yan_dat))
+yan_dat <- yan_dat[!is.spike, ]
+
+#Start the time here
+start_time <- Sys.time()
+
+#Extract the needed variables
+yan_dat_exprs <- assays(yan_dat)[["logcounts"]]
+yan_dat_cellnames <- colnames(yan_dat)
+yan_dat_cellnames <- data.frame("cellBarcodes" = yan_dat_cellnames)
+yan_dat_GeneMetaData <- rownames(yan_dat)
+yan_dat_GeneMetaData <- data.frame("GeneSymbol" = yan_dat_GeneMetaData)
+
+#Store Data in scGPS format
+mixedpop <-NewscGPS_SME(ExpressionMatrix = yan_dat_exprs, GeneMetadata = yan_dat_GeneMetaData, CellMetadata = yan_dat_cellnames)
+
+#Cluster and plot data using SCORE
+CORE_cluster_bagging <- CORE_scGPS_bagging(mixedpop, remove_outlier = c(0), PCA=FALSE, bagging_run = 20, subsample_proportion = .8)
+plot_CORE(CORE_cluster_bagging$tree, list_clusters = CORE_cluster_bagging$Cluster)
+plot_optimal_CORE(original_tree= CORE_cluster_bagging$tree, optimal_cluster = unlist(CORE_cluster_bagging$Cluster[CORE_cluster_bagging$optimal_index]), shift = -100)
+
+#Stop the time here
+end_time <- Sys.time()
+time_difference_SCORE <- end_time - start_time
+
+#Make a dataframe with the results we want to examine
+cell_types1 <- colData(yan_dat)$cell_type1
+cell_types2 <- colData(yan_dat)$cell_type2
+label_list <- unlist(yan_dat_cellnames$cellBarcodes)
+cluster_list <- unlist(CORE_cluster_bagging$Cluster[CORE_cluster_bagging$optimal_index])
+compare_frame <- data.frame("Gene_label" = label_list, "type1" = cell_types1, "type2" = cell_types2, "cluster" = cluster_list)
+
+#Find the Adjusted Rand Index
+AdjustedRandIndex_SCORE <- mclust::adjustedRandIndex(compare_frame$type2, compare_frame$cluster)
+HighResRand <- mclust::adjustedRandIndex(compare_frame$type2, unlist(CORE_cluster_bagging$Cluster[1]))
+
+#Store the estimated k from the bagging runs
+estimated_k_SCORE <- CORE_cluster_bagging$optimalMax
+
+#Remove unwanted data
+rm(list = setdiff(ls(), c("AdjustedRandIndex_SCORE", "time_difference_SCORE", "estimated_k_SCORE", "HighResRand")))
+
+```
+
+
+
+#Using SC3 to test the Yan dataset
+```{r}
+#Load everything required for SC3
+library(SC3)
+library(scater)
+
+#Get the path to the dataset
+path_to_data = "/Users/s5125601/Documents/BenchMarking/Datasets/scMapDataset/"
+
+#Retrieve the dataset
+sce <- readRDS(url("https://scrnaseq-public-datasets.s3.amazonaws.com/scater-objects/yan.rds"))
+
+#Find the genes with all zero entries and remove
+keep_features <- rowSums(assays(sce)[["normcounts"]] > 0) > 0
+sce <- sce[keep_features, ]
+
+#Remove the spikes
+is.spike <-grepl("^ERCC", rownames(sce))
+table(is.spike)
+sce <- sce[!is.spike, ]
+
+#place the rpkm in the counts column for SC3
+counts(sce) <- normcounts(sce)
+
+#Start the time here
+start_time <- Sys.time()
+
+#Run sc3 with an estimation for k
+sce <- sc3_prepare(sce, n_cores = 1, gene_filter = TRUE)
+sce <- sc3_estimate_k(sce)
+SC3_k_estimate <- as.integer(unlist(metadata(sce)$sc3$k_estimation))
+sce <- sc3(sce, ks = SC3_k_estimate, biology = FALSE, gene_filter = TRUE, k_estimator = TRUE)
+
+#Stop the time here
+end_time <- Sys.time()
+time_difference_SC3 <- end_time - start_time
+
+#Make a dataframe with the results we want to examine
+cell_types1 <- colData(sce)$cell_type1
+cell_types2 <- colData(sce)$cell_type2
+label_list <- rownames(colData(sce))
+cluster_list <- as.numeric(colData(sce)[, paste0("sc3_", SC3_k_estimate, "_clusters")])
+compare_frame <- data.frame("Gene_label" = label_list, "type1" = cell_types1, "type2" = cell_types2, "cluster" = cluster_list)
+
+#Find the Adjusted Rand Index
+AdjustedRandIndex_SC3 <- mclust::adjustedRandIndex(compare_frame$type2, compare_frame$cluster)
+
+#Remove unwanted data
+rm(list = setdiff(ls(), c("AdjustedRandIndex_SC3", "time_difference_SC3", "SC3_k_estimate")))
+```
+
