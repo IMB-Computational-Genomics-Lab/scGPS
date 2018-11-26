@@ -287,7 +287,7 @@ predicting_scGPS <- function(listData = NULL, cluster_mixedpop2 = NULL, mixedpop
 
     for (clust in unique(my.clusters)) {
         c_selectID_2 <- clust
-        cluster_select <- which(my.clusters == as.numeric(c_selectID_2))  #select cells
+        cluster_select <- which(my.clusters == c_selectID_2)  #select cells
         dataset <- predictor_S1
 
         # Get gene names
