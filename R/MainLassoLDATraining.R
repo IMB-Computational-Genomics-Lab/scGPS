@@ -377,10 +377,10 @@ predicting_scGPS <- function(listData = NULL, cluster_mixedpop2 = NULL, mixedpop
 #' test$LDAPredict
 
 bootstrap_scGPS <- function(nboots = 1, genes = genes, mixedpop1 = mixedpop1, mixedpop2 = mixedpop2,
-    c_selectID = NULL, listData = list(), cluster_mixedpop1=NULL, cluster_mixedpop2=NULL) {
+    c_selectID = NULL, listData = list(), cluster_mixedpop1=NULL, cluster_mixedpop2=NULL, trainset_ratio = .5) {
 
     for (out_idx in 1:nboots) {
-        listData <- training_scGPS(genes = genes, mixedpop1 = mixedpop1, mixedpop2 = mixedpop2,
+        listData <- training_scGPS(genes = genes, mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, trainset_ratio = trainset_ratio,
             c_selectID, listData = listData, out_idx = out_idx, cluster_mixedpop1=cluster_mixedpop1, standardize = TRUE)
         print(paste0("done bootstrap ", out_idx))
         listData <- predicting_scGPS(listData = listData, mixedpop2 = mixedpop2,
