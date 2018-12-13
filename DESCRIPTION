@@ -13,8 +13,8 @@ LazyData: true
 License: GPL-3
 BugReports: https://github.com/IMB-Computational-Genomics-Lab/scGPS/issues
 url: https://github.com/IMB-Computational-Genomics-Lab/scGPS/
-RoxygenNote: 6.1.0
-Depends: R (>= 3.4), SummarizedExperiment, dynamicTreeCut
+RoxygenNote: 6.1.1
+Depends: R (>= 3.4), SummarizedExperiment, dynamicTreeCut, SingleCellExperiment
 biocViews: SingleCell, Clustering, DataImport
 Imports:
   glmnet (> 2.0),
@@ -24,14 +24,26 @@ Imports:
   dplyr,
   Rcpp,
   RcppArmadillo,
-  RcppParallel
+  RcppParallel,
+  e1071
 Suggests:
   Matrix (>= 1.2),
   testthat,
   knitr,
   cidr,
   parallel,
-  rmarkdown
+  rmarkdown,
+  DESeq,
+  RColorBrewer,
+  ReactomePA,
+  clusterProfiler,
+  cowplot,
+  org.Hs.eg.db,
+  reshape2,
+  xlsx,
+  dendextend,
+  networkD3,
+  Rtsne
 VignetteBuilder: knitr
 LinkingTo: 
   Rcpp,
