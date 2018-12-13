@@ -9,17 +9,21 @@ clustering_scGPS(object = NULL, ngenes = 1500, windows = seq(0.025:1,
   nPCs = 20)
 }
 \arguments{
+\item{object}{is a \linkS4class{SingleCellExperiment} object from the
+train mixed population}
+
 \item{ngenes}{number of top variable genes to be used}
+
+\item{windows}{a numeric specifying the number of windows to test}
 
 \item{remove_outlier}{a vector containing IDs for clusters to be removed
 the default vector contains 0, as 0 is the cluster with singletons}
 
 \item{nRounds}{number of iterations to remove a selected clusters}
 
-\item{nPCs}{number of principal components from PCA dimensional reduction to be used}
+\item{PCA}{logical specifying if PCA is used before calculating distance matrix}
 
-\item{mixedpop1}{is a \linkS4class{SingleCellExperiment} object from the
-train mixed population}
+\item{nPCs}{number of principal components from PCA dimensional reduction to be used}
 }
 \value{
 clustering results

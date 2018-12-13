@@ -48,9 +48,11 @@ cellnames <- data.frame("cluster" = cluster, "cellBarcodes" = cellnames)
 #day5$dat5_counts needs to be in a matrix format
 mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
                          CellMetadata = day5$dat5_clusters)
-test <- CORE_scGPS_bagging(mixedpop2, remove_outlier = c(1), PCA=FALSE, bagging_run = 20, subsample_proportion = .8)
+test <- CORE_scGPS_bagging(mixedpop2, remove_outlier = c(1), PCA=FALSE,
+                         bagging_run = 20, subsample_proportion = .8)
 plot_CORE(test$tree, list_clusters = test$Cluster)
-plot_optimal_CORE(original_tree= test$tree, optimal_cluster = unlist(test$Cluster[test$optimal_index]), shift = -100)
+plot_optimal_CORE(original_tree= test$tree,
+                  optimal_cluster = unlist(test$Cluster[test$optimal_index]), shift = -100)
 
 }
 \author{

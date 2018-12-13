@@ -4,17 +4,22 @@
 \alias{predicting_scGPS}
 \title{Main prediction function applying the optimal ElasticNet and LDA models}
 \usage{
-predicting_scGPS(listData = NULL, mixedpop2 = NULL, out_idx = NULL)
+predicting_scGPS(listData = NULL, cluster_mixedpop2 = NULL,
+  mixedpop2 = NULL, out_idx = NULL, standardize = TRUE)
 }
 \arguments{
 \item{listData}{a \code{list} object containing trained results for the
 selected subpopulation in the first mixed population}
+
+\item{cluster_mixedpop2}{a vector of cluster assignment for mixedpop2}
 
 \item{mixedpop2}{a \linkS4class{SingleCellExperiment} object from the target
 mixed population of importance, e.g. differentially expressed genes that are most significant}
 
 \item{out_idx}{a number to specify index to write results into the list output.
 This is needed for running bootstrap.}
+
+\item{standardize}{a logical of whether to standardize the data}
 }
 \value{
 a \code{list} with prediction results written in to the index \code{out_idx}
@@ -31,14 +36,17 @@ c_selectID<-1
 out_idx<-1
 day2 <- sample1
 mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day2$dat2geneInfo,
-                     CellMetadata = day2$dat2_clusters)
+                    CellMetadata = day2$dat2_clusters)
 day5 <- sample2
 mixedpop2 <-NewscGPS(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
-                     CellMetadata = day5$dat5_clusters)
+                    CellMetadata = day5$dat5_clusters)
 genes <-GeneList
 genes <-genes$Merged_unique
-listData  <- training_scGPS(genes, mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, c_selectID, listData =list(), out_idx=out_idx)
-listData  <- predicting_scGPS(listData =listData,  mixedpop2 = mixedpop2, out_idx=out_idx)
+listData  <- training_scGPS(genes, cluster_mixedpop1 = colData(mixedpop1)[, 1],
+                           mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, c_selectID,
+                           listData =list(), out_idx=out_idx)
+listData  <- predicting_scGPS(listData =listData,  mixedpop2 = mixedpop2, out_idx=out_idx,
+                              cluster_mixedpop2 = colData(mixedpop2)[, 1])
 }
 \author{
 Quan Nguyen, 2017-11-25

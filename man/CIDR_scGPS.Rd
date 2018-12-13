@@ -4,11 +4,12 @@
 \alias{CIDR_scGPS}
 \title{CIDR}
 \usage{
-CIDR_scGPS(expression.matrix = NULL, ngenes = 1500, scaling = TRUE,
-  theta = 0.5, perplexity = 30)
+CIDR_scGPS(expression.matrix = NULL, ngenes = 1500)
 }
 \arguments{
-\item{expression_matrix}{An expression matrix, with genes in rows}
+\item{expression.matrix}{An expression matrix, with genes in rows}
+
+\item{ngenes}{number of genes used for clustering calculations.}
 }
 \value{
 a CIDR reduced matrix for the top 20 components

@@ -10,6 +10,16 @@ plotReduced_scGPS(reduced_dat, color_fac = factor(Sample_id),
 }
 \arguments{
 \item{reduced_dat}{is a matrix with genes in rows and cells in columns}
+
+\item{color_fac}{------}
+
+\item{dims}{an integer of the number of dimestions}
+
+\item{dimNames}{a vector of the names of the dimensions}
+
+\item{palletes}{---}
+
+\item{legend_title}{title of the plot's legend}
 }
 \value{
 a matrix with the top 20 CIDR dimensions
@@ -22,11 +32,11 @@ day2 <- sample1
 mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day2$dat2geneInfo,
                     CellMetadata = day2$dat2_clusters)
 CIDR_dim <-CIDR_scGPS(expression.matrix=assay(mixedpop1))
-p <-plotReduced_scGPS(CIDR_dim)
-plot(p)
-tSNE_dim <-tSNE_scGPS(expression.matrix=assay(mixedpop1))
-p2 <-plotReduced_scGPS(tSNE_dim)
-plot(p2)
+#p <-plotReduced_scGPS(CIDR_dim)
+#plot(p)
+#tSNE_dim <-tSNE_scGPS(expression.matrix=assay(mixedpop1))
+#p2 <-plotReduced_scGPS(tSNE_dim)
+#plot(p2)
 
 
 }

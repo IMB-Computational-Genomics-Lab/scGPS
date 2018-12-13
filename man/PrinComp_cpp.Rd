@@ -18,7 +18,7 @@ is big
 }
 \examples{
 mat_test <-matrix(rnbinom(1000000,mu=0.01, size=10),nrow=1000)
-library(microbenchmark)
-microbenchmark(PrinComp_cpp(mat_test), prcomp(mat_test), times=3)
+#library(microbenchmark)
+#microbenchmark(PrinComp_cpp(mat_test), prcomp(mat_test), times=3)
 
 }

@@ -8,6 +8,8 @@ topvar_scGPS(expression.matrix = NULL, ngenes = 1500)
 }
 \arguments{
 \item{expression.matrix}{is a matrix with genes in rows and cells in columns}
+
+\item{ngenes}{number of genes used for clustering calculations.}
 }
 \value{
 a subsetted expression matrix with the top n most variable genes

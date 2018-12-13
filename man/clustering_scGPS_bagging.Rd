@@ -41,7 +41,8 @@ subsamples cells for each bagging run and performs 40 clustering runs or more de
 day5 <- sample2
 mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
                          CellMetadata = day5$dat5_clusters)
-test <-clustering_scGPS_bagging(mixedpop2, remove_outlier = c(1), bagging_run = 20, subsample_proportion = .8)
+test <-clustering_scGPS_bagging(mixedpop2, remove_outlier = c(1),
+                                bagging_run = 20, subsample_proportion = .8)
 }
 \author{
 Quan Nguyen, 2017-11-25

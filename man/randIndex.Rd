@@ -8,6 +8,8 @@ randIndex(tab, adjust = TRUE)
 }
 \arguments{
 \item{tab}{a table containing different clustering results in rows}
+
+\item{adjust}{a logical of whether to use the adjusted rand index}
 }
 \value{
 a randIndex value

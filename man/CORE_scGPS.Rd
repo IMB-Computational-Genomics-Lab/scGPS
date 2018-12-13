@@ -17,7 +17,13 @@ mixed population}
 \item{remove_outlier}{a vector containing IDs for clusters to be removed
 the default vector contains 0, as 0 is the cluster with singletons.}
 
+\item{nRounds}{an integer specifying the number rounds to attempt to remove outliers.}
+
 \item{PCA}{logical specifying if PCA is used before calculating distance matrix}
+
+\item{nPCs}{an integer specifying the number of principal components to use.}
+
+\item{ngenes}{number of genes used for clustering calculations.}
 }
 \value{
 a \code{list} with clustering results of all iterations, and a selected

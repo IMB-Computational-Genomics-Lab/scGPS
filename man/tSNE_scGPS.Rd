@@ -8,7 +8,16 @@ tSNE_scGPS(expression.matrix = NULL, ngenes = 1500, scaling = TRUE,
   theta = 0.5, perplexity = 30)
 }
 \arguments{
-\item{expression_matrix}{An expression matrix, with genes in rows}
+\item{expression.matrix}{An expression matrix, with genes in rows}
+
+\item{ngenes}{number of genes used for clustering calculations.}
+
+\item{scaling}{a logical of whether we want to scale the matrix}
+
+\item{theta}{numeric; Speed/accuracy trade-off (increase for less accuracy)}
+
+\item{perplexity}{numeric; Perplexity parameter
+(should not be bigger than 3 * perplexity < nrow(X) - 1, see details for interpretation)}
 }
 \value{
 a tSNE reduced matrix containing three tSNE dimensions

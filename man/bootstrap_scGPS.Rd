@@ -5,7 +5,9 @@
 \title{BootStrap runs for both scGPS training and prediction}
 \usage{
 bootstrap_scGPS(nboots = 1, genes = genes, mixedpop1 = mixedpop1,
-  mixedpop2 = mixedpop2, c_selectID, listData = list())
+  mixedpop2 = mixedpop2, c_selectID = NULL, listData = list(),
+  cluster_mixedpop1 = NULL, cluster_mixedpop2 = NULL,
+  trainset_ratio = 0.5)
 }
 \arguments{
 \item{nboots}{a number specifying how many bootstraps to be run}
@@ -16,7 +18,16 @@ bootstrap_scGPS(nboots = 1, genes = genes, mixedpop1 = mixedpop1,
 
 \item{mixedpop2}{a \linkS4class{SingleCellExperiment} object from a target mixed population for prediction}
 
+\item{c_selectID}{the root cluster in mixedpop1 to becompared to clusters in mixedpop2}
+
 \item{listData}{a \code{list} object, which contains trained results for the first mixed population}
+
+\item{cluster_mixedpop1}{a vector of cluster assignment for mixedpop1}
+
+\item{cluster_mixedpop2}{a vector of cluster assignment for mixedpop2}
+
+\item{trainset_ratio}{a number specifying the proportion of cells to be part of
+the training subpopulation}
 }
 \value{
 a \code{list} with prediction results written in to the index \code{out_idx}
@@ -35,7 +46,12 @@ mixedpop2 <-NewscGPS(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$da
                      CellMetadata = day5$dat5_clusters)
 genes <-GeneList
 genes <-genes$Merged_unique
-test <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, genes=genes, c_selectID=1, listData =list())
+cluster_mixedpop1 <- colData(mixedpop1)[,1]
+cluster_mixedpop2 <- colData(mixedpop2)[,1]
+c_selectID <- 2
+test <- bootstrap_scGPS(nboots = 2, mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, genes=genes,
+                        listData =list(), cluster_mixedpop1 = cluster_mixedpop1,
+                        cluster_mixedpop2 = cluster_mixedpop2, c_selectID = c_selectID)
 names(test)
 test$ElasticNetPredict
 test$LDAPredict

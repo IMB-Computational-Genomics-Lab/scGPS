@@ -15,6 +15,8 @@ mixed population}
 
 \item{select_cell_index}{a vector containing indexes for cells in selected clusters
 to be reclustered}
+
+\item{ngenes}{number of genes used for clustering calculations.}
 }
 \value{
 a \code{list} with clustering results of all iterations, and a selected

@@ -7,7 +7,11 @@
 subset_cpp(m1in, rowidx_in, colidx_in)
 }
 \arguments{
-\item{X}{an R matrix (expression matrix)}
+\item{m1in}{an R matrix (expression matrix)}
+
+\item{rowidx_in}{a numeric vector of rows to keep}
+
+\item{colidx_in}{a numeric vector of columns to keep}
 }
 \value{
 a subsetted matrix

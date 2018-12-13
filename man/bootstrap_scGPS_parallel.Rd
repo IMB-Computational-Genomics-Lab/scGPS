@@ -6,7 +6,8 @@
 \usage{
 bootstrap_scGPS_parallel(ncores = 4, nboots = 1, genes = genes,
   mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, c_selectID,
-  listData = list())
+  listData = list(), cluster_mixedpop1 = NULL,
+  cluster_mixedpop2 = NULL)
 }
 \arguments{
 \item{ncores}{a number specifying how many cpus to be used for running}
@@ -19,7 +20,13 @@ bootstrap_scGPS_parallel(ncores = 4, nboots = 1, genes = genes,
 
 \item{mixedpop2}{a \linkS4class{SingleCellExperiment} object from a target mixed population for prediction}
 
+\item{c_selectID}{the root cluster in mixedpop1 to becompared to clusters in mixedpop2}
+
 \item{listData}{a \code{list} object, which contains trained results for the first mixed population}
+
+\item{cluster_mixedpop1}{a vector of cluster assignment for mixedpop1}
+
+\item{cluster_mixedpop2}{a vector of cluster assignment for mixedpop2}
 }
 \value{
 a \code{list} with prediction results written in to the index \code{out_idx}
@@ -36,9 +43,10 @@ mixedpop2 <-NewscGPS(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$da
                     CellMetadata = day5$dat5_clusters)
 genes <-GeneList
 genes <-genes$Merged_unique
-prl_boots <- bootstrap_scGPS_parallel(ncores = 4, nboots = 2, genes=genes, mixedpop1 = mixedpop2, mixedpop2 = mixedpop2,  c_selectID=1, listData =list())
-prl_boots[[1]]$ElasticNetPredict
-prl_boots[[1]]$LDAPredict
+#prl_boots <- bootstrap_scGPS_parallel(ncores = 4, nboots = 2, genes=genes, mixedpop1 = mixedpop2,
+#                                      mixedpop2 = mixedpop2,  c_selectID=1, listData =list())
+#prl_boots[[1]]$ElasticNetPredict
+#prl_boots[[1]]$LDAPredict
 
 }
 \author{

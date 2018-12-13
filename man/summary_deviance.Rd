@@ -7,7 +7,7 @@
 summary_deviance(object = LSOLDA_dat)
 }
 \arguments{
-\item{LSOLDA_dat}{is a list containing the training results from \code{training_scGPS}}
+\item{object}{is a list containing the training results from \code{training_scGPS}}
 }
 \value{
 a \code{list} containing three elements, with a vector of percent maximum
@@ -31,7 +31,10 @@ mixedpop2 <-NewscGPS(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$da
                     CellMetadata = day5$dat5_clusters)
 genes <-GeneList
 genes <-genes$Merged_unique
-LSOLDA_dat <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list())
+LSOLDA_dat <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop1, mixedpop2 = mixedpop2,
+                             genes=genes, c_selectID, listData =list(),
+                             cluster_mixedpop1 = colData(mixedpop1)[,1],
+                             cluster_mixedpop2=colData(mixedpop2)[,1])
 summary_deviance(LSOLDA_dat)
 }
 \author{

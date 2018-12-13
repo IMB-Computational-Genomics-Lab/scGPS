@@ -7,7 +7,7 @@
 rcpp_Eucl_distance_NotPar(mat)
 }
 \arguments{
-\item{X}{an R matrix (expression matrix), with cells in rows and genes in columns}
+\item{mat}{an R matrix (expression matrix), with cells in rows and genes in columns}
 }
 \value{
 a distance matrix
@@ -17,7 +17,7 @@ Function to calculate Eucledean distance matrix without parallelisation
 }
 \examples{
 mat_test <-matrix(rnbinom(100000,mu=0.01, size=10),nrow=1000)
-library(microbenchmark)
-microbenchmark(rcpp_Eucl_distance_NotPar(mat_test), dist(mat_test), times=3)
+#library(microbenchmark)
+#microbenchmark(rcpp_Eucl_distance_NotPar(mat_test), dist(mat_test), times=3)
 
 }

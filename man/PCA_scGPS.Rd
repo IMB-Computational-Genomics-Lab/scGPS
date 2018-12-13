@@ -8,7 +8,13 @@ PCA_scGPS(expression.matrix = NULL, ngenes = 1500, scaling = TRUE,
   npcs = 50)
 }
 \arguments{
-\item{expression_matrix}{An expression matrix, with genes in rows}
+\item{expression.matrix}{An expression matrix, with genes in rows}
+
+\item{ngenes}{number of genes used for clustering calculations.}
+
+\item{scaling}{a logical of whether we want to scale the matrix}
+
+\item{npcs}{an integer specifying the number of principal components to use.}
 }
 \value{
 a list containing PCA results and variance explained

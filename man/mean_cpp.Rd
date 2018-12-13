@@ -7,12 +7,7 @@
 mean_cpp(x)
 }
 \arguments{
-\item{N}{integer.}
-
-\item{thin}{integer}
-}
-\value{
-a mean value
+\item{x}{integer.}
 }
 \description{
 Calculate mean

@@ -7,7 +7,7 @@
 rcpp_parallel_distance(mat)
 }
 \arguments{
-\item{X}{an R matrix (expression matrix), rows are genes, columns are cells}
+\item{mat}{an R matrix (expression matrix), rows are genes, columns are cells}
 }
 \value{
 a distance matrix
@@ -17,7 +17,7 @@ This function provides fast and memory efficient distance matrix calculation
 }
 \examples{
 mat_test <-matrix(rnbinom(1000000,mu=0.01, size=10),nrow=10000)
-library(microbenchmark)
-microbenchmark(rcpp_parallel_distance(mat_test), dist(mat_test), times=3)
+#library(microbenchmark)
+#microbenchmark(rcpp_parallel_distance(mat_test), dist(mat_test), times=3)
 
 }

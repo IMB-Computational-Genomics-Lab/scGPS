@@ -11,6 +11,10 @@ SubClustering_scGPS(object = NULL, ngenes = 1500,
 \item{object}{is a \linkS4class{SingleCellExperiment} object from the
 train mixed population}
 
+\item{ngenes}{number of genes used for clustering calculations.}
+
+\item{windows}{a numeric vector specifying the ranges of each window.}
+
 \item{select_cell_index}{a vector containing indexes for cells in selected clusters
 to be reclustered}
 }
