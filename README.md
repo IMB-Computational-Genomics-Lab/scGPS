@@ -5,6 +5,7 @@
 
 The _scGPS_ package website is available at: https://imb-computational-genomics-lab.github.io/scGPS/index.html 
 
+The usage instruction can be found at: https://imb-computational-genomics-lab.github.io/scGPS/articles/vignette.html 
 ## _scGPS_ general description
 _scGPS_ is a complete single cell RNA analysis framework from decomposing a mixed population into clusters (_SCORE_) to analysing the relationship between clusters (_scGPS_). _scGPS_ also performs unsupervised selection of predictive genes defining a subpopulation and/or driving transition between subpopulations. 
 
