@@ -3,6 +3,7 @@
 #' @description subset a matrix by top variable genes
 #' @param expression.matrix is a matrix with genes in rows and cells in columns
 #' @return a subsetted expression matrix with the top n most variable genes
+#' @param ngenes number of genes used for clustering calculations.
 #' @examples
 #' day2 <- sample1
 #' mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day2$dat2geneInfo,
@@ -25,17 +26,22 @@ topvar_scGPS <- function(expression.matrix = NULL, ngenes = 1500) {
 #' plot reduced data
 #' @description plot PCA, tSNE, and CIDR reduced datasets
 #' @param reduced_dat is a matrix with genes in rows and cells in columns
+#' @param color_fac ------
+#' @param dims an integer of the number of dimestions
+#' @param dimNames a vector of the names of the dimensions
+#' @param palletes ---
+#' @param legend_title title of the plot's legend
 #' @return a matrix with the top 20 CIDR dimensions
 #' @examples
 #' day2 <- sample1
 #' mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day2$dat2geneInfo,
 #'                     CellMetadata = day2$dat2_clusters)
 #' CIDR_dim <-CIDR_scGPS(expression.matrix=assay(mixedpop1))
-#' p <-plotReduced_scGPS(CIDR_dim)
-#' plot(p)
-#' tSNE_dim <-tSNE_scGPS(expression.matrix=assay(mixedpop1))
-#' p2 <-plotReduced_scGPS(tSNE_dim)
-#' plot(p2)
+#' #p <-plotReduced_scGPS(CIDR_dim)
+#' #plot(p)
+#' #tSNE_dim <-tSNE_scGPS(expression.matrix=assay(mixedpop1))
+#' #p2 <-plotReduced_scGPS(tSNE_dim)
+#' #plot(p2)
 #'
 #'
 plotReduced_scGPS <- function(reduced_dat, color_fac = factor(Sample_id), dims = c(1,
@@ -88,7 +94,8 @@ plotReduced_scGPS <- function(reduced_dat, color_fac = factor(Sample_id), dims =
 #' day2 <- sample1
 #' mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day2$dat2geneInfo,
 #'                     CellMetadata = day2$dat2_clusters)
-#' DEgenes <- findMarkers_scGPS(expression_matrix=assay(mixedpop1), cluster = colData(mixedpop1)[,1])
+#' DEgenes <- findMarkers_scGPS(expression_matrix=assay(mixedpop1),
+#'                              cluster = colData(mixedpop1)[,1])
 #' names(DEgenes)
 
 
@@ -141,12 +148,28 @@ findMarkers_scGPS <- function(expression_matrix = NULL, cluster = NULL, selected
 #' analysis. The annotate_scGPS implements ReactomePA and clusterProfiler for this analysis
 #' type in R. The function require installation of several databases as described below.
 #' @param DEgeneList is a vector of gene symbols, convertable to ENTREZID
+#' @param pvalueCutoff is a numeric of the cutoff p value
+#' @param gene_symbol -------
+#' @param output_filename is a string of the filename to save the spreadsheet to
+#' @param output_path is a string of the path to the location to save the spreadsheet
 #' @return write enrichment test output to a file and an enrichment test object for plotting
 #' @examples
+#' day2 <- sample1
+#' mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day2$dat2geneInfo,
+#'                      CellMetadata = day2$dat2_clusters)
+#' day5 <- sample2
+#' mixedpop2 <-NewscGPS(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
+#'                      CellMetadata = day5$dat5_clusters)
 #' genes <-GeneList
 #' genes <-genes$Merged_unique
-#' LSOLDA_dat <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list())
-#' enrichment_test <- annotate_scGPS(genes$Merged_unique, pvalueCutoff=0.05, gene_symbol=TRUE,output_filename = "PathwayEnrichment.xlsx", output_path = NULL )
+#' cluster_mixedpop1 <- colData(mixedpop1)[,1]
+#' cluster_mixedpop2 <- colData(mixedpop2)[,1]
+#' c_selectID <- 2
+#' LSOLDA_dat <- bootstrap_scGPS(nboots = 2, mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, genes=genes,
+#'                         listData =list(), cluster_mixedpop1 = cluster_mixedpop1,
+#'                         cluster_mixedpop2 = cluster_mixedpop2, c_selectID = c_selectID)
+#' enrichment_test <- annotate_scGPS(genes, pvalueCutoff=0.05, gene_symbol=TRUE,
+#'                                   output_filename = "PathwayEnrichment.xlsx", output_path = NULL)
 #' dotplot(enrichment_test, showCategory=15)
 #'
 
@@ -191,4 +214,23 @@ annotate_scGPS <- function(DEgeneList, pvalueCutoff = 0.05, gene_symbol = TRUE, 
     # dotplot(Reactome_pathway_test, showCategory=15) barplot(Reactome_pathway_test,
     # showCategory=15)
 }
+
+#' Add imports
+#' @description temp function to import packages to namespace using devtools
+#' @useDynLib scGPS
+#' @importFrom Rcpp evalCpp
+#' @exportPattern "^[[:alpha:]]+"
+#' @import glmnet
+#' @import caret
+#' @import dplyr
+#' @import dynamicTreeCut
+#' @import ggplot2
+#' @import RcppArmadillo
+#' @import RcppParallel
+#' @return NULL
+
+add_import <- function() {
+	return(NULL)
+}
+
 

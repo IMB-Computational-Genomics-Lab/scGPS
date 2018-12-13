@@ -23,7 +23,8 @@
 #' @export
 #' @examples
 #' day2 <- sample1
-#' t <-NewscGPS(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
+#' t <-NewscGPS(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day2$dat2geneInfo,
+#'              CellMetadata = day2$dat2_clusters)
 #' colData(t); show(t); colnames(t)
 #' @author Quan Nguyen, 2018-04-06
 #'
@@ -77,7 +78,8 @@ NewscGPS <- function(ExpressionMatrix = NULL, GeneMetadata = NULL, CellMetadata 
 #' @export
 #' @examples
 #' day2 <- sample1
-#' t <-NewscGPS_SME(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
+#' t <-NewscGPS_SME(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day2$dat2geneInfo,
+#'                  CellMetadata = day2$dat2_clusters)
 #' colData(t); show(t); colnames(t)
 #' @author Quan Nguyen, 2017-11-25
 #'

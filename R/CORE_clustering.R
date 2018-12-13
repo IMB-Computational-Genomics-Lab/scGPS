@@ -14,6 +14,9 @@
 #' @param remove_outlier a vector containing IDs for clusters to be removed
 #' the default vector contains 0, as 0 is the cluster with singletons.
 #' @param PCA logical specifying if PCA is used before calculating distance matrix
+#' @param nRounds an integer specifying the number rounds to attempt to remove outliers.
+#' @param nPCs an integer specifying the number of principal components to use.
+#' @param ngenes number of genes used for clustering calculations.
 #' @return a \code{list} with clustering results of all iterations, and a selected
 #' optimal resolution
 #' @examples
@@ -48,6 +51,7 @@ CORE_scGPS <- function(mixedpop = NULL, windows = seq(0.025:1, by = 0.025), remo
 #' @param windows a numeric specifying the number of windows to test
 #' @param  select_cell_index a vector containing indexes for cells in selected clusters
 #'  to be reclustered
+#' @param ngenes number of genes used for clustering calculations.
 #' @return a \code{list} with clustering results of all iterations, and a selected
 #' optimal resolution
 #' @examples
@@ -76,13 +80,15 @@ CORE_Subcluster_scGPS <- function(mixedpop = NULL, windows = seq(0.025:1, by = 0
 #' HC clustering for a number of resolutions
 #'
 #' @description  performs 40 clustering runs or more depending on windows
-#' @param mixedpop1 is a \linkS4class{SingleCellExperiment} object from the
+#' @param object is a \linkS4class{SingleCellExperiment} object from the
 #' train mixed population
 #' @param remove_outlier a vector containing IDs for clusters to be removed
 #' the default vector contains 0, as 0 is the cluster with singletons
 #' @param ngenes number of top variable genes to be used
+#' @param PCA logical specifying if PCA is used before calculating distance matrix
 #' @param nPCs number of principal components from PCA dimensional reduction to be used
 #' @param nRounds number of iterations to remove a selected clusters
+#' @param windows a numeric specifying the number of windows to test
 #' @return clustering results
 #' @export
 #' @author Quan Nguyen, 2017-11-25
@@ -207,6 +213,8 @@ clustering_scGPS <- function(object = NULL, ngenes = 1500, windows = seq(0.025:1
 #' train mixed population
 #' @param select_cell_index a vector containing indexes for cells in selected clusters
 #'  to be reclustered
+#' @param ngenes number of genes used for clustering calculations.
+#' @param windows a numeric vector specifying the ranges of each window.
 #' @return clustering results
 #' @export
 #' @author Quan Nguyen, 2018-01-31
@@ -279,6 +287,7 @@ SubClustering_scGPS <- function(object = NULL, ngenes = 1500, windows = seq(0.02
 #' @description  Comparing clustering results Function for calculating randindex (adapted from
 # the function by Steve Horvath and Luohua Jiang, UCLA, 2003)
 #' @param tab a table containing different clustering results in rows
+#' @param adjust a logical of whether to use the adjusted rand index
 #' @return a randIndex value
 #' @examples
 #' day5 <- sample2
@@ -349,7 +358,8 @@ randIndex <- function(tab, adjust = TRUE) {
 #' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
 #'                         CellMetadata = day5$dat5_clusters)
 #' cluster_all <-clustering_scGPS(object=mixedpop2)
-#' stab_df <- FindStability(list_clusters=cluster_all$list_clusters, cluster_ref = cluster_all$cluster_ref)
+#' stab_df <- FindStability(list_clusters=cluster_all$list_clusters,
+#'                          cluster_ref = cluster_all$cluster_ref)
 #' @export
 #' @author Quan Nguyen, 2017-11-25
 #'
@@ -457,6 +467,7 @@ FindStability <- function(list_clusters = NULL, cluster_ref = NULL) {
 #' @param run_RandIdx is a \code{data frame} object from iterative clustering runs
 #' @param list_clusters is a \code{list} object containing 40 clustering results
 #' @param bagging is a logical that is true if bagging is to be performed, changes return
+#' @param windows a numeric vector specifying the ranges of each window.
 #' @return bagging == FALSE => a \code{list} with optimal stability, cluster count and summary stats
 #' baggign == TRUE => a \code{list} with high res cluster count, optimal cluster count and keystats
 #' @export
@@ -466,8 +477,10 @@ FindStability <- function(list_clusters = NULL, cluster_ref = NULL) {
 #' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
 #'                         CellMetadata = day5$dat5_clusters)
 #' cluster_all <-clustering_scGPS(object=mixedpop2)
-#' stab_df <- FindStability(list_clusters=cluster_all$list_clusters, cluster_ref = cluster_all$cluster_ref)
-#' optimal_stab <- FindOptimalStability(list_clusters = cluster_all$list_clusters, stab_df, bagging = FALSE)
+#' stab_df <- FindStability(list_clusters=cluster_all$list_clusters,
+#'                          cluster_ref = cluster_all$cluster_ref)
+#' optimal_stab <- FindOptimalStability(list_clusters = cluster_all$list_clusters,
+#'                                      stab_df, bagging = FALSE)
 
 
 FindOptimalStability <- function(list_clusters, run_RandIdx, bagging  = FALSE, windows = seq(0.025:1, by = 0.025)) { #ADD windows
@@ -569,7 +582,8 @@ FindOptimalStability <- function(list_clusters, run_RandIdx, bagging  = FALSE, w
 #' cellnames <- colnames(day5$dat5_counts)
 #' cluster <-day5$dat5_clusters
 #' cellnames <-data.frame("Cluster"=cluster, "cellBarcodes" = cellnames)
-#' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo, CellMetadata = cellnames )
+#' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts,
+#'                          GeneMetadata = day5$dat5geneInfo, CellMetadata = cellnames )
 #' CORE_cluster <- CORE_scGPS(mixedpop2, remove_outlier = c(0))
 #' plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster)
 
@@ -810,12 +824,16 @@ plot_CORE <- function(original.tree, list_clusters = NULL, color_branch = NULL) 
 #' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
 #'                         CellMetadata = day5$dat5_clusters)
 #' cluster_all <-clustering_scGPS(object=mixedpop2)
-#' stab_df <- FindStability(list_clusters=cluster_all$list_clusters, cluster_ref = cluster_all$cluster_ref)
-#' optimal_stab <- FindOptimalStability(list_clusters = cluster_all, list_clusters, stab_df)
+#' stab_df <- FindStability(list_clusters=cluster_all$list_clusters,
+#'                          cluster_ref = cluster_all$cluster_ref)
+#' optimal_stab <- FindOptimalStability(list_clusters = cluster_all, stab_df)
 #' CORE_cluster <- CORE_scGPS(mixedpop2, remove_outlier = c(0))
 #' plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster)
-#' optimal_index = which(CORE_cluster$optimalClust$KeyStats$Height == CORE_cluster$optimalClust$OptimalRes)
-#' plot_optimal_CORE(original_tree= CORE_cluster$tree, optimal_cluster = unlist(CORE_cluster$Cluster[optimal_index]), shift = -2000)
+#' key_height <- CORE_cluster$optimalClust$KeyStats$Height
+#' optimal_res <- CORE_cluster$optimalClust$OptimalRes
+#' optimal_index = which(key_height == optimal_res)
+#' plot_optimal_CORE(original_tree= CORE_cluster$tree,
+#'                   optimal_cluster = unlist(CORE_cluster$Cluster[optimal_index]), shift = -2000)
 #'
 
 plot_optimal_CORE <- function(original_tree, optimal_cluster = NULL, shift = -100,

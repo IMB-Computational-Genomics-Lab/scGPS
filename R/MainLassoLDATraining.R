@@ -12,7 +12,10 @@
 #' @param c_selectID a selected number to specify which subpopulation to be used for training
 #' @param out_idx a number to specify index to write results into the list output.
 #' This is needed for running bootstrap.
-#' @param standardize a logical value specifying whether or not to standardize the train matrix 
+#' @param standardize a logical value specifying whether or not to standardize the train matrix
+#' @param listData list to store output in
+#' @param trainset_ratio a number specifying the proportion of cells to be part of
+#' the training subpopulation
 #' @return a \code{list} with prediction results written in to the indexed \code{out_idx}
 #' @export
 #' @author Quan Nguyen, 2017-11-25
@@ -28,7 +31,9 @@
 #'                      CellMetadata = day5$dat5_clusters)
 #' genes <-GeneList
 #' genes <-genes$Merged_unique
-#' listData  <- training_scGPS(genes, cluster_mixedpop1 = colData(mixedpop1)[, 1], mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, c_selectID, listData =list(), out_idx=out_idx)
+#' listData  <- training_scGPS(genes, cluster_mixedpop1 = colData(mixedpop1)[, 1],
+#'                             mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, c_selectID,
+#'                             listData =list(), out_idx=out_idx)
 #' names(listData)
 #' listData$Accuracy
 
@@ -248,7 +253,8 @@ training_scGPS <- function(genes = NULL, cluster_mixedpop1 = NULL, mixedpop1 = N
 #' mixed population of importance, e.g. differentially expressed genes that are most significant
 #' @param out_idx a number to specify index to write results into the list output.
 #' This is needed for running bootstrap.
-#' @param cluster_mixedpop2 a vector of cluster assignment for mixedpop2 
+#' @param cluster_mixedpop2 a vector of cluster assignment for mixedpop2
+#' @param standardize a logical of whether to standardize the data 
 #' @return a \code{list} with prediction results written in to the index \code{out_idx}
 #' @export
 #' @author Quan Nguyen, 2017-11-25
@@ -257,14 +263,18 @@ training_scGPS <- function(genes = NULL, cluster_mixedpop1 = NULL, mixedpop1 = N
 #' out_idx<-1
 #' day2 <- sample1
 #' mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day2$dat2geneInfo,
-#'                      CellMetadata = day2$dat2_clusters)
+#'                     CellMetadata = day2$dat2_clusters)
 #' day5 <- sample2
 #' mixedpop2 <-NewscGPS(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
-#'                      CellMetadata = day5$dat5_clusters)
+#'                     CellMetadata = day5$dat5_clusters)
 #' genes <-GeneList
-#' test <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, genes=genes, c_selectID=1, listData =list())
-#' listData  <- training_scGPS(genes, mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, c_selectID, listData =list(), out_idx=out_idx)
-#' listData  <- predicting_scGPS(listData =listData,  mixedpop2 = mixedpop2, out_idx=out_idx)
+#' genes <-genes$Merged_unique
+#' listData  <- training_scGPS(genes, cluster_mixedpop1 = colData(mixedpop1)[, 1],
+#'                            mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, c_selectID,
+#'                            listData =list(), out_idx=out_idx)
+#' listData  <- predicting_scGPS(listData =listData,  mixedpop2 = mixedpop2, out_idx=out_idx,
+#'                               cluster_mixedpop2 = colData(mixedpop2)[, 1])
+
 
 predicting_scGPS <- function(listData = NULL, cluster_mixedpop2 = NULL, mixedpop2 = NULL, out_idx = NULL, standardize = TRUE) {
     # predictor_S1 is the dataset used for the training phase (already transposed)
@@ -358,6 +368,8 @@ predicting_scGPS <- function(listData = NULL, cluster_mixedpop2 = NULL, mixedpop
 #' @param c_selectID the root cluster in mixedpop1 to becompared to clusters in mixedpop2 
 #' @param genes a gene list to build the model
 #' @param nboots a number specifying how many bootstraps to be run
+#' @param trainset_ratio a number specifying the proportion of cells to be part of
+#' the training subpopulation
 #' @return a \code{list} with prediction results written in to the index \code{out_idx}
 #' @export
 #' @author Quan Nguyen, 2017-11-25
@@ -369,9 +381,13 @@ predicting_scGPS <- function(listData = NULL, cluster_mixedpop2 = NULL, mixedpop
 #' mixedpop2 <-NewscGPS(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
 #'                      CellMetadata = day5$dat5_clusters)
 #' genes <-GeneList
+#' genes <-genes$Merged_unique
 #' cluster_mixedpop1 <- colData(mixedpop1)[,1]
 #' cluster_mixedpop2 <- colData(mixedpop2)[,1]
-#' test <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, genes=genes, c_selectID=1, listData =list(), cluster_mixedpop1 = cluster_mixedpop1, cluster_mixedpop2=cluster_mixedpop2)
+#' c_selectID <- 2
+#' test <- bootstrap_scGPS(nboots = 2, mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, genes=genes,
+#'                         listData =list(), cluster_mixedpop1 = cluster_mixedpop1,
+#'                         cluster_mixedpop2 = cluster_mixedpop2, c_selectID = c_selectID)
 #' names(test)
 #' test$ElasticNetPredict
 #' test$LDAPredict
@@ -396,9 +412,12 @@ bootstrap_scGPS <- function(nboots = 1, genes = genes, mixedpop1 = mixedpop1, mi
 #' @param listData  a \code{list} object, which contains trained results for the first mixed population
 #' @param mixedpop1 a \linkS4class{SingleCellExperiment} object from a mixed population for training
 #' @param mixedpop2 a \linkS4class{SingleCellExperiment} object from a target mixed population for prediction
+#' @param cluster_mixedpop1 a vector of cluster assignment for mixedpop1 
+#' @param cluster_mixedpop2 a vector of cluster assignment for mixedpop2 
 #' @param genes a gene list to build the model
 #' @param nboots a number specifying how many bootstraps to be run
 #' @param ncores a number specifying how many cpus to be used for running
+#' @param c_selectID the root cluster in mixedpop1 to becompared to clusters in mixedpop2 
 #' @return a \code{list} with prediction results written in to the index \code{out_idx}
 #' @export
 #' @author Quan Nguyen, 2017-11-25
@@ -411,9 +430,10 @@ bootstrap_scGPS <- function(nboots = 1, genes = genes, mixedpop1 = mixedpop1, mi
 #'                     CellMetadata = day5$dat5_clusters)
 #' genes <-GeneList
 #' genes <-genes$Merged_unique
-#' prl_boots <- bootstrap_scGPS_parallel(ncores = 4, nboots = 2, genes=genes, mixedpop1 = mixedpop2, mixedpop2 = mixedpop2,  c_selectID=1, listData =list())
-#' prl_boots[[1]]$ElasticNetPredict
-#' prl_boots[[1]]$LDAPredict
+#' #prl_boots <- bootstrap_scGPS_parallel(ncores = 4, nboots = 2, genes=genes, mixedpop1 = mixedpop2,
+#' #                                      mixedpop2 = mixedpop2,  c_selectID=1, listData =list())
+#' #prl_boots[[1]]$ElasticNetPredict
+#' #prl_boots[[1]]$LDAPredict
 #'
 
 bootstrap_scGPS_parallel <- function(ncores = 4, nboots = 1, genes = genes, mixedpop1 = mixedpop1,

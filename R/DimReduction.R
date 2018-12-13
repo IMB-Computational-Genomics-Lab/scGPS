@@ -1,7 +1,10 @@
 #' PCA
 #'
 #' @description Select top variable genes and perform prcomp
-#' @param expression_matrix An expression matrix, with genes in rows
+#' @param expression.matrix An expression matrix, with genes in rows
+#' @param ngenes number of genes used for clustering calculations.
+#' @param npcs an integer specifying the number of principal components to use.
+#' @param scaling a logical of whether we want to scale the matrix
 #' @export
 #' @return a list containing PCA results and variance explained
 #' @examples
@@ -36,7 +39,8 @@ PCA_scGPS <- function(expression.matrix = NULL, ngenes = 1500, scaling = TRUE, n
 #' CIDR
 #'
 #' @description calculate CIDR using top variable genes
-#' @param expression_matrix An expression matrix, with genes in rows
+#' @param expression.matrix An expression matrix, with genes in rows
+#' @param ngenes number of genes used for clustering calculations.
 #' @return a CIDR reduced matrix for the top 20 components
 #' @export
 #' @examples
@@ -45,8 +49,8 @@ PCA_scGPS <- function(expression.matrix = NULL, ngenes = 1500, scaling = TRUE, n
 #'                     CellMetadata = day2$dat2_clusters)
 #' t <-CIDR_scGPS(expression.matrix=assay(mixedpop1))
 #'
-CIDR_scGPS <- function(expression.matrix = NULL, ngenes = 1500, scaling = TRUE, theta = 0.5,
-    perplexity = 30) {
+CIDR_scGPS <- function(expression.matrix = NULL, ngenes = 1500) {
+	library(cidr)
     subset.matrix <- topvar_scGPS(expression.matrix = expression.matrix, ngenes = 1500)
     print("building cidr object...")
     sData <- scDataConstructor(subset.matrix)
@@ -69,7 +73,12 @@ CIDR_scGPS <- function(expression.matrix = NULL, ngenes = 1500, scaling = TRUE, 
 #' tSNE
 #'
 #' @description calculate tSNE from top variable genes
-#' @param expression_matrix An expression matrix, with genes in rows
+#' @param expression.matrix An expression matrix, with genes in rows
+#' @param ngenes number of genes used for clustering calculations.
+#' @param perplexity numeric; Perplexity parameter
+#' (should not be bigger than 3 * perplexity < nrow(X) - 1, see details for interpretation)
+#' @param theta numeric; Speed/accuracy trade-off (increase for less accuracy)
+#' @param scaling a logical of whether we want to scale the matrix
 #' @export
 #' @return a tSNE reduced matrix containing three tSNE dimensions
 #' @examples
