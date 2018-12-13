@@ -4,9 +4,7 @@ using namespace arma;
 
 //' Calculate mean
 //'
-//' @param N  integer.
-//' @param thin integer
-//' @return a mean value
+//' @param x integer.
 //' @examples
 //' mean_cpp(c(1:10^6))
 //'
@@ -60,7 +58,9 @@ arma::mat tp_cpp(const arma::mat X) {
 
 //' Subset a matrix
 //'
-//' @param X an R matrix (expression matrix)
+//' @param m1in an R matrix (expression matrix)
+//' @param rowidx_in a numeric vector of rows to keep
+//' @param colidx_in a numeric vector of columns to keep
 //' @return a subsetted matrix
 //' @examples
 //' mat_test <-matrix(rnbinom(1000000,mu=0.01, size=10),nrow=100)
@@ -85,8 +85,8 @@ arma::mat subset_cpp(NumericMatrix m1in, NumericVector rowidx_in, NumericVector 
 //' @return a list with three list pca lists
 //' @examples
 //' mat_test <-matrix(rnbinom(1000000,mu=0.01, size=10),nrow=1000)
-//' library(microbenchmark)
-//' microbenchmark(PrinComp_cpp(mat_test), prcomp(mat_test), times=3)
+//' #library(microbenchmark)
+//' #microbenchmark(PrinComp_cpp(mat_test), prcomp(mat_test), times=3)
 //'
 // [[Rcpp::export]]
 List PrinComp_cpp(const arma::mat X) {

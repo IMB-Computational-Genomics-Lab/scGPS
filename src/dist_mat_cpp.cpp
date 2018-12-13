@@ -4,12 +4,33 @@
 using namespace arma;
 using namespace Rcpp;
 
+
+//' Compute Distance between two vectors
+//'
+//' @param x A numeric vector
+//' @param y A numeric vector
+//' @return a numeric distance
+//' @examples
+//' x <-matrix(rnbinom(1000,mu=0.01, size=10),nrow=1000)
+//' x <- x[1,]
+//' y <-matrix(rnbinom(1000,mu=0.01, size=10),nrow=1000)
+//' y <- y[1,]
+//' distvec(x, y)
+//'
 // [[Rcpp::export]]
 double distvec(NumericVector x, NumericVector y){
   double d = sqrt( sum( pow(x - y, 2) ) );
   return d;
 }
 
+//' Compute Euclidean distance matrix by rows
+//'
+//' @param x A numeric matrix
+//' @return a distance matrix
+//' @examples
+//' mat_test <-matrix(rnbinom(1000,mu=0.01, size=10),nrow=1000)
+//' calcDist(mat_test)
+//'
 // [[Rcpp::export]]
 NumericMatrix calcDist(NumericMatrix x){
   int outrows = x.nrow();
@@ -34,9 +55,9 @@ NumericMatrix calcDist(NumericMatrix x){
 //' @param x A numeric matrix
 //' @return a distance matrix
 //' @examples
-//' mat_test <-matrix(rnbinom(100000,mu=0.01, size=10),nrow=1000)
-//' library(microbenchmark)
-//' microbenchmark(calcDistArma(mat_test), dist(mat_test), times=3)
+//' mat_test <-matrix(rnbinom(1000,mu=0.01, size=10),nrow=1000)
+//' #library(microbenchmark)
+//' #microbenchmark(calcDistArma(mat_test), dist(mat_test), times=3)
 //'
 //'
 // [[Rcpp::export]]
