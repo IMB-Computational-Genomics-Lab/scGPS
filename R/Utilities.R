@@ -46,12 +46,10 @@ topvar_scGPS <- function(expression.matrix = NULL, ngenes = 1500) {
 #'
 plotReduced_scGPS <- function(reduced_dat, color_fac = factor(Sample_id), dims = c(1,
   2), dimNames = c("Dim 1", "Dim 2"), palletes = NULL, legend_title = "Cluster") {
-  library(cowplot)
-  library(RColorBrewer)
   reduced_dat_toPlot <- as.data.frame(reduced_dat[, dims])
   sample_num <- length(unique(color_fac))
   if(is.null(palletes)){
-    palletes <- colorRampPalette(brewer.pal(sample_num, "Set1"))(sample_num)
+    palletes <- colorRampPalette(RColorBrewer::brewer.pal(sample_num, "Set1"))(sample_num)
   }
   reduced_dat_toPlot <- as.data.frame(reduced_dat[, dims])
   sample_num <- length(unique(color_fac))
@@ -72,9 +70,9 @@ plotReduced_scGPS <- function(reduced_dat, color_fac = factor(Sample_id), dims =
                                                      aes(`Dim 1`, ..count.., fill = color_fac), size = 0.4, alpha = 0.7) + scale_fill_manual(name = "Samples",
                                                                                                                                              values = palletes[1:sample_num], limits = sort(as.character(as.vector(unique(color_fac)))))
   
-  p1_x <- insert_xaxis_grob(p, xaxis, grid::unit(0.2, "null"), position = "top")
-  p1_x_y <- insert_yaxis_grob(p1_x, yaxis, grid::unit(0.2, "null"), position = "right")
-  p2 <- ggdraw(p1_x_y)
+  p1_x <- cowplot::insert_xaxis_grob(p, xaxis, grid::unit(0.2, "null"), position = "top")
+  p1_x_y <- cowplot::insert_yaxis_grob(p1_x, yaxis, grid::unit(0.2, "null"), position = "right")
+  p2 <- cowplot::ggdraw(p1_x_y)
   return(p2)
 }
 
@@ -100,8 +98,6 @@ plotReduced_scGPS <- function(reduced_dat, color_fac = factor(Sample_id), dims =
 
 
 findMarkers_scGPS <- function(expression_matrix = NULL, cluster = NULL, selected_cluster = NULL, fitType="local") {
-    library(DESeq)
-
     DE_exprsMat <- round(expression_matrix + 1)
 
     DE_results <- list()
@@ -119,12 +115,12 @@ findMarkers_scGPS <- function(expression_matrix = NULL, cluster = NULL, selected
 
         print(paste0("Start estimate dispersions for cluster ", as.character(cl_id),
             "..."))
-        cds = newCountDataSet(diff_mat, condition_cluster)
-        cds = estimateSizeFactors(cds)
-        cds = estimateDispersions(cds, method = "per-condition", fitType = fitType)
+        cds = DESeq::newCountDataSet(diff_mat, condition_cluster)
+        cds = DESeq::estimateSizeFactors(cds)
+        cds = DESeq::estimateDispersions(cds, method = "per-condition", fitType = fitType)
         print(paste0("Done estimate dispersions. Start nbinom test for cluster ",
             as.character(cl_id), "..."))
-        res1 = nbinomTest(cds, "Others", as.character(cl_id))
+        res1 = DESeq::nbinomTest(cds, "Others", as.character(cl_id))
         print(paste0("Done nbinom test for cluster ", as.character(cl_id), " ..."))
         # adjust folchange
         print(paste0("Adjust foldchange by subtracting basemean to 1..."))
@@ -170,7 +166,7 @@ findMarkers_scGPS <- function(expression_matrix = NULL, cluster = NULL, selected
 #'                         cluster_mixedpop2 = cluster_mixedpop2, c_selectID = c_selectID)
 #' enrichment_test <- annotate_scGPS(genes, pvalueCutoff=0.05, gene_symbol=TRUE,
 #'                                   output_filename = "PathwayEnrichment.xlsx", output_path = NULL)
-#' dotplot(enrichment_test, showCategory=15)
+#' clusterProfiler::dotplot(enrichment_test, showCategory=15)
 #'
 
 
@@ -186,13 +182,9 @@ findMarkers_scGPS <- function(expression_matrix = NULL, cluster = NULL, selected
 
 annotate_scGPS <- function(DEgeneList, pvalueCutoff = 0.05, gene_symbol = TRUE, output_filename = "PathwayEnrichment.xlsx",
     output_path = NULL) {
-    library(ReactomePA)
-    library(clusterProfiler)
-    library(org.Hs.eg.db)
-    library(xlsx)
     # assumming the geneList is gene symbol (common for 10X data)
     if (gene_symbol == TRUE) {
-        convert_to_gene_ID = bitr(DEgeneList, fromType = "SYMBOL", toType = "ENTREZID",
+        convert_to_gene_ID = clusterProfiler::bitr(DEgeneList, fromType = "SYMBOL", toType = "ENTREZID",
             OrgDb = "org.Hs.eg.db")
         print("Original gene number in geneList")
         print(length(DEgeneList))
@@ -202,13 +194,13 @@ annotate_scGPS <- function(DEgeneList, pvalueCutoff = 0.05, gene_symbol = TRUE, 
         stop("The list must contain gene symbols")
     }
 
-    Reactome_pathway_test <- enrichPathway(gene = convert_to_gene_ID$ENTREZID, pvalueCutoff = 0.05,
+    Reactome_pathway_test <- ReactomePA::enrichPathway(gene = convert_to_gene_ID$ENTREZID, pvalueCutoff = 0.05,
         readable = TRUE)
 
     # plot some results: note Reactome_pathway_test is a reactomePA object write
     # Reactome_pathway_test results, need to convert to data.frame
     output_df <- as.data.frame(Reactome_pathway_test)
-    write.xlsx(output_df, paste0(output_path, output_filename))
+    xlsx::write.xlsx(output_df, paste0(output_path, output_filename))
     return(Reactome_pathway_test)
     # note can conveniently plot the outputs by running the followings
     # dotplot(Reactome_pathway_test, showCategory=15) barplot(Reactome_pathway_test,
@@ -227,6 +219,13 @@ annotate_scGPS <- function(DEgeneList, pvalueCutoff = 0.05, gene_symbol = TRUE, 
 #' @import ggplot2
 #' @import RcppArmadillo
 #' @import RcppParallel
+#' @import SingleCellExperiment
+#' @import SummarizedExperiment
+#' @importFrom graphics barplot lines rect strheight strwidth text
+#' @importFrom stats as.dist coef na.omit prcomp predict sd
+#' @importFrom grDevices colorRampPalette
+#' @importFrom graphics abline layout par plot
+#' @importFrom stats as.dendrogram
 #' @return NULL
 
 add_import <- function() {

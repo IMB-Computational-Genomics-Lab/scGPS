@@ -144,7 +144,7 @@ training_scGPS <- function(genes = NULL, cluster_mixedpop1 = NULL, mixedpop1 = N
     dat_DE <- as.data.frame(t_DE)
     colnames(dat_DE) <- c("Dfd", "Deviance", "lambda")
     # Get the coordinate for lambda that produces minimum error
-    dat_DE_Lambda_idx <- which(round(dat_DE$lambda, digit = 3) == round(cvfit$lambda.min,
+    dat_DE_Lambda_idx <- which(round(dat_DE$lambda, digits = 3) == round(cvfit$lambda.min,
         digits = 3))
     dat_DE <- dat_DE[1:dat_DE_Lambda_idx[1], ]
 
@@ -448,7 +448,7 @@ bootstrap_scGPS_parallel <- function(ncores = 4, nboots = 1, genes = genes, mixe
       return(listData)
     }
 
-    register(MulticoreParam(workers = ncores, progressbar=TRUE))
+    BiocParallel::register(BiocParallel::MulticoreParam(workers = ncores, progressbar=TRUE))
 
 
     listData <- BiocParallel::bplapply(1:nboots, bootstrap_single,

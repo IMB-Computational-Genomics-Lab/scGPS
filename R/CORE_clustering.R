@@ -484,7 +484,6 @@ FindStability <- function(list_clusters = NULL, cluster_ref = NULL) {
 
 
 FindOptimalStability <- function(list_clusters, run_RandIdx, bagging  = FALSE, windows = seq(0.025:1, by = 0.025)) { #ADD windows
-    library(reshape2)
     print("Start finding optimal clustering...")
     
     window_param <- length(windows)  ###ADDED THIS TO CHANGE WINDOWS
@@ -509,7 +508,7 @@ FindOptimalStability <- function(list_clusters, run_RandIdx, bagging  = FALSE, w
     colnames(KeyStats) <- c("Height", "Stability", "RandIndex", "ConsecutiveRI")
 
     KeyStats$Height <- as.character(KeyStats$Height)
-    day_melt <- melt(KeyStats, id = "Height")
+    day_melt <- reshape2::melt(KeyStats, id = "Height")
     day_melt$Height <- as.numeric(day_melt$Height)
     p <- ggplot(day_melt)
     p <- p + geom_line(aes(x = Height, y = value, colour = variable), size = 2) +
@@ -588,10 +587,9 @@ FindOptimalStability <- function(list_clusters, run_RandIdx, bagging  = FALSE, w
 #' plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster)
 
 plot_CORE <- function(original.tree, list_clusters = NULL, color_branch = NULL) {
-    library(RColorBrewer)
     n <- length(unique(unlist(list_clusters[[1]])))
-    qual_col_pals = brewer.pal.info[brewer.pal.info$category == "qual", ]
-    col_vector = unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals)))
+    qual_col_pals = RColorBrewer::brewer.pal.info[RColorBrewer::brewer.pal.info$category == "qual", ]
+    col_vector = unlist(mapply(RColorBrewer::brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals)))
     if (is.null(color_branch)) {
         color_branch <- col_vector
     }
@@ -839,10 +837,9 @@ plot_CORE <- function(original.tree, list_clusters = NULL, color_branch = NULL) 
 plot_optimal_CORE <- function(original_tree, optimal_cluster = NULL, shift = -100,
     values = NULL) {
     if (is.null(values)) {
-        library(RColorBrewer)
         n <- length(unique(optimal_cluster))
-        qual_col_pals = brewer.pal.info[brewer.pal.info$category == "qual", ]
-        col_vector = unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals)))
+        qual_col_pals = RColorBrewer::brewer.pal.info[RColorBrewer::brewer.pal.info$category == "qual", ]
+        col_vector = unlist(mapply(RColorBrewer::brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals)))
         values <- col_vector
     }
 

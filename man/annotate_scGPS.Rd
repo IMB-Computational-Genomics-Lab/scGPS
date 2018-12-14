@@ -44,6 +44,6 @@ LSOLDA_dat <- bootstrap_scGPS(nboots = 2, mixedpop1 = mixedpop1, mixedpop2 = mix
                         cluster_mixedpop2 = cluster_mixedpop2, c_selectID = c_selectID)
 enrichment_test <- annotate_scGPS(genes, pvalueCutoff=0.05, gene_symbol=TRUE,
                                   output_filename = "PathwayEnrichment.xlsx", output_path = NULL)
-dotplot(enrichment_test, showCategory=15)
+clusterProfiler::dotplot(enrichment_test, showCategory=15)
 
 }
