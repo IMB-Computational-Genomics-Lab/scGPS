@@ -1,4 +1,4 @@
-#' Main training function for a subpopulation
+#' Main model training function for finding the best model that characterises a subpopulation
 #'
 #' @description  Training a haft of all cells to find optimal ElasticNet and LDA
 #' models to predict a subpopulation
@@ -216,8 +216,8 @@ training_scGPS <- function(genes = NULL, cluster_mixedpop1 = NULL, mixedpop1 = N
 
     compare <- merge(original_cluster, predict_cluster_dat, by.x = "V1", by.y = "cellnames")
     # this is the accurate prediction
-    cluster_select_predict <- subset(compare, (as.numeric(compare$V2) == c_selectID &
-        compare$predict_label == c_selectID) | (as.numeric(compare$V2) != c_selectID &
+    cluster_select_predict <- subset(compare, (as.numeric(compare[,2]) == c_selectID &
+        compare$predict_label == c_selectID) | (as.numeric(compare[,2]) != c_selectID &
         compare$predict_label != c_selectID))
 
     accurate <- dim(cluster_select_predict)[1]
