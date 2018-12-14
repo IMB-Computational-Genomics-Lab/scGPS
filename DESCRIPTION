@@ -43,7 +43,8 @@ Suggests:
   xlsx,
   dendextend,
   networkD3,
-  Rtsne
+  Rtsne,
+  BiocParallel
 VignetteBuilder: knitr
 LinkingTo: 
   Rcpp,
