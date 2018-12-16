@@ -144,8 +144,7 @@ training_scGPS <- function(genes = NULL, cluster_mixedpop1 = NULL, mixedpop1 = N
     dat_DE <- as.data.frame(t_DE)
     colnames(dat_DE) <- c("Dfd", "Deviance", "lambda")
     # Get the coordinate for lambda that produces minimum error
-    dat_DE_Lambda_idx <- which(round(dat_DE$lambda, digits = 3) == round(cvfit$lambda.min,
-        digits = 3))
+    dat_DE_Lambda_idx <- which(dat_DE$lambda == round(cvfit$lambda.min)
     dat_DE <- dat_DE[1:dat_DE_Lambda_idx[1], ]
 
     dat_DE_fm_DE <- dat_DE %>% group_by(Dfd) %>% summarise(Deviance = max(Deviance))

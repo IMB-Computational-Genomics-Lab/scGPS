@@ -1,4 +1,4 @@
-#' Main clustering CORE V2.0 with bagging analysis
+#' Main clustering SCORE (CORE V2.0) Stable Clustering at Optimal REsolution with bagging and bootstrapping
 #'
 #' @description  CORE is an algorithm to generate reproduciable clustering,
 #' CORE is first implemented in ascend R package. Here, CORE V2.0 uses bagging analysis
