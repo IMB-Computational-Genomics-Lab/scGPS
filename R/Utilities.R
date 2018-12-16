@@ -62,11 +62,11 @@ plotReduced_scGPS <- function(reduced_dat, color_fac = factor(Sample_id), dims =
   p <- p + theme(panel.border = element_rect(colour = "black", fill = NA, size = 1.5)) +
     theme(legend.position = "bottom") + theme(text = element_text(size = 20))
   
-  yaxis <- axis_canvas(p, axis = "y", coord_flip = TRUE) + geom_density(data = reduced_dat_toPlot,
+  yaxis <- cowplot::axis_canvas(p, axis = "y", coord_flip = TRUE) + geom_density(data = reduced_dat_toPlot,
                                                                         aes(`Dim 2`, ..count.., fill = color_fac), size = 0.2, alpha = 0.7) + coord_flip() +
     scale_fill_manual(name = "Samples", values = palletes[1:sample_num], limits = sort(as.character(as.vector(unique(color_fac)))))
   
-  xaxis <- axis_canvas(p, axis = "x") + geom_density(data = reduced_dat_toPlot,
+  xaxis <- cowplot::axis_canvas(p, axis = "x") + geom_density(data = reduced_dat_toPlot,
                                                      aes(`Dim 1`, ..count.., fill = color_fac), size = 0.4, alpha = 0.7) + scale_fill_manual(name = "Samples",
                                                                                                                                              values = palletes[1:sample_num], limits = sort(as.character(as.vector(unique(color_fac)))))
   
@@ -200,7 +200,7 @@ annotate_scGPS <- function(DEgeneList, pvalueCutoff = 0.05, gene_symbol = TRUE, 
     # plot some results: note Reactome_pathway_test is a reactomePA object write
     # Reactome_pathway_test results, need to convert to data.frame
     output_df <- as.data.frame(Reactome_pathway_test)
-    xlsx::write.xlsx(output_df, paste0(output_path, output_filename))
+    # xlsx::write.xlsx(output_df, paste0(output_path, output_filename))
     return(Reactome_pathway_test)
     # note can conveniently plot the outputs by running the followings
     # dotplot(Reactome_pathway_test, showCategory=15) barplot(Reactome_pathway_test,
