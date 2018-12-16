@@ -43,7 +43,6 @@ training_scGPS <- function(genes = NULL, cluster_mixedpop1 = NULL, mixedpop1 = N
     # taking a subsampling size of trainset_ratio of the cluster_select out for training
     subpop1cluster_indx <- which(cluster_mixedpop1 == c_selectID) #class 1 
     subremaining1_indx <- which(cluster_mixedpop1 != c_selectID) #remaining class 
-
     subsampling <- round(length(subpop1cluster_indx) * trainset_ratio )
     subpop1_train_indx <- sample(subpop1cluster_indx, subsampling, replace = FALSE)
     # check if there is a very big cluster present in the dataset C/2 = SubSampling
@@ -144,8 +143,11 @@ training_scGPS <- function(genes = NULL, cluster_mixedpop1 = NULL, mixedpop1 = N
     dat_DE <- as.data.frame(t_DE)
     colnames(dat_DE) <- c("Dfd", "Deviance", "lambda")
     # Get the coordinate for lambda that produces minimum error
-    dat_DE_Lambda_idx <- which(dat_DE$lambda == round(cvfit$lambda.min)
-    dat_DE <- dat_DE[1:dat_DE_Lambda_idx[1], ]
+    dat_DE_Lambda_idx <- which(dat_DE$lambda == round(cvfit$lambda.min, digits = 5)) #glmnet lambda min has 5 decimal digits
+    if(length(dat_DE_Lambda_idx) >0) {
+      dat_DE <- dat_DE[1:dat_DE_Lambda_idx[1], ]}else{
+        print("please check the lambda min output ...")
+      }
 
     dat_DE_fm_DE <- dat_DE %>% group_by(Dfd) %>% summarise(Deviance = max(Deviance))
     dat_DE_fm_DE <- as.data.frame(dat_DE_fm_DE)
