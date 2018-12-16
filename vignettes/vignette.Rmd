@@ -35,7 +35,7 @@ knitr::include_graphics("./docs/reference/figures/packagePlan.png")
 
 #1. Installation instruction
 
-```{r, eval = FALSE}
+```{r installation, eval = FALSE}
 # Prior to installing scGPS you need to install the SummarizedExperiment
 # bioconductor package as the following
 # source('https://bioconductor.org/biocLite.R') biocLite('SummarizedExperiment')
@@ -67,8 +67,8 @@ devtools::load_all()
 #2. A simple workflow of the scGPS: 
 *The purpose of this workflow is to solve the following task: given a mixed population with known subpopulations, estimate transition scores between these subpopulation*
 
-##2.1 Setup scGPS objects
-```{r, warning = FALSE, message = FALSE}
+##2.1 Create scGPS objects
+```{r create objects, warning = FALSE, message = FALSE}
 
 # load mixed population 1 (loaded from sample1 dataset, named it as day2)
 # setwd('/Users/quan.nguyen/Documents/Powell_group_MacQuan/AllCodes/scGPS/vignettes/')
@@ -84,8 +84,8 @@ mixedpop2 <- NewscGPS(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$d
     CellMetadata = day5$dat5_clusters)
 
 ```
-##2.2 Run predictions
-```{r, warning = FALSE, message = FALSE}
+##2.2 Run prediction
+```{r run prediction, warning = FALSE, message = FALSE}
 
 # select a subpopulation
 c_selectID <- 1
@@ -103,7 +103,7 @@ LSOLDA_dat <- bootstrap_scGPS(nboots = 2, mixedpop1 = mixedpop1,
 
 ```
 ##2.3 Summarise results 
-```{r, warning = FALSE, message = FALSE}
+```{r summarise results, warning = FALSE, message = FALSE}
 
 # display the list of result information in the LASOLDA_dat object 
 names(LSOLDA_dat)
@@ -128,7 +128,7 @@ summary_deviance(object = LSOLDA_dat)
 
 ##3.1 Identify clusters in a dataset using CORE
 *(skip this step if clusters are known)*
-```{r, warning = FALSE, message = FALSE}
+```{r CORE clustering, warning = FALSE, message = FALSE}
 
 # find clustering information in an expresion data using CORE
 day5 <- sample2
@@ -136,13 +136,14 @@ cellnames <- colnames(day5$dat5_counts)
 cluster <-day5$dat5_clusters
 cellnames <-data.frame("Cluster"=cluster, "cellBarcodes" = cellnames)
 mixedpop2 <-NewscGPS(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo, CellMetadata = cellnames ) 
+
 CORE_cluster <- CORE_scGPS(mixedpop2, remove_outlier = c(0), PCA=FALSE)
 
 ```
 ##3.1 Identify clusters in a dataset using SCORE (Stable Clustering at Optimal REsolution)
 *(skip this step if clusters are known)*
 *(SCORE aims to get stable subpopulation results, by introducing bagging aggregation and bootstrapping to the CORE algorithm)*
-```{r, warning = FALSE, message = FALSE}
+```{r SCORE with bagging, warning = FALSE, message = FALSE}
 
 # find clustering information in an expresion data using SCORE
 day5 <- sample2
@@ -157,7 +158,7 @@ SCORE_test <- CORE_scGPS_bagging(mixedpop2, remove_outlier = c(0), PCA=FALSE,
 ```
 
 ##3.2 Visualise all cluster results in all iterations
-```{r}
+```{r visualisation}
 ##3.2.1 plot CORE clustering 
 plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster) #plot all clustering bars 
 #extract optimal index identified by CORE_scGPS
@@ -179,7 +180,7 @@ plot_optimal_CORE(original_tree= SCORE_test$tree,
 ```
   
 ##3.4 Compare clustering results with other dimensional reduction methods (e.g., CIDR)
-```{r}
+```{r compare clustering}
 library(cidr)
 t <- CIDR_scGPS(expression.matrix=assay(mixedpop2))
 p2 <-plotReduced_scGPS(t, color_fac = factor(colData(mixedpop2)[,1]),palletes =1:length(unique(colData(mixedpop2)[,1])))
@@ -188,7 +189,7 @@ p2
   
 ##3.5 Find gene markers and annotate clusters
 
-```{r, warning = FALSE, message = FALSE}
+```{r find markers, warning = FALSE, message = FALSE}
 
 #load gene list (this can be any lists of user-selected genes)
 genes <-GeneList
@@ -233,7 +234,7 @@ dotplot(enrichment_test, showCategory=15)
 
 ##4.1 Start the scGPS prediction to find relationship between clusters
 
-```{r, warning = FALSE, message = FALSE}
+```{r scGPS prediction, warning = FALSE, message = FALSE}
 
 #select a subpopulation, and input gene list 
 c_selectID <- 1
@@ -258,7 +259,7 @@ sink()
 
 ##4.2 Display summary results for the prediction
 
-```{r}
+```{r summary prediction results}
 #get the number of rows for the summary matrix 
 row_cluster <-length(unique(colData(mixedpop2)[,1]))
 
@@ -279,7 +280,7 @@ summary_accuracy(object = LSOLDA_dat)
 ##4.3 Plot the relationship between clusters in one sample 
 *Here we look at one example use case to find relationship between clusters within one sample or between two sample*
 
-```{r,warning = FALSE, message = FALSE}
+```{r visualise prediction one sample,warning = FALSE, message = FALSE}
 #run prediction for 3 clusters 
 cluster_mixedpop1 <- colData(mixedpop1)[,1]
 cluster_mixedpop2 <- as.numeric(as.vector(colData(mixedpop2)[,1]))
@@ -378,7 +379,7 @@ p1
 ##4.3 Plot the relationship between clusters in two samples 
 *Here we look at one example use case to find relationship between clusters within one sample or between two sample*
 
-```{r,warning = FALSE, message = FALSE}
+```{r visualise prediction two samples,warning = FALSE, message = FALSE}
 #run prediction for 3 clusters 
 cluster_mixedpop1 <- colData(mixedpop1)[,1]
 cluster_mixedpop2 <- as.numeric(as.vector(colData(mixedpop2)[,1]))
