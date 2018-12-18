@@ -85,7 +85,7 @@ mixedpop2 <- NewscGPS(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$d
 
 ```
 ##2.2 Run prediction
-```{r run prediction, warning = FALSE, message = FALSE}
+```{r run prediction, warning = FALSE, message = FALSE, eval = FALSE}
 
 # select a subpopulation
 c_selectID <- 1
@@ -103,7 +103,7 @@ LSOLDA_dat <- bootstrap_scGPS(nboots = 2, mixedpop1 = mixedpop1,
 
 ```
 ##2.3 Summarise results 
-```{r summarise results, warning = FALSE, message = FALSE}
+```{r summarise results, warning = FALSE, message = FALSE, eval = FALSE}
 
 # display the list of result information in the LASOLDA_dat object 
 names(LSOLDA_dat)
@@ -128,7 +128,7 @@ summary_deviance(object = LSOLDA_dat)
 
 ##3.1 Identify clusters in a dataset using CORE
 *(skip this step if clusters are known)*
-```{r CORE clustering, warning = FALSE, message = FALSE}
+```{r CORE clustering, warning = FALSE, message = FALSE, eval = FALSE}
 
 # find clustering information in an expresion data using CORE
 day5 <- sample2
@@ -158,7 +158,7 @@ SCORE_test <- CORE_scGPS_bagging(mixedpop2, remove_outlier = c(0), PCA=FALSE,
 ```
 
 ##3.2 Visualise all cluster results in all iterations
-```{r visualisation}
+```{r visualisation, eval = FALSE}
 ##3.2.1 plot CORE clustering 
 plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster) #plot all clustering bars 
 #extract optimal index identified by CORE_scGPS
@@ -180,7 +180,7 @@ plot_optimal_CORE(original_tree= SCORE_test$tree,
 ```
   
 ##3.4 Compare clustering results with other dimensional reduction methods (e.g., CIDR)
-```{r compare clustering}
+```{r compare clustering, eval = FALSE}
 library(cidr)
 t <- CIDR_scGPS(expression.matrix=assay(mixedpop2))
 p2 <-plotReduced_scGPS(t, color_fac = factor(colData(mixedpop2)[,1]),palletes =1:length(unique(colData(mixedpop2)[,1])))
@@ -276,36 +276,51 @@ summary_deviance(object = LSOLDA_dat)
 summary_accuracy(object = LSOLDA_dat)
 
 ```
+#test 
+```{r}
+#run prediction for 3 clusters 
+cluster_mixedpop1 <- colData(mixedpop1)[,1]
+#cluster_mixedpop2 <- colData(mixedpop2)[,1]
+cluster_mixedpop2 <- as.numeric(as.vector(colData(mixedpop2)[,1]))
+
+c_selectID <- 1
+genes = DEgenes$DE_Subpop1vsRemaining$id[1:500] #top 200 gene markers distinguishing cluster 1 
+
+sink("temp")
+LSOLDA_dat1 <- bootstrap_scGPS(nboots = 2, mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, genes=genes, c_selectID = c_selectID , listData =list(), cluster_mixedpop1 = cluster_mixedpop1, cluster_mixedpop2 = cluster_mixedpop2)
+sink()
+
+```
 
 ##4.3 Plot the relationship between clusters in one sample 
 *Here we look at one example use case to find relationship between clusters within one sample or between two sample*
 
-```{r visualise prediction one sample,warning = FALSE, message = FALSE}
+```{r visualise prediction one sample,warning = FALSE, message = FALSE, eval = FALSE }
 #run prediction for 3 clusters 
 cluster_mixedpop1 <- colData(mixedpop1)[,1]
 cluster_mixedpop2 <- as.numeric(as.vector(colData(mixedpop2)[,1]))
 
 c_selectID <- 1
 genes = DEgenes$DE_Subpop1vsRemaining$id[1:200] #top 200 gene markers distinguishing cluster 1 
-genes <- gsub("_.*", "", genes)
+
 
 LSOLDA_dat1 <- bootstrap_scGPS(nboots = 2, mixedpop1 = mixedpop2, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(), cluster_mixedpop1 = cluster_mixedpop2, cluster_mixedpop2 = cluster_mixedpop2)
 
 c_selectID <- 2
 genes = DEgenes$DE_Subpop2vsRemaining$id[1:200]
-genes <- gsub("_.*", "", genes)
+
 LSOLDA_dat2 <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop2, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(), cluster_mixedpop1 = cluster_mixedpop2,
      cluster_mixedpop2 = cluster_mixedpop2)
 
 c_selectID <- 3
 genes = DEgenes$DE_Subpop3vsRemaining$id[1:200]
-genes <- gsub("_.*", "", genes)
+#genes <- gsub("_.*", "", genes)
 LSOLDA_dat3 <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop2, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(), cluster_mixedpop1 = cluster_mixedpop2,
      cluster_mixedpop2 = cluster_mixedpop2)
-     
+
 c_selectID <- 4
 genes = DEgenes$DE_Subpop4vsRemaining$id[1:200]
-genes <- gsub("_.*", "", genes)
+#genes <- gsub("_.*", "", genes)
 LSOLDA_dat4 <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop2, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(), cluster_mixedpop1 = cluster_mixedpop2,
      cluster_mixedpop2 = cluster_mixedpop2)
 
@@ -379,7 +394,7 @@ p1
 ##4.3 Plot the relationship between clusters in two samples 
 *Here we look at one example use case to find relationship between clusters within one sample or between two sample*
 
-```{r visualise prediction two samples,warning = FALSE, message = FALSE}
+```{r visualise prediction two samples,warning = FALSE, message = FALSE, eval = FALSE}
 #run prediction for 3 clusters 
 cluster_mixedpop1 <- colData(mixedpop1)[,1]
 cluster_mixedpop2 <- as.numeric(as.vector(colData(mixedpop2)[,1]))
@@ -464,3 +479,4 @@ p1
 
 ```
 
+##4.4 Annotation: scGPS prediction can be used to compare scGPS clusters with a reference dataset to see which cluster is most similar to the reference 
