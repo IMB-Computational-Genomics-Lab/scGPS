@@ -278,17 +278,24 @@ summary_accuracy(object = LSOLDA_dat)
 ```
 #test 
 ```{r}
-#run prediction for 3 clusters 
-cluster_mixedpop1 <- colData(mixedpop1)[,1]
-#cluster_mixedpop2 <- colData(mixedpop2)[,1]
-cluster_mixedpop2 <- as.numeric(as.vector(colData(mixedpop2)[,1]))
-
 c_selectID <- 1
-genes = DEgenes$DE_Subpop1vsRemaining$id[1:500] #top 200 gene markers distinguishing cluster 1 
+genes = DEgenes$DE_Subpop1vsRemaining$id[1:500]
+#format gene names 
+genes <- gsub("_.*", "", genes)
+
+#run the test bootstrap with nboots = 2 runs
+
+cluster_mixedpop1 <- colData(mixedpop1)[,1]
+cluster_mixedpop2 <- colData(mixedpop2)[,1]
 
 sink("temp")
-LSOLDA_dat1 <- bootstrap_scGPS(nboots = 2, mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, genes=genes, c_selectID = c_selectID , listData =list(), cluster_mixedpop1 = cluster_mixedpop1, cluster_mixedpop2 = cluster_mixedpop2)
+LSOLDA_dat <- bootstrap_scGPS(nboots = 2, mixedpop1 = mixedpop2, 
+    mixedpop2 = mixedpop2, genes = genes, c_selectID  = c_selectID, listData = list(),
+     cluster_mixedpop1 = cluster_mixedpop2,
+     cluster_mixedpop2 = cluster_mixedpop2)
+
 sink()
+
 
 ```
 
