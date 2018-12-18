@@ -193,6 +193,25 @@ training_scGPS <- function(genes = NULL, cluster_mixedpop1 = NULL, mixedpop1 = N
       predictor_S2 <- t(apply(predictor_S2,1, standardizing))
     }  
 
+    #before prediction, check genes in cvfit and predictor_S2 are compatible 
+    # Get gene names
+    gene_cvfit <- cvfit$glmnet.fit$beta@Dimnames[[1]]
+    # Reformat the names, removing _.* if present in the name 
+    names <- colnames(predictor_S2)
+    cvfitGenes_idx <- which(names %in% gene_cvfit)
+    # check how many genes in gene_cvfit but not in mixedpop2 (should be 0, as this
+    # is checked in the training step, if not add random genes)
+    to_add <- length(gene_cvfit) - length(cvfitGenes_idx)
+    to_add_idx <- c()
+    
+    if (to_add > 0) {
+      to_add_idx <- sample(cvfitGenes_idx, to_add, replace = FALSE) #add more random
+    } else if (to_add < 0) {
+      cvfitGenes_idx <- sample(cvfitGenes_idx, length(gene_cvfit), replace = FALSE)
+    }
+    
+    #predictor_S2_temp <- ori_dat_2[c(to_add_idx, cvfitGenes_idx), cluster_select]
+    predictor_S2 <- predictor_S2[,c(to_add_idx, cvfitGenes_idx) ]
     # Start prediction for estimating accuracy
     predict_clusters <- predict(cvfit, newx = predictor_S2, type = "class", s = cvfit$lambda.min)
     # Done cross validation test to estimate accuracy------------------------------
