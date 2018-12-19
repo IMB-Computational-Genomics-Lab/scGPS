@@ -85,6 +85,7 @@ plotReduced_scGPS <- function(reduced_dat, color_fac = factor(Sample_id), dims =
 #' by running CORE clustering or using other methods.
 #' @param selected_cluster a vector of unique cluster ids to calculate
 #' @param fitType string specifying "local" or "parametric" for DEseq dispersion estimation
+#' @param dispersion_method one of the options c( "pooled", "pooled-CR", "per-condition", "blind" )
 #' @return a \code{list} containing sorted DESeq analysis results
 #' @export
 #' @author Quan Nguyen, 2017-11-25
@@ -93,11 +94,13 @@ plotReduced_scGPS <- function(reduced_dat, color_fac = factor(Sample_id), dims =
 #' mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day2$dat2geneInfo,
 #'                     CellMetadata = day2$dat2_clusters)
 #' DEgenes <- findMarkers_scGPS(expression_matrix=assay(mixedpop1),
-#'                              cluster = colData(mixedpop1)[,1])
+#'                              cluster = colData(mixedpop1)[,1],
+#'                              selected_cluster=c(1,2)
+#'                              )
 #' names(DEgenes)
 
 
-findMarkers_scGPS <- function(expression_matrix = NULL, cluster = NULL, selected_cluster = NULL, fitType="local") {
+findMarkers_scGPS <- function(expression_matrix = NULL, cluster = NULL, selected_cluster = NULL, fitType="local", dispersion_method = "per-condition" ) {
     DE_exprsMat <- round(expression_matrix + 1)
 
     DE_results <- list()
@@ -115,9 +118,10 @@ findMarkers_scGPS <- function(expression_matrix = NULL, cluster = NULL, selected
 
         print(paste0("Start estimate dispersions for cluster ", as.character(cl_id),
             "..."))
+        #Note: the local fit option requires the library
         cds = DESeq::newCountDataSet(diff_mat, condition_cluster)
         cds = DESeq::estimateSizeFactors(cds)
-        cds = DESeq::estimateDispersions(cds, method = "per-condition", fitType = fitType)
+        cds = DESeq::estimateDispersions(cds, method = dispersion_method, fitType = fitType)
         print(paste0("Done estimate dispersions. Start nbinom test for cluster ",
             as.character(cl_id), "..."))
         res1 = DESeq::nbinomTest(cds, "Others", as.character(cl_id))
@@ -147,7 +151,7 @@ findMarkers_scGPS <- function(expression_matrix = NULL, cluster = NULL, selected
 #' @param pvalueCutoff is a numeric of the cutoff p value
 #' @param gene_symbol -------
 #' @param output_filename is a string of the filename to save the spreadsheet to
-#' @param output_path is a string of the path to the location to save the spreadsheet
+#' @param specis is the selection of "human" or "mouse", default to "human" genes
 #' @return write enrichment test output to a file and an enrichment test object for plotting
 #' @examples
 #' day2 <- sample1
@@ -164,8 +168,7 @@ findMarkers_scGPS <- function(expression_matrix = NULL, cluster = NULL, selected
 #' LSOLDA_dat <- bootstrap_scGPS(nboots = 2, mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, genes=genes,
 #'                         listData =list(), cluster_mixedpop1 = cluster_mixedpop1,
 #'                         cluster_mixedpop2 = cluster_mixedpop2, c_selectID = c_selectID)
-#' enrichment_test <- annotate_scGPS(genes, pvalueCutoff=0.05, gene_symbol=TRUE,
-#'                                   output_filename = "PathwayEnrichment.xlsx", output_path = NULL)
+#' enrichment_test <- annotate_scGPS(genes, pvalueCutoff=0.05, gene_symbol=TRUE, species = "human")
 #' clusterProfiler::dotplot(enrichment_test, showCategory=15)
 #'
 
@@ -174,16 +177,17 @@ findMarkers_scGPS <- function(expression_matrix = NULL, cluster = NULL, selected
 # source('https://bioconductor.org/biocLite.R') biocLite('ReactomePA') Package
 # Genome wide annotation for Human
 # http://bioconductor.org/packages/release/data/annotation/html/org.Hs.eg.db.html
-# biocLite('org.Hs.eg.db') biocLite('clusterProfiler') install.packages('xlsx')
+# biocLite('org.Hs.eg.db'); biocLite('org.Mm.eg.db');  biocLite('clusterProfiler'); install.packages('xlsx')
 # Note: users may need to download and install clusterProfiler from source
 # clusterProfiler_3.6.0.tgz' use: manual installing
 # install.packages(path_to_file, repos = NULL, type='source') Done installation
 # needed for reactome pathway analysis reactome in R----------------------------
 
-annotate_scGPS <- function(DEgeneList, pvalueCutoff = 0.05, gene_symbol = TRUE, output_filename = "PathwayEnrichment.xlsx",
-    output_path = NULL) {
+annotate_scGPS <- function(DEgeneList, pvalueCutoff = 0.05, gene_symbol = TRUE, 
+    species = "human") {
     # assumming the geneList is gene symbol (common for 10X data)
-    if (gene_symbol == TRUE) {
+    if (species == "human"){
+      if (gene_symbol == TRUE) {
         convert_to_gene_ID = clusterProfiler::bitr(DEgeneList, fromType = "SYMBOL", toType = "ENTREZID",
             OrgDb = "org.Hs.eg.db")
         print("Original gene number in geneList")
@@ -191,8 +195,20 @@ annotate_scGPS <- function(DEgeneList, pvalueCutoff = 0.05, gene_symbol = TRUE, 
         print("Number of genes successfully converted")
         print(nrow(convert_to_gene_ID))
     } else {
-        stop("The list must contain gene symbols")
+        stop("The list must contain human gene symbols")
     }
+    } else if (species == "mouse"){
+      if (gene_symbol == TRUE) {
+      convert_to_gene_ID = clusterProfiler::bitr(DEgeneList, fromType = "SYMBOL", toType = "ENTREZID",
+                                                 OrgDb = "org.Mm.eg.db")
+      print("Original gene number in geneList")
+      print(length(DEgeneList))
+      print("Number of genes successfully converted")
+      print(nrow(convert_to_gene_ID))
+    } else {
+      stop("The list must contain mouse gene symbols")        
+    }
+    } 
 
     Reactome_pathway_test <- ReactomePA::enrichPathway(gene = convert_to_gene_ID$ENTREZID, pvalueCutoff = 0.05,
         readable = TRUE)
@@ -206,6 +222,7 @@ annotate_scGPS <- function(DEgeneList, pvalueCutoff = 0.05, gene_symbol = TRUE, 
     # dotplot(Reactome_pathway_test, showCategory=15) barplot(Reactome_pathway_test,
     # showCategory=15)
 }
+
 
 #' Add imports
 #' @description temp function to import packages to namespace using devtools
