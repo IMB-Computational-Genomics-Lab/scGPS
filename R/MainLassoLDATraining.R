@@ -33,7 +33,7 @@
 #' genes <-genes$Merged_unique
 #' listData  <- training_scGPS(genes, cluster_mixedpop1 = colData(mixedpop1)[, 1],
 #'                             mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, c_selectID,
-#'                             listData =list(), out_idx=out_idx)
+#'                             listData =list(), out_idx=out_idx, trainset_ratio = 0.5)
 #' names(listData)
 #' listData$Accuracy
 
@@ -42,15 +42,20 @@ training_scGPS <- function(genes = NULL, cluster_mixedpop1 = NULL, mixedpop1 = N
     # subsammpling-----------------------------------------------------------------
     # taking a subsampling size of trainset_ratio of the cluster_select out for training
     subpop1cluster_indx <- which(cluster_mixedpop1 == c_selectID) #class 1 
+    print(paste0("Total ", length(subpop1cluster_indx)," cells as source subpop"))
     subremaining1_indx <- which(cluster_mixedpop1 != c_selectID) #remaining class 
-    subsampling <- round(length(subpop1cluster_indx) * trainset_ratio )
+    print(paste0("Total ", length(subremaining1_indx)," cells in remaining subpops"))
+    subsampling <- round(length(subpop1cluster_indx) * trainset_ratio)
+    print(paste0("subsampling ", subsampling," cells for training souce subpop"))
     subpop1_train_indx <- sample(subpop1cluster_indx, subsampling, replace = FALSE)
     # check if there is a very big cluster present in the dataset C/2 = SubSampling
     # >length(total - C, which is cluster_compare)
     if (length(subremaining1_indx) > subsampling) {
+        print(paste0("subsampling ", subsampling," cells in remaining subpops for training"))
         subremaining1_train_indx <- sample(subremaining1_indx, subsampling,
                                            replace = FALSE)
     } else {
+        print(paste0("no subsampling, using ", length(subremaining1_indx)," cells in remaining subpops for training"))
         subremaining1_train_indx <- subremaining1_indx
     }
     # done subsampling------------------------------------------------------------
@@ -60,12 +65,13 @@ training_scGPS <- function(genes = NULL, cluster_mixedpop1 = NULL, mixedpop1 = N
     if (length(genes) > 500) {
         genes <- genes[1:500]
     }
-    # select genes
+    # select genes in both mixedpop1 and mixedpop2 
     names1 <- elementMetadata(mixedpop1)[, 1]
     subpop1_selected_genes <- names1[which(names1 %in% genes)]
     names2 <- elementMetadata(mixedpop2)[, 1]
     genes_in_both <- names2[which(names2 %in% subpop1_selected_genes)]
     genes_in_both_idx1 <- which(names1 %in% genes_in_both)
+    print(paste0("use ", length(genes_in_both_idx1) , " genes for training model"))
     # done selecting genes--------------------------------------------------------
 
     # prepare ElasticNet training matrices---------------------------------------------
@@ -73,13 +79,14 @@ training_scGPS <- function(genes = NULL, cluster_mixedpop1 = NULL, mixedpop1 = N
     # prepare predictor matrix containing both clustering classes
     predictor_S1 <- mixedpop1[genes_in_both_idx1, c(subpop1_train_indx, subremaining1_train_indx)]
     predictor_S1 <- assay(predictor_S1)
-    
+    print(paste0("use ", dim(predictor_S1)[1] , " genes ", dim(predictor_S1)[2]," cells for testing model"))
     # generate categorical response
 
     # assign class labels############
     #rename the group of remaining clusters 
     c_compareID <- unique(cluster_mixedpop1)
     c_compareID <- paste0(c_compareID[-which(c_compareID == c_selectID)], collapse = "_")
+    print(paste0("rename remaining subpops to ", c_compareID))
     # change cluster number to character
     c_selectID <- as.character(c_selectID)
     # done assigning class labels####
@@ -92,8 +99,10 @@ training_scGPS <- function(genes = NULL, cluster_mixedpop1 = NULL, mixedpop1 = N
     remainingClass_Indx_in_y <- which(colnames(predictor_S1) %in% colnames(mixedpop1[,
         subremaining1_train_indx]))
 
-    # change value of the cluster id
+    # change value of the cluster id for the remaining class
     y_cat[remainingClass_Indx_in_y] <- rep(c_compareID, length(remainingClass_Indx_in_y))
+    print(paste0("there are ",length(remainingClass_Indx_in_y), " cells in class ", c_compareID, 
+                 " and ", length(y_cat) - length(remainingClass_Indx_in_y), " cells in class ", c_selectID))
     # Done prepare ElasticNet training matrices------------------------------------
 
     # prepare LDA training matrices------------------------------------------------
@@ -109,30 +118,35 @@ training_scGPS <- function(genes = NULL, cluster_mixedpop1 = NULL, mixedpop1 = N
     Zero_col <- which(colSums(dataset) == 0)
     duplicated_col <- which(duplicated(colnames(dataset)) == TRUE)
     if (length(c(Zero_col, duplicated_col)) != 0) {
+        print(paste0("removing ",length(c(Zero_col, duplicated_col)), " genes with no variance"))
         dataset <- dataset[, -c(Zero_col, duplicated_col)]
     }
     
     if(standardize  == TRUE){
+      print("standardizing prediction/target dataset")
       dataset <- t(apply(dataset,1, standardizing)) #dataset is transposed after standardised and scaled
     }
     dataset <- as.data.frame(dataset)    
     dataset$Cluster_class <- as.character(as.vector(y_cat))
+    
     # Done LDA training matrices---------------------------------------------------
     
     # Fit the ElasticNet and LDA models--------------------------------------------
 
     # fitting with cross validation to find the best ElasticNet model
+    print("performning elasticnet model training...")
     cvfit = cv.glmnet(as.matrix(dataset[,-which(colnames(dataset) == "Cluster_class")]), y_cat, family = "binomial", type.measure = "class", standardize = TRUE)
 
     # fit LDA
+    print("performning LDA model training...")
     trainControl <- trainControl(method = "repeatedcv", number = 10, repeats = 3)
-    metric <- "Accuracy"
-    fit.lda <- train(Cluster_class ~ ., preProcess = NULL, data = dataset, method = "lda", metric = metric,
+    fit.lda <- train(Cluster_class ~ ., preProcess = NULL, data = dataset, method = "lda", metric = "Accuracy",
         trControl = trainControl, na.action = na.omit)
 
     # Done fitting the ElasticNet and LDA models-----------------------------------
 
     # Extract coefficient Beta for a gene for an optimized lambda value------------
+    print("extracting deviance and best gene features...")
     cvfit_out <- as.matrix(coef(cvfit, s = cvfit$lambda.min))
     cvfit_out <- as.data.frame(cvfit_out)
     # Find number of genes with coefficient different to 0
@@ -143,38 +157,52 @@ training_scGPS <- function(genes = NULL, cluster_mixedpop1 = NULL, mixedpop1 = N
     dat_DE <- as.data.frame(t_DE)
     colnames(dat_DE) <- c("Dfd", "Deviance", "lambda")
     # Get the coordinate for lambda that produces minimum error
-    dat_DE_Lambda_idx <- which(dat_DE$lambda == round(cvfit$lambda.min, digits = 5)) #glmnet lambda min has 5 decimal digits
-    if(length(dat_DE_Lambda_idx) >0) {
-      dat_DE <- dat_DE[1:dat_DE_Lambda_idx[1], ]}else{
-        print("please check the lambda min output ...")
+    dat_DE_Lambda_idx <- c()
+    for (i in(1:nrow(dat_DE))){
+      if(dat_DE$lambda[i] == round(cvfit$lambda.min,nchar(dat_DE$lambda[i])-2)){
+        dat_DE_Lambda_idx <-c(dat_DE_Lambda_idx,i)
       }
+    }
+    dat_DE_Lambda_idx <- which(dat_DE$lambda == round(cvfit$lambda.min,5)) #glmnet lambda min has 5 decimal digits
+    if(length(dat_DE_Lambda_idx) >0) {
+      dat_DE <- dat_DE[1:dat_DE_Lambda_idx[1], ]
+      print(paste0("lambda min is at location ",dat_DE_Lambda_idx[1]))
+            } else {
+        print("no lambda min found, please check output ...")
+      } 
 
     dat_DE_fm_DE <- dat_DE %>% group_by(Dfd) %>% summarise(Deviance = max(Deviance))
     dat_DE_fm_DE <- as.data.frame(dat_DE_fm_DE)
     dat_DE_fm_DE$DEgenes <- paste0("genes_cluster", c_selectID)
-    remaining <- c("remaining", 1, "DEgenes")
+    remaining <- c("remaining DEgenes")
     dat_DE_fm_DE <- rbind(dat_DE_fm_DE, remaining)
     # Done extracting the coefficients---------------------------------------------
 
-    # Cross validation test to estimate accuracy-----------------------------------
+    # fit the model on the leave-out data to estimate accuracy---------------------
 
     # Keep all cells except for those used in the training set note that:
-    # subpop1_train_indx = subpop1cluster_indx[sample(1:ncol(mixedpop1),subsampling ,
+    # subpop1cluster_indx is for the total cells in the source subpop 
+    # subpop1_train_indx is for the subsampled cells as in subpop1cluster_indx[sample(1:ncol(mixedpop1),subsampling ,
     # replace = F)]
 
     cluster_select_indx_Round2 <- subpop1cluster_indx[-which(subpop1cluster_indx %in%
         subpop1_train_indx)]
+    print(paste0("the leave-out cells in the source subpop is ", length(cluster_select_indx_Round2)))
     
-    #subremaining1_train_indx is the index for remaining class, in contrast to class 1 
+    #subremaining1_train_indx is the index for remaining subpops used for training
+    #subremaining1_indx is the total cells in the remaining subpops
+
     subremaining1_train_order <- which(subremaining1_indx %in% subremaining1_train_indx) #to remove remaininng class already used for training 
 
     # Select cluster_compare_indx_Round2 as the remaining cells in class 2 (opposite to class 1) 
     if (length(subremaining1_indx) - length(subremaining1_train_indx) > subsampling) {
         cluster_compare_indx_Round2 <- sample(subremaining1_indx[-subremaining1_train_order],
             subsampling, replace = FALSE)
+        print(paste0("use ", subsampling, " target subpops cells for leave-out test set"))
     } else {
         cluster_compare_indx_Round2 <- subremaining1_indx[-subremaining1_train_order] #use all of the class 2 cells after taken those for training 
-    }
+        print(paste0("use ", length(cluster_compare_indx_Round2), " target subpop cells for leave-out test set"))
+         }
     
     #select common genes again because genes with no variation are removed before standardization 
     genes_in_trainset <- row.names(cvfit$glmnet.fit$beta) 
@@ -188,11 +216,6 @@ training_scGPS <- function(genes = NULL, cluster_mixedpop1 = NULL, mixedpop1 = N
     temp_S2 <- assay(temp_S2)
     predictor_S2 <- t(temp_S2)
     
-    #standardizing 
-    if(standardize  == TRUE){
-      predictor_S2 <- t(apply(predictor_S2,1, standardizing))
-    }  
-
     #before prediction, check genes in cvfit and predictor_S2 are compatible 
     # Get gene names
     gene_cvfit <- cvfit$glmnet.fit$beta@Dimnames[[1]]
@@ -202,17 +225,26 @@ training_scGPS <- function(genes = NULL, cluster_mixedpop1 = NULL, mixedpop1 = N
     # check how many genes in gene_cvfit but not in mixedpop2 (should be 0, as this
     # is checked in the training step, if not add random genes)
     to_add <- length(gene_cvfit) - length(cvfitGenes_idx)
+    
     to_add_idx <- c()
     
     if (to_add > 0) {
+      print(paste0("adding ", to_add, " genes to prediction dataset"))
       to_add_idx <- sample(cvfitGenes_idx, to_add, replace = FALSE) #add more random
     } else if (to_add < 0) {
       cvfitGenes_idx <- sample(cvfitGenes_idx, length(gene_cvfit), replace = FALSE)
     }
     
+    #standardizing the leave-out target and source subpops
+    if(standardize  == TRUE){
+      print("standardizing the leave-out target and source subpops...")
+      predictor_S2 <- t(apply(predictor_S2,1, standardizing))
+    }  
     #predictor_S2_temp <- ori_dat_2[c(to_add_idx, cvfitGenes_idx), cluster_select]
     predictor_S2 <- predictor_S2[,c(to_add_idx, cvfitGenes_idx) ]
+    
     # Start prediction for estimating accuracy
+    print("start prediction for estimating accuracy...")
     predict_clusters <- predict(cvfit, newx = predictor_S2, type = "class", s = cvfit$lambda.min)
     # Done cross validation test to estimate accuracy------------------------------
 
@@ -221,7 +253,7 @@ training_scGPS <- function(genes = NULL, cluster_mixedpop1 = NULL, mixedpop1 = N
     # is to calculate the accuracy
     cellNames_cluster <- cbind(colnames(mixedpop1), cluster_mixedpop1)
     # Compare to original clusering classes to check for accuracy (just for
-    # the training set), using the initial cellNames_cluster
+    # the source subpop), using the initial cellNames_cluster
     predictor_S2_name <- row.names(predict_clusters)
     predict_label <- predict_clusters[, 1]
 
@@ -233,12 +265,12 @@ training_scGPS <- function(genes = NULL, cluster_mixedpop1 = NULL, mixedpop1 = N
     original_cluster <- as.data.frame(original_cluster)
     predict_cluster_dat <- as.data.frame(predict_label)
     predict_cluster_dat$cellnames <- row.names(predict_cluster_dat)
-
+    # merge original and predicted datasets
     compare <- merge(original_cluster, predict_cluster_dat, by.x = "V1", by.y = "cellnames")
-    # this is the accurate prediction
+    # fing how many predictions are accurate 
     cluster_select_predict <- subset(compare, (as.numeric(compare[,2]) == c_selectID &
         compare$predict_label == c_selectID) | (as.numeric(compare[,2]) != c_selectID &
-        compare$predict_label != c_selectID))
+        compare$predict_label != c_selectID)) 
 
     accurate <- dim(cluster_select_predict)[1]
     inaccurate <- dim(compare)[1] - dim(cluster_select_predict)[1]
@@ -309,6 +341,7 @@ predicting_scGPS <- function(listData = NULL, cluster_mixedpop2 = NULL, mixedpop
     standardizing <-function(X){X<-X-mean(X); X<-X/sd(X); return(X)} 
     
     if(standardize  == TRUE){
+      print("standardizing target subpops before prediction...")
       ori_dat_2 <- t(apply(ori_dat_2,1, standardizing))
     }
     
@@ -316,22 +349,25 @@ predicting_scGPS <- function(listData = NULL, cluster_mixedpop2 = NULL, mixedpop
     list_predict_clusters_LDA <- list()
 
     for (clust in unique(my.clusters)) {
+        print(paste0("predicting from source to target subpop ", clust, "..."))
         c_selectID_2 <- clust
         cluster_select <- which(my.clusters == c_selectID_2)  #select cells
-        dataset <- predictor_S1
+        print(paste0("number of cells in the target subpop", length(cluster_select)))
+        # call predictor_S1, the dataset used for the training phase (already transposed)
+        #dataset <- predictor_S1
 
-        # Get gene names
+        # Get gene names from the trained model
         gene_cvfit <- cvfit_best$glmnet.fit$beta@Dimnames[[1]]
 
-        # Reformat the names, removing _.* if present in the name 
-        gene_cvfit <- gsub("_.*", "", gene_cvfit)
-        cvfitGenes_idx <- which(names %in% gene_cvfit)
-        # check how many genes in gene_cvfit but not in mixedpop2 (should be 0, as this
-        # is checked in the training step, if not add random genes)
+        # Assumming the gene names are at the same format between target and model for source  
+        cvfitGenes_idx <- which(names %in% gene_cvfit) #names are genes in target subpop
+        if(cvfitGenes_idx ==0){print("Check the name formats, making sure the same format between target and model for source")}
+        # check how many genes in gene_cvfit but not in mixedpop2 
         to_add <- length(gene_cvfit) - length(cvfitGenes_idx)
         to_add_idx <- c()
 
         if (to_add > 0) {
+            print(paste0("adding ", to_add, " genes to prediction dataset"))
             to_add_idx <- sample(cvfitGenes_idx, to_add, replace = FALSE)
         } else if (to_add < 0) {
             cvfitGenes_idx <- sample(cvfitGenes_idx, length(gene_cvfit), replace = FALSE)
@@ -340,6 +376,7 @@ predicting_scGPS <- function(listData = NULL, cluster_mixedpop2 = NULL, mixedpop
         predictor_S2_temp <- ori_dat_2[c(to_add_idx, cvfitGenes_idx), cluster_select]
 
         # predict ElasticNet:
+        print("running elasticNet classification...")
         predict_clusters_ElasticNet <- predict(cvfit_best, newx = t(predictor_S2_temp),
             type = "class", s = cvfit_best$lambda.min)
         ElasticNet_result <- as.data.frame(table(predict_clusters_ElasticNet))  #convert table() to 2x2 dataframe, it will always have 2 variable names: $name, Freq
@@ -354,6 +391,7 @@ predicting_scGPS <- function(listData = NULL, cluster_mixedpop2 = NULL, mixedpop
         # predict LDA:
         newdataset <- t(predictor_S2_temp)
         newdataset <- as.data.frame(newdataset)
+        print("running LDA classification...")
         predict_clusters_LDA <- predict(fit.lda, newdataset)
         LDA_result <- as.data.frame(table(predict_clusters_LDA))  #convert table() to 2x2 dataframe, it will always have 2 variable names: $name, Freq
         LDA_cluster_idx <- which(LDA_result[, 1] == c_selectID)
