@@ -14,7 +14,7 @@ Dr Joseph Powell's laboratory, IMB, UQ
 sample2
 }
 \value{
-a list, with the name dat5_list
+a list, with the name day5
 }
 \description{
 The count data set contains counts for 17402 genes for 983 cells

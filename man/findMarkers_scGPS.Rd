@@ -5,7 +5,8 @@
 \title{find marker genes}
 \usage{
 findMarkers_scGPS(expression_matrix = NULL, cluster = NULL,
-  selected_cluster = NULL, fitType = "local")
+  selected_cluster = NULL, fitType = "local",
+  dispersion_method = "per-condition")
 }
 \arguments{
 \item{expression_matrix}{is  a normalised expression matrix.}
@@ -15,8 +16,9 @@ by running CORE clustering or using other methods.}
 
 \item{selected_cluster}{a vector of unique cluster ids to calculate}
 
-\item{fitType}{string specifying 'local' or 'parametric' for 
-DEseq dispersion estimation}
+\item{fitType}{string specifying "local" or "parametric" for DEseq dispersion estimation}
+
+\item{dispersion_method}{one of the options c( "pooled", "pooled-CR", "per-condition", "blind" )}
 }
 \value{
 a \code{list} containing sorted DESeq analysis results
@@ -26,10 +28,12 @@ Find DE genes from comparing one clust vs remaining
 }
 \examples{
 day2 <- sample1
-mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, 
-    GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
+mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day2$dat2geneInfo,
+                    CellMetadata = day2$dat2_clusters)
 DEgenes <- findMarkers_scGPS(expression_matrix=assay(mixedpop1),
-                             cluster = colData(mixedpop1)[,1])
+                             cluster = colData(mixedpop1)[,1],
+                             selected_cluster=c(1,2)
+                             )
 names(DEgenes)
 }
 \author{
