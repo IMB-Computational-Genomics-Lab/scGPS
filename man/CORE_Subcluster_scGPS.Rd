@@ -2,7 +2,7 @@
 % Please edit documentation in R/CORE_clustering.R
 \name{CORE_Subcluster_scGPS}
 \alias{CORE_Subcluster_scGPS}
-\title{Subclustering (optional) after running CORE "test"}
+\title{Subclustering (optional) after running CORE 'test'}
 \usage{
 CORE_Subcluster_scGPS(mixedpop = NULL, windows = seq(0.025:1, by =
   0.025), select_cell_index = NULL, ngenes = 1500)
@@ -13,22 +13,23 @@ mixed population}
 
 \item{windows}{a numeric specifying the number of windows to test}
 
-\item{select_cell_index}{a vector containing indexes for cells in selected clusters
-to be reclustered}
+\item{select_cell_index}{a vector containing indexes for cells in selected 
+clusters to be reclustered}
 
 \item{ngenes}{number of genes used for clustering calculations.}
 }
 \value{
-a \code{list} with clustering results of all iterations, and a selected
-optimal resolution
+a \code{list} with clustering results of all iterations, and a 
+selected optimal resolution
 }
 \description{
-CORE_Subcluster_scGPS allows re-cluster the CORE clustering result
+CORE_Subcluster_scGPS allows re-cluster the CORE clustering 
+result
 }
 \examples{
 day5 <- sample2
-mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
-                         CellMetadata = day5$dat5_clusters)
+mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts,
+    GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 test <- CORE_scGPS(mixedpop2,remove_outlier= c(0))
 }
 \author{

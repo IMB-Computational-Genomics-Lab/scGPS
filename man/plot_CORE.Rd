@@ -9,7 +9,7 @@ plot_CORE(original.tree, list_clusters = NULL, color_branch = NULL)
 \arguments{
 \item{original.tree}{the original dendrogram before clustering}
 
-\item{list_clusters}{a list containing clustering results for each of the resolution run}
+\item{list_clusters}{a list containing clustering results for each of the}
 
 \item{color_branch}{is a vector containing user-specified colors (the number
 of unique colors should be equal or larger than the number of clusters). This
@@ -25,9 +25,9 @@ This function plots CORE and all clustering results underneath
 day5 <- sample2
 cellnames <- colnames(day5$dat5_counts)
 cluster <-day5$dat5_clusters
-cellnames <-data.frame("Cluster"=cluster, "cellBarcodes" = cellnames)
+cellnames <-data.frame('Cluster'=cluster, 'cellBarcodes' = cellnames)
 mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts,
-                         GeneMetadata = day5$dat5geneInfo, CellMetadata = cellnames )
+    GeneMetadata = day5$dat5geneInfo, CellMetadata = cellnames)
 CORE_cluster <- CORE_scGPS(mixedpop2, remove_outlier = c(0))
 plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster)
 }

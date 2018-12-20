@@ -12,35 +12,37 @@ plot_optimal_CORE(original_tree, optimal_cluster = NULL, shift = -100,
 
 \item{optimal_cluster}{a vector of cluster IDs for cells in the dendrogram}
 
-\item{shift}{a numer specifying the gap between the dendrogram and the colored}
+\item{shift}{a numer specifying the gap between the dendrogram and the 
+colored}
 
 \item{values}{a vector containing color values of the branches and the
 colored bar underneath the tree bar underneath the dendrogram. This
 parameter allows better selection of colors for the display.}
 }
 \value{
-a plot with colored braches and bars for the optimal clustering result
+a plot with colored braches and bars for the optimal clustering 
+result
 }
 \description{
 after an optimal cluster has been identified, users may use this
-function to plot the resulting dendrogram with the branch colors represent clutering
-results
+function to plot the resulting dendrogram with the branch colors represent 
+clutering results
 }
 \examples{
 day5 <- sample2
-mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
-                        CellMetadata = day5$dat5_clusters)
+mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, 
+    GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 cluster_all <-clustering_scGPS(object=mixedpop2)
 stab_df <- FindStability(list_clusters=cluster_all$list_clusters,
-                         cluster_ref = cluster_all$cluster_ref)
+    cluster_ref = cluster_all$cluster_ref)
 optimal_stab <- FindOptimalStability(list_clusters = cluster_all, stab_df)
 CORE_cluster <- CORE_scGPS(mixedpop2, remove_outlier = c(0))
 plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster)
 key_height <- CORE_cluster$optimalClust$KeyStats$Height
 optimal_res <- CORE_cluster$optimalClust$OptimalRes
 optimal_index = which(key_height == optimal_res)
-plot_optimal_CORE(original_tree= CORE_cluster$tree,
-                  optimal_cluster = unlist(CORE_cluster$Cluster[optimal_index]), shift = -2000)
+plot_optimal_CORE(original_tree= CORE_cluster$tree, 
+optimal_cluster = unlist(CORE_cluster$Cluster[optimal_index]), shift = -2000)
 
 }
 \author{

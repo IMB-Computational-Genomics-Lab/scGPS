@@ -10,29 +10,34 @@ FindOptimalStability(list_clusters, run_RandIdx, bagging = FALSE,
 \arguments{
 \item{list_clusters}{is a \code{list} object containing 40 clustering results}
 
-\item{run_RandIdx}{is a \code{data frame} object from iterative clustering runs}
+\item{run_RandIdx}{is a \code{data frame} object from iterative clustering 
+runs}
 
-\item{bagging}{is a logical that is true if bagging is to be performed, changes return}
+\item{bagging}{is a logical that is true if bagging is to be performed, 
+changes return}
 
 \item{windows}{a numeric vector specifying the ranges of each window.}
 }
 \value{
-bagging == FALSE => a \code{list} with optimal stability, cluster count and summary stats
-baggign == TRUE => a \code{list} with high res cluster count, optimal cluster count and keystats
+bagging == FALSE => a \code{list} with optimal stability, cluster 
+count and summary stats bagging == TRUE => a \code{list} with high res 
+cluster count, optimal cluster count and keystats
 }
 \description{
 from calculated stability based on Rand indexes for consecutive
-clustering run, find the resolution (window), where the stability is the highest
+clustering run, find the resolution (window), where the stability is the 
+highest
 }
 \examples{
 day5 <- sample2
-mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
-                        CellMetadata = day5$dat5_clusters)
+mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, 
+    GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 cluster_all <-clustering_scGPS(object=mixedpop2)
 stab_df <- FindStability(list_clusters=cluster_all$list_clusters,
                          cluster_ref = cluster_all$cluster_ref)
-optimal_stab <- FindOptimalStability(list_clusters = cluster_all$list_clusters,
-                                     stab_df, bagging = FALSE)
+optimal_stab <- FindOptimalStability(list_clusters = 
+    cluster_all$list_clusters, stab_df, bagging = FALSE)
+
 }
 \author{
 Quan Nguyen, 2017-11-25

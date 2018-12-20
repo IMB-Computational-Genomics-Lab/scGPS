@@ -15,8 +15,8 @@ train mixed population}
 
 \item{windows}{a numeric vector specifying the ranges of each window.}
 
-\item{select_cell_index}{a vector containing indexes for cells in selected clusters
-to be reclustered}
+\item{select_cell_index}{a vector containing indexes for cells in selected 
+clusters to be reclustered}
 }
 \value{
 clustering results
@@ -26,9 +26,10 @@ performs 40 clustering runs or more depending on windows
 }
 \examples{
 day5 <- sample2
-mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
-                         CellMetadata = day5$dat5_clusters)
-test_SubClustering <-SubClustering_scGPS(mixedpop2, select_cell_index = c(1:100))
+mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, 
+    GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
+test_SubClustering <-SubClustering_scGPS(mixedpop2,
+    select_cell_index = c(1:100))
 }
 \author{
 Quan Nguyen, 2018-01-31

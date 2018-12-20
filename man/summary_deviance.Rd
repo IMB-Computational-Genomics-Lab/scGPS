@@ -2,39 +2,43 @@
 % Please edit documentation in R/scgps_prediction_summary.R
 \name{summary_deviance}
 \alias{summary_deviance}
-\title{get percent deviance explained for Lasso model, from \code{n} bootstraps}
+\title{get percent deviance explained for Lasso model, 
+from \code{n} bootstraps}
 \usage{
 summary_deviance(object = LSOLDA_dat)
 }
 \arguments{
-\item{object}{is a list containing the training results from \code{training_scGPS}}
+\item{object}{is a list containing the training results from 
+\code{training_scGPS}}
 }
 \value{
-a \code{list} containing three elements, with a vector of percent maximum
-deviance explained, a dataframe containg information for the full deviance, and a
-dataframe containing gene names and coefficients
-of the best model
+a \code{list} containing three elements, with a vector of percent
+maximum deviance explained, a dataframe containg information for the full 
+deviance, and a dataframe containing gene names and coefficients of the best 
+model
 }
 \description{
 the training results from \code{training_scGPS} were written to
-the object \code{LSOLDA_dat}, the \code{summary_devidance} summarises deviance explained
-for \code{n} bootstrap runs and also returns the best deviance matrix for plotting, as
-well as the best matrix with Lasso genes and coefficients
+the object \code{LSOLDA_dat}, the \code{summary_devidance} summarises 
+deviance explained for \code{n} bootstrap runs and also returns the best
+deviance matrix for plotting, as well as the best matrix with Lasso genes 
+and coefficients
 }
 \examples{
 c_selectID<-1
 day2 <- sample1
-mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day2$dat2geneInfo,
-                    CellMetadata = day2$dat2_clusters)
+mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, 
+    GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
 day5 <- sample2
-mixedpop2 <-NewscGPS(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
+mixedpop2 <-NewscGPS(ExpressionMatrix = day5$dat5_counts, 
+    GeneMetadata = day5$dat5geneInfo,
                     CellMetadata = day5$dat5_clusters)
 genes <-GeneList
 genes <-genes$Merged_unique
-LSOLDA_dat <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop1, mixedpop2 = mixedpop2,
-                             genes=genes, c_selectID, listData =list(),
-                             cluster_mixedpop1 = colData(mixedpop1)[,1],
-                             cluster_mixedpop2=colData(mixedpop2)[,1])
+LSOLDA_dat <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop1, 
+    mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
+    cluster_mixedpop1 = colData(mixedpop1)[,1],
+    cluster_mixedpop2=colData(mixedpop2)[,1])
 summary_deviance(LSOLDA_dat)
 }
 \author{
