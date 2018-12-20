@@ -68,7 +68,7 @@ devtools::load_all()
 *The purpose of this workflow is to solve the following task: given a mixed population with known subpopulations, estimate transition scores between these subpopulation*
 
 ##2.1 Create scGPS objects
-```{r create objects, warning = FALSE, message = FALSE}
+```{r scGPS_object, warning = FALSE, message = FALSE}
 
 # load mixed population 1 (loaded from sample1 dataset, named it as day2)
 # setwd('/Users/quan.nguyen/Documents/Powell_group_MacQuan/AllCodes/scGPS/vignettes/')
@@ -85,7 +85,7 @@ mixedpop2 <- NewscGPS(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$d
 
 ```
 ##2.2 Run prediction
-```{r run prediction, warning = FALSE, message = FALSE, eval = FALSE}
+```{r prediction, warning = FALSE, message = FALSE, eval = FALSE}
 
 # select a subpopulation
 c_selectID <- 1
@@ -103,7 +103,7 @@ LSOLDA_dat <- bootstrap_scGPS(nboots = 2, mixedpop1 = mixedpop1,
 
 ```
 ##2.3 Summarise results 
-```{r summarise results, warning = FALSE, message = FALSE, eval = FALSE}
+```{r summarise_results, warning = FALSE, message = FALSE, eval = FALSE}
 
 # display the list of result information in the LASOLDA_dat object 
 names(LSOLDA_dat)
@@ -128,7 +128,7 @@ summary_deviance(object = LSOLDA_dat)
 
 ##3.1 Identify clusters in a dataset using CORE
 *(skip this step if clusters are known)*
-```{r CORE clustering, warning = FALSE, message = FALSE, eval = FALSE}
+```{r CORE, warning = FALSE, message = FALSE, eval = FALSE}
 
 # find clustering information in an expresion data using CORE
 day5 <- sample2
@@ -180,7 +180,7 @@ plot_optimal_CORE(original_tree= SCORE_test$tree,
 ```
   
 ##3.4 Compare clustering results with other dimensional reduction methods (e.g., CIDR)
-```{r compare clustering, eval = FALSE}
+```{r compare_clustering, eval = FALSE}
 library(cidr)
 t <- CIDR_scGPS(expression.matrix=assay(mixedpop2))
 p2 <-plotReduced_scGPS(t, color_fac = factor(colData(mixedpop2)[,1]),palletes =1:length(unique(colData(mixedpop2)[,1])))
@@ -189,7 +189,7 @@ p2
   
 ##3.5 Find gene markers and annotate clusters
 
-```{r find markers, warning = FALSE, message = FALSE}
+```{r find_markers, warning = FALSE, message = FALSE}
 
 #load gene list (this can be any lists of user-selected genes)
 genes <-GeneList
@@ -234,7 +234,7 @@ dotplot(enrichment_test, showCategory=15)
 
 ##4.1 Start the scGPS prediction to find relationship between clusters
 
-```{r scGPS prediction, warning = FALSE, message = FALSE}
+```{r scGPS_prediction, warning = FALSE, message = FALSE}
 
 #select a subpopulation, and input gene list 
 c_selectID <- 1
@@ -259,7 +259,7 @@ sink()
 
 ##4.2 Display summary results for the prediction
 
-```{r summary prediction results}
+```{r summarise_prediction}
 #get the number of rows for the summary matrix 
 row_cluster <-length(unique(colData(mixedpop2)[,1]))
 
@@ -279,7 +279,7 @@ summary_accuracy(object = LSOLDA_dat)
 #test 
 ```{r}
 c_selectID <- 1
-genes = DEgenes$DE_Subpop1vsRemaining$id[1:500]
+genes = DEgenes$DE_Subpop1vsRemaining$id[1:200]
 #format gene names 
 genes <- gsub("_.*", "", genes)
 
@@ -302,14 +302,13 @@ sink()
 ##4.3 Plot the relationship between clusters in one sample 
 *Here we look at one example use case to find relationship between clusters within one sample or between two sample*
 
-```{r visualise prediction one sample,warning = FALSE, message = FALSE, eval = FALSE }
+```{r prediction_one_sample, warning = FALSE, message = FALSE, eval = FALSE }
 #run prediction for 3 clusters 
 cluster_mixedpop1 <- colData(mixedpop1)[,1]
 cluster_mixedpop2 <- as.numeric(as.vector(colData(mixedpop2)[,1]))
 
 c_selectID <- 1
 genes = DEgenes$DE_Subpop1vsRemaining$id[1:200] #top 200 gene markers distinguishing cluster 1 
-
 
 LSOLDA_dat1 <- bootstrap_scGPS(nboots = 2, mixedpop1 = mixedpop2, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(), cluster_mixedpop1 = cluster_mixedpop2, cluster_mixedpop2 = cluster_mixedpop2)
 
@@ -401,7 +400,7 @@ p1
 ##4.3 Plot the relationship between clusters in two samples 
 *Here we look at one example use case to find relationship between clusters within one sample or between two sample*
 
-```{r visualise prediction two samples,warning = FALSE, message = FALSE, eval = FALSE}
+```{r prediction_two_samples,warning = FALSE, message = FALSE, eval = FALSE}
 #run prediction for 3 clusters 
 cluster_mixedpop1 <- colData(mixedpop1)[,1]
 cluster_mixedpop2 <- as.numeric(as.vector(colData(mixedpop2)[,1]))
@@ -466,13 +465,10 @@ node_df <-data.frame(Node=Node_all)
 node_df$id <-as.numeric(c(0, 1:(length(Node_all)-1)))
 
 suppressMessages(library(dplyr))
-Color <- combined %>% count(Node, color=NodeGroup) %>% select(2)
-
 n <- length(unique(node_df$Node))
-Color = RColorBrewer::brewer.pal(n,"Set2")
-        
+getPalette = colorRampPalette(RColorBrewer::brewer.pal(9, "Set1"))
+Color = getPalette(n)
 node_df$color <- Color
-
 suppressMessages(library(networkD3))
 p1<-sankeyNetwork(Links =combined_D3obj$Links, Nodes = node_df,  Value = "Value", NodeGroup ="color", LinkGroup = "LinkColor", NodeID="Node", Source="Source", Target="Target", 
                   fontSize = 22 )
