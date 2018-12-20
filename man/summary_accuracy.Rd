@@ -7,8 +7,8 @@
 summary_accuracy(object = LSOLDA_dat)
 }
 \arguments{
-\item{object}{is a list containing the training results from \code{training_scGPS}
-the object \code{LSOLDA_dat}, the \code{summary_accuracy} summarise \code{n} bootstraps}
+\item{object}{is a list containing the training results from 
+the \code{summary_accuracy} summarise \code{n} bootstraps}
 }
 \value{
 a vector of percent accuracy for the selected subpopulation
@@ -19,17 +19,17 @@ The training results from \code{training_scGPS} were written to
 \examples{
 c_selectID<-1
 day2 <- sample1
-mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day2$dat2geneInfo,
-                    CellMetadata = day2$dat2_clusters)
+mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, 
+    GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
 day5 <- sample2
-mixedpop2 <-NewscGPS(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
-                    CellMetadata = day5$dat5_clusters)
+mixedpop2 <-NewscGPS(ExpressionMatrix = day5$dat5_counts, 
+    GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 genes <-GeneList
 genes <-genes$Merged_unique
-LSOLDA_dat <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop1, mixedpop2 = mixedpop2,
-                             genes=genes, c_selectID, listData =list(),
-                             cluster_mixedpop1 = colData(mixedpop1)[,1],
-                             cluster_mixedpop2=colData(mixedpop2)[,1])
+LSOLDA_dat <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop1, 
+    mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
+    cluster_mixedpop1 = colData(mixedpop1)[,1],
+    cluster_mixedpop2=colData(mixedpop2)[,1])
 summary_accuracy(LSOLDA_dat)
 summary_deviance(LSOLDA_dat)
 }

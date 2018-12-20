@@ -17,37 +17,42 @@ mixed population}
 \item{remove_outlier}{a vector containing IDs for clusters to be removed
 the default vector contains 0, as 0 is the cluster with singletons.}
 
-\item{nRounds}{an integer specifying the number rounds to attempt to remove outliers.}
+\item{nRounds}{an integer specifying the number rounds to attempt to remove 
+outliers.}
 
-\item{PCA}{logical specifying if PCA is used before calculating distance matrix}
+\item{PCA}{logical specifying if PCA is used before calculating distance
+matrix}
 
 \item{nPCs}{an integer specifying the number of principal components to use.}
 
 \item{ngenes}{number of genes used for clustering calculations.}
 }
 \value{
-a \code{list} with clustering results of all iterations, and a selected
-optimal resolution
+a \code{list} with clustering results of all iterations, and a 
+selected optimal resolution
 }
 \description{
 CORE is an algorithm to generate reproduciable clustering,
-CORE is first implemented in ascend R package. Here, CORE V2.0 introduces several new
-functionalities, including three key features:
-fast (and more memory efficient) implementation with C++ and paralellisation options allowing clustering
-of hundreds of thousands of cells (ongoing development), outlier revomal important if singletons
-exist (done), a number of dimensionality reduction methods including the imputation
+CORE is first implemented in ascend R package. Here, CORE V2.0 introduces 
+several new functionalities, including three key features:
+fast (and more memory efficient) implementation with C++ and paralellisation
+options allowing clustering of hundreds of thousands of cells 
+(ongoing development), outlier revomal important if singletons exist (done),
+a number of dimensionality reduction methods including the imputation
 implementation (CIDR) for confirming clustering results (done), and an option
-to select the number of optimisation tree height windows for increasing resolution
+to select the number of optimisation tree height windows for increasing
+resolution
 }
 \examples{
 day5 <- sample2
 #day5$dat5_counts needs to be in a matrix format
 cellnames <- colnames(day5$dat5_counts)
 cluster <-day5$dat5_clusters
-cellnames <-data.frame("Cluster"=cluster, "cellBarcodes" = cellnames)
-mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
-                         CellMetadata = day5$dat5_clusters)
-test <- CORE_scGPS(mixedpop2, remove_outlier = c(1), PCA=FALSE, nPCs=20, ngenes=1500)
+cellnames <-data.frame('Cluster'=cluster, 'cellBarcodes' = cellnames)
+mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, 
+    GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
+test <- CORE_scGPS(mixedpop2, remove_outlier = c(1), PCA=FALSE, nPCs=20,
+    ngenes=1500)
 }
 \author{
 Quan Nguyen, 2017-11-25

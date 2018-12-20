@@ -15,18 +15,22 @@ mixed population.}
 
 \item{ngenes}{number of genes used for clustering calculations.}
 
-\item{bagging_run}{an integer specifying the number of bagging runs to be computed.}
+\item{bagging_run}{an integer specifying the number of bagging runs to be 
+computed.}
 
-\item{subsample_proportion}{a numeric specifying the proportion of the tree to be chosen in subsampling.}
+\item{subsample_proportion}{a numeric specifying the proportion of the tree 
+to be chosen in subsampling.}
 
 \item{windows}{a numeric vector specifying the rages of each window.}
 
 \item{remove_outlier}{a vector containing IDs for clusters to be removed
 the default vector contains 0, as 0 is the cluster with singletons.}
 
-\item{nRounds}{a integer specifying the number rounds to attempt to remove outliers.}
+\item{nRounds}{a integer specifying the number rounds to attempt to remove 
+outliers.}
 
-\item{PCA}{logical specifying if PCA is used before calculating distance matrix.}
+\item{PCA}{logical specifying if PCA is used before calculating distance 
+matrix.}
 
 \item{nPCs}{an integer specifying the number of principal components to use.}
 }
@@ -35,14 +39,15 @@ a list of clustering results containing each bagging run
 as well as the clustering of the original tree and the tree itself.
 }
 \description{
-subsamples cells for each bagging run and performs 40 clustering runs or more depending on windows.
+subsamples cells for each bagging run and performs 40 
+clustering runs or more depending on windows.
 }
 \examples{
 day5 <- sample2
-mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
-                         CellMetadata = day5$dat5_clusters)
+mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, 
+    GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 test <-clustering_scGPS_bagging(mixedpop2, remove_outlier = c(1),
-                                bagging_run = 20, subsample_proportion = .8)
+    bagging_run = 20, subsample_proportion = .8)
 }
 \author{
 Quan Nguyen, 2017-11-25

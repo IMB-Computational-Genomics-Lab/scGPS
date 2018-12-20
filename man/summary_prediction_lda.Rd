@@ -7,34 +7,38 @@
 summary_prediction_lda(LSOLDA_dat = NULL, nPredSubpop = NULL)
 }
 \arguments{
-\item{LSOLDA_dat}{is a list containing the training results from \code{training_scGPS}}
+\item{LSOLDA_dat}{is a list containing the training results from 
+\code{training_scGPS}}
 
-\item{nPredSubpop}{is the number of subpopulations in the target mixed population}
+\item{nPredSubpop}{is the number of subpopulations in the target mixed 
+population}
 }
 \value{
-a dataframe containg information for the LDA prediction results, each column
-contains prediction results for all subpopulations from each bootstrap run
+a dataframe containg information for the LDA prediction 
+results, each column contains prediction results for all subpopulations from
+each bootstrap run
 }
 \description{
 the training results from \code{training_scGPS} were written to
-the object \code{LSOLDA_dat}, the \code{summary_prediction} summarises prediction explained
-for \code{n} bootstrap runs and also returns the best deviance matrix for plotting, as
-well as the best matrix with Lasso genes and coefficients
+the object \code{LSOLDA_dat}, the \code{summary_prediction} summarises 
+prediction explained for \code{n} bootstrap runs and also returns the best
+deviance matrix for plotting, as well as the best matrix with Lasso genes
+and coefficients
 }
 \examples{
 c_selectID<-1
 day2 <- sample1
-mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day2$dat2geneInfo,
-                    CellMetadata = day2$dat2_clusters)
+mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, 
+GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
 day5 <- sample2
-mixedpop2 <-NewscGPS(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
-                    CellMetadata = day5$dat5_clusters)
+mixedpop2 <-NewscGPS(ExpressionMatrix = day5$dat5_counts, 
+    GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 genes <-GeneList
 genes <-genes$Merged_unique
-LSOLDA_dat <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop1, mixedpop2 = mixedpop2,
-                             genes=genes, c_selectID, listData =list(),
-                             cluster_mixedpop1 = colData(mixedpop1)[,1],
-                             cluster_mixedpop2=colData(mixedpop2)[,1])
+LSOLDA_dat <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop1, 
+mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
+    cluster_mixedpop1 = colData(mixedpop1)[,1],
+    cluster_mixedpop2=colData(mixedpop2)[,1])
 summary_prediction_lda(LSOLDA_dat=LSOLDA_dat, nPredSubpop=4)
 
 }

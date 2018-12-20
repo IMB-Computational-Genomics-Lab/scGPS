@@ -6,7 +6,8 @@
 #' @return a list, with the name day2
 #' @docType data
 #' @usage sample1
-#' @format a list instance, containing a count matrix and a vector with clustering information
+#' @format a list instance, containing a count matrix and a vector with 
+#' clustering information
 #' @source Dr Joseph Powell's laboratory, IMB, UQ
 #' @author Quan Nguyen, 2017-11-25
 "sample1"

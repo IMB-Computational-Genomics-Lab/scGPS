@@ -2,7 +2,8 @@
 % Please edit documentation in R/CORE_clustering_bagging.R
 \name{CORE_scGPS_bagging}
 \alias{CORE_scGPS_bagging}
-\title{Main clustering CORE V2.0 with bagging analysis}
+\title{Main clustering SCORE (CORE V2.0) Stable Clustering at Optimal REsolution 
+with bagging and bootstrapping}
 \usage{
 CORE_scGPS_bagging(mixedpop = NULL, bagging_run = 10,
   subsample_proportion = 0.8, windows = seq(0.025:1, by = 0.025),
@@ -13,7 +14,8 @@ CORE_scGPS_bagging(mixedpop = NULL, bagging_run = 10,
 \item{mixedpop}{is a \linkS4class{SingleCellExperiment} object from the train
 mixed population.}
 
-\item{bagging_run}{an integer specifying the number of bagging runs to be computed.}
+\item{bagging_run}{an integer specifying the number of bagging runs to be 
+computed.}
 
 \item{subsample_proportion}{a numeric specifying the proportion 
 of the tree to be chosen in subsampling.}
@@ -23,36 +25,40 @@ of the tree to be chosen in subsampling.}
 \item{remove_outlier}{a vector containing IDs for clusters to be removed
 the default vector contains 0, as 0 is the cluster with singletons.}
 
-\item{nRounds}{an integer specifying the number rounds to attempt to remove outliers.}
+\item{nRounds}{an integer specifying the number rounds to attempt to remove 
+outliers.}
 
-\item{PCA}{logical specifying if PCA is used before calculating distance matrix.}
+\item{PCA}{logical specifying if PCA is used before calculating distance 
+matrix.}
 
 \item{nPCs}{an integer specifying the number of principal components to use.}
 
 \item{ngenes}{number of genes used for clustering calculations.}
 }
 \value{
-a \code{list} with clustering results of all iterations, and a selected
+a \code{list} with clustering results of all iterations, and a 
+selected
 optimal resolution
 }
 \description{
 CORE is an algorithm to generate reproduciable clustering,
-CORE is first implemented in ascend R package. Here, CORE V2.0 uses bagging analysis
-to find a stable clustering result and detect rare clusters mixed population.
+CORE is first implemented in ascend R package. Here, CORE V2.0 uses bagging 
+analysis to find a stable clustering result and detect rare clusters mixed
+population.
 }
 \examples{
 day5 <- sample2
 cellnames<-colnames(day5$dat5_counts)
 cluster <-day5$dat5_clusters
-cellnames <- data.frame("cluster" = cluster, "cellBarcodes" = cellnames)
+cellnames <- data.frame('cluster' = cluster, 'cellBarcodes' = cellnames)
 #day5$dat5_counts needs to be in a matrix format
-mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
-                         CellMetadata = day5$dat5_clusters)
+mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, 
+    GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 test <- CORE_scGPS_bagging(mixedpop2, remove_outlier = c(1), PCA=FALSE,
-                         bagging_run = 20, subsample_proportion = .8)
+    bagging_run = 20, subsample_proportion = .8)
 plot_CORE(test$tree, list_clusters = test$Cluster)
 plot_optimal_CORE(original_tree= test$tree,
-                  optimal_cluster = unlist(test$Cluster[test$optimal_index]), shift = -100)
+    optimal_cluster = unlist(test$Cluster[test$optimal_index]), shift = -100)
 
 }
 \author{

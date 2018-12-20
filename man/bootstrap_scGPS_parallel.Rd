@@ -16,35 +16,41 @@ bootstrap_scGPS_parallel(ncores = 4, nboots = 1, genes = genes,
 
 \item{genes}{a gene list to build the model}
 
-\item{mixedpop1}{a \linkS4class{SingleCellExperiment} object from a mixed population for training}
+\item{mixedpop1}{a \linkS4class{SingleCellExperiment} object from a mixed 
+population for training}
 
-\item{mixedpop2}{a \linkS4class{SingleCellExperiment} object from a target mixed population for prediction}
+\item{mixedpop2}{a \linkS4class{SingleCellExperiment} object from a target 
+mixed population for prediction}
 
-\item{c_selectID}{the root cluster in mixedpop1 to becompared to clusters in mixedpop2}
+\item{c_selectID}{the root cluster in mixedpop1 to becompared to clusters in
+mixedpop2}
 
-\item{listData}{a \code{list} object, which contains trained results for the first mixed population}
+\item{listData}{a \code{list} object, which contains trained results for the
+first mixed population}
 
 \item{cluster_mixedpop1}{a vector of cluster assignment for mixedpop1}
 
 \item{cluster_mixedpop2}{a vector of cluster assignment for mixedpop2}
 }
 \value{
-a \code{list} with prediction results written in to the index \code{out_idx}
+a \code{list} with prediction results written in to the index 
+\code{out_idx}
 }
 \description{
 same as bootstrap_scGPS, but with an multicore option
 }
 \examples{
 day2 <- sample1
-mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day2$dat2geneInfo,
-                    CellMetadata = day2$dat2_clusters)
+mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, 
+    GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
 day5 <- sample2
-mixedpop2 <-NewscGPS(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
-                    CellMetadata = day5$dat5_clusters)
+mixedpop2 <-NewscGPS(ExpressionMatrix = day5$dat5_counts, 
+    GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 genes <-GeneList
 genes <-genes$Merged_unique
-#prl_boots <- bootstrap_scGPS_parallel(ncores = 4, nboots = 2, genes=genes, mixedpop1 = mixedpop2,
-#                                      mixedpop2 = mixedpop2,  c_selectID=1, listData =list())
+#prl_boots <- bootstrap_scGPS_parallel(ncores = 4, nboots = 2, genes=genes,
+#    mixedpop1 = mixedpop2, mixedpop2 = mixedpop2,  c_selectID=1,
+#    listData =list())
 #prl_boots[[1]]$ElasticNetPredict
 #prl_boots[[1]]$LDAPredict
 

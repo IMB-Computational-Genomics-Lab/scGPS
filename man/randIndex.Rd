@@ -15,15 +15,17 @@ randIndex(tab, adjust = TRUE)
 a randIndex value
 }
 \description{
-Comparing clustering results Function for calculating randindex (adapted from
+Comparing clustering results Function for calculating randindex
+(adapted from the function by Steve Horvath and Luohua Jiang, UCLA, 2003)
 }
 \examples{
 day5 <- sample2
-mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo,
-                        CellMetadata = day5$dat5_clusters)
+mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts,
+GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 cluster_all <-clustering_scGPS(object=mixedpop2)
 
-randIndex(table(unlist(cluster_all$list_clusters[[1]]), cluster_all$cluster_ref))
+randIndex(table(unlist(cluster_all$list_clusters[[1]]), 
+cluster_all$cluster_ref))
 
 }
 \author{

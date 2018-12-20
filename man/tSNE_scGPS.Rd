@@ -17,7 +17,8 @@ tSNE_scGPS(expression.matrix = NULL, ngenes = 1500, scaling = TRUE,
 \item{theta}{numeric; Speed/accuracy trade-off (increase for less accuracy)}
 
 \item{perplexity}{numeric; Perplexity parameter
-(should not be bigger than 3 * perplexity < nrow(X) - 1, see details for interpretation)}
+(should not be bigger than 3 * perplexity < nrow(X) - 1, see details for 
+interpretation)}
 }
 \value{
 a tSNE reduced matrix containing three tSNE dimensions
@@ -27,8 +28,8 @@ calculate tSNE from top variable genes
 }
 \examples{
 day2 <- sample1
-mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day2$dat2geneInfo,
-                    CellMetadata = day2$dat2_clusters)
+mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, 
+    GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
 t <-tSNE_scGPS(expression.matrix=assay(mixedpop1))
 
 }
