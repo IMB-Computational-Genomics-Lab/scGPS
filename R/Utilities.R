@@ -100,7 +100,8 @@ plotReduced_scGPS <- function(reduced_dat, color_fac = factor(Sample_id), dims =
 #' names(DEgenes)
 
 
-findMarkers_scGPS <- function(expression_matrix = NULL, cluster = NULL, selected_cluster = NULL, fitType="local", dispersion_method = "per-condition" ) {
+findMarkers_scGPS <- function(expression_matrix = NULL, cluster = NULL, selected_cluster = NULL, 
+                              fitType="local", dispersion_method = "per-condition" ) {
     DE_exprsMat <- round(expression_matrix + 1)
 
     DE_results <- list()
