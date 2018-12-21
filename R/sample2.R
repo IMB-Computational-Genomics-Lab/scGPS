@@ -6,7 +6,7 @@
 #' population
 #' The vector of clustering information contains corresponding to cells in the
 #' count matrix
-#' @return a list, with the name dat5_list
+#' @return a list, with the name day5
 #' @docType data
 #' @usage sample2
 #' @format a list instance, containing a count matrix and a vector with 
