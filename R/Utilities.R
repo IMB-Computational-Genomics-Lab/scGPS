@@ -122,6 +122,7 @@ findMarkers_scGPS <- function(expression_matrix = NULL, cluster = NULL, selected
         #Note: the local fit option requires the library
         cds = DESeq::newCountDataSet(diff_mat, condition_cluster)
         cds = DESeq::estimateSizeFactors(cds)
+        library(locfit)
         cds = DESeq::estimateDispersions(cds, method = dispersion_method, fitType = fitType)
         print(paste0("Done estimate dispersions. Start nbinom test for cluster ",
             as.character(cl_id), "..."))
@@ -150,9 +151,8 @@ findMarkers_scGPS <- function(expression_matrix = NULL, cluster = NULL, selected
 #' type in R. The function require installation of several databases as described below.
 #' @param DEgeneList is a vector of gene symbols, convertable to ENTREZID
 #' @param pvalueCutoff is a numeric of the cutoff p value
-#' @param gene_symbol -------
-#' @param output_filename is a string of the filename to save the spreadsheet to
-#' @param specis is the selection of "human" or "mouse", default to "human" genes
+#' @param gene_symbol logical of whether the geneList is a gene symbol
+#' @param species is the selection of "human" or "mouse", default to "human" genes
 #' @return write enrichment test output to a file and an enrichment test object for plotting
 #' @examples
 #' day2 <- sample1
