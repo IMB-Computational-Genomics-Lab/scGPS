@@ -130,10 +130,10 @@ findMarkers_scGPS <- function(expression_matrix = NULL, cluster = NULL, selected
         print(paste0("Done nbinom test for cluster ", as.character(cl_id), " ..."))
         # adjust folchange
         print(paste0("Adjust foldchange by subtracting basemean to 1..."))
-        res1 <- mutate(res1, AdjustedFC = (baseMeanB - 1)/(baseMeanA - 1))
-        res1 <- mutate(res1, AdjustedLogFC = log2((baseMeanB - 1)/(baseMeanA - 1)))
+        res1 <- mutate(res1, AdjustedFC = (res1$baseMeanB - 1)/(res1$baseMeanA - 1))
+        res1 <- mutate(res1, AdjustedLogFC = log2((res1$baseMeanB - 1)/(res1$baseMeanA - 1)))
         # order
-        res1_order <- arrange(res1, pval, desc(abs(AdjustedLogFC)))
+        res1_order <- arrange(res1, res1$pval, desc(abs(res1$AdjustedLogFC)))
         # write to list
         DE_results <- c(DE_results, list(res1_order))
         name_list = paste0("DE_Subpop", cl_id, "vsRemaining")
@@ -240,11 +240,11 @@ annotate_scGPS <- function(DEgeneList, pvalueCutoff = 0.05, gene_symbol = TRUE,
 #' @import SingleCellExperiment
 #' @import SummarizedExperiment
 #' @importFrom graphics barplot lines rect strheight strwidth text
-#' @importFrom stats as.dist coef na.omit prcomp predict sd
+#' @importFrom stats as.dist coef na.omit prcomp predict sd as.dendrogram
 #' @importFrom grDevices colorRampPalette
 #' @importFrom graphics abline layout par plot
-#' @importFrom stats as.dendrogram
 #' @return NULL
+
 
 add_import <- function() {
 	return(NULL)

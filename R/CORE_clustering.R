@@ -565,7 +565,7 @@ FindOptimalStability <- function(list_clusters, run_RandIdx, bagging = FALSE,
     day_melt <- reshape2::melt(KeyStats, id = "Height")
     day_melt$Height <- as.numeric(day_melt$Height)
     p <- ggplot(day_melt)
-    p <- p + geom_line(aes(x = Height, y = value, colour = variable), 
+    p <- p + geom_line(aes(x = day_melt$Height, y = day_melt$value, colour = day_melt$variable), 
         size = 2) + 
         theme_bw() + 
         theme(axis.text = element_text(size = 24), 
@@ -694,7 +694,7 @@ plot_CORE <- function(original.tree, list_clusters = NULL,
         par(mar = c(0, marAll[2], marAll[3], marAll[4]))
         plot(dendro, labels = dendroLabels, cex = cex.dendroLabels, ...)
         if (addGuide) 
-            addGuideLines(dendro, count = if (guideAll) 
+            WGCNA::addGuideLines(dendro, count = if (guideAll) 
                 length(dendro$height) + 1 else guideCount, hang = guideHang)
         if (!is.null(abHeight)) 
             abline(h = abHeight, col = abCol)
