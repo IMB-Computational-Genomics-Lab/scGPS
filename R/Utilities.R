@@ -26,10 +26,11 @@ topvar_scGPS <- function(expression.matrix = NULL, ngenes = 1500) {
 #' plot reduced data
 #' @description plot PCA, tSNE, and CIDR reduced datasets
 #' @param reduced_dat is a matrix with genes in rows and cells in columns
-#' @param color_fac ------
+#' @param color_fac is a vector of colors corresponding to clusters to determine colors of scattered plots 
+#' @param palletes can be a customised color pallete that determine colors for density plots, if NULL it will 
+#' use RColorBrewer colorRampPalette(RColorBrewer::brewer.pal(sample_num, "Set1"))(sample_num)
 #' @param dims an integer of the number of dimestions
 #' @param dimNames a vector of the names of the dimensions
-#' @param palletes ---
 #' @param legend_title title of the plot's legend
 #' @return a matrix with the top 20 CIDR dimensions
 #' @examples
@@ -37,14 +38,16 @@ topvar_scGPS <- function(expression.matrix = NULL, ngenes = 1500) {
 #' mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day2$dat2geneInfo,
 #'                     CellMetadata = day2$dat2_clusters)
 #' CIDR_dim <-CIDR_scGPS(expression.matrix=assay(mixedpop1))
-#' #p <-plotReduced_scGPS(CIDR_dim)
-#' #plot(p)
-#' #tSNE_dim <-tSNE_scGPS(expression.matrix=assay(mixedpop1))
-#' #p2 <-plotReduced_scGPS(tSNE_dim)
-#' #plot(p2)
+#' p <- plotReduced_scGPS(CIDR_dim, color_fac = factor(colData(mixedpop1)[,1]),
+#'     palletes =1:length(unique(colData(mixedpop1)[,1])))
+#' plot(p)
+#' tSNE_dim <-tSNE_scGPS(expression.matrix=assay(mixedpop1))
+#' p2 <- plotReduced_scGPS(tSNE_dim, color_fac = factor(colData(mixedpop1)[,1]),
+#'     palletes =1:length(unique(colData(mixedpop1)[,1])))
+#' plot(p2)
 #'
-#'
-plotReduced_scGPS <- function(reduced_dat, color_fac = factor(Sample_id), dims = c(1,
+
+plotReduced_scGPS <- function(reduced_dat, color_fac = NULL, dims = c(1,
   2), dimNames = c("Dim 1", "Dim 2"), palletes = NULL, legend_title = "Cluster") {
   reduced_dat_toPlot <- as.data.frame(reduced_dat[, dims])
   sample_num <- length(unique(color_fac))
