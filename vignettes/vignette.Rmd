@@ -139,6 +139,17 @@ mixedpop2 <-NewscGPS(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$da
 
 CORE_cluster <- CORE_scGPS(mixedpop2, remove_outlier = c(0), PCA=FALSE)
 
+# to update the clustering information, users can ...
+clustering_after_outlier_removal <- unlist(CORE_cluster$Cluster[[optimal_index]])
+corresponding_cells_after_outlier_removal <- CORE_cluster$cellsForClustering
+original_cells_before_removal <- colData(mixedpop2)[,1]
+corresponding_index <- match(corresponding_cells_after_outlier_removal, original_cells_before_removal )
+# check the matching 
+identical(original_cells_before_removal[corresponding_index],corresponding_cells_after_outlier_removal)
+# create new object with the new clustering after removing outliers 
+mixedpop2_post_clustering <- mixedpop2[,corresponding_index]
+colData(mixedpop2_post_clustering)[,1] <- clustering_after_outlier_removal
+
 ```
 ##3.1 Identify clusters in a dataset using SCORE (Stable Clustering at Optimal REsolution)
 *(skip this step if clusters are known)*
@@ -176,7 +187,6 @@ plot_CORE(SCORE_test$tree, list_clusters = SCORE_test$Cluster)#plot all clusteri
 #plot one stable optimal clustering bar
 plot_optimal_CORE(original_tree= SCORE_test$tree,
                    optimal_cluster = unlist(SCORE_test$Cluster[SCORE_test$optimal_index]), shift = -100)
-
 ```
   
 ##3.4 Compare clustering results with other dimensional reduction methods (e.g., CIDR)
