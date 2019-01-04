@@ -24,8 +24,7 @@ Imports:
   dplyr,
   Rcpp,
   RcppArmadillo,
-  RcppParallel,
-  e1071
+  RcppParallel
 Suggests:
   Matrix (>= 1.2),
   testthat,
@@ -44,7 +43,9 @@ Suggests:
   dendextend,
   networkD3,
   Rtsne,
-  BiocParallel
+  BiocParallel,
+  e1071,
+  WGCNA
 VignetteBuilder: knitr
 LinkingTo: 
   Rcpp,

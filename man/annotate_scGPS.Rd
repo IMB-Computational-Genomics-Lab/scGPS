@@ -12,11 +12,9 @@ annotate_scGPS(DEgeneList, pvalueCutoff = 0.05, gene_symbol = TRUE,
 
 \item{pvalueCutoff}{is a numeric of the cutoff p value}
 
-\item{gene_symbol}{-------}
+\item{gene_symbol}{logical of whether the geneList is a gene symbol}
 
-\item{output_filename}{is a string of the filename to save the spreadsheet to}
-
-\item{specis}{is the selection of "human" or "mouse", default to "human" genes}
+\item{species}{is the selection of "human" or "mouse", default to "human" genes}
 }
 \value{
 write enrichment test output to a file and an enrichment test object for plotting

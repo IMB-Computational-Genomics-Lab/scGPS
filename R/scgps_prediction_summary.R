@@ -25,7 +25,7 @@
 #' @author Quan Nguyen, 2017-11-25
 
 
-summary_accuracy <- function(object = LSOLDA_dat) {
+summary_accuracy <- function(object = NULL) {
     acc_inacc <- object$Accuracy
     pcAcc <- as.vector(unlist(lapply(acc_inacc, function(x) {
         x[[1]][[1]]/(x[[1]][[1]] + x[[1]][[2]]) * 100
@@ -66,7 +66,7 @@ summary_accuracy <- function(object = LSOLDA_dat) {
 #' summary_deviance(LSOLDA_dat)
 #' @author Quan Nguyen, 2017-11-25
 
-summary_deviance <- function(object = LSOLDA_dat) {
+summary_deviance <- function(object = NULL) {
     deviDat <- object$Deviance
     deviVec <- as.vector(unlist(lapply(deviDat, function(x) {
         temp <- x[[1]]$Deviance
@@ -74,7 +74,7 @@ summary_deviance <- function(object = LSOLDA_dat) {
     })))
     deviVec_max <- which(deviVec == max(deviVec, na.rm = TRUE))
     # get gene info
-    genesSig <- LSOLDA_dat$LassoGenes
+    genesSig <- object$LassoGenes
     
     GeneNames_max <- genesSig[[deviVec_max]][[1]]
     return(list(allDeviance = deviVec, DeviMax = deviDat[[deviVec_max]][[1]],
@@ -239,7 +239,7 @@ summary_prediction_lda <- function(LSOLDA_dat = NULL, nPredSubpop = NULL) {
 #'     mp_selectID =2)
 #'
 reformat_LASSO <- function(c_selectID = NULL, mp_selectID = NULL, 
-    LSOLDA_dat = NULL, nPredSubpop = row_cluster, Nodes_group = "#7570b3",
+    LSOLDA_dat = NULL, nPredSubpop = NULL, Nodes_group = "#7570b3",
     nboots = 2) {
     LASSO_out <- summary_prediction_lasso(LSOLDA_dat = LSOLDA_dat, 
         nPredSubpop = nPredSubpop)

@@ -172,7 +172,7 @@ training_scGPS <- function(genes = NULL, cluster_mixedpop1 = NULL, mixedpop1 = N
         print("no lambda min found, please check output ...")
       } 
 
-    dat_DE_fm_DE <- dat_DE %>% group_by(Dfd) %>% summarise(Deviance = max(Deviance))
+    dat_DE_fm_DE <- dat_DE %>% group_by(dat_DE$Dfd) %>% summarise(Deviance = max(dat_DE$Deviance))
     dat_DE_fm_DE <- as.data.frame(dat_DE_fm_DE)
     dat_DE_fm_DE$DEgenes <- paste0("genes_cluster", c_selectID)
     remaining <- c("remaining DEgenes")

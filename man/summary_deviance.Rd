@@ -5,7 +5,7 @@
 \title{get percent deviance explained for Lasso model, 
 from \code{n} bootstraps}
 \usage{
-summary_deviance(object = LSOLDA_dat)
+summary_deviance(object = NULL)
 }
 \arguments{
 \item{object}{is a list containing the training results from 

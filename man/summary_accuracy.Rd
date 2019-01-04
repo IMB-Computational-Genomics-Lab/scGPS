@@ -4,7 +4,7 @@
 \alias{summary_accuracy}
 \title{get percent accuracy for Lasso model, from \code{n} bootstraps}
 \usage{
-summary_accuracy(object = LSOLDA_dat)
+summary_accuracy(object = NULL)
 }
 \arguments{
 \item{object}{is a list containing the training results from 
