@@ -89,7 +89,8 @@ training_scGPS <- function(genes = NULL, cluster_mixedpop1 = NULL, mixedpop1 = N
     print(paste0("use ", dim(predictor_S1)[1] , " genes ", dim(predictor_S1)[2]," cells for testing model"))
     # generate categorical response
     
-    # assign class labels############ rename the group of remaining clusters
+    # assign class labels############ 
+    # rename the group of remaining clusters
     c_compareID <- unique(cluster_mixedpop1)
     c_compareID <- paste0(c_compareID[-which(c_compareID == c_selectID)], collapse = "_")
     print(paste0("rename remaining subpops to ", c_compareID))
@@ -113,12 +114,8 @@ training_scGPS <- function(genes = NULL, cluster_mixedpop1 = NULL, mixedpop1 = N
 
     # prepare LDA training matrices------------------------------------------------
     # fitting with lda, also with cross validation
-    # scaled and centered data before training 
-    # standardizing data (centered and scaled) - this step is not necessary in the function glmnet 
-    standardizing <-function(X){X <- X-mean(X); X <- X/sd(X); return(X)} 
     dataset <- t(predictor_S1)  #(note predictor_S1 =t(gene_S1))
-    
-    # remove genes with no variation across cells
+    # remove genes with no variation across cells and duplicated genes 
     Zero_col <- which(colSums(dataset) == 0)
     duplicated_col <- which(duplicated(colnames(dataset)) == TRUE)
     if (length(c(Zero_col, duplicated_col)) != 0) {
@@ -126,7 +123,10 @@ training_scGPS <- function(genes = NULL, cluster_mixedpop1 = NULL, mixedpop1 = N
         dataset <- dataset[, -c(Zero_col, duplicated_col)]
     }
     
-
+    # scaled and centered data before training 
+    # standardizing data (centered and scaled) - this step is not necessary in the function glmnet 
+    standardizing <-function(X){X <- X-mean(X); X <- X/sd(X); return(X)} 
+  
     if(standardize  == TRUE){
       print("standardizing prediction/target dataset")
       dataset <- t(apply(dataset,1, standardizing)) #dataset is transposed after standardised and scaled
@@ -137,13 +137,13 @@ training_scGPS <- function(genes = NULL, cluster_mixedpop1 = NULL, mixedpop1 = N
     # Done LDA training matrices---------------------------------------------------
     # fitting with cross validation to find the best ElasticNet model
     print("performning elasticnet model training...")
-    cvfit = cv.glmnet(as.matrix(dataset[,-which(colnames(dataset) == "Cluster_class")]), y_cat, family = "binomial", type.measure = "class", standardize = TRUE)
+    cvfit = cv.glmnet(as.matrix(dataset[,-which(colnames(dataset) == "Cluster_class")]), y_cat, family = "binomial", type.measure = "class")
 
     # fit LDA
     print("performning LDA model training...")
     trainControl <- trainControl(method = "repeatedcv", number = 10, repeats = 3)
     fit.lda <- train(Cluster_class ~ ., preProcess = NULL, data = dataset, method = "lda", metric = "Accuracy",
-        trControl = trainControl, na.action = na.omit)
+        trControl = trainControl, na.action = na.omit, standardize = FALSE)
 
     # Done fitting the ElasticNet and LDA models-----------------------------------
 
@@ -216,16 +216,15 @@ training_scGPS <- function(genes = NULL, cluster_mixedpop1 = NULL, mixedpop1 = N
     #before prediction, check genes in cvfit and predictor_S2 are compatible 
     # Get gene names
     gene_cvfit <- cvfit$glmnet.fit$beta@Dimnames[[1]]
-    # Reformat the names, removing _.* if present in the name
     names <- colnames(predictor_S2)
     cvfitGenes_idx <- match(gene_cvfit,as.character(names)) #names are genes in target subpop
     if(length(cvfitGenes_idx) == 0){print("No genes in the model present in the data...check your input")}
     
     # check how many genes in gene_cvfit but not in mixedpop2 
-    to_add <- which(is.na(cvfitGenes_idx)==TRUE)
+    to_add <- which(is.na(cvfitGenes_idx) == TRUE)
     if(length(to_add) > 0){
             print(paste0("add ", length(to_add),  " random indexes for genes in model but not in target subpop, later to be replaced by NA"))
-            to_add_idx <- sample(cvfitGenes_idx, length(to_add), replace = FALSE) 
+            to_add_idx <- sample(cvfitGenes_idx[-to_add], length(to_add), replace = FALSE) 
             cvfitGenes_idx[to_add] <- to_add_idx #replace NA indexes by random           
     }
     
@@ -234,19 +233,23 @@ training_scGPS <- function(genes = NULL, cluster_mixedpop1 = NULL, mixedpop1 = N
     if(length(to_add) > 0){
       print("Replacing missing genes by NA...")
       predictor_S2[,to_add] <- NA} 
+    
     #standardizing the leave-out target and source subpops
     if(standardize  == TRUE){
       print("standardizing the leave-out target and source subpops...")
       predictor_S2 <- t(apply(predictor_S2,1, standardizing))
     }  
-    # Predict ElasticNet
+    
+    # Evaluation: predict ElasticNet
     # Start prediction for estimating accuracy
     print("start ElasticNet prediction for estimating accuracy...")
     predict_clusters <- predict(cvfit, newx = predictor_S2, type = "class", s = cvfit$lambda.min)
+    
+    # Evaluation: predict LDA
     print(paste0("start LDA prediction for estimating accuracy for ",nrow(predictor_S2) ," cells and ",  
           ncol(predictor_S2), " genes..."))
-    lda_predict <-predict(fit.lda, predictor_S2 )
-    # Done cross validation test to estimate accuracy------------------------------
+    lda_predict <-predict(fit.lda, predictor_S2)
+    # Done validation test to estimate accuracy------------------------------------
 
     # Estimate accuracy------------------------------------------------------------
     # Reference classification for comparing predicted results this cellNames_cluster
@@ -357,7 +360,7 @@ predicting_scGPS <- function(listData = NULL, cluster_mixedpop2 = NULL,
     
     my.clusters <- cluster_mixedpop2
     ori_dat_2 <- assay(mixedpop2)
-    names <- elementMetadata(mixedpop2)[, 1]
+    
     # standardizing data (centered and scaled)
     standardizing <- function(X) {
         X <- X - mean(X)
@@ -365,11 +368,10 @@ predicting_scGPS <- function(listData = NULL, cluster_mixedpop2 = NULL,
         return(X)
     }
     
-
-    if(standardize  == TRUE){
-      print("standardizing target subpops before prediction...")
-      ori_dat_2 <- t(apply(ori_dat_2, 1, standardizing))
-    }
+    #if(standardize  == TRUE){
+    #  print("standardizing target subpops before prediction...")
+    #  ori_dat_2 <- t(apply(ori_dat_2, 1, standardizing))
+    #}
     
     list_predict_clusters_ElasticNet <- list()
     list_predict_clusters_LDA <- list()
@@ -383,25 +385,36 @@ predicting_scGPS <- function(listData = NULL, cluster_mixedpop2 = NULL,
         #dataset <- predictor_S1
 
         # Get gene names from the trained model
-        gene_cvfit <- cvfit_best$glmnet.fit$beta@Dimnames[[1]]
+        target_genes <- elementMetadata(mixedpop2)[, 1]
 
-        # Assumming the gene names are at the same format between target and model for source  
-        cvfitGenes_idx <- match(gene_cvfit,as.character(names)) #names are genes in target subpop
-        if(length(cvfitGenes_idx) == 0){print("No genes in the model present in the data...check your input")}
-       
-         # check how many genes in gene_cvfit but not in mixedpop2 
-        to_add <- which(is.na(cvfitGenes_idx)==TRUE)
-        if(length(to_add) > 0){
-          print(paste0("add ", length(to_add),  " random indexes for genes in model but not in target subpop, later to be replaced by NA"))
-          to_add_idx <- sample(cvfitGenes_idx, length(to_add), replace = FALSE) 
-          cvfitGenes_idx[to_add] <- to_add_idx #replace NA indexes by random           
+        # A function to match target dataset
+        matching_genes <- function(target_dataset, model_genes,
+                                   cluster_idx = cluster_select){
+          target_genes <- row.names(target_dataset)
+          # assumming the same gename formats between target and model  
+          modelGenes_idx <- match(model_genes, as.character(target_genes)) 
+          if(length(modelGenes_idx) == 0){
+            print("No genes in the model present in the data...check your input")
+            }
+          # check how many genes in model_genes but not in mixedpop2 
+          to_add <- which(is.na(modelGenes_idx) == TRUE)
+          if(length(to_add) > 0){
+            print(paste0("add ", length(to_add),  " random indexes for genes in model but not in target subpop, later to be replaced by NA"))
+            to_add_idx <- sample(modelGenes_idx[-to_add], length(to_add), replace = TRUE) 
+            modelGenes_idx[to_add] <- to_add_idx #replace indexes for NA, by random indexes with nonNA values           
+          }
+          predictor_S2_temp <- target_dataset[modelGenes_idx, cluster_select]
+          # replace gene values for those in model but not in prediction dataset by NA 
+          if(length(to_add) > 0){
+            print("Replacing missing genes by NA...")
+            predictor_S2_temp[to_add,] <- NA} #row by NA totally fine 
+          return(predictor_S2_temp)
         }
-
-        predictor_S2_temp <- ori_dat_2[cvfitGenes_idx, cluster_select]
-        #replace gene values for those in model but not in prediction dataset by NA 
-        if(length(to_add) > 0){
-          print("Replacing missing genes by NA...")
-          predictor_S2_temp[to_add,] <- NA} 
+        # update predictor dataset 
+        predictor_S2_temp <- matching_genes(target_dataset = ori_dat_2,
+                                            model_genes = cvfit_best$glmnet.fit$beta@Dimnames[[1]],
+                                            cluster_idx = cluster_select
+        )
         # predict ElasticNet:
         print("running elasticNet classification...")
         predict_clusters_ElasticNet <- predict(cvfit_best, newx = t(predictor_S2_temp),
@@ -412,14 +425,21 @@ predicting_scGPS <- function(listData = NULL, cluster_mixedpop2 = NULL,
                                     " in target mixedpop2")
         #if predict_clusters_ElasticNet has solution 
         if(ncol(ElasticNet_result) == 2){
-        ElasticNet_cluster_idx <- which(ElasticNet_result[, 1] == c_selectID)
-        predict_clusters_ElasticNet_proportion <- as.numeric(ElasticNet_result[
-            ElasticNet_cluster_idx, 2])/
-            sum(as.numeric(ElasticNet_result[, 2])) * 100
-        print(paste0("class probability prediction ElasticNet for target subpop ", 
-                     clust, " is ", predict_clusters_ElasticNet_proportion))
-        predict_clusters_ElasticNet <- list(report_ElasticNet, 
-                                            predict_clusters_ElasticNet_proportion)
+          ElasticNet_cluster_idx <- which(ElasticNet_result[, 1] == c_selectID)
+          if(length(ElasticNet_cluster_idx) > 0){
+            predict_clusters_ElasticNet_proportion <- as.numeric(ElasticNet_result[
+              ElasticNet_cluster_idx, 2])/
+              sum(as.numeric(ElasticNet_result[, 2])) * 100
+            print(paste0("class probability prediction ElasticNet for target subpop ", 
+                         clust, " is ", predict_clusters_ElasticNet_proportion))
+            
+          } else {
+            predict_clusters_ElasticNet_proportion = 0 
+            print(paste0("class probability prediction ElasticNet for target subpop ", 
+                         clust, " is 0"))            
+          }
+          predict_clusters_ElasticNet <- list(report_ElasticNet, 
+                                              predict_clusters_ElasticNet_proportion)
         } else {
           print(paste0("ElasticNet for target subpop ",clust," has no solution"))
           predict_clusters_ElasticNet <- list(report_ElasticNet, 
@@ -429,37 +449,17 @@ predicting_scGPS <- function(listData = NULL, cluster_mixedpop2 = NULL,
         # write to the next list level in the list if bootstrap is used 
         list_predict_clusters_ElasticNet <- c(list_predict_clusters_ElasticNet,
             predict_clusters_ElasticNet) 
-        
-        # predict LDA:
-        newdataset <- t(ori_dat_2[,cluster_select])
-        newdataset <- as.data.frame(newdataset)
-        
-        #check LDA model genes are in the newdataset ---------------------------
-        gene_LDAfit <- fit.lda$finalModel$xNames
-        names_newdataset <- colnames(newdataset)
-        # Assumming the gene names are at the same format between target and model for source  
-        LDAfitGenes_idx <- match(gene_LDAfit, as.character(names_newdataset)) #names are genes in target subpop
-        if(length(LDAfitGenes_idx) == 0){
-          print("No genes in the model present in the data...check your input")
-          }
-        # check how many genes in gene_cvfit but not in mixedpop2 
-        to_add <- which(is.na(LDAfitGenes_idx) == TRUE)
-        if(length(to_add) > 0){
-                print(paste0("add ", length(to_add),  " random indexes for genes in model but not in target subpop, later to be replaced by NA"))
-                to_add_idx <- sample(LDAfitGenes_idx, length(to_add), replace = FALSE) 
-                LDAfitGenes_idx[to_add] <- to_add_idx #replace NA indexes by random 
-        }
-         
-        if(length(LDAfitGenes_idx) == 0){
-          newdataset <- newdataset[,LDAfitGenes_idx]
-          }
-        if(length(to_add) > 0){ 
-          newdataset[,to_add] <-NA
-          } 
-
+    
         #done checking----------------------------------------------------------
+        # predict LDA:
+        #newdataset <- as.data.frame(t(ori_dat_2[,cluster_select]))
+        newdataset <- matching_genes(target_dataset = ori_dat_2,
+                                            model_genes =  fit.lda$finalModel$xNames,
+                                            cluster_idx = cluster_select
+        )
+        
         print("running LDA classification...")
-        predict_clusters_LDA <- predict(fit.lda, newdataset)
+        predict_clusters_LDA <- predict(fit.lda, t(newdataset)) #t(newdataset)
         
         LDA_result <- as.data.frame(table(predict_clusters_LDA))  #convert
         # table() to 2x2 dataframe, it will always have 2 variable names: $name,
