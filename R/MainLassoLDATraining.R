@@ -394,9 +394,6 @@ predicting_scGPS <- function(listData = NULL, cluster_mixedpop2 = NULL,
         c_selectID_2 <- clust
         cluster_select <- which(my.clusters == c_selectID_2)  #select cells
         print(paste0("number of cells in the target subpop ", clust, " is ", length(cluster_select)))
-        # call predictor_S1, the dataset used for the training phase (already transposed)
-        #dataset <- predictor_S1
-
         # Get gene names from the trained model
         target_genes <- elementMetadata(mixedpop2)[, 1]
 
@@ -426,17 +423,10 @@ predicting_scGPS <- function(listData = NULL, cluster_mixedpop2 = NULL,
             # if the genes not in the target dataset, set the expression values to 0 
             to_add_df <- as.data.frame(matrix(0, nrow= length(to_add), ncol = length(cluster_select))) #columns = number of cells
             row.names(to_add_df) <- gsub("`", "", model_genes[to_add]) #format special names with "`MCM3AP-AS1`"
-            print(paste0("genes to be added to target subpop are",row.names(to_add_df) ))
+            print(paste0("genes to be added to target subpop are ",as.vector(row.names(to_add_df))))
             colnames(to_add_df) <- colnames(predictor_S2_temp)
-            # to_add_idx <- sample(modelGenes_idx[-to_add], length(to_add), replace = TRUE) 
-            # modelGenes_idx[to_add] <- to_add_idx #replace indexes for NA, by random indexes with nonNA values           
-            # add NA data for genes in model but not in the target data 
             predictor_S2_temp <- rbind(predictor_S2_temp, to_add_df)
             } 
-          # replace gene values for those in model but not in prediction dataset by NA 
-          #if(length(to_add) > 0){
-          #  print("Replacing missing genes by NA...")
-          #  predictor_S2_temp[to_add,] <- NA} #row by NA totally fine 
           
           print(paste0("the prediction (target) subop has ", dim(predictor_S2_temp)[1], 
                 " genes and ", dim(predictor_S2_temp)[2], " cells. The trained model has ",
@@ -491,7 +481,7 @@ predicting_scGPS <- function(listData = NULL, cluster_mixedpop2 = NULL,
         if(LDA_run == TRUE){
         #newdataset <- as.data.frame(t(ori_dat_2[,cluster_select]))
         #for better LDA conversion, the target data should not be standardised 
-        #ori_dat_2 <- assay(mixedpop2) 
+        ori_dat_2 <- assay(mixedpop2) 
         
         newdataset <- matching_genes(target_dataset = ori_dat_2,
                                             model_genes =  fit.lda$finalModel$xNames,
