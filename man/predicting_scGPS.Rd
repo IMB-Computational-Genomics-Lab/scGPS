@@ -5,7 +5,8 @@
 \title{Main prediction function applying the optimal ElasticNet and LDA models}
 \usage{
 predicting_scGPS(listData = NULL, cluster_mixedpop2 = NULL,
-  mixedpop2 = NULL, out_idx = NULL, standardize = TRUE)
+  mixedpop2 = NULL, out_idx = NULL, standardize = TRUE,
+  LDA_run = FALSE)
 }
 \arguments{
 \item{listData}{a \code{list} object containing trained results for the
@@ -21,6 +22,10 @@ most significant}
 output. This is needed for running bootstrap.}
 
 \item{standardize}{a logical of whether to standardize the data}
+
+\item{LDA_run}{logical, if the LDA prediction is added to compare to ElasticNet, 
+the LDA model needs to be trained from the training_scGPS before inputting to this 
+prediction step}
 }
 \value{
 a \code{list} with prediction results written in to the index

@@ -27,10 +27,6 @@ knitr::opts_chunk$set(
 #Homepage 
 knitr::include_graphics("./docs/reference/figures/packagePlan.png")
 
-#knitr::opts_chunk$set(
-#  fig.path = "./docs/reference/figures/"
-#)
-
 ```
 
 #1. Installation instruction
@@ -72,7 +68,7 @@ devtools::load_all()
 
 # load mixed population 1 (loaded from sample1 dataset, named it as day2)
 
-devtools::load_all("C:/Users/s5125601/Desktop/new2/scGPS")#'/Users/quan.nguyen/Documents/Powell_group_MacQuan/AllCodes/scGPS/') 
+devtools::load_all('/Users/quan.nguyen/Documents/Powell_group_MacQuan/AllCodes/scGPS/') 
 
 day2 <- sample1
 mixedpop1 <- NewscGPS(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day2$dat2geneInfo, 
@@ -380,10 +376,6 @@ p1<-sankeyNetwork(Links =combined_D3obj$Links, Nodes = node_df,  Value = "Value"
 p1
 
 #saveNetwork(p1, file = paste0(path,'Subpopulation_Net.html'))
-##R Setting Information
-#sessionInfo()
-#rmarkdown::render("/Users/quan.nguyen/Documents/Powell_group_MacQuan/AllCodes/scGPS/vignettes/vignette.Rmd",html_document(toc = TRUE, toc_depth = 3))
-#rmarkdown::render("/Users/quan.nguyen/Documents/Powell_group_MacQuan/AllCodes/scGPS/vignettes/vignette.Rmd",pdf_document(toc = TRUE, toc_depth = 3))
 
 ```
 

@@ -21,9 +21,11 @@
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
 
 
@@ -33,14 +35,17 @@
 <meta property="og:title" content="Main clustering CORE V2.0 updated — CORE_scGPS" />
 
 <meta property="og:description" content="CORE is an algorithm to generate reproduciable clustering,
-CORE is first implemented in ascend R package. Here, CORE V2.0 introduces several new
-functionalities, including three key features:
-fast (and more memory efficient) implementation with C++ and paralellisation options allowing clustering
-of hundreds of thousands of cells (ongoing development), outlier revomal important if singletons
-exist (done), a number of dimensionality reduction methods including the imputation
+CORE is first implemented in ascend R package. Here, CORE V2.0 introduces 
+several new functionalities, including three key features:
+fast (and more memory efficient) implementation with C++ and paralellisation
+options allowing clustering of hundreds of thousands of cells 
+(ongoing development), outlier revomal important if singletons exist (done),
+a number of dimensionality reduction methods including the imputation
 implementation (CIDR) for confirming clustering results (done), and an option
-to select the number of optimisation tree height windows for increasing resolution" />
+to select the number of optimisation tree height windows for increasing
+resolution" />
 <meta name="twitter:card" content="summary" />
+
 
 
 <!-- mathjax -->
@@ -67,7 +72,7 @@ to select the number of optimisation tree height windows for increasing resoluti
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scGPS</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.9</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.9.1</span>
       </span>
     </div>
 
@@ -121,13 +126,15 @@ to select the number of optimisation tree height windows for increasing resoluti
     <div class="ref-description">
     
     <p>CORE is an algorithm to generate reproduciable clustering,
-CORE is first implemented in ascend R package. Here, CORE V2.0 introduces several new
-functionalities, including three key features:
-fast (and more memory efficient) implementation with C++ and paralellisation options allowing clustering
-of hundreds of thousands of cells (ongoing development), outlier revomal important if singletons
-exist (done), a number of dimensionality reduction methods including the imputation
+CORE is first implemented in ascend R package. Here, CORE V2.0 introduces 
+several new functionalities, including three key features:
+fast (and more memory efficient) implementation with C++ and paralellisation
+options allowing clustering of hundreds of thousands of cells 
+(ongoing development), outlier revomal important if singletons exist (done),
+a number of dimensionality reduction methods including the imputation
 implementation (CIDR) for confirming clustering results (done), and an option
-to select the number of optimisation tree height windows for increasing resolution</p>
+to select the number of optimisation tree height windows for increasing
+resolution</p>
     
     </div>
 
@@ -153,27 +160,52 @@ mixed population</p></td>
 the default vector contains 0, as 0 is the cluster with singletons.</p></td>
     </tr>
     <tr>
+      <th>nRounds</th>
+      <td><p>an integer specifying the number rounds to attempt to remove 
+outliers.</p></td>
+    </tr>
+    <tr>
       <th>PCA</th>
-      <td><p>logical specifying if PCA is used before calculating distance matrix</p></td>
+      <td><p>logical specifying if PCA is used before calculating distance
+matrix</p></td>
+    </tr>
+    <tr>
+      <th>nPCs</th>
+      <td><p>an integer specifying the number of principal components to use.</p></td>
+    </tr>
+    <tr>
+      <th>ngenes</th>
+      <td><p>number of genes used for clustering calculations.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a <code>list</code> with clustering results of all iterations, and a selected
-optimal resolution</p>
+    <p>a <code>list</code> with clustering results of all iterations, and a 
+selected optimal resolution</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>day5</span> <span class='kw'>&lt;-</span> <span class='no'>sample2</span>
 <span class='co'>#day5$dat5_counts needs to be in a matrix format</span>
-<span class='no'>mixedpop2</span> <span class='kw'>&lt;-</span><span class='fu'><a href='NewscGPS_SME.html'>NewscGPS_SME</a></span>(<span class='kw'>ExpressionMatrix</span> <span class='kw'>=</span> <span class='no'>day5</span>$<span class='no'>dat5_counts</span>, <span class='kw'>GeneMetadata</span> <span class='kw'>=</span> <span class='no'>day5</span>$<span class='no'>dat5geneInfo</span>,
-                         <span class='kw'>CellMetadata</span> <span class='kw'>=</span> <span class='no'>day5</span>$<span class='no'>dat5_clusters</span>)
-<span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'>CORE_scGPS</span>(<span class='no'>mixedpop2</span>, <span class='kw'>remove_outlier</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1</span>), <span class='kw'>PCA</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>nPCs</span><span class='kw'>=</span><span class='fl'>20</span>, <span class='kw'>ngenes</span><span class='kw'>=</span><span class='fl'>1500</span>)</div><div class='output co'>#&gt; [1] "Identifying top variable genes"
+<span class='no'>cellnames</span> <span class='kw'>&lt;-</span> <span class='fu'>colnames</span>(<span class='no'>day5</span>$<span class='no'>dat5_counts</span>)
+<span class='no'>cluster</span> <span class='kw'>&lt;-</span><span class='no'>day5</span>$<span class='no'>dat5_clusters</span>
+<span class='no'>cellnames</span> <span class='kw'>&lt;-</span><span class='fu'>data.frame</span>(<span class='st'>'Cluster'</span><span class='kw'>=</span><span class='no'>cluster</span>, <span class='st'>'cellBarcodes'</span> <span class='kw'>=</span> <span class='no'>cellnames</span>)
+<span class='no'>mixedpop2</span> <span class='kw'>&lt;-</span><span class='fu'>NewscGPS_SME</span>(<span class='kw'>ExpressionMatrix</span> <span class='kw'>=</span> <span class='no'>day5</span>$<span class='no'>dat5_counts</span>,
+    <span class='kw'>GeneMetadata</span> <span class='kw'>=</span> <span class='no'>day5</span>$<span class='no'>dat5geneInfo</span>, <span class='kw'>CellMetadata</span> <span class='kw'>=</span> <span class='no'>day5</span>$<span class='no'>dat5_clusters</span>)
+<span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'>CORE_scGPS</span>(<span class='no'>mixedpop2</span>, <span class='kw'>remove_outlier</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1</span>), <span class='kw'>PCA</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>nPCs</span><span class='kw'>=</span><span class='fl'>20</span>,
+    <span class='kw'>ngenes</span><span class='kw'>=</span><span class='fl'>1500</span>)</div><div class='output co'>#&gt; [1] "Performing 1 round of filtering"
+#&gt; [1] "Identifying top variable genes"
 #&gt; [1] "Calculating distance matrix"
 #&gt; [1] "Performing hierarchical clustering"
 #&gt; [1] "Finding clustering information"
-#&gt; [1] "Removing 128 cells as outliers at filtering round 1 ..."
+#&gt; [1] "Found 128 cells as outliers at round 1 ..."
+#&gt; [1] "Identifying top variable genes"
+#&gt; [1] "Calculating distance matrix"
+#&gt; [1] "Performing hierarchical clustering"
+#&gt; [1] "Finding clustering information"
+#&gt; [1] "Found 111 cells as outliers at round 2 ..."
+#&gt; [1] "Select 2 removal rounds if you want to remove these cells"
 #&gt; [1] "writing clustering result for run 1"
 #&gt; [1] "writing clustering result for run 2"
 #&gt; [1] "writing clustering result for run 3"
@@ -238,7 +270,7 @@ Quan Nguyen, 2017-11-25
 
       <footer>
       <div class="copyright">
-  <p>Developed by Quan Nguyen, Anne Asenbouth.</p>
+  <p>Developed by Quan Nguyen, Michael Thompson, Anne Asenbouth.</p>
 </div>
 
 <div class="pkgdown">

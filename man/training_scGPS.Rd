@@ -8,7 +8,7 @@ subpopulation}
 training_scGPS(genes = NULL, cluster_mixedpop1 = NULL,
   mixedpop1 = NULL, mixedpop2 = NULL, c_selectID = NULL,
   listData = list(), out_idx = 1, standardize = TRUE,
-  trainset_ratio = 0.5)
+  trainset_ratio = 0.5, LDA_run = FALSE)
 }
 \arguments{
 \item{genes}{a vector of gene names (for ElasticNet shrinkage); gene symbols 
@@ -38,6 +38,8 @@ the train matrix}
 
 \item{trainset_ratio}{a number specifying the proportion of cells to be part
 of the training subpopulation}
+
+\item{LDA_run}{logical, if the LDA run is added to compare to ElasticNet}
 }
 \value{
 a \code{list} with prediction results written in to the indexed 

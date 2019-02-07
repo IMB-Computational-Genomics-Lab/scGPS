@@ -21,9 +21,11 @@
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
 
 
@@ -33,9 +35,10 @@
 <meta property="og:title" content="plot one single tree with the optimal clustering result — plot_optimal_CORE" />
 
 <meta property="og:description" content="after an optimal cluster has been identified, users may use this
-function to plot the resulting dendrogram with the branch colors represent clutering
-results" />
+function to plot the resulting dendrogram with the branch colors represent 
+clutering results" />
 <meta name="twitter:card" content="summary" />
+
 
 
 <!-- mathjax -->
@@ -62,7 +65,7 @@ results" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scGPS</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.9</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.9.1</span>
       </span>
     </div>
 
@@ -116,8 +119,8 @@ results" />
     <div class="ref-description">
     
     <p>after an optimal cluster has been identified, users may use this
-function to plot the resulting dendrogram with the branch colors represent clutering
-results</p>
+function to plot the resulting dendrogram with the branch colors represent 
+clutering results</p>
     
     </div>
 
@@ -137,7 +140,8 @@ results</p>
     </tr>
     <tr>
       <th>shift</th>
-      <td><p>a numer specifying the gap between the dendrogram and the colored</p></td>
+      <td><p>a numer specifying the gap between the dendrogram and the 
+colored</p></td>
     </tr>
     <tr>
       <th>values</th>
@@ -149,18 +153,24 @@ parameter allows better selection of colors for the display.</p></td>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a plot with colored braches and bars for the optimal clustering result</p>
+    <p>a plot with colored braches and bars for the optimal clustering 
+result</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>day5</span> <span class='kw'>&lt;-</span> <span class='no'>sample2</span>
-<span class='no'>mixedpop2</span> <span class='kw'>&lt;-</span><span class='fu'><a href='NewscGPS_SME.html'>NewscGPS_SME</a></span>(<span class='kw'>ExpressionMatrix</span> <span class='kw'>=</span> <span class='no'>day5</span>$<span class='no'>dat5_counts</span>, <span class='kw'>GeneMetadata</span> <span class='kw'>=</span> <span class='no'>day5</span>$<span class='no'>dat5geneInfo</span>,
-                        <span class='kw'>CellMetadata</span> <span class='kw'>=</span> <span class='no'>day5</span>$<span class='no'>dat5_clusters</span>)
-<span class='no'>cluster_all</span> <span class='kw'>&lt;-</span><span class='fu'><a href='clustering_scGPS.html'>clustering_scGPS</a></span>(<span class='kw'>object</span><span class='kw'>=</span><span class='no'>mixedpop2</span>)</div><div class='output co'>#&gt; [1] "Identifying top variable genes"
+<span class='no'>mixedpop2</span> <span class='kw'>&lt;-</span><span class='fu'>NewscGPS_SME</span>(<span class='kw'>ExpressionMatrix</span> <span class='kw'>=</span> <span class='no'>day5</span>$<span class='no'>dat5_counts</span>,
+    <span class='kw'>GeneMetadata</span> <span class='kw'>=</span> <span class='no'>day5</span>$<span class='no'>dat5geneInfo</span>, <span class='kw'>CellMetadata</span> <span class='kw'>=</span> <span class='no'>day5</span>$<span class='no'>dat5_clusters</span>)
+<span class='no'>cluster_all</span> <span class='kw'>&lt;-</span><span class='fu'>clustering_scGPS</span>(<span class='kw'>object</span><span class='kw'>=</span><span class='no'>mixedpop2</span>)</div><div class='output co'>#&gt; [1] "Performing 1 round of filtering"
+#&gt; [1] "Identifying top variable genes"
 #&gt; [1] "Calculating distance matrix"
 #&gt; [1] "Performing hierarchical clustering"
 #&gt; [1] "Finding clustering information"
-#&gt; [1] "No more outliers detected after 1 filtering round"
+#&gt; [1] "No more outliers detected in filtering round 1"
+#&gt; [1] "Identifying top variable genes"
+#&gt; [1] "Calculating distance matrix"
+#&gt; [1] "Performing hierarchical clustering"
+#&gt; [1] "Finding clustering information"
 #&gt; [1] "writing clustering result for run 1"
 #&gt; [1] "writing clustering result for run 2"
 #&gt; [1] "writing clustering result for run 3"
@@ -201,11 +211,18 @@ parameter allows better selection of colors for the display.</p></td>
 #&gt; [1] "writing clustering result for run 38"
 #&gt; [1] "writing clustering result for run 39"
 #&gt; [1] "writing clustering result for run 40"
-#&gt; [1] "Done clustering, moving to stability calculation..."</div><div class='input'><span class='no'>stab_df</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='FindStability.html'>FindStability</a></span>(<span class='kw'>list_clusters</span><span class='kw'>=</span><span class='no'>cluster_all</span>$<span class='no'>list_clusters</span>, <span class='kw'>cluster_ref</span> <span class='kw'>=</span> <span class='no'>cluster_all</span>$<span class='no'>cluster_ref</span>)</div><div class='output co'>#&gt; [1] "Done calculating stability..."</div><div class='input'><span class='no'>optimal_stab</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='FindOptimalStability.html'>FindOptimalStability</a></span>(<span class='kw'>list_clusters</span> <span class='kw'>=</span> <span class='no'>cluster_all</span>, <span class='no'>list_clusters</span>, <span class='no'>stab_df</span>)</div><div class='output co'>#&gt; <span class='error'>Error in FindOptimalStability(list_clusters = cluster_all, list_clusters,     stab_df): unused argument (stab_df)</span></div><div class='input'><span class='no'>CORE_cluster</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='CORE_scGPS.html'>CORE_scGPS</a></span>(<span class='no'>mixedpop2</span>, <span class='kw'>remove_outlier</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0</span>))</div><div class='output co'>#&gt; [1] "Identifying top variable genes"
+#&gt; [1] "Done clustering, moving to stability calculation..."</div><div class='input'><span class='no'>stab_df</span> <span class='kw'>&lt;-</span> <span class='fu'>FindStability</span>(<span class='kw'>list_clusters</span><span class='kw'>=</span><span class='no'>cluster_all</span>$<span class='no'>list_clusters</span>,
+    <span class='kw'>cluster_ref</span> <span class='kw'>=</span> <span class='no'>cluster_all</span>$<span class='no'>cluster_ref</span>)</div><div class='output co'>#&gt; [1] "Done calculating stability..."</div><div class='input'><span class='no'>optimal_stab</span> <span class='kw'>&lt;-</span> <span class='fu'>FindOptimalStability</span>(<span class='kw'>list_clusters</span> <span class='kw'>=</span> <span class='no'>cluster_all</span>, <span class='no'>stab_df</span>)</div><div class='output co'>#&gt; [1] "Start finding optimal clustering..."
+#&gt; [1] "Done finding optimal clustering..."</div><div class='input'><span class='no'>CORE_cluster</span> <span class='kw'>&lt;-</span> <span class='fu'>CORE_scGPS</span>(<span class='no'>mixedpop2</span>, <span class='kw'>remove_outlier</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0</span>))</div><div class='output co'>#&gt; [1] "Performing 1 round of filtering"
+#&gt; [1] "Identifying top variable genes"
 #&gt; [1] "Calculating distance matrix"
 #&gt; [1] "Performing hierarchical clustering"
 #&gt; [1] "Finding clustering information"
-#&gt; [1] "No more outliers detected after 1 filtering round"
+#&gt; [1] "No more outliers detected in filtering round 1"
+#&gt; [1] "Identifying top variable genes"
+#&gt; [1] "Calculating distance matrix"
+#&gt; [1] "Performing hierarchical clustering"
+#&gt; [1] "Finding clustering information"
 #&gt; [1] "writing clustering result for run 1"
 #&gt; [1] "writing clustering result for run 2"
 #&gt; [1] "writing clustering result for run 3"
@@ -249,13 +266,16 @@ parameter allows better selection of colors for the display.</p></td>
 #&gt; [1] "Done clustering, moving to stability calculation..."
 #&gt; [1] "Done calculating stability..."
 #&gt; [1] "Start finding optimal clustering..."
-#&gt; [1] "Done finding optimal clustering..."</div><div class='input'><span class='fu'><a href='plot_CORE.html'>plot_CORE</a></span>(<span class='no'>CORE_cluster</span>$<span class='no'>tree</span>, <span class='no'>CORE_cluster</span>$<span class='no'>Cluster</span>)</div><div class='img'><img src='plot_optimal_CORE-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='no'>optimal_index</span> <span class='kw'>=</span> <span class='fu'>which</span>(<span class='no'>CORE_cluster</span>$<span class='no'>optimalClust</span>$<span class='no'>KeyStats</span>$<span class='no'>Height</span> <span class='kw'>==</span> <span class='no'>CORE_cluster</span>$<span class='no'>optimalClust</span>$<span class='no'>OptimalRes</span>)
-<span class='fu'>plot_optimal_CORE</span>(<span class='kw'>original_tree</span><span class='kw'>=</span> <span class='no'>CORE_cluster</span>$<span class='no'>tree</span>, <span class='kw'>optimal_cluster</span> <span class='kw'>=</span> <span class='fu'>unlist</span>(<span class='no'>CORE_cluster</span>$<span class='no'>Cluster</span>[<span class='no'>optimal_index</span>]), <span class='kw'>shift</span> <span class='kw'>=</span> -<span class='fl'>2000</span>)</div><div class='output co'>#&gt; [1] "Ordering and assigning labels..."
+#&gt; [1] "Done finding optimal clustering..."</div><div class='input'><span class='fu'>plot_CORE</span>(<span class='no'>CORE_cluster</span>$<span class='no'>tree</span>, <span class='no'>CORE_cluster</span>$<span class='no'>Cluster</span>)</div><div class='img'><img src='plot_optimal_CORE-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='no'>key_height</span> <span class='kw'>&lt;-</span> <span class='no'>CORE_cluster</span>$<span class='no'>optimalClust</span>$<span class='no'>KeyStats</span>$<span class='no'>Height</span>
+<span class='no'>optimal_res</span> <span class='kw'>&lt;-</span> <span class='no'>CORE_cluster</span>$<span class='no'>optimalClust</span>$<span class='no'>OptimalRes</span>
+<span class='no'>optimal_index</span> <span class='kw'>=</span> <span class='fu'>which</span>(<span class='no'>key_height</span> <span class='kw'>==</span> <span class='no'>optimal_res</span>)
+<span class='fu'>plot_optimal_CORE</span>(<span class='kw'>original_tree</span><span class='kw'>=</span> <span class='no'>CORE_cluster</span>$<span class='no'>tree</span>,
+<span class='kw'>optimal_cluster</span> <span class='kw'>=</span> <span class='fu'>unlist</span>(<span class='no'>CORE_cluster</span>$<span class='no'>Cluster</span>[<span class='no'>optimal_index</span>]), <span class='kw'>shift</span> <span class='kw'>=</span> -<span class='fl'>2000</span>)</div><div class='output co'>#&gt; [1] "Ordering and assigning labels..."
 #&gt; [1] 2
 #&gt; [1] 128 270  NA
 #&gt; [1] 3
 #&gt; [1] 128 270 393
-#&gt; [1] "Plotting the colored dendrogram now...."</div><div class='output co'>#&gt; <span class='error'>Error in plot.new(): figure margins too large</span></div><div class='input'>
+#&gt; [1] "Plotting the colored dendrogram now...."</div><div class='img'><img src='plot_optimal_CORE-2.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; [1] "Plotting the bar underneath now...."</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -277,7 +297,7 @@ Quan Nguyen, 2017-11-25
 
       <footer>
       <div class="copyright">
-  <p>Developed by Quan Nguyen, Anne Asenbouth.</p>
+  <p>Developed by Quan Nguyen, Michael Thompson, Anne Asenbouth.</p>
 </div>
 
 <div class="pkgdown">

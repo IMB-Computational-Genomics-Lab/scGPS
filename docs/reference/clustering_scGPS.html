@@ -21,9 +21,11 @@
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
 
 
@@ -34,6 +36,7 @@
 
 <meta property="og:description" content="performs 40 clustering runs or more depending on windows" />
 <meta name="twitter:card" content="summary" />
+
 
 
 <!-- mathjax -->
@@ -60,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scGPS</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.9</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.9.1</span>
       </span>
     </div>
 
@@ -117,15 +120,25 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>clustering_scGPS</span>(<span class='kw'>object</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>ngenes</span> <span class='kw'>=</span> <span class='fl'>1500</span>, <span class='kw'>windows</span> <span class='kw'>=</span> <span class='fu'>seq</span>(<span class='fl'>0.025</span>:<span class='fl'>1</span>, <span class='kw'>by</span> <span class='kw'>=</span>
-  <span class='fl'>0.025</span>), <span class='kw'>remove_outlier</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0</span>), <span class='kw'>nRounds</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>PCA</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>nPCs</span> <span class='kw'>=</span> <span class='fl'>20</span>)</pre>
+    <pre class="usage"><span class='fu'>clustering_scGPS</span>(<span class='kw'>object</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>ngenes</span> <span class='kw'>=</span> <span class='fl'>1500</span>, <span class='kw'>windows</span> <span class='kw'>=</span> <span class='fu'>seq</span>(<span class='fl'>0.025</span>:<span class='fl'>1</span>,
+  <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>0.025</span>), <span class='kw'>remove_outlier</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0</span>), <span class='kw'>nRounds</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>PCA</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>nPCs</span> <span class='kw'>=</span> <span class='fl'>20</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
+      <th>object</th>
+      <td><p>is a SingleCellExperiment object from the
+train mixed population</p></td>
+    </tr>
+    <tr>
       <th>ngenes</th>
       <td><p>number of top variable genes to be used</p></td>
+    </tr>
+    <tr>
+      <th>windows</th>
+      <td><p>a numeric specifying the number of windows to test</p></td>
     </tr>
     <tr>
       <th>remove_outlier</th>
@@ -137,13 +150,14 @@ the default vector contains 0, as 0 is the cluster with singletons</p></td>
       <td><p>number of iterations to remove a selected clusters</p></td>
     </tr>
     <tr>
-      <th>nPCs</th>
-      <td><p>number of principal components from PCA dimensional reduction to be used</p></td>
+      <th>PCA</th>
+      <td><p>logical specifying if PCA is used before calculating distance 
+matrix</p></td>
     </tr>
     <tr>
-      <th>mixedpop1</th>
-      <td><p>is a SingleCellExperiment object from the
-train mixed population</p></td>
+      <th>nPCs</th>
+      <td><p>number of principal components from PCA dimensional reduction to
+be used</p></td>
     </tr>
     </table>
     
@@ -154,13 +168,20 @@ train mixed population</p></td>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>day5</span> <span class='kw'>&lt;-</span> <span class='no'>sample2</span>
-<span class='no'>mixedpop2</span> <span class='kw'>&lt;-</span><span class='fu'><a href='NewscGPS_SME.html'>NewscGPS_SME</a></span>(<span class='kw'>ExpressionMatrix</span> <span class='kw'>=</span> <span class='no'>day5</span>$<span class='no'>dat5_counts</span>, <span class='kw'>GeneMetadata</span> <span class='kw'>=</span> <span class='no'>day5</span>$<span class='no'>dat5geneInfo</span>,
-                         <span class='kw'>CellMetadata</span> <span class='kw'>=</span> <span class='no'>day5</span>$<span class='no'>dat5_clusters</span>)
-<span class='no'>test</span> <span class='kw'>&lt;-</span><span class='fu'>clustering_scGPS</span>(<span class='no'>mixedpop2</span>, <span class='kw'>remove_outlier</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1</span>))</div><div class='output co'>#&gt; [1] "Identifying top variable genes"
+<span class='no'>mixedpop2</span> <span class='kw'>&lt;-</span><span class='fu'>NewscGPS_SME</span>(<span class='kw'>ExpressionMatrix</span> <span class='kw'>=</span> <span class='no'>day5</span>$<span class='no'>dat5_counts</span>,
+    <span class='kw'>GeneMetadata</span> <span class='kw'>=</span> <span class='no'>day5</span>$<span class='no'>dat5geneInfo</span>, <span class='kw'>CellMetadata</span> <span class='kw'>=</span> <span class='no'>day5</span>$<span class='no'>dat5_clusters</span>)
+<span class='no'>test</span> <span class='kw'>&lt;-</span><span class='fu'>clustering_scGPS</span>(<span class='no'>mixedpop2</span>, <span class='kw'>remove_outlier</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1</span>))</div><div class='output co'>#&gt; [1] "Performing 1 round of filtering"
+#&gt; [1] "Identifying top variable genes"
 #&gt; [1] "Calculating distance matrix"
 #&gt; [1] "Performing hierarchical clustering"
 #&gt; [1] "Finding clustering information"
-#&gt; [1] "Removing 128 cells as outliers at filtering round 1 ..."
+#&gt; [1] "Found 128 cells as outliers at round 1 ..."
+#&gt; [1] "Identifying top variable genes"
+#&gt; [1] "Calculating distance matrix"
+#&gt; [1] "Performing hierarchical clustering"
+#&gt; [1] "Finding clustering information"
+#&gt; [1] "Found 111 cells as outliers at round 2 ..."
+#&gt; [1] "Select 2 removal rounds if you want to remove these cells"
 #&gt; [1] "writing clustering result for run 1"
 #&gt; [1] "writing clustering result for run 2"
 #&gt; [1] "writing clustering result for run 3"
@@ -222,7 +243,7 @@ Quan Nguyen, 2017-11-25
 
       <footer>
       <div class="copyright">
-  <p>Developed by Quan Nguyen, Anne Asenbouth.</p>
+  <p>Developed by Quan Nguyen, Michael Thompson, Anne Asenbouth.</p>
 </div>
 
 <div class="pkgdown">

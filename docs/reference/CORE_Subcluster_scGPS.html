@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Subclustering (optional) after running CORE "test" — CORE_Subcluster_scGPS • scGPS</title>
+<title>Subclustering (optional) after running CORE 'test' — CORE_Subcluster_scGPS • scGPS</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -21,19 +21,23 @@
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
 
 
 
   <link href="../extra.css" rel="stylesheet">
   <script src="../extra.js"></script>
-<meta property="og:title" content="Subclustering (optional) after running CORE "test" — CORE_Subcluster_scGPS" />
+<meta property="og:title" content="Subclustering (optional) after running CORE 'test' — CORE_Subcluster_scGPS" />
 
-<meta property="og:description" content="CORE_Subcluster_scGPS allows re-cluster the CORE clustering result" />
+<meta property="og:description" content="CORE_Subcluster_scGPS allows re-cluster the CORE clustering 
+result" />
 <meta name="twitter:card" content="summary" />
+
 
 
 <!-- mathjax -->
@@ -60,7 +64,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scGPS</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.9</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.9.1</span>
       </span>
     </div>
 
@@ -106,19 +110,20 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Subclustering (optional) after running CORE "test"</h1>
+    <h1>Subclustering (optional) after running CORE 'test'</h1>
     
     <div class="hidden name"><code>CORE_Subcluster_scGPS.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>CORE_Subcluster_scGPS allows re-cluster the CORE clustering result</p>
+    <p>CORE_Subcluster_scGPS allows re-cluster the CORE clustering 
+result</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>CORE_Subcluster_scGPS</span>(<span class='kw'>mixedpop</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>windows</span> <span class='kw'>=</span> <span class='fu'>seq</span>(<span class='fl'>0.025</span>:<span class='fl'>1</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>0.025</span>),
-  <span class='kw'>select_cell_index</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>ngenes</span> <span class='kw'>=</span> <span class='fl'>1500</span>)</pre>
+    <pre class="usage"><span class='fu'>CORE_Subcluster_scGPS</span>(<span class='kw'>mixedpop</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>windows</span> <span class='kw'>=</span> <span class='fu'>seq</span>(<span class='fl'>0.025</span>:<span class='fl'>1</span>, <span class='kw'>by</span> <span class='kw'>=</span>
+  <span class='fl'>0.025</span>), <span class='kw'>select_cell_index</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>ngenes</span> <span class='kw'>=</span> <span class='fl'>1500</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -134,26 +139,35 @@ mixed population</p></td>
     </tr>
     <tr>
       <th>select_cell_index</th>
-      <td><p>a vector containing indexes for cells in selected clusters
-to be reclustered</p></td>
+      <td><p>a vector containing indexes for cells in selected 
+clusters to be reclustered</p></td>
+    </tr>
+    <tr>
+      <th>ngenes</th>
+      <td><p>number of genes used for clustering calculations.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a <code>list</code> with clustering results of all iterations, and a selected
-optimal resolution</p>
+    <p>a <code>list</code> with clustering results of all iterations, and a 
+selected optimal resolution</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>day5</span> <span class='kw'>&lt;-</span> <span class='no'>sample2</span>
-<span class='no'>mixedpop2</span> <span class='kw'>&lt;-</span><span class='fu'><a href='NewscGPS_SME.html'>NewscGPS_SME</a></span>(<span class='kw'>ExpressionMatrix</span> <span class='kw'>=</span> <span class='no'>day5</span>$<span class='no'>dat5_counts</span>, <span class='kw'>GeneMetadata</span> <span class='kw'>=</span> <span class='no'>day5</span>$<span class='no'>dat5geneInfo</span>,
-                         <span class='kw'>CellMetadata</span> <span class='kw'>=</span> <span class='no'>day5</span>$<span class='no'>dat5_clusters</span>)
-<span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='CORE_scGPS.html'>CORE_scGPS</a></span>(<span class='no'>mixedpop2</span>,<span class='kw'>remove_outlier</span><span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0</span>))</div><div class='output co'>#&gt; [1] "Identifying top variable genes"
+<span class='no'>mixedpop2</span> <span class='kw'>&lt;-</span><span class='fu'>NewscGPS_SME</span>(<span class='kw'>ExpressionMatrix</span> <span class='kw'>=</span> <span class='no'>day5</span>$<span class='no'>dat5_counts</span>,
+    <span class='kw'>GeneMetadata</span> <span class='kw'>=</span> <span class='no'>day5</span>$<span class='no'>dat5geneInfo</span>, <span class='kw'>CellMetadata</span> <span class='kw'>=</span> <span class='no'>day5</span>$<span class='no'>dat5_clusters</span>)
+<span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'>CORE_scGPS</span>(<span class='no'>mixedpop2</span>,<span class='kw'>remove_outlier</span><span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0</span>))</div><div class='output co'>#&gt; [1] "Performing 1 round of filtering"
+#&gt; [1] "Identifying top variable genes"
 #&gt; [1] "Calculating distance matrix"
 #&gt; [1] "Performing hierarchical clustering"
 #&gt; [1] "Finding clustering information"
-#&gt; [1] "No more outliers detected after 1 filtering round"
+#&gt; [1] "No more outliers detected in filtering round 1"
+#&gt; [1] "Identifying top variable genes"
+#&gt; [1] "Calculating distance matrix"
+#&gt; [1] "Performing hierarchical clustering"
+#&gt; [1] "Finding clustering information"
 #&gt; [1] "writing clustering result for run 1"
 #&gt; [1] "writing clustering result for run 2"
 #&gt; [1] "writing clustering result for run 3"
@@ -195,7 +209,8 @@ optimal resolution</p>
 #&gt; [1] "writing clustering result for run 39"
 #&gt; [1] "writing clustering result for run 40"
 #&gt; [1] "Done clustering, moving to stability calculation..."
-#&gt; [1] "Done calculating stability..."</div><div class='output co'>#&gt; <span class='warning'>Warning: package ‘reshape2’ was built under R version 3.4.3</span></div><div class='output co'>#&gt; [1] "Start finding optimal clustering..."
+#&gt; [1] "Done calculating stability..."
+#&gt; [1] "Start finding optimal clustering..."
 #&gt; [1] "Done finding optimal clustering..."</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -217,7 +232,7 @@ Quan Nguyen, 2017-11-25
 
       <footer>
       <div class="copyright">
-  <p>Developed by Quan Nguyen, Anne Asenbouth.</p>
+  <p>Developed by Quan Nguyen, Michael Thompson, Anne Asenbouth.</p>
 </div>
 
 <div class="pkgdown">

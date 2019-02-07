@@ -7,7 +7,7 @@
 bootstrap_scGPS(nboots = 1, genes = genes, mixedpop1 = mixedpop1,
   mixedpop2 = mixedpop2, c_selectID = NULL, listData = list(),
   cluster_mixedpop1 = NULL, cluster_mixedpop2 = NULL,
-  trainset_ratio = 0.5)
+  trainset_ratio = 0.5, LDA_run = TRUE)
 }
 \arguments{
 \item{nboots}{a number specifying how many bootstraps to be run}
@@ -32,6 +32,8 @@ first mixed population}
 
 \item{trainset_ratio}{a number specifying the proportion of cells to be part 
 of the training subpopulation}
+
+\item{LDA_run}{logical, if the LDA prediction is added to compare to ElasticNet}
 }
 \value{
 a \code{list} with prediction results written in to the index 
