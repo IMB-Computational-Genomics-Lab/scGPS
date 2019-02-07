@@ -203,8 +203,8 @@ clustering_scGPS <- function(object = NULL, ngenes = 1500,
                 cellsForClustering = colnames(object[, -cells_to_remove]))
         } else {
             output <- list(firstRound_out = filter_out, 
-                cellsRemoved = c("No outliers found"), 
-                cellsForClustering = "All cells are kept for clustering")
+                cellsRemoved = "No cells removed",
+                cellsForClustering = colnames(object))
         }
         return(output)
     }
