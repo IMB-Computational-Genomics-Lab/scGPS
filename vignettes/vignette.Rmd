@@ -3,15 +3,15 @@ title: "scGPS introduction"
 author: "Quan Nguyen and Michael Thompson"
 date: "`r Sys.Date()`"
 output:
-  pdf_document:
-    toc: true
-    highlight: tango
   html_document:
     standalone: true
     highlight: tango
     self-contained: true
     keep_md: true
     toc: true
+  pdf_document:
+    toc: true
+    highlight: tango
   vignette: >
     %\VignetteIndexEntry{Multi-format vignettes}
     \usepackage[utf8]{inputenc}
@@ -72,7 +72,7 @@ devtools::load_all()
 
 # load mixed population 1 (loaded from sample1 dataset, named it as day2)
 
-devtools::load_all('/Users/quan.nguyen/Documents/Powell_group_MacQuan/AllCodes/scGPS/') 
+devtools::load_all("C:/Users/s5125601/Desktop/new2/scGPS")#'/Users/quan.nguyen/Documents/Powell_group_MacQuan/AllCodes/scGPS/') 
 
 day2 <- sample1
 mixedpop1 <- NewscGPS(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day2$dat2geneInfo, 
@@ -140,18 +140,23 @@ mixedpop2 <-NewscGPS(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$da
 CORE_cluster <- CORE_scGPS(mixedpop2, remove_outlier = c(0), PCA=FALSE)
 
 # to update the clustering information, users can ...
-clustering_after_outlier_removal <- unlist(CORE_cluster$Cluster[[optimal_index]])
+key_height <- CORE_cluster$optimalClust$KeyStats$Height
+optimal_res <- CORE_cluster$optimalClust$OptimalRes
+optimal_index = which(key_height == optimal_res)
+
+clustering_after_outlier_removal <- unname(unlist(CORE_cluster$Cluster[[optimal_index]]))
 corresponding_cells_after_outlier_removal <- CORE_cluster$cellsForClustering
-original_cells_before_removal <- colData(mixedpop2)[,1]
+original_cells_before_removal <- colData(mixedpop2)[,2]
 corresponding_index <- match(corresponding_cells_after_outlier_removal, original_cells_before_removal )
 # check the matching 
-identical(original_cells_before_removal[corresponding_index],corresponding_cells_after_outlier_removal)
+identical(as.character(original_cells_before_removal[corresponding_index]),corresponding_cells_after_outlier_removal)
 # create new object with the new clustering after removing outliers 
 mixedpop2_post_clustering <- mixedpop2[,corresponding_index]
 colData(mixedpop2_post_clustering)[,1] <- clustering_after_outlier_removal
 
 ```
-##3.1 Identify clusters in a dataset using SCORE (Stable Clustering at Optimal REsolution)
+
+##3.2 Identify clusters in a dataset using SCORE (Stable Clustering at Optimal REsolution)
 *(skip this step if clusters are known)*
 *(SCORE aims to get stable subpopulation results, by introducing bagging aggregation and bootstrapping to the CORE algorithm)*
 ```{r SCORE with bagging, warning = FALSE, message = FALSE}
@@ -168,7 +173,7 @@ SCORE_test <- CORE_scGPS_bagging(mixedpop2, remove_outlier = c(0), PCA=FALSE,
 
 ```
 
-##3.2 Visualise all cluster results in all iterations
+##3.3 Visualise all cluster results in all iterations
 ```{r visualisation}
 ##3.2.1 plot CORE clustering 
 plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster) #plot all clustering bars 
