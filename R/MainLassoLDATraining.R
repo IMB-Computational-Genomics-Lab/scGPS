@@ -135,11 +135,11 @@ training_scGPS <- function(genes = NULL, cluster_mixedpop1 = NULL, mixedpop1 = N
     }
     dataset <- as.data.frame(dataset)
     dataset$Cluster_class <- as.character(as.vector(y_cat))
-
-    
+    #remove NA before prediction (if a gene has zero variance, it will have NA values after standardization)
+    dataset <- na.omit(dataset)
     # fitting with cross validation to find the best ElasticNet model
     print("performning elasticnet model training...")
-    cvfit = cv.glmnet(as.matrix(dataset[,-which(colnames(dataset) == "Cluster_class")]), y_cat, family = "binomial", type.measure = "class")
+    cvfit = cv.glmnet(as.matrix(dataset[,-which(colnames(dataset) == "Cluster_class")]), as.vector(dataset$Cluster_class), family = "binomial", type.measure = "class")
 
     # fit LDA
     if(LDA_run == TRUE){
