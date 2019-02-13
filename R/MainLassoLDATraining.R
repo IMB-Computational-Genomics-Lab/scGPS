@@ -243,7 +243,8 @@ training_scGPS <- function(genes = NULL, cluster_mixedpop1 = NULL, mixedpop1 = N
       print("standardizing the leave-out target and source subpops...")
       predictor_S2 <- t(apply(predictor_S2,1, standardizing))
     }  
-    
+    #remove NA before prediction (if a gene has zero variance, it will have NA values after standardization)
+    predictor_S2 <- na.omit(predictor_S2)    
     # Evaluation: predict ElasticNet
     # Start prediction for estimating accuracy
     print("start ElasticNet prediction for estimating accuracy...")
