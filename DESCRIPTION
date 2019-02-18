@@ -25,7 +25,7 @@ Imports:
   Rcpp,
   RcppArmadillo,
   RcppParallel,
-  grDecives,
+  grDevices,
   graphics,
   stats
 Suggests:
