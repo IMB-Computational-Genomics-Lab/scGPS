@@ -6,6 +6,7 @@ using namespace arma;
 //'
 //' @param x integer.
 //' @examples
+//' @return a scalar value
 //' mean_cpp(c(1:10^6))
 //'
 // [[Rcpp::export]]
