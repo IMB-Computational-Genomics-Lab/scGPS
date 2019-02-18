@@ -15,7 +15,7 @@ BugReports: https://github.com/IMB-Computational-Genomics-Lab/scGPS/issues
 url: https://github.com/IMB-Computational-Genomics-Lab/scGPS/
 RoxygenNote: 6.1.1
 Depends: R (>= 3.5), SummarizedExperiment, dynamicTreeCut, SingleCellExperiment
-biocViews: SingleCell, Clustering, DataImport
+biocViews: SingleCell, Clustering, DataImport, Sequencing, Converge, Trajectory
 Imports:
   glmnet (> 2.0),
   caret (>= 6.0),
