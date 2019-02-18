@@ -341,6 +341,7 @@ training_scGPS <- function(genes = NULL, cluster_mixedpop1 = NULL, mixedpop1 = N
 #' @param LDA_run logical, if the LDA prediction is added to compare to ElasticNet, 
 #' the LDA model needs to be trained from the training_scGPS before inputting to this 
 #' prediction step
+#' @param c_selectId a number to specify the trained cluster used for prediction 
 #' @return a \code{list} with prediction results written in to the index
 #' \code{out_idx}
 #' @export
@@ -360,12 +361,13 @@ training_scGPS <- function(genes = NULL, cluster_mixedpop1 = NULL, mixedpop1 = N
 #'     cluster_mixedpop1 = colData(mixedpop1)[, 1], mixedpop1 = mixedpop1, 
 #'     mixedpop2 = mixedpop2, c_selectID, listData =list(), out_idx=out_idx)
 #' listData  <- predicting_scGPS(listData =listData,  mixedpop2 = mixedpop2, 
-#'     out_idx=out_idx, cluster_mixedpop2 = colData(mixedpop2)[, 1])
+#'     out_idx=out_idx, cluster_mixedpop2 = colData(mixedpop2)[, 1], c_selectID = c_selectID)
 #'
 
 
 predicting_scGPS <- function(listData = NULL, cluster_mixedpop2 = NULL, 
-    mixedpop2 = NULL, out_idx = NULL, standardize = TRUE, LDA_run =FALSE) {
+    mixedpop2 = NULL, out_idx = NULL, standardize = TRUE, LDA_run =FALSE, 
+    c_selectID = NULL) {
     # predictor_S1 is the dataset used for the training phase 
     # (already transposed)
     predictor_S1 <- listData$predictor_S1[[out_idx]][[1]]  #1 for extract matrix
@@ -591,7 +593,8 @@ bootstrap_scGPS <- function(nboots = 1, genes = genes, mixedpop1 = mixedpop1,
         listData <- predicting_scGPS(listData = listData, mixedpop2 = mixedpop2, 
             out_idx = out_idx, standardize = TRUE, 
             cluster_mixedpop2 = cluster_mixedpop2,
-            LDA_run = LDA_run)
+            LDA_run = LDA_run,
+            c_selectID = c_selectID)
     }
     return(listData)
 }
