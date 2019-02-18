@@ -73,6 +73,7 @@ rcpp_Eucl_distance_NotPar <- function(mat) {
 #' Calculate mean
 #'
 #' @param x integer.
+#' @return a scalar value
 #' @examples
 #' mean_cpp(c(1:10^6))
 #'

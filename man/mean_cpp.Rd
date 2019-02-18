@@ -9,6 +9,9 @@ mean_cpp(x)
 \arguments{
 \item{x}{integer.}
 }
+\value{
+a scalar value
+}
 \description{
 Calculate mean
 }

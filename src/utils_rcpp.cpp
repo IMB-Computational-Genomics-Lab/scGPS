@@ -5,8 +5,8 @@ using namespace arma;
 //' Calculate mean
 //'
 //' @param x integer.
-//' @examples
 //' @return a scalar value
+//' @examples
 //' mean_cpp(c(1:10^6))
 //'
 // [[Rcpp::export]]
