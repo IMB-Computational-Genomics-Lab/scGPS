@@ -2,40 +2,28 @@
 title: "scGPS introduction"
 author: "Quan Nguyen and Michael Thompson"
 date: "`r Sys.Date()`"
-output:
-  html_document:
-    standalone: true
-    highlight: tango
-    self-contained: true
-    keep_md: true
-    toc: true
-  pdf_document:
-    toc: true
-    highlight: tango
-  vignette: >
-    %\VignetteIndexEntry{Multi-format vignettes}
+output: rmarkdown::html_vignette
+vignette: >
+    %\VignetteIndexEntry{Vignettes}
+    %\VignetteEngine{knitr::rmarkdown}
     \usepackage[utf8]{inputenc}
-    %\VignetteEngine{knitr::multiformat}
 ---
 
 ```{r setup, out.width = '100%', include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "man/figures/"
+  fig.path = "man/figures/",
+  fig.keep = 'all'
 )
 #Homepage 
-knitr::include_graphics("./docs/reference/figures/packagePlan.png")
+knitr::include_graphics("./man/figures/packagePlan.png")
 
 ```
 
 #1. Installation instruction
 
 ```{r installation, eval = FALSE}
-# Prior to installing scGPS you need to install the SummarizedExperiment
-# bioconductor package as the following
-# source('https://bioconductor.org/biocLite.R') biocLite('SummarizedExperiment')
-
 # To install scGPS from github (Depending on the configuration of the local
 # computer or HPC, possible custom C++ compilation may be required - see
 # installation trouble-shootings below)
@@ -68,7 +56,9 @@ devtools::load_all()
 
 # load mixed population 1 (loaded from sample1 dataset, named it as day2)
 
-devtools::load_all('/Users/quan.nguyen/Documents/Powell_group_MacQuan/AllCodes/scGPS/') 
+devtools::load_all("/Users/quan.nguyen/Documents/Powell_group_MacQuan/AllCodes/scGPS") 
+
+#devtools::load_all("C:/Users/s5125601/Desktop/new2/scGPS") 
 
 day2 <- sample1
 mixedpop1 <- NewscGPS(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day2$dat2geneInfo, 
@@ -170,24 +160,36 @@ SCORE_test <- CORE_scGPS_bagging(mixedpop2, remove_outlier = c(0), PCA=FALSE,
 ```
 
 ##3.3 Visualise all cluster results in all iterations
-```{r visualisation}
+```{r visualisation, dev='CairoPDF'}
+dev.off()
 ##3.2.1 plot CORE clustering 
-plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster) #plot all clustering bars 
+
+#plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster) #plot all clustering bars 
+#you can customise the cluster color bars (provide color_branch values)
+#pdf("All_CORE_clustering_bar.pdf")
+p1 <- plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster, color_branch = c("#208eb7", "#6ce9d3", "#1c5e39", "#8fca40", "#154975", "#b1c8eb"))
+#dev.off()
+p1 
 #extract optimal index identified by CORE_scGPS
 key_height <- CORE_cluster$optimalClust$KeyStats$Height
 optimal_res <- CORE_cluster$optimalClust$OptimalRes
 optimal_index = which(key_height == optimal_res)
 #plot one optimal clustering bar
+pdf("CORE_optimal_clusters.pdf")
 plot_optimal_CORE(original_tree= CORE_cluster$tree,
                    optimal_cluster = unlist(CORE_cluster$Cluster[optimal_index]), shift = -2000)
-# you can customise the cluster color bars (provide color_branch values)
-plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster, color_branch = c("#208eb7", "#6ce9d3", "#1c5e39", "#8fca40", "#154975", "#b1c8eb"))
+dev.off()
 
 ##3.2.2 plot SCORE clustering 
+pdf("All_SCORE_clustering_bar.pdf")
 plot_CORE(SCORE_test$tree, list_clusters = SCORE_test$Cluster)#plot all clustering bars 
+dev.off()
 #plot one stable optimal clustering bar
+pdf("SCORE_optimal_clusters.pdf")
 plot_optimal_CORE(original_tree= SCORE_test$tree,
                    optimal_cluster = unlist(SCORE_test$Cluster[SCORE_test$optimal_index]), shift = -100)
+dev.off()
+
 ```
   
 ##3.4 Compare clustering results with other dimensional reduction methods (e.g., CIDR)
@@ -234,7 +236,7 @@ suppressMessages(library(clusterProfiler))
 enrichment_test <- annotate_scGPS(DEgeneList_1vsOthers[1:500], pvalueCutoff=0.05, gene_symbol=TRUE)
 
 #the enrichment outputs can be displayed by running
-dotplot(enrichment_test, showCategory=15)
+dotplot(enrichment_test, showCategory=10, font.size = 6)
 
 ```
 
