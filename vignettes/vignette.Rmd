@@ -82,10 +82,11 @@ genes <- genes$Merged_unique
 cluster_mixedpop1 <- colData(mixedpop1)[,1]
 cluster_mixedpop2 <- colData(mixedpop2)[,1]
 #run training 
-LSOLDA_dat <- bootstrap_scGPS(nboots = 2, mixedpop1 = mixedpop1, 
+LSOLDA_dat <- bootstrap_scGPS(nboots = 50, mixedpop1 = mixedpop1, 
     mixedpop2 = mixedpop2, genes = genes, c_selectID  = c_selectID, listData = list(),
      cluster_mixedpop1 = cluster_mixedpop1,
-     cluster_mixedpop2 = cluster_mixedpop2)
+     cluster_mixedpop2 = cluster_mixedpop2,
+     trainset_ratio = 0.7)
 
 ```
 ##2.3 Summarise results 
@@ -97,16 +98,29 @@ LSOLDA_dat$ElasticNetPredict
 LSOLDA_dat$LDAPredict
 
 # summary results LDA
-summary_prediction_lda(LSOLDA_dat = LSOLDA_dat, nPredSubpop = 4)
-
+sum_pred_lda <- summary_prediction_lda(LSOLDA_dat = LSOLDA_dat, nPredSubpop = 4)
 # summary results Lasso to show the percent of cells classified as cells belonging 
-summary_prediction_lasso(LSOLDA_dat = LSOLDA_dat, nPredSubpop = 4)
-
+sum_pred_lasso <- summary_prediction_lasso(LSOLDA_dat = LSOLDA_dat, nPredSubpop = 4)
+# plot summary results 
+plot_sum <-function(sum_dat){
+  sum_dat_tf <- t(sum_dat)
+  sum_dat_tf <- na.omit(sum_dat_tf)
+  sum_dat_tf <- apply(sum_dat[, -ncol(sum_dat)],1, function(x){as.numeric(as.vector(x))})
+  sum_dat$names <- gsub("for subpop ","sp",  sum_dat$names )
+  sum_dat$names <- gsub("in target mixedpop","in p",  sum_dat$names) 
+  colnames(sum_dat_tf) <- sum_dat$names
+  boxplot(sum_dat_tf, las=2)
+}
+plot_sum(sum_pred_lasso)
+plot_sum(sum_pred_lda)
 # summary accuracy to check the model accuracy in the leave-out test set 
 summary_accuracy(object = LSOLDA_dat)
 
 # summary maximum deviance explained by the model 
 summary_deviance(object = LSOLDA_dat)
+
+
+
 ```
 
 #3. A complete workflow of the scGPS: 
