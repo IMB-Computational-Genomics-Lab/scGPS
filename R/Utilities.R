@@ -47,8 +47,8 @@ topvar_scGPS <- function(expression.matrix = NULL, ngenes = 1500) {
 #' plot(p2)
 #'
 
-plotReduced_scGPS <- function(reduced_dat, color_fac = NULL, dims = c(1, 2), dimNames = c("Dim 1", 
-    "Dim 2"), palletes = NULL, legend_title = "Cluster") {
+plotReduced_scGPS <- function(reduced_dat, color_fac = NULL, dims = c(1, 2), dimNames = c("Dim1", 
+    "Dim2"), palletes = NULL, legend_title = "Cluster") {
     reduced_dat_toPlot <- as.data.frame(reduced_dat[, dims])
     sample_num <- length(unique(color_fac))
     if (is.null(palletes)) {
@@ -66,11 +66,11 @@ plotReduced_scGPS <- function(reduced_dat, color_fac = NULL, dims = c(1, 2), dim
         theme(legend.position = "bottom") + theme(text = element_text(size = 20))
     
     yaxis <- cowplot::axis_canvas(p, axis = "y", coord_flip = TRUE) + geom_density(data = reduced_dat_toPlot, 
-        aes(`Dim 2`, ..count.., fill = color_fac), size = 0.2, alpha = 0.7) + coord_flip() + 
+        aes(reduced_dat_toPlot$Dim2, ..count.., fill = color_fac), size = 0.2, alpha = 0.7) + coord_flip() + 
         scale_fill_manual(name = "Samples", values = palletes[1:sample_num], limits = sort(as.character(as.vector(unique(color_fac)))))
     
     xaxis <- cowplot::axis_canvas(p, axis = "x") + geom_density(data = reduced_dat_toPlot, 
-        aes(`Dim 1`, ..count.., fill = color_fac), size = 0.4, alpha = 0.7) + scale_fill_manual(name = "Samples", 
+        aes(reduced_dat_toPlot$Dim1, ..count.., fill = color_fac), size = 0.4, alpha = 0.7) + scale_fill_manual(name = "Samples", 
         values = palletes[1:sample_num], limits = sort(as.character(as.vector(unique(color_fac)))))
     
     p1_x <- cowplot::insert_xaxis_grob(p, xaxis, grid::unit(0.2, "null"), position = "top")
@@ -248,10 +248,14 @@ annotate_scGPS <- function(DEgeneList, pvalueCutoff = 0.05, gene_symbol = TRUE, 
 #' @importFrom stats as.dist coef na.omit prcomp predict sd as.dendrogram
 #' @importFrom grDevices colorRampPalette
 #' @importFrom graphics abline layout par plot
+#' @x a dummy variable for the temp function 
 #' @return a message 
+#' #' @examples
+#' add_import()
 
 add_import <- function(x = 1) {
-    if (x == 1) 
-        return("required functions imported")
+    if (x == 1) {
+      return("required functions imported")
+      }
 }
 
