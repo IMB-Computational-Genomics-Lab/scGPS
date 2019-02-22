@@ -36,20 +36,17 @@
 #' @export
 #' @author Quan Nguyen, 2017-11-25
 
-CORE_scGPS <- function(mixedpop = NULL, windows = seq(0.025:1, by = 0.025), 
-    remove_outlier = c(0), nRounds = 1, PCA = FALSE, nPCs = 20, ngenes = 1500) {
-    cluster_all <- clustering_scGPS(object = mixedpop, windows = windows, 
-        remove_outlier = remove_outlier, nRounds = nRounds, PCA = PCA, 
-        nPCs = nPCs)
+CORE_scGPS <- function(mixedpop = NULL, windows = seq(0.025:1, by = 0.025), remove_outlier = c(0), 
+    nRounds = 1, PCA = FALSE, nPCs = 20, ngenes = 1500) {
+    cluster_all <- clustering_scGPS(object = mixedpop, windows = windows, remove_outlier = remove_outlier, 
+        nRounds = nRounds, PCA = PCA, nPCs = nPCs)
     
-    stab_df <- FindStability(list_clusters = cluster_all$list_clusters, 
-        cluster_ref = cluster_all$cluster_ref)
-    optimal_stab <- FindOptimalStability(list_clusters = 
-        cluster_all$list_clusters, stab_df, windows = windows)
+    stab_df <- FindStability(list_clusters = cluster_all$list_clusters, cluster_ref = cluster_all$cluster_ref)
+    optimal_stab <- FindOptimalStability(list_clusters = cluster_all$list_clusters, 
+        stab_df, windows = windows)
     
-    return(list(Cluster = cluster_all$list_clusters, tree = cluster_all$tree,
-        optimalClust = optimal_stab, cellsRemoved = cluster_all$cellsRemoved, 
-        cellsForClustering = cluster_all$cellsForClustering))
+    return(list(Cluster = cluster_all$list_clusters, tree = cluster_all$tree, optimalClust = optimal_stab, 
+        cellsRemoved = cluster_all$cellsRemoved, cellsForClustering = cluster_all$cellsForClustering))
 }
 
 #' Subclustering (optional) after running CORE 'test'
@@ -72,22 +69,19 @@ CORE_scGPS <- function(mixedpop = NULL, windows = seq(0.025:1, by = 0.025),
 #' @export
 #' @author Quan Nguyen, 2017-11-25
 
-CORE_Subcluster_scGPS <- function(mixedpop = NULL, 
-    windows = seq(0.025:1, by = 0.025), select_cell_index = NULL, 
-    ngenes = 1500) {
-
-    cluster_all <- SubClustering_scGPS(object = mixedpop, windows = windows, 
-        select_cell_index = select_cell_index, ngenes = ngenes)
+CORE_Subcluster_scGPS <- function(mixedpop = NULL, windows = seq(0.025:1, by = 0.025), 
+    select_cell_index = NULL, ngenes = 1500) {
     
-    stab_df <- FindStability(list_clusters = cluster_all$list_clusters, 
-        cluster_ref = cluster_all$cluster_ref)
+    cluster_all <- SubClustering_scGPS(object = mixedpop, windows = windows, select_cell_index = select_cell_index, 
+        ngenes = ngenes)
     
-    optimal_stab <- FindOptimalStability(list_clusters = 
-        cluster_all$list_clusters, stab_df)
+    stab_df <- FindStability(list_clusters = cluster_all$list_clusters, cluster_ref = cluster_all$cluster_ref)
     
-    return(list(Cluster = cluster_all$list_clusters, tree = cluster_all$tree,
-        optimalClust = optimal_stab, cellsRemoved = cluster_all$cellsRemoved, 
-        cellsForClustering = cluster_all$cellsForClustering))
+    optimal_stab <- FindOptimalStability(list_clusters = cluster_all$list_clusters, 
+        stab_df)
+    
+    return(list(Cluster = cluster_all$list_clusters, tree = cluster_all$tree, optimalClust = optimal_stab, 
+        cellsRemoved = cluster_all$cellsRemoved, cellsForClustering = cluster_all$cellsForClustering))
 }
 
 
@@ -114,12 +108,11 @@ CORE_Subcluster_scGPS <- function(mixedpop = NULL,
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 #' test <-clustering_scGPS(mixedpop2, remove_outlier = c(1))
 
-clustering_scGPS <- function(object = NULL, ngenes = 1500, 
-    windows = seq(0.025:1, by = 0.025), remove_outlier = c(0), nRounds = 1, 
-    PCA = FALSE, nPCs = 20) {
+clustering_scGPS <- function(object = NULL, ngenes = 1500, windows = seq(0.025:1, 
+    by = 0.025), remove_outlier = c(0), nRounds = 1, PCA = FALSE, nPCs = 20) {
     
-    # function for the highest resolution clustering (i.e. no window applied, 
-    # no cell removal)
+    # function for the highest resolution clustering (i.e. no window applied, no cell
+    # removal)
     firstRoundClustering <- function(object = NULL) {
         exprs_mat <- assay(object)
         # take the top variable genes
@@ -128,10 +121,9 @@ clustering_scGPS <- function(object = NULL, ngenes = 1500,
         # exprs_mat_t <- t(exprs_mat_topVar)
         if (PCA == TRUE) {
             # perform PCA dimensionality reduction
-            print(paste0("Performing PCA analysis (Note: the variance for ",
-                "each cell needs to be >0)"))
-            #print("Performing PCA analysis (Note: the variance for each cell 
-            #needs to be >0)")
+            print(paste0("Performing PCA analysis (Note: the variance for ", "each cell needs to be >0)"))
+            # print('Performing PCA analysis (Note: the variance for each cell needs to be
+            # >0)')
             exprs_mat_topVar_PCA <- prcomp(t(exprs_mat_topVar))
             exprs_mat_t <- as.data.frame(exprs_mat_topVar_PCA$x[, 1:nPCs])
             
@@ -143,21 +135,18 @@ clustering_scGPS <- function(object = NULL, ngenes = 1500,
         print("Calculating distance matrix")
         dist_mat <- rcpp_parallel_distance(as.matrix(exprs_mat_t))
         print("Performing hierarchical clustering")
-        original.tree <- fastcluster::hclust(as.dist(dist_mat), 
-            method = "ward.D2")
+        original.tree <- fastcluster::hclust(as.dist(dist_mat), method = "ward.D2")
         # the original clusters to be used as the reference
         print("Finding clustering information")
-        original.clusters <- unname(cutreeDynamic(original.tree, 
-            distM = as.matrix(dist_mat), verbose = 0, 
-            minClusterSize = round(ncol(dist_mat)/100)))
+        original.clusters <- unname(cutreeDynamic(original.tree, distM = as.matrix(dist_mat), 
+            verbose = 0, minClusterSize = round(ncol(dist_mat)/100)))
         original.tree$labels <- original.clusters
-        return(list(tree = original.tree, cluster_ref = original.clusters, 
-            dist_mat = dist_mat))
+        return(list(tree = original.tree, cluster_ref = original.clusters, dist_mat = dist_mat))
     }
     
     # function to remove outlier clusters
-    removeOutlierCluster <- function(object = object, 
-        remove_outlier = remove_outlier, nRounds = nRounds) {
+    removeOutlierCluster <- function(object = object, remove_outlier = remove_outlier, 
+        nRounds = nRounds) {
         
         # Initial Message to the user
         if (nRounds == 1) {
@@ -173,17 +162,15 @@ clustering_scGPS <- function(object = NULL, ngenes = 1500,
         
         while (i <= nRounds) {
             filter_out <- firstRoundClustering(objectTemp)
-            cluster_toRemove <- which(filter_out$cluster_ref %in%
-                remove_outlier)
+            cluster_toRemove <- which(filter_out$cluster_ref %in% remove_outlier)
             if (length(cluster_toRemove) > 0) {
-                print(paste0("Found ", length(cluster_toRemove), 
-                    " cells as outliers at round ", i, " ..."))
+                print(paste0("Found ", length(cluster_toRemove), " cells as outliers at round ", 
+                  i, " ..."))
                 cells_to_remove <- c(cells_to_remove, cluster_toRemove)
                 objectTemp <- object[, -cells_to_remove]
                 i <- i + 1
             } else {
-                print(paste0("No more outliers detected in filtering round ",
-                    i))
+                print(paste0("No more outliers detected in filtering round ", i))
                 i <- nRounds + 1
             }
         }
@@ -191,27 +178,24 @@ clustering_scGPS <- function(object = NULL, ngenes = 1500,
         filter_out <- firstRoundClustering(objectTemp)
         cluster_toRemove <- which(filter_out$cluster_ref %in% remove_outlier)
         if (length(cluster_toRemove) > 0) {
-            print(paste0("Found ", length(cluster_toRemove), 
-                " cells as outliers at round ", i, " ..."))
-            print(paste0("Select ", i, 
-                " removal rounds if you want to remove these cells"))
+            print(paste0("Found ", length(cluster_toRemove), " cells as outliers at round ", 
+                i, " ..."))
+            print(paste0("Select ", i, " removal rounds if you want to remove these cells"))
         }
         
         if (length(cells_to_remove) > 0) {
-            output <- list(firstRound_out = filter_out,
-                cellsRemoved = colnames(object[, cells_to_remove]), 
-                cellsForClustering = colnames(object[, -cells_to_remove]))
+            output <- list(firstRound_out = filter_out, cellsRemoved = colnames(object[, 
+                cells_to_remove]), cellsForClustering = colnames(object[, -cells_to_remove]))
         } else {
-            output <- list(firstRound_out = filter_out, 
-                cellsRemoved = "No cells removed",
+            output <- list(firstRound_out = filter_out, cellsRemoved = "No cells removed", 
                 cellsForClustering = colnames(object))
         }
         return(output)
     }
     
     
-    firstRoundPostRemoval <- removeOutlierCluster(object = object,
-        remove_outlier = remove_outlier, nRounds = nRounds)
+    firstRoundPostRemoval <- removeOutlierCluster(object = object, remove_outlier = remove_outlier, 
+        nRounds = nRounds)
     firstRound_out <- firstRoundPostRemoval$firstRound_out
     # return variables for the next step
     original.tree <- firstRound_out$tree
@@ -222,9 +206,8 @@ clustering_scGPS <- function(object = NULL, ngenes = 1500,
     for (i in 1:length(windows)) {
         
         namelist = paste0("window", windows[i])
-        toadd <- as.vector(cutreeDynamic(original.tree, 
-            distM = as.matrix(dist_mat), minSplitHeight = windows[i], 
-            verbose = 0))
+        toadd <- as.vector(cutreeDynamic(original.tree, distM = as.matrix(dist_mat), 
+            minSplitHeight = windows[i], verbose = 0))
         
         print(paste0("writing clustering result for run ", i))
         clustering_param[[i]] <- list(toadd)
@@ -233,10 +216,8 @@ clustering_scGPS <- function(object = NULL, ngenes = 1500,
     
     names(clustering_param[[i]]) <- "cluster_ref"
     print("Done clustering, moving to stability calculation...")
-    return(list(list_clusters = clustering_param, tree = original.tree, 
-        cluster_ref = original.clusters, 
-        cellsRemoved = firstRoundPostRemoval$cellsRemoved, 
-        cellsForClustering = firstRoundPostRemoval$cellsForClustering))
+    return(list(list_clusters = clustering_param, tree = original.tree, cluster_ref = original.clusters, 
+        cellsRemoved = firstRoundPostRemoval$cellsRemoved, cellsForClustering = firstRoundPostRemoval$cellsForClustering))
     
 }
 
@@ -260,8 +241,8 @@ clustering_scGPS <- function(object = NULL, ngenes = 1500,
 #'     select_cell_index = c(1:100))
 
 
-SubClustering_scGPS <- function(object = NULL, ngenes = 1500, 
-    windows = seq(0.025:1, by = 0.025), select_cell_index = NULL) {
+SubClustering_scGPS <- function(object = NULL, ngenes = 1500, windows = seq(0.025:1, 
+    by = 0.025), select_cell_index = NULL) {
     
     print("Calculating distance matrix")
     # function for the highest resolution clustering (i.e. no window applied)
@@ -272,29 +253,25 @@ SubClustering_scGPS <- function(object = NULL, ngenes = 1500,
         exprs_mat_t <- t(exprs_mat_topVar)
         dist_mat <- rcpp_parallel_distance(exprs_mat_t)
         print("Performing hierarchical clustering")
-        original.tree <- fastcluster::hclust(as.dist(dist_mat), 
-            method = "ward.D2")
+        original.tree <- fastcluster::hclust(as.dist(dist_mat), method = "ward.D2")
         # the original clusters to be used as the reference
         print("Finding clustering information")
-        original.clusters <- unname(cutreeDynamic(original.tree, 
-            distM = as.matrix(dist_mat), verbose = 0))
+        original.clusters <- unname(cutreeDynamic(original.tree, distM = as.matrix(dist_mat), 
+            verbose = 0))
         original.tree$labels <- original.clusters
-        return(list(tree = original.tree, cluster_ref = original.clusters, 
-            dist_mat = dist_mat))
+        return(list(tree = original.tree, cluster_ref = original.clusters, dist_mat = dist_mat))
     }
     
     Select_out <- function(object = NULL, select_cell_index = NULL) {
         
         Clustering_out <- Clustering(object[, select_cell_index])
         
-        return(list(SubClustering_out = Clustering_out, 
-            cellsRemoved = colnames(object[, -select_cell_index]),
-            cellsForClustering = colnames(object[, select_cell_index])))
+        return(list(SubClustering_out = Clustering_out, cellsRemoved = colnames(object[, 
+            -select_cell_index]), cellsForClustering = colnames(object[, select_cell_index])))
     }
     
     
-    SelectCluster_out <- Select_out(object = object, 
-        select_cell_index = select_cell_index)
+    SelectCluster_out <- Select_out(object = object, select_cell_index = select_cell_index)
     
     # return variables for the next step
     original.tree <- SelectCluster_out$SubClustering_out$tree
@@ -305,9 +282,8 @@ SubClustering_scGPS <- function(object = NULL, ngenes = 1500,
     for (i in 1:length(windows)) {
         
         namelist = paste0("window", windows[i])
-        toadd <- as.vector(cutreeDynamic(original.tree,
-            distM = as.matrix(dist_mat), minSplitHeight = windows[i],
-            verbose = 0))
+        toadd <- as.vector(cutreeDynamic(original.tree, distM = as.matrix(dist_mat), 
+            minSplitHeight = windows[i], verbose = 0))
         
         print(paste0("writing clustering result for run ", i))
         clustering_param[[i]] <- list(toadd)
@@ -316,10 +292,8 @@ SubClustering_scGPS <- function(object = NULL, ngenes = 1500,
     
     names(clustering_param[[i]]) <- "cluster_ref"
     print("Done clustering, moving to stability calculation...")
-    return(list(list_clusters = clustering_param, tree = original.tree,
-        cluster_ref = original.clusters, 
-        cellsRemoved = SelectCluster_out$cellsRemoved, 
-        cellsForClustering = SelectCluster_out$cellsForClustering))
+    return(list(list_clusters = clustering_param, tree = original.tree, cluster_ref = original.clusters, 
+        cellsRemoved = SelectCluster_out$cellsRemoved, cellsForClustering = SelectCluster_out$cellsForClustering))
     
 }
 
@@ -416,14 +390,12 @@ FindStability <- function(list_clusters = NULL, cluster_ref = NULL) {
     cluster_index_ref <- list()
     
     cluster_index_consec[[1]] <- 1
-    cluster_index_ref[[1]] <- randIndex(table(unlist(list_clusters[[1]]),
-        cluster_ref))
+    cluster_index_ref[[1]] <- randIndex(table(unlist(list_clusters[[1]]), cluster_ref))
     
     for (i in 2:(length(list_clusters))) {
         cluster_index_consec[[i]] <- randIndex(table(unlist(list_clusters[[i]]), 
             unlist(list_clusters[[i - 1]])))
-        cluster_index_ref[[i]] <- randIndex(table(unlist(list_clusters[[i]]), 
-            cluster_ref))
+        cluster_index_ref[[i]] <- randIndex(table(unlist(list_clusters[[i]]), cluster_ref))
     }
     
     cluster_index_consec <- unlist(cluster_index_consec)
@@ -477,8 +449,7 @@ FindStability <- function(list_clusters = NULL, cluster_ref = NULL) {
             counter_adjusted[index_0[length_id0]] = 1
         } else {
             length_id0 <- length(index_0)
-            counter_adjusted[(index_0[length_id0] + 1):length(counter)] <- 
-                counter[length(counter)]
+            counter_adjusted[(index_0[length_id0] + 1):length(counter)] <- counter[length(counter)]
             counter_adjusted[index_0[length_id0]] = 1
         }
         
@@ -486,9 +457,9 @@ FindStability <- function(list_clusters = NULL, cluster_ref = NULL) {
         if (length(index_0) > 2) {
             for (i in 1:(length(index_0) - 1)) {
                 if (index_0[i + 1] - index_0[i] > 1) {
-                  #assign value to the last count
-                  counter_adjusted[(index_0[i] + 1):(index_0[i + 1] - 1)] = 
-                      counter[index_0[i + 1] - 1]  
+                  # assign value to the last count
+                  counter_adjusted[(index_0[i] + 1):(index_0[i + 1] - 1)] = counter[index_0[i + 
+                    1] - 1]
                   counter_adjusted[index_0[i]] = 1  #reset
                 } else {
                   counter_adjusted[(index_0[i] + 1)] = 1
@@ -535,8 +506,8 @@ FindStability <- function(list_clusters = NULL, cluster_ref = NULL) {
 #'
 
 
-FindOptimalStability <- function(list_clusters, run_RandIdx, bagging = FALSE,
-    windows = seq(0.025:1, by = 0.025)) {
+FindOptimalStability <- function(list_clusters, run_RandIdx, bagging = FALSE, windows = seq(0.025:1, 
+    by = 0.025)) {
     print("Start finding optimal clustering...")
     
     window_param <- length(windows)
@@ -555,9 +526,8 @@ FindOptimalStability <- function(list_clusters, run_RandIdx, bagging = FALSE,
     
     
     # CHANGED HERE FOR .025 -->> based on the seq
-    KeyStats <- as.data.frame(cbind(as.numeric(run_RandIdx$order) * windows[1],
-        run_RandIdx$stability_count, run_RandIdx$cluster_index_ref, 
-        run_RandIdx$cluster_index_consec))
+    KeyStats <- as.data.frame(cbind(as.numeric(run_RandIdx$order) * windows[1], run_RandIdx$stability_count, 
+        run_RandIdx$cluster_index_ref, run_RandIdx$cluster_index_consec))
     
     colnames(KeyStats) <- c("Height", "Stability", "RandIndex", "ConsecutiveRI")
     
@@ -566,17 +536,10 @@ FindOptimalStability <- function(list_clusters, run_RandIdx, bagging = FALSE,
     day_melt$Height <- as.numeric(day_melt$Height)
     p <- ggplot(day_melt)
     p <- p + geom_line(aes(x = day_melt$Height, y = day_melt$value, colour = day_melt$variable), 
-        size = 2) + 
-        theme_bw() + 
-        theme(axis.text = element_text(size = 24), 
-            axis.title = element_text(size = 24)) + 
-        theme(legend.text = element_text(size = 24)) + 
-        theme(legend.title = element_blank()) + 
-        xlab("Parameter from 0.025 to 1") + 
-        ylab("Scores") + 
-        theme(panel.border = element_rect(colour = "black", fill = NA,
-            size = 1.5)) + 
-        guides(colour = FALSE)
+        size = 2) + theme_bw() + theme(axis.text = element_text(size = 24), axis.title = element_text(size = 24)) + 
+        theme(legend.text = element_text(size = 24)) + theme(legend.title = element_blank()) + 
+        xlab("Parameter from 0.025 to 1") + ylab("Scores") + theme(panel.border = element_rect(colour = "black", 
+        fill = NA, size = 1.5)) + guides(colour = FALSE)
     
     #---------------------------------------------------------------------------
     # End diagnostic plot for comparing clustering results
@@ -594,7 +557,7 @@ FindOptimalStability <- function(list_clusters, run_RandIdx, bagging = FALSE,
     St_max <- St[which.max(St)]
     
     if ((St[window_param] > 0.5) && (St[window_param] == St_max)) {
-        optimal_param = window_param 
+        optimal_param = window_param
     } else {
         concat_St <- vector()
         for (i in 1:window_param) {
@@ -609,14 +572,12 @@ FindOptimalStability <- function(list_clusters, run_RandIdx, bagging = FALSE,
     }
     
     if (bagging == TRUE) {
-        output <- list(HighestRes = KeyStats$Cluster_count[1], 
-            OptimalClust = KeyStats$Cluster_count[optimal_param], 
+        output <- list(HighestRes = KeyStats$Cluster_count[1], OptimalClust = KeyStats$Cluster_count[optimal_param], 
             KeyStats = KeyStats)
     } else {
         print("Done finding optimal clustering...")
         # Final result
-        output <- list(StabilityPlot = p, KeyStats = KeyStats, 
-            OptimalRes = KeyStats$Height[optimal_param], 
+        output <- list(StabilityPlot = p, KeyStats = KeyStats, OptimalRes = KeyStats$Height[optimal_param], 
             OptimalClust = KeyStats$Cluster_count[optimal_param])
     }
     
@@ -633,7 +594,7 @@ FindOptimalStability <- function(list_clusters, run_RandIdx, bagging = FALSE,
 #' @description This function plots CORE and all clustering results underneath
 #' @param original.tree the original dendrogram before clustering
 #' @param list_clusters a list containing clustering results for each of the 
-#  resolution run
+# resolution run
 #' @param color_branch is a vector containing user-specified colors (the number
 #' of unique colors should be equal or larger than the number of clusters). This
 #' parameter allows better selection of colors for the display.
@@ -648,37 +609,34 @@ FindOptimalStability <- function(list_clusters, run_RandIdx, bagging = FALSE,
 #' CORE_cluster <- CORE_scGPS(mixedpop2, remove_outlier = c(0))
 #' plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster)
 
-plot_CORE <- function(original.tree, list_clusters = NULL, 
-    color_branch = NULL) {
-
+plot_CORE <- function(original.tree, list_clusters = NULL, color_branch = NULL) {
+    
     n <- length(unique(unlist(list_clusters[[1]])))
-    qual_col_pals = RColorBrewer::brewer.pal.info[
-        RColorBrewer::brewer.pal.info$category == "qual", ]
-    col_vector = unlist(mapply(RColorBrewer::brewer.pal,
-        qual_col_pals$maxcolors, rownames(qual_col_pals)))
+    qual_col_pals = RColorBrewer::brewer.pal.info[RColorBrewer::brewer.pal.info$category == 
+        "qual", ]
+    col_vector = unlist(mapply(RColorBrewer::brewer.pal, qual_col_pals$maxcolors, 
+        rownames(qual_col_pals)))
     if (is.null(color_branch)) {
         color_branch <- col_vector
     }
     #---------------------------------------------------------------------------
-    # Function to plot dendrogram and color The plot_CORE function implements 
-    # the code by Steve Horvarth, Peter Langelder, and Tal Galili (used in the 
-    # WGCNA package, version 1.61) The code were customised to plot scGPS object
-    # and clustering colors
+    # Function to plot dendrogram and color The plot_CORE function implements the
+    # code by Steve Horvarth, Peter Langelder, and Tal Galili (used in the WGCNA
+    # package, version 1.61) The code were customised to plot scGPS object and
+    # clustering colors
     #---------------------------------------------------------------------------
     col_all <- matrix(unlist(list_clusters), ncol = length(list_clusters))
     col_all <- as.data.frame(col_all)
     # remove branch labels
     original.tree$labels <- rep("", length(original.tree$labels))
     
-    plotDendroAndColors <- function(dendro, colors, groupLabels = NULL, 
-        rowText = NULL, rowTextAlignment = c("left", "center", "right"), 
-        rowTextIgnore = NULL, textPositions = NULL, setLayout = TRUE, 
-        autoColorHeight = TRUE, colorHeight = 0.2, rowWidths = NULL, 
-        dendroLabels = NULL, addGuide = FALSE, guideAll = FALSE, 
-        guideCount = 50, guideHang = 0.2, addTextGuide = FALSE,
-        cex.colorLabels = 0.8, cex.dendroLabels = 0.9, 
-        cex.rowText = 0.8, marAll = c(1, 5, 3, 1), saveMar = TRUE, 
-        abHeight = NULL, abCol = "red", ...) {
+    plotDendroAndColors <- function(dendro, colors, groupLabels = NULL, rowText = NULL, 
+        rowTextAlignment = c("left", "center", "right"), rowTextIgnore = NULL, textPositions = NULL, 
+        setLayout = TRUE, autoColorHeight = TRUE, colorHeight = 0.2, rowWidths = NULL, 
+        dendroLabels = NULL, addGuide = FALSE, guideAll = FALSE, guideCount = 50, 
+        guideHang = 0.2, addTextGuide = FALSE, cex.colorLabels = 0.8, cex.dendroLabels = 0.9, 
+        cex.rowText = 0.8, marAll = c(1, 5, 3, 1), saveMar = TRUE, abHeight = NULL, 
+        abCol = "red", ...) {
         oldMar = par("mar")
         if (!is.null(dim(colors))) {
             nRows = dim(colors)[2]
@@ -689,8 +647,7 @@ plot_CORE <- function(original.tree, list_clusters = NULL,
         if (autoColorHeight) 
             colorHeight = 0.2 + 0.3 * (1 - exp(-(nRows - 1)/6))
         if (setLayout) 
-            layout(matrix(c(1:2), 2, 1), heights = c(1 - colorHeight, 
-                colorHeight))
+            layout(matrix(c(1:2), 2, 1), heights = c(1 - colorHeight, colorHeight))
         par(mar = c(0, marAll[2], marAll[3], marAll[4]))
         plot(dendro, labels = dendroLabels, cex = cex.dendroLabels, ...)
         if (addGuide) 
@@ -699,38 +656,33 @@ plot_CORE <- function(original.tree, list_clusters = NULL,
         if (!is.null(abHeight)) 
             abline(h = abHeight, col = abCol)
         par(mar = c(marAll[1], marAll[2], 0, marAll[4]))
-        plotColorUnderTree(dendro, colors, groupLabels, 
-            cex.rowLabels = cex.colorLabels, rowText = rowText, 
-            rowTextAlignment = rowTextAlignment, rowTextIgnore = rowTextIgnore, 
-            textPositions = textPositions, cex.rowText = cex.rowText, 
-            rowWidths = rowWidths, addTextGuide = addTextGuide)
+        plotColorUnderTree(dendro, colors, groupLabels, cex.rowLabels = cex.colorLabels, 
+            rowText = rowText, rowTextAlignment = rowTextAlignment, rowTextIgnore = rowTextIgnore, 
+            textPositions = textPositions, cex.rowText = cex.rowText, rowWidths = rowWidths, 
+            addTextGuide = addTextGuide)
         if (saveMar) 
             par(mar = oldMar)
     }
     #---------------------------------------------------------------------------
     # plotColorUnderTree
     #---------------------------------------------------------------------------
-    plotColorUnderTree <- function(dendro, colors, rowLabels = NULL, 
-        rowWidths = NULL, rowText = NULL, 
-        rowTextAlignment = c("left", "center", "right"), rowTextIgnore = NULL, 
-        textPositions = NULL, addTextGuide = TRUE, cex.rowLabels = 1, 
-        cex.rowText = 0.8, ...) {
+    plotColorUnderTree <- function(dendro, colors, rowLabels = NULL, rowWidths = NULL, 
+        rowText = NULL, rowTextAlignment = c("left", "center", "right"), rowTextIgnore = NULL, 
+        textPositions = NULL, addTextGuide = TRUE, cex.rowLabels = 1, cex.rowText = 0.8, 
+        ...) {
         
-        plotOrderedColors(dendro$order, colors = colors, rowLabels = rowLabels, 
-            rowWidths = rowWidths, rowText = rowText, 
-            rowTextAlignment = rowTextAlignment, rowTextIgnore = rowTextIgnore, 
-            textPositions = textPositions, addTextGuide = addTextGuide, 
-            cex.rowLabels = cex.rowLabels, cex.rowText = cex.rowText, 
-            startAt = 0, ...)
+        plotOrderedColors(dendro$order, colors = colors, rowLabels = rowLabels, rowWidths = rowWidths, 
+            rowText = rowText, rowTextAlignment = rowTextAlignment, rowTextIgnore = rowTextIgnore, 
+            textPositions = textPositions, addTextGuide = addTextGuide, cex.rowLabels = cex.rowLabels, 
+            cex.rowText = cex.rowText, startAt = 0, ...)
     }
     #---------------------------------------------------------------------------
     # plotOrderedColors
     #---------------------------------------------------------------------------
-    plotOrderedColors <- function(order, colors, rowLabels = NULL, 
-        rowWidths = NULL, rowText = NULL, 
-        rowTextAlignment = c("left", "center", "right"), 
-        rowTextIgnore = NULL, textPositions = NULL, addTextGuide = TRUE, 
-        cex.rowLabels = 1, cex.rowText = 0.8, startAt = 0, ...) {
+    plotOrderedColors <- function(order, colors, rowLabels = NULL, rowWidths = NULL, 
+        rowText = NULL, rowTextAlignment = c("left", "center", "right"), rowTextIgnore = NULL, 
+        textPositions = NULL, addTextGuide = TRUE, cex.rowLabels = 1, cex.rowText = 0.8, 
+        startAt = 0, ...) {
         colors = as.matrix(colors)
         dimC = dim(colors)
         if (is.null(rowLabels) & (length(dimnames(colors)[[2]]) == dimC[2])) 
@@ -740,14 +692,12 @@ plot_CORE <- function(original.tree, list_clusters = NULL,
         on.exit(options(stringsAsFactors = sAF[[1]]), TRUE)
         nColorRows = dimC[2]
         if (length(order) != dimC[1]) 
-        	stop(paste0("ERROR: length of colors vector not compatible with ",
-                "number of objects in 'order'."))
-            #stop("ERROR: length of colors vector not compatible with number 
-            #of objects in 'order'.")
+            stop(paste0("ERROR: length of colors vector not compatible with ", "number of objects in 'order'."))
+        # stop('ERROR: length of colors vector not compatible with number of objects in
+        # 'order'.')
         C = colors[order, , drop = FALSE]
         step = 1/(dimC[1] - 1 + 2 * startAt)
-        barplot(height = 1, col = "white", border = FALSE, space = 0, 
-            axes = FALSE)
+        barplot(height = 1, col = "white", border = FALSE, space = 0, axes = FALSE)
         charWidth = strwidth("W")/2
         if (!is.null(rowText)) {
             if (is.null(textPositions)) 
@@ -762,10 +712,9 @@ plot_CORE <- function(original.tree, list_clusters = NULL,
             rowWidths = rep(ystep, nColorRows + nTextRows)
         } else {
             if (length(rowWidths) != nRows) 
-                stop(paste0("plotOrderedColors: Length of 'rowWidths' must ",
-                    "equal the total number of rows."))
-                #stop("plotOrderedColors: Length of 'rowWidths' must equal the 
-                #total number of rows.")
+                stop(paste0("plotOrderedColors: Length of 'rowWidths' must ", "equal the total number of rows."))
+            # stop('plotOrderedColors: Length of 'rowWidths' must equal the total number of
+            # rows.')
             rowWidths = rowWidths/sum(rowWidths)
         }
         hasText = rep(0, nColorRows)
@@ -787,46 +736,41 @@ plot_CORE <- function(original.tree, list_clusters = NULL,
                 charHeight = max(strheight(rowText[, tr], cex = cex.rowText))
                 width1 = rowWidths[physicalTextRow[tr]]
                 nCharFit = floor(width1/charHeight/1.7/par("lheight"))
-                if (nCharFit < 1)
-                    stop(paste0("Rows are too narrow to fit text. Consider ",
-                        "decreasing cex.rowText."))
-                    #stop("Rows are too narrow to fit text.
-                    #Consider decreasing cex.rowText.")
+                if (nCharFit < 1) 
+                  stop(paste0("Rows are too narrow to fit text. Consider ", "decreasing cex.rowText."))
+                # stop('Rows are too narrow to fit text. Consider decreasing cex.rowText.')
                 set = textPositions[tr]
                 textLevs[[tr]] = sort(unique(rowText[, tr]))
-                textLevs[[tr]] = textLevs[[tr]][!textLevs[[tr]] %in% 
-                    rowTextIgnore]
+                textLevs[[tr]] = textLevs[[tr]][!textLevs[[tr]] %in% rowTextIgnore]
                 nLevs = length(textLevs[[tr]])
                 textPos[[tr]] = rep(0, nLevs)
                 orderedText = rowText[order, tr]
                 for (cl in 1:nLevs) {
-                    ind = orderedText == textLevs[[tr]][cl]
-                    sind = ind[-1]
-                    ind1 = ind[-length(ind)]
-                    starts = c(if (ind[1]) 1 else NULL, which(!ind1 & sind) + 1)
-                    ends = which(c(ind1 & !sind, ind[length(ind)]))
-                    if (length(starts) == 0) 
-                        starts = 1
-                    if (length(ends) == 0) 
-                        ends = length(ind)
-                    if (ends[1] < starts[1]) 
-                        starts = c(1, starts)
-                    if (ends[length(ends)] < starts[length(starts)]) 
-                        ends = c(ends, length(ind))
-                    lengths = ends - starts
-                    long = which.max(lengths)
-                    textPos[[tr]][cl] = switch(rowTextAlignment, 
-                        left = starts[long], center = (starts[long] + 
-                        ends[long])/2 + 0.5, 
-                        right = ends[long] + 1)
+                  ind = orderedText == textLevs[[tr]][cl]
+                  sind = ind[-1]
+                  ind1 = ind[-length(ind)]
+                  starts = c(if (ind[1]) 1 else NULL, which(!ind1 & sind) + 1)
+                  ends = which(c(ind1 & !sind, ind[length(ind)]))
+                  if (length(starts) == 0) 
+                    starts = 1
+                  if (length(ends) == 0) 
+                    ends = length(ind)
+                  if (ends[1] < starts[1]) 
+                    starts = c(1, starts)
+                  if (ends[length(ends)] < starts[length(starts)]) 
+                    ends = c(ends, length(ind))
+                  lengths = ends - starts
+                  long = which.max(lengths)
+                  textPos[[tr]][cl] = switch(rowTextAlignment, left = starts[long], 
+                    center = (starts[long] + ends[long])/2 + 0.5, right = ends[long] + 
+                      1)
                 }
                 if (rowTextAlignment == "left") {
-                    yPos = seq(from = 1, to = nCharFit, by = 1)/(nCharFit + 1)
+                  yPos = seq(from = 1, to = nCharFit, by = 1)/(nCharFit + 1)
                 } else {
-                    yPos = seq(from = nCharFit, to = 1, by = -1)/(nCharFit + 1)
+                  yPos = seq(from = nCharFit, to = 1, by = -1)/(nCharFit + 1)
                 }
-                textPosY[[tr]] = rep(yPos, 
-                    ceiling(nLevs/nCharFit) + 5)[1:nLevs][rank(textPos[[tr]])]
+                textPosY[[tr]] = rep(yPos, ceiling(nLevs/nCharFit) + 5)[1:nLevs][rank(textPos[[tr]])]
             }
         }
         jIndex = nRows
@@ -841,35 +785,34 @@ plot_CORE <- function(original.tree, list_clusters = NULL,
             yb = rep(yBottom[jj], dimC[1])
             yt = rep(yTop[jj], dimC[1])
             if (is.null(dim(C))) {
-                rect(xl, yb, xr, yt, col = as.character(C), 
-                    border = as.character(C))
+                rect(xl, yb, xr, yt, col = as.character(C), border = as.character(C))
             } else {
-                rect(xl, yb, xr, yt, col = as.character(C[, j]), 
-                    border = as.character(C[, j]))
+                rect(xl, yb, xr, yt, col = as.character(C[, j]), border = as.character(C[, 
+                  j]))
             }
-            text(rowLabels[j], pos = 2, x = -charWidth/2 + xl[1], 
-                y = (yBottom[jj] + yTop[jj])/2, cex = cex.rowLabels, xpd = TRUE)
+            text(rowLabels[j], pos = 2, x = -charWidth/2 + xl[1], y = (yBottom[jj] + 
+                yTop[jj])/2, cex = cex.rowLabels, xpd = TRUE)
             textRow = match(j, textPositions)
             if (is.finite(textRow)) {
                 jIndex = jIndex - 1
                 xt = (textPos[[textRow]] - 1.5) * step
                 xt[xt < par("usr")[1]] = par("usr")[1]
                 xt[xt > par("usr")[2]] = par("usr")[2]
-                yt = yBottom[jIndex] + (yTop[jIndex] - yBottom[jIndex]) * 
-                    (textPosY[[textRow]] + 1/(2 * nCharFit + 2))
+                yt = yBottom[jIndex] + (yTop[jIndex] - yBottom[jIndex]) * (textPosY[[textRow]] + 
+                  1/(2 * nCharFit + 2))
                 nt = length(textLevs[[textRow]])
                 if (addTextGuide) 
                   for (l in 1:nt) lines(c(xt[l], xt[l]), c(yt[l], yTop[jIndex]), 
                     col = "darkgrey", lty = 3)
-                textAdj = c(0, 0.5, 1)[match(rowTextAlignment, c("left", 
-                    "center", "right"))]
-                text(textLevs[[textRow]], x = xt, y = yt, adj = c(textAdj, 1), 
-                    xpd = TRUE, cex = cex.rowText)
+                textAdj = c(0, 0.5, 1)[match(rowTextAlignment, c("left", "center", 
+                  "right"))]
+                text(textLevs[[textRow]], x = xt, y = yt, adj = c(textAdj, 1), xpd = TRUE, 
+                  cex = cex.rowText)
             }
             jIndex = jIndex - 1
         }
-        for (j in 0:(nColorRows + nTextRows)) lines(x = c(0, 1), 
-            y = c(yBottom[j + 1], yBottom[j + 1]))
+        for (j in 0:(nColorRows + nTextRows)) lines(x = c(0, 1), y = c(yBottom[j + 
+            1], yBottom[j + 1]))
     }
     
     #---------------------------------------------------------------------------
@@ -924,14 +867,14 @@ plot_CORE <- function(original.tree, list_clusters = NULL,
 #' optimal_cluster = unlist(CORE_cluster$Cluster[optimal_index]), shift = -2000)
 #'
 
-plot_optimal_CORE <- function(original_tree, optimal_cluster = NULL, 
-    shift = -100, values = NULL) {
+plot_optimal_CORE <- function(original_tree, optimal_cluster = NULL, shift = -100, 
+    values = NULL) {
     if (is.null(values)) {
         n <- length(unique(optimal_cluster))
-        qual_col_pals = RColorBrewer::brewer.pal.info[
-            RColorBrewer::brewer.pal.info$category == "qual", ]
-        col_vector = unlist(mapply(RColorBrewer::brewer.pal,
-            qual_col_pals$maxcolors, rownames(qual_col_pals)))
+        qual_col_pals = RColorBrewer::brewer.pal.info[RColorBrewer::brewer.pal.info$category == 
+            "qual", ]
+        col_vector = unlist(mapply(RColorBrewer::brewer.pal, qual_col_pals$maxcolors, 
+            rownames(qual_col_pals)))
         values <- col_vector
     }
     
@@ -951,8 +894,7 @@ plot_optimal_CORE <- function(original_tree, optimal_cluster = NULL,
     index_to_overwriteNA[1] <- c(round(dendro.labels[1]/2))
     # the loop only uses information from dendro.labels
     for (i in 2:length(dendro.labels)) {
-        index_to_overwriteNA[i] <- sum(dendro.labels[1:i - 1]) + 
-            round(dendro.labels[i]/2)
+        index_to_overwriteNA[i] <- sum(dendro.labels[1:i - 1]) + round(dendro.labels[i]/2)
         print(i)
         print(index_to_overwriteNA)
     }
@@ -964,8 +906,8 @@ plot_optimal_CORE <- function(original_tree, optimal_cluster = NULL,
     # branch_names[index_to_overwriteNA] <- index_labels_cluster_names
     
     # Apply labels directly to dendrogram
-    coloured.dendro <- dendextend::branches_attr_by_clusters(dendro.obj, 
-        clusters = ordered.clusters, attr = "col", values = values)
+    coloured.dendro <- dendextend::branches_attr_by_clusters(dendro.obj, clusters = ordered.clusters, 
+        attr = "col", values = values)
     # need to specify the name space dendextend::
     coloured.dendro <- dendextend::set(coloured.dendro, "labels", branch_names)
     
@@ -974,15 +916,12 @@ plot_optimal_CORE <- function(original_tree, optimal_cluster = NULL,
     print("Plotting the colored dendrogram now....")
     plot(coloured.dendro)
     print("Plotting the bar underneath now....")
-    dendro.colours <- unique(dendextend::get_leaves_branches_col(
-        coloured.dendro))
+    dendro.colours <- unique(dendextend::get_leaves_branches_col(coloured.dendro))
     coloured.order <- stats::order.dendrogram(coloured.dendro)
-    sorted.levels <- dendextend::sort_levels_values(as.vector(optimal_cluster)[
-        coloured.order])
+    sorted.levels <- dendextend::sort_levels_values(as.vector(optimal_cluster)[coloured.order])
     
-    sorted.levels <- sorted.levels[match(seq_along(coloured.order),
-        coloured.order)]
-    dendextend::colored_bars(dendro.colours[sorted.levels], coloured.dendro, 
-        rowLabels = "Cluster", y_shift = shift)
+    sorted.levels <- sorted.levels[match(seq_along(coloured.order), coloured.order)]
+    dendextend::colored_bars(dendro.colours[sorted.levels], coloured.dendro, rowLabels = "Cluster", 
+        y_shift = shift)
     
 }

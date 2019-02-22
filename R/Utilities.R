@@ -28,7 +28,7 @@ topvar_scGPS <- function(expression.matrix = NULL, ngenes = 1500) {
 #' @param reduced_dat is a matrix with genes in rows and cells in columns
 #' @param color_fac is a vector of colors corresponding to clusters to determine colors of scattered plots 
 #' @param palletes can be a customised color pallete that determine colors for density plots, if NULL it will 
-#' use RColorBrewer colorRampPalette(RColorBrewer::brewer.pal(sample_num, "Set1"))(sample_num)
+#' use RColorBrewer colorRampPalette(RColorBrewer::brewer.pal(sample_num, 'Set1'))(sample_num)
 #' @param dims an integer of the number of dimestions
 #' @param dimNames a vector of the names of the dimensions
 #' @param legend_title title of the plot's legend
@@ -47,36 +47,36 @@ topvar_scGPS <- function(expression.matrix = NULL, ngenes = 1500) {
 #' plot(p2)
 #'
 
-plotReduced_scGPS <- function(reduced_dat, color_fac = NULL, dims = c(1,
-  2), dimNames = c("Dim 1", "Dim 2"), palletes = NULL, legend_title = "Cluster") {
-  reduced_dat_toPlot <- as.data.frame(reduced_dat[, dims])
-  sample_num <- length(unique(color_fac))
-  if(is.null(palletes)){
-    palletes <- colorRampPalette(RColorBrewer::brewer.pal(sample_num, "Set1"))(sample_num)
-  }
-  reduced_dat_toPlot <- as.data.frame(reduced_dat[, dims])
-  sample_num <- length(unique(color_fac))
-  colnames(reduced_dat_toPlot) <- dimNames
-  reduced_dat_toPlot$color_fac <- color_fac
-  p <- qplot(x = reduced_dat[, dims[1]], y = reduced_dat[, dims[2]], alpha = I(0.7),
-             geom = "point", color = color_fac) + theme_bw()
-  p <- p + ylab(dimNames[2]) + xlab(dimNames[1]) + scale_color_manual(name = legend_title,
-                                                                      values = palletes[1:sample_num], limits = sort(as.character(as.vector(unique(color_fac)))))
-  p <- p + theme(panel.border = element_rect(colour = "black", fill = NA, size = 1.5)) +
-    theme(legend.position = "bottom") + theme(text = element_text(size = 20))
-  
-  yaxis <- cowplot::axis_canvas(p, axis = "y", coord_flip = TRUE) + geom_density(data = reduced_dat_toPlot,
-                                                                        aes(`Dim 2`, ..count.., fill = color_fac), size = 0.2, alpha = 0.7) + coord_flip() +
-    scale_fill_manual(name = "Samples", values = palletes[1:sample_num], limits = sort(as.character(as.vector(unique(color_fac)))))
-  
-  xaxis <- cowplot::axis_canvas(p, axis = "x") + geom_density(data = reduced_dat_toPlot,
-                                                     aes(`Dim 1`, ..count.., fill = color_fac), size = 0.4, alpha = 0.7) + scale_fill_manual(name = "Samples",
-                                                                                                                                             values = palletes[1:sample_num], limits = sort(as.character(as.vector(unique(color_fac)))))
-  
-  p1_x <- cowplot::insert_xaxis_grob(p, xaxis, grid::unit(0.2, "null"), position = "top")
-  p1_x_y <- cowplot::insert_yaxis_grob(p1_x, yaxis, grid::unit(0.2, "null"), position = "right")
-  p2 <- cowplot::ggdraw(p1_x_y)
-  return(p2)
+plotReduced_scGPS <- function(reduced_dat, color_fac = NULL, dims = c(1, 2), dimNames = c("Dim 1", 
+    "Dim 2"), palletes = NULL, legend_title = "Cluster") {
+    reduced_dat_toPlot <- as.data.frame(reduced_dat[, dims])
+    sample_num <- length(unique(color_fac))
+    if (is.null(palletes)) {
+        palletes <- colorRampPalette(RColorBrewer::brewer.pal(sample_num, "Set1"))(sample_num)
+    }
+    reduced_dat_toPlot <- as.data.frame(reduced_dat[, dims])
+    sample_num <- length(unique(color_fac))
+    colnames(reduced_dat_toPlot) <- dimNames
+    reduced_dat_toPlot$color_fac <- color_fac
+    p <- qplot(x = reduced_dat[, dims[1]], y = reduced_dat[, dims[2]], alpha = I(0.7), 
+        geom = "point", color = color_fac) + theme_bw()
+    p <- p + ylab(dimNames[2]) + xlab(dimNames[1]) + scale_color_manual(name = legend_title, 
+        values = palletes[1:sample_num], limits = sort(as.character(as.vector(unique(color_fac)))))
+    p <- p + theme(panel.border = element_rect(colour = "black", fill = NA, size = 1.5)) + 
+        theme(legend.position = "bottom") + theme(text = element_text(size = 20))
+    
+    yaxis <- cowplot::axis_canvas(p, axis = "y", coord_flip = TRUE) + geom_density(data = reduced_dat_toPlot, 
+        aes(`Dim 2`, ..count.., fill = color_fac), size = 0.2, alpha = 0.7) + coord_flip() + 
+        scale_fill_manual(name = "Samples", values = palletes[1:sample_num], limits = sort(as.character(as.vector(unique(color_fac)))))
+    
+    xaxis <- cowplot::axis_canvas(p, axis = "x") + geom_density(data = reduced_dat_toPlot, 
+        aes(`Dim 1`, ..count.., fill = color_fac), size = 0.4, alpha = 0.7) + scale_fill_manual(name = "Samples", 
+        values = palletes[1:sample_num], limits = sort(as.character(as.vector(unique(color_fac)))))
+    
+    p1_x <- cowplot::insert_xaxis_grob(p, xaxis, grid::unit(0.2, "null"), position = "top")
+    p1_x_y <- cowplot::insert_yaxis_grob(p1_x, yaxis, grid::unit(0.2, "null"), position = "right")
+    p2 <- cowplot::ggdraw(p1_x_y)
+    return(p2)
 }
 
 
@@ -87,8 +87,8 @@ plotReduced_scGPS <- function(reduced_dat, color_fac = NULL, dims = c(1,
 #' @param cluster corresponding cluster information in the expression_matrix
 #' by running CORE clustering or using other methods.
 #' @param selected_cluster a vector of unique cluster ids to calculate
-#' @param fitType string specifying "local" or "parametric" for DEseq dispersion estimation
-#' @param dispersion_method one of the options c( "pooled", "pooled-CR", "per-condition", "blind" )
+#' @param fitType string specifying 'local' or 'parametric' for DEseq dispersion estimation
+#' @param dispersion_method one of the options c( 'pooled', 'pooled-CR', 'per-condition', 'blind' )
 #' @return a \code{list} containing sorted DESeq analysis results
 #' @export
 #' @author Quan Nguyen, 2017-11-25
@@ -104,9 +104,9 @@ plotReduced_scGPS <- function(reduced_dat, color_fac = NULL, dims = c(1,
 
 
 findMarkers_scGPS <- function(expression_matrix = NULL, cluster = NULL, selected_cluster = NULL, 
-                              fitType="local", dispersion_method = "per-condition" ) {
+    fitType = "local", dispersion_method = "per-condition") {
     DE_exprsMat <- round(expression_matrix + 1)
-
+    
     DE_results <- list()
     for (cl_id in unique(selected_cluster)) {
         # arrange clusters and exprs matrix
@@ -114,27 +114,29 @@ findMarkers_scGPS <- function(expression_matrix = NULL, cluster = NULL, selected
         mainCl_idx <- which(as.character(cluster) != as.character(cl_id))
         diff_mat <- DE_exprsMat[, c(mainCl_idx, cl_index)]
         # start DE
-
+        
         condition_cluster = as.vector(cluster)
         condition_cluster[1:length(mainCl_idx)] <- rep("Others", length(mainCl_idx))
-        condition_cluster[(length(mainCl_idx) + 1):ncol(diff_mat)] <- rep(as.character(cl_id),
+        condition_cluster[(length(mainCl_idx) + 1):ncol(diff_mat)] <- rep(as.character(cl_id), 
             length(cl_index))
-
-        print(paste0("Start estimate dispersions for cluster ", as.character(cl_id),
+        
+        print(paste0("Start estimate dispersions for cluster ", as.character(cl_id), 
             "..."))
-        #Note: the local fit option requires the library
+        # Note: the local fit option requires the library
         cds = DESeq::newCountDataSet(diff_mat, condition_cluster)
         cds = DESeq::estimateSizeFactors(cds)
         library(locfit)
         cds = DESeq::estimateDispersions(cds, method = dispersion_method, fitType = fitType)
-        print(paste0("Done estimate dispersions. Start nbinom test for cluster ",
+        print(paste0("Done estimate dispersions. Start nbinom test for cluster ", 
             as.character(cl_id), "..."))
         res1 = DESeq::nbinomTest(cds, "Others", as.character(cl_id))
         print(paste0("Done nbinom test for cluster ", as.character(cl_id), " ..."))
         # adjust folchange
         print(paste0("Adjust foldchange by subtracting basemean to 1..."))
-        res1 <- mutate(res1, AdjustedFC = (res1$baseMeanB - 1)/(res1$baseMeanA - 1))
-        res1 <- mutate(res1, AdjustedLogFC = log2((res1$baseMeanB - 1)/(res1$baseMeanA - 1)))
+        res1 <- mutate(res1, AdjustedFC = (res1$baseMeanB - 1)/(res1$baseMeanA - 
+            1))
+        res1 <- mutate(res1, AdjustedLogFC = log2((res1$baseMeanB - 1)/(res1$baseMeanA - 
+            1)))
         # order
         res1_order <- arrange(res1, res1$pval, desc(abs(res1$AdjustedLogFC)))
         # write to list
@@ -142,7 +144,7 @@ findMarkers_scGPS <- function(expression_matrix = NULL, cluster = NULL, selected
         name_list = paste0("DE_Subpop", cl_id, "vsRemaining")
         names(DE_results)[length(DE_results)] <- name_list
     }
-
+    
     return(DE_results)
 }
 
@@ -155,7 +157,7 @@ findMarkers_scGPS <- function(expression_matrix = NULL, cluster = NULL, selected
 #' @param DEgeneList is a vector of gene symbols, convertable to ENTREZID
 #' @param pvalueCutoff is a numeric of the cutoff p value
 #' @param gene_symbol logical of whether the geneList is a gene symbol
-#' @param species is the selection of "human" or "mouse", default to "human" genes
+#' @param species is the selection of 'human' or 'mouse', default to 'human' genes
 #' @return write enrichment test output to a file and an enrichment test object for plotting
 #' @examples
 #' day2 <- sample1
@@ -172,7 +174,7 @@ findMarkers_scGPS <- function(expression_matrix = NULL, cluster = NULL, selected
 #' LSOLDA_dat <- bootstrap_scGPS(nboots = 2, mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, genes=genes,
 #'                         listData =list(), cluster_mixedpop1 = cluster_mixedpop1,
 #'                         cluster_mixedpop2 = cluster_mixedpop2, c_selectID = c_selectID)
-#' enrichment_test <- annotate_scGPS(genes, pvalueCutoff=0.05, gene_symbol=TRUE, species = "human")
+#' enrichment_test <- annotate_scGPS(genes, pvalueCutoff=0.05, gene_symbol=TRUE, species = 'human')
 #' clusterProfiler::dotplot(enrichment_test, showCategory=15)
 #'
 
@@ -181,42 +183,42 @@ findMarkers_scGPS <- function(expression_matrix = NULL, cluster = NULL, selected
 # source('https://bioconductor.org/biocLite.R') biocLite('ReactomePA') Package
 # Genome wide annotation for Human
 # http://bioconductor.org/packages/release/data/annotation/html/org.Hs.eg.db.html
-# biocLite('org.Hs.eg.db'); biocLite('org.Mm.eg.db');  biocLite('clusterProfiler'); install.packages('xlsx')
-# Note: users may need to download and install clusterProfiler from source
-# clusterProfiler_3.6.0.tgz' use: manual installing
-# install.packages(path_to_file, repos = NULL, type='source') Done installation
-# needed for reactome pathway analysis reactome in R----------------------------
+# biocLite('org.Hs.eg.db'); biocLite('org.Mm.eg.db');
+# biocLite('clusterProfiler'); install.packages('xlsx') Note: users may need to
+# download and install clusterProfiler from source clusterProfiler_3.6.0.tgz'
+# use: manual installing install.packages(path_to_file, repos = NULL,
+# type='source') Done installation needed for reactome pathway analysis reactome
+# in R----------------------------
 
-annotate_scGPS <- function(DEgeneList, pvalueCutoff = 0.05, gene_symbol = TRUE, 
-    species = "human") {
+annotate_scGPS <- function(DEgeneList, pvalueCutoff = 0.05, gene_symbol = TRUE, species = "human") {
     # assumming the geneList is gene symbol (common for 10X data)
-    if (species == "human"){
-      if (gene_symbol == TRUE) {
-        convert_to_gene_ID = clusterProfiler::bitr(DEgeneList, fromType = "SYMBOL", toType = "ENTREZID",
-            OrgDb = "org.Hs.eg.db")
-        print("Original gene number in geneList")
-        print(length(DEgeneList))
-        print("Number of genes successfully converted")
-        print(nrow(convert_to_gene_ID))
-    } else {
-        stop("The list must contain human gene symbols")
+    if (species == "human") {
+        if (gene_symbol == TRUE) {
+            convert_to_gene_ID = clusterProfiler::bitr(DEgeneList, fromType = "SYMBOL", 
+                toType = "ENTREZID", OrgDb = "org.Hs.eg.db")
+            print("Original gene number in geneList")
+            print(length(DEgeneList))
+            print("Number of genes successfully converted")
+            print(nrow(convert_to_gene_ID))
+        } else {
+            stop("The list must contain human gene symbols")
+        }
+    } else if (species == "mouse") {
+        if (gene_symbol == TRUE) {
+            convert_to_gene_ID = clusterProfiler::bitr(DEgeneList, fromType = "SYMBOL", 
+                toType = "ENTREZID", OrgDb = "org.Mm.eg.db")
+            print("Original gene number in geneList")
+            print(length(DEgeneList))
+            print("Number of genes successfully converted")
+            print(nrow(convert_to_gene_ID))
+        } else {
+            stop("The list must contain mouse gene symbols")
+        }
     }
-    } else if (species == "mouse"){
-      if (gene_symbol == TRUE) {
-      convert_to_gene_ID = clusterProfiler::bitr(DEgeneList, fromType = "SYMBOL", toType = "ENTREZID",
-                                                 OrgDb = "org.Mm.eg.db")
-      print("Original gene number in geneList")
-      print(length(DEgeneList))
-      print("Number of genes successfully converted")
-      print(nrow(convert_to_gene_ID))
-    } else {
-      stop("The list must contain mouse gene symbols")        
-    }
-    } 
-
-    Reactome_pathway_test <- ReactomePA::enrichPathway(gene = convert_to_gene_ID$ENTREZID, pvalueCutoff = 0.05,
-        readable = TRUE)
-
+    
+    Reactome_pathway_test <- ReactomePA::enrichPathway(gene = convert_to_gene_ID$ENTREZID, 
+        pvalueCutoff = 0.05, readable = TRUE)
+    
     # plot some results: note Reactome_pathway_test is a reactomePA object write
     # Reactome_pathway_test results, need to convert to data.frame
     output_df <- as.data.frame(Reactome_pathway_test)
@@ -232,7 +234,7 @@ annotate_scGPS <- function(DEgeneList, pvalueCutoff = 0.05, gene_symbol = TRUE,
 #' @description temp function to import packages to namespace using devtools
 #' @useDynLib scGPS
 #' @importFrom Rcpp evalCpp
-#' @exportPattern "^[[:alpha:]]+"
+#' @exportPattern '^[[:alpha:]]+'
 #' @import glmnet
 #' @import caret
 #' @import dplyr
@@ -246,10 +248,10 @@ annotate_scGPS <- function(DEgeneList, pvalueCutoff = 0.05, gene_symbol = TRUE,
 #' @importFrom stats as.dist coef na.omit prcomp predict sd as.dendrogram
 #' @importFrom grDevices colorRampPalette
 #' @importFrom graphics abline layout par plot
-#' @return NULL
+#' @return a message 
 
-
-add_import <- function() {
-	return(NULL)
+add_import <- function(x = 1) {
+    if (x == 1) 
+        return("required functions imported")
 }
 
