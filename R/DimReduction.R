@@ -15,17 +15,13 @@
 #'
 
 
-PCA_scGPS <- function(expression.matrix = NULL, ngenes = 1500, scaling = TRUE, 
-    npcs = 50) {
-    print(paste0("Preparing PCA inputs using the top ", as.integer(ngenes),
-        " genes ..."))
-    subset.matrix <- topvar_scGPS(expression.matrix = expression.matrix,
-        ngenes = ngenes)
+PCA_scGPS <- function(expression.matrix = NULL, ngenes = 1500, scaling = TRUE, npcs = 50) {
+    print(paste0("Preparing PCA inputs using the top ", as.integer(ngenes), " genes ..."))
+    subset.matrix <- topvar_scGPS(expression.matrix = expression.matrix, ngenes = ngenes)
     
     # transpose to perform pca for cells in rows
     pca.input.matrix <- t(subset.matrix)
-    # pca.input.matrix <- transposed.matrix[, CalcColVariance(transposed.matrix)
-    #    > 0]
+    # pca.input.matrix <- transposed.matrix[, CalcColVariance(transposed.matrix) > 0]
     
     # Compute PCA
     print("Computing PCA values...")
@@ -36,8 +32,7 @@ PCA_scGPS <- function(expression.matrix = NULL, ngenes = 1500, scaling = TRUE,
     }
     
     pca.percent.var <- pca.result$sdev^2/sum(pca.result$sdev^2)
-    return(list(reduced_dat = pca.result$x[, 1:npcs], 
-        variance = pca.percent.var))
+    return(list(reduced_dat = pca.result$x[, 1:npcs], variance = pca.percent.var))
 }
 
 
@@ -55,8 +50,7 @@ PCA_scGPS <- function(expression.matrix = NULL, ngenes = 1500, scaling = TRUE,
 #' t <-CIDR_scGPS(expression.matrix=assay(mixedpop1))
 #'
 CIDR_scGPS <- function(expression.matrix = NULL, ngenes = 1500) {
-    subset.matrix <- topvar_scGPS(expression.matrix = expression.matrix,
-    ngenes = 1500)
+    subset.matrix <- topvar_scGPS(expression.matrix = expression.matrix, ngenes = 1500)
     print("building cidr object...")
     sData <- cidr::scDataConstructor(subset.matrix)
     print("determine dropout candidates...")
@@ -78,29 +72,29 @@ CIDR_scGPS <- function(expression.matrix = NULL, ngenes = 1500) {
 #' tSNE
 #'
 #' @description calculate tSNE from top variable genes
-#' @param expression.matrix An expression matrix, with genes in rows
-#' @param ngenes number of genes used for clustering calculations.
-#' @param perplexity numeric; Perplexity parameter
+#' @param expression.mat An expression matrix, with genes in rows
+#' @param topgenes number of genes used for clustering calculations.
+#' @param perp numeric; Perplexity parameter
 #' (should not be bigger than 3 * perplexity < nrow(X) - 1, see details for 
 #' interpretation)
-#' @param theta numeric; Speed/accuracy trade-off (increase for less accuracy)
-#' @param scaling a logical of whether we want to scale the matrix
+#' @param thet numeric; Speed/accuracy trade-off (increase for less accuracy)
+#' @param scale a logical of whether we want to scale the matrix
 #' @export
 #' @return a tSNE reduced matrix containing three tSNE dimensions
 #' @examples
 #' day2 <- sample1
 #' mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, 
 #'     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
-#' t <-tSNE_scGPS(expression.matrix=assay(mixedpop1))
+#' t <-tSNE_scGPS(expression.mat = assay(mixedpop1))
 #'
-tSNE_scGPS <- function(expression.matrix = NULL, ngenes = 1500, scaling = TRUE,
-    theta = 0.5, perplexity = 30) {
-    reducedDat <- PCA_scGPS(expression.matrix = expression.matrix, 
-        ngenes = ngenes, scaling = scaling)
+tSNE_scGPS <- function(expression.mat = NULL, topgenes = 1500, scale = TRUE, thet = 0.5, 
+    perp = 30) {
+    reducedDat <- PCA_scGPS(expression.matrix = expression.mat, ngenes = topgenes, 
+        scaling = scale)
     reducedDat <- reducedDat$reduced_dat
     print("Running tSNE ...")
-    tsne <- Rtsne::Rtsne(reducedDat, pca = TRUE, perplexity = perplexity, 
-        theta = theta, ignore_duplicates = TRUE)
+    tsne <- Rtsne::Rtsne(reducedDat, pca = TRUE, perplexity = perp, theta = thet, 
+        ignore_duplicates = TRUE)
     return(tsne$Y)
 }
 
