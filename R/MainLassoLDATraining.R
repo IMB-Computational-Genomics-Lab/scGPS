@@ -354,7 +354,7 @@ training_scGPS <- function(genes = NULL, cluster_mixedpop1 = NULL, mixedpop1 = N
 #' @param LDA_run logical, if the LDA prediction is added to compare to ElasticNet, 
 #' the LDA model needs to be trained from the training_scGPS before inputting to this 
 #' prediction step
-#' @param c_selectId a number to specify the trained cluster used for prediction 
+#' @param c_selectID a number to specify the trained cluster used for prediction 
 #' @return a \code{list} with prediction results written in to the index
 #' \code{out_idx}
 #' @export
