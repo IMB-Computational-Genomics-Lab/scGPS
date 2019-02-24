@@ -1,15 +1,16 @@
 ---
 title: "scGPS introduction"
+description: "scGPS is a single cell RNA analysis framework to decompose a mixed population into clusters (SCORE), followed by analysing the relationship between clusters (scGPS)"
 author: "Quan Nguyen and Michael Thompson"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-    %\VignetteIndexEntry{Vignettes}
+    %\VignetteIndexEntry{scGPS: single cell Global fate Potential of Subpopulations}
     %\VignetteEngine{knitr::rmarkdown}
-    \usepackage[utf8]{inputenc}
+    %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, out.width = '100%', include = FALSE}
+```{r setup, out.width = '100%', include = FALSE, eval = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -18,7 +19,6 @@ knitr::opts_chunk$set(
 )
 #Homepage 
 knitr::include_graphics("./man/figures/packagePlan.png")
-
 ```
 
 #1. Installation instruction
@@ -81,8 +81,8 @@ genes <- genes$Merged_unique
 # load cluster information 
 cluster_mixedpop1 <- colData(mixedpop1)[,1]
 cluster_mixedpop2 <- colData(mixedpop2)[,1]
-#run training 
-LSOLDA_dat <- bootstrap_scGPS(nboots = 50, mixedpop1 = mixedpop1, 
+#run training (running nboots = 3 here, but recommend to use nboots = 50-100)
+LSOLDA_dat <- bootstrap_scGPS(nboots = 3, mixedpop1 = mixedpop1, 
     mixedpop2 = mixedpop2, genes = genes, c_selectID  = c_selectID, listData = list(),
      cluster_mixedpop1 = cluster_mixedpop1,
      cluster_mixedpop2 = cluster_mixedpop2,
@@ -115,11 +115,8 @@ plot_sum(sum_pred_lasso)
 plot_sum(sum_pred_lda)
 # summary accuracy to check the model accuracy in the leave-out test set 
 summary_accuracy(object = LSOLDA_dat)
-
 # summary maximum deviance explained by the model 
 summary_deviance(object = LSOLDA_dat)
-
-
 
 ```
 
@@ -177,32 +174,21 @@ SCORE_test <- CORE_scGPS_bagging(mixedpop2, remove_outlier = c(0), PCA=FALSE,
 ```{r visualisation, dev='CairoPDF'}
 dev.off()
 ##3.2.1 plot CORE clustering 
-
-#plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster) #plot all clustering bars 
-#you can customise the cluster color bars (provide color_branch values)
-#pdf("All_CORE_clustering_bar.pdf")
 p1 <- plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster, color_branch = c("#208eb7", "#6ce9d3", "#1c5e39", "#8fca40", "#154975", "#b1c8eb"))
-#dev.off()
 p1 
 #extract optimal index identified by CORE_scGPS
 key_height <- CORE_cluster$optimalClust$KeyStats$Height
 optimal_res <- CORE_cluster$optimalClust$OptimalRes
 optimal_index = which(key_height == optimal_res)
 #plot one optimal clustering bar
-pdf("CORE_optimal_clusters.pdf")
 plot_optimal_CORE(original_tree= CORE_cluster$tree,
                    optimal_cluster = unlist(CORE_cluster$Cluster[optimal_index]), shift = -2000)
-dev.off()
 
 ##3.2.2 plot SCORE clustering 
-pdf("All_SCORE_clustering_bar.pdf")
 plot_CORE(SCORE_test$tree, list_clusters = SCORE_test$Cluster)#plot all clustering bars 
-dev.off()
 #plot one stable optimal clustering bar
-pdf("SCORE_optimal_clusters.pdf")
 plot_optimal_CORE(original_tree= SCORE_test$tree,
                    optimal_cluster = unlist(SCORE_test$Cluster[SCORE_test$optimal_index]), shift = -100)
-dev.off()
 
 ```
   
@@ -472,13 +458,7 @@ suppressMessages(library(networkD3))
 p1<-sankeyNetwork(Links =combined_D3obj$Links, Nodes = node_df,  Value = "Value", NodeGroup ="color", LinkGroup = "LinkColor", NodeID="Node", Source="Source", Target="Target", 
                   fontSize = 22 )
 p1
-
 #saveNetwork(p1, file = paste0(path,'Subpopulation_Net.html'))
-##R Setting Information
-#sessionInfo()
-#rmarkdown::render("/Users/quan.nguyen/Documents/Powell_group_MacQuan/AllCodes/scGPS/vignettes/vignette.Rmd",html_document(toc = TRUE, toc_depth = 3))
-#rmarkdown::render("/Users/quan.nguyen/Documents/Powell_group_MacQuan/AllCodes/scGPS/vignettes/vignette.Rmd",pdf_document(toc = TRUE, toc_depth = 3))
-
 ```
 
 ##4.4 Annotation: scGPS prediction can be used to compare scGPS clusters with a reference dataset to see which cluster is most similar to the reference 
