@@ -4,19 +4,19 @@
 \alias{tSNE_scGPS}
 \title{tSNE}
 \usage{
-tSNE_scGPS(expression.matrix = NULL, ngenes = 1500, scaling = TRUE,
-  theta = 0.5, perplexity = 30)
+tSNE_scGPS(expression.mat = NULL, topgenes = 1500, scale = TRUE,
+  thet = 0.5, perp = 30)
 }
 \arguments{
-\item{expression.matrix}{An expression matrix, with genes in rows}
+\item{expression.mat}{An expression matrix, with genes in rows}
 
-\item{ngenes}{number of genes used for clustering calculations.}
+\item{topgenes}{number of genes used for clustering calculations.}
 
-\item{scaling}{a logical of whether we want to scale the matrix}
+\item{scale}{a logical of whether we want to scale the matrix}
 
-\item{theta}{numeric; Speed/accuracy trade-off (increase for less accuracy)}
+\item{thet}{numeric; Speed/accuracy trade-off (increase for less accuracy)}
 
-\item{perplexity}{numeric; Perplexity parameter
+\item{perp}{numeric; Perplexity parameter
 (should not be bigger than 3 * perplexity < nrow(X) - 1, see details for 
 interpretation)}
 }
@@ -30,6 +30,6 @@ calculate tSNE from top variable genes
 day2 <- sample1
 mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, 
     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
-t <-tSNE_scGPS(expression.matrix=assay(mixedpop1))
+t <-tSNE_scGPS(expression.mat = assay(mixedpop1))
 
 }

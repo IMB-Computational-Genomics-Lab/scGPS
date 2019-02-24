@@ -5,7 +5,7 @@
 \title{plot reduced data}
 \usage{
 plotReduced_scGPS(reduced_dat, color_fac = NULL, dims = c(1, 2),
-  dimNames = c("Dim 1", "Dim 2"), palletes = NULL,
+  dimNames = c("Dim1", "Dim2"), palletes = NULL,
   legend_title = "Cluster")
 }
 \arguments{
@@ -18,7 +18,7 @@ plotReduced_scGPS(reduced_dat, color_fac = NULL, dims = c(1, 2),
 \item{dimNames}{a vector of the names of the dimensions}
 
 \item{palletes}{can be a customised color pallete that determine colors for density plots, if NULL it will 
-use RColorBrewer colorRampPalette(RColorBrewer::brewer.pal(sample_num, "Set1"))(sample_num)}
+use RColorBrewer colorRampPalette(RColorBrewer::brewer.pal(sample_num, 'Set1'))(sample_num)}
 
 \item{legend_title}{title of the plot's legend}
 }

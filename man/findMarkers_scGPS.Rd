@@ -16,9 +16,9 @@ by running CORE clustering or using other methods.}
 
 \item{selected_cluster}{a vector of unique cluster ids to calculate}
 
-\item{fitType}{string specifying "local" or "parametric" for DEseq dispersion estimation}
+\item{fitType}{string specifying 'local' or 'parametric' for DEseq dispersion estimation}
 
-\item{dispersion_method}{one of the options c( "pooled", "pooled-CR", "per-condition", "blind" )}
+\item{dispersion_method}{one of the options c( 'pooled', 'pooled-CR', 'per-condition', 'blind' )}
 }
 \value{
 a \code{list} containing sorted DESeq analysis results

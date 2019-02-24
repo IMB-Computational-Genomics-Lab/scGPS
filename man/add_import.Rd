@@ -4,6 +4,11 @@
 \alias{add_import}
 \title{Add imports}
 \usage{
+add_import(x = 1)
+}
+\value{
+a message 
+#' @examples
 add_import()
 }
 \description{

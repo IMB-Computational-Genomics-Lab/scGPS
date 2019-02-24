@@ -14,7 +14,7 @@ annotate_scGPS(DEgeneList, pvalueCutoff = 0.05, gene_symbol = TRUE,
 
 \item{gene_symbol}{logical of whether the geneList is a gene symbol}
 
-\item{species}{is the selection of "human" or "mouse", default to "human" genes}
+\item{species}{is the selection of 'human' or 'mouse', default to 'human' genes}
 }
 \value{
 write enrichment test output to a file and an enrichment test object for plotting
@@ -40,7 +40,7 @@ c_selectID <- 2
 LSOLDA_dat <- bootstrap_scGPS(nboots = 2, mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, genes=genes,
                         listData =list(), cluster_mixedpop1 = cluster_mixedpop1,
                         cluster_mixedpop2 = cluster_mixedpop2, c_selectID = c_selectID)
-enrichment_test <- annotate_scGPS(genes, pvalueCutoff=0.05, gene_symbol=TRUE, species = "human")
+enrichment_test <- annotate_scGPS(genes, pvalueCutoff=0.05, gene_symbol=TRUE, species = 'human')
 clusterProfiler::dotplot(enrichment_test, showCategory=15)
 
 }
