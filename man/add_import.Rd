@@ -6,11 +6,15 @@
 \usage{
 add_import(x = 1)
 }
+\arguments{
+\item{x}{a dummy variable for the temp function}
+}
 \value{
-a message 
-#' @examples
-add_import()
+a message
 }
 \description{
 temp function to import packages to namespace using devtools
+}
+\examples{
+add_import()
 }
