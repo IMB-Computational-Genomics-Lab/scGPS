@@ -28,7 +28,10 @@ Imports:
   RcppParallel,
   grDevices,
   graphics,
-  stats
+  stats,
+  utils,
+  DESeq,
+  locfit
 Suggests:
   Matrix (>= 1.2),
   testthat,

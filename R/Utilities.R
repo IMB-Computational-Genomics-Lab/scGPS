@@ -125,7 +125,7 @@ findMarkers_scGPS <- function(expression_matrix = NULL, cluster = NULL, selected
         # Note: the local fit option requires the library
         cds = DESeq::newCountDataSet(diff_mat, condition_cluster)
         cds = DESeq::estimateSizeFactors(cds)
-        library(locfit)
+        #library(locfit)
         cds = DESeq::estimateDispersions(cds, method = dispersion_method, fitType = fitType)
         print(paste0("Done estimate dispersions. Start nbinom test for cluster ", 
             as.character(cl_id), "..."))
@@ -244,10 +244,13 @@ annotate_scGPS <- function(DEgeneList, pvalueCutoff = 0.05, gene_symbol = TRUE, 
 #' @import RcppParallel
 #' @import SingleCellExperiment
 #' @import SummarizedExperiment
+#' @import DESeq
+#' @import locfit
 #' @importFrom graphics barplot lines rect strheight strwidth text
 #' @importFrom stats as.dist coef na.omit prcomp predict sd as.dendrogram
 #' @importFrom grDevices colorRampPalette
 #' @importFrom graphics abline layout par plot
+#' @importFrom utils head
 #' @param x a dummy variable for the temp function 
 #' @return a message 
 #' @examples
