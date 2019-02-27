@@ -93,14 +93,18 @@ plotReduced_scGPS <- function(reduced_dat, color_fac = NULL, dims = c(1, 2), dim
 #' @export
 #' @author Quan Nguyen, 2017-11-25
 #' @examples
-#' day2 <- sample1
-#' mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day2$dat2geneInfo,
+#' if (requireNamespace("locfit", quietly = TRUE)) {
+#'     day2 <- sample1
+#'     mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day2$dat2geneInfo,
 #'                     CellMetadata = day2$dat2_clusters)
-#' DEgenes <- findMarkers_scGPS(expression_matrix=assay(mixedpop1),
+#'     DEgenes <- findMarkers_scGPS(expression_matrix=assay(mixedpop1),
 #'                              cluster = colData(mixedpop1)[,1],
 #'                              selected_cluster=c(1,2)
 #'                              )
-#' names(DEgenes)
+#'     names(DEgenes)
+#' } else {
+#'     print("Load locfit to use this functionality")
+#' }
 
 
 findMarkers_scGPS <- function(expression_matrix = NULL, cluster = NULL, selected_cluster = NULL, 

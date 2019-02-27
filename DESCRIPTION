@@ -39,7 +39,6 @@ Suggests:
   cidr,
   parallel,
   rmarkdown,
-  DESeq,
   RColorBrewer,
   ReactomePA,
   clusterProfiler,
