@@ -93,18 +93,19 @@ plotReduced_scGPS <- function(reduced_dat, color_fac = NULL, dims = c(1, 2), dim
 #' @export
 #' @author Quan Nguyen, 2017-11-25
 #' @examples
-#' if (requireNamespace("locfit", quietly = TRUE)) {
-#'     day2 <- sample1
-#'     mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day2$dat2geneInfo,
-#'                     CellMetadata = day2$dat2_clusters)
-#'     DEgenes <- findMarkers_scGPS(expression_matrix=assay(mixedpop1),
-#'                              cluster = colData(mixedpop1)[,1],
-#'                              selected_cluster=c(1,2)
-#'                              )
-#'     names(DEgenes)
-#' } else {
-#'     print("Load locfit to use this functionality")
-#' }
+#'day2 <- sample1
+#'mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day2$dat2geneInfo,
+#'                CellMetadata = day2$dat2_clusters)
+#'# depending on the data, the DESeq::estimateDispersions function requires suitable fitType
+#'# and dispersion_method options
+#'DEgenes <- findMarkers_scGPS(expression_matrix=assay(mixedpop1),
+#'                         cluster = colData(mixedpop1)[,1],
+#'                         selected_cluster=c(1,2),
+#'                         fitType = "parametric", 
+#'                         dispersion_method = "blind"
+#'                         )
+#'names(DEgenes)
+
 
 
 findMarkers_scGPS <- function(expression_matrix = NULL, cluster = NULL, selected_cluster = NULL, 
