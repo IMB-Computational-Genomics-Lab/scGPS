@@ -55,8 +55,10 @@ devtools::load_all()
 ```{r scGPS_object, warning = FALSE, message = FALSE}
 
 # load mixed population 1 (loaded from sample1 dataset, named it as day2)
+path_scPGS = getwd()
+devtools::load_all(path_scPGS) 
 
-devtools::load_all("/Users/quan.nguyen/Documents/Powell_group_MacQuan/AllCodes/scGPS") 
+#devtools::load_all("/Users/quan.nguyen/Documents/Powell_group_MacQuan/AllCodes/scGPS") 
 
 #devtools::load_all("C:/Users/s5125601/Desktop/new2/scGPS") 
 
