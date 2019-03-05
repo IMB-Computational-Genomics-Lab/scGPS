@@ -51,7 +51,9 @@ Suggests:
   Rtsne,
   BiocParallel,
   e1071,
-  WGCNA
+  WGCNA,
+  devtools,
+  DOSE
 VignetteBuilder: knitr
 LinkingTo: 
   Rcpp,
