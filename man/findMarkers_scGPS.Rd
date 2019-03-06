@@ -16,9 +16,11 @@ by running CORE clustering or using other methods.}
 
 \item{selected_cluster}{a vector of unique cluster ids to calculate}
 
-\item{fitType}{string specifying 'local' or 'parametric' for DEseq dispersion estimation}
+\item{fitType}{string specifying 'local' or 'parametric' for DEseq dispersion
+estimation}
 
-\item{dispersion_method}{one of the options c( 'pooled', 'pooled-CR', 'per-condition', 'blind' )}
+\item{dispersion_method}{one of the options c( 'pooled', 'pooled-CR', 
+per-condition', 'blind' )}
 }
 \value{
 a \code{list} containing sorted DESeq analysis results
@@ -27,18 +29,19 @@ a \code{list} containing sorted DESeq analysis results
 Find DE genes from comparing one clust vs remaining
 }
 \examples{
-if (requireNamespace("locfit", quietly = TRUE)) {
-    day2 <- sample1
-    mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day2$dat2geneInfo,
-                    CellMetadata = day2$dat2_clusters)
-    DEgenes <- findMarkers_scGPS(expression_matrix=assay(mixedpop1),
-                             cluster = colData(mixedpop1)[,1],
-                             selected_cluster=c(1,2)
-                             )
-    names(DEgenes)
-} else {
-    print("Load locfit to use this functionality")
-}
+day2 <- sample1
+mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, 
+    GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
+# depending on the data, the DESeq::estimateDispersions function requires
+# suitable fitType
+# and dispersion_method options
+DEgenes <- findMarkers_scGPS(expression_matrix=assay(mixedpop1),
+                        cluster = colData(mixedpop1)[,1],
+                        selected_cluster=c(1,2),
+                        fitType = "parametric", 
+                        dispersion_method = "blind"
+                        )
+names(DEgenes)
 }
 \author{
 Quan Nguyen, 2017-11-25

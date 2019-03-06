@@ -23,9 +23,9 @@ output. This is needed for running bootstrap.}
 
 \item{standardize}{a logical of whether to standardize the data}
 
-\item{LDA_run}{logical, if the LDA prediction is added to compare to ElasticNet, 
-the LDA model needs to be trained from the training_scGPS before inputting to this 
-prediction step}
+\item{LDA_run}{logical, if the LDA prediction is added to compare to 
+ElasticNet, the LDA model needs to be trained from the training_scGPS before
+inputting to this prediction step}
 
 \item{c_selectID}{a number to specify the trained cluster used for prediction}
 }
@@ -55,7 +55,8 @@ listData  <- training_scGPS(genes,
     cluster_mixedpop1 = colData(mixedpop1)[, 1], mixedpop1 = mixedpop1, 
     mixedpop2 = mixedpop2, c_selectID, listData =list(), out_idx=out_idx)
 listData  <- predicting_scGPS(listData =listData,  mixedpop2 = mixedpop2, 
-    out_idx=out_idx, cluster_mixedpop2 = colData(mixedpop2)[, 1], c_selectID = c_selectID)
+    out_idx=out_idx, cluster_mixedpop2 = colData(mixedpop2)[, 1], 
+    c_selectID = c_selectID)
 
 }
 \author{

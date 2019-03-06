@@ -13,8 +13,8 @@ PrinComp_cpp(X)
 a list with three list pca lists
 }
 \description{
-This function provides significant speed gain if the input matrix
-is big
+This function provides significant speed gain if the input
+matrix is big
 }
 \examples{
 mat_test <-matrix(rnbinom(1000000,mu=0.01, size=10),nrow=1000)

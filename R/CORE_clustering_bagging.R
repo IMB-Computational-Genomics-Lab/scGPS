@@ -40,22 +40,27 @@
 #' @export
 #' @author Quan Nguyen, 2018-05-11
 
-CORE_scGPS_bagging <- function(mixedpop = NULL, bagging_run = 10, subsample_proportion = 0.8, 
-    windows = seq(0.025:1, by = 0.025), remove_outlier = c(0), nRounds = 1, PCA = FALSE, 
-    nPCs = 20, ngenes = 1500) {
+CORE_scGPS_bagging <- function(mixedpop = NULL, bagging_run = 10, 
+    subsample_proportion = 0.8, windows = seq(0.025:1, by = 0.025), 
+    remove_outlier = c(0), nRounds = 1, PCA = FALSE, nPCs = 20, ngenes = 1500) {
     
     # perform the clustering runs
-    cluster_all <- clustering_scGPS_bagging(object = mixedpop, windows = windows, 
-        bagging_run = bagging_run, subsample_proportion = subsample_proportion, remove_outlier = remove_outlier, 
-        ngenes = ngenes, nRounds = nRounds, PCA = PCA, nPCs = nPCs)
+    cluster_all <- clustering_scGPS_bagging(object = mixedpop, 
+        windows = windows, bagging_run = bagging_run, 
+        subsample_proportion = subsample_proportion, 
+        remove_outlier = remove_outlier, ngenes = ngenes, nRounds = nRounds, 
+        PCA = PCA, nPCs = nPCs)
     
     # find the optimal stability for each of the bagging runs
     optimal_stab <- list()
     for (i in 1:bagging_run) {
-        stab_df <- FindStability(list_clusters = cluster_all$bootstrap_clusters[[i]][[1]], 
-            cluster_ref = unname(unlist(cluster_all$bootstrap_clusters[[i]][[1]][[1]])))
+        stab_df <- FindStability(list_clusters = 
+            cluster_all$bootstrap_clusters[[i]][[1]], 
+            cluster_ref = unname(unlist(
+            cluster_all$bootstrap_clusters[[i]][[1]][[1]])))
         
-        optimal_stab[[i]] <- FindOptimalStability(list_clusters = cluster_all$bootstrap_clusters[[i]][[1]], 
+        optimal_stab[[i]] <- FindOptimalStability(list_clusters = 
+            cluster_all$bootstrap_clusters[[i]][[1]], 
             stab_df, bagging = TRUE, windows = windows)
     }
     
@@ -72,7 +77,8 @@ CORE_scGPS_bagging <- function(mixedpop = NULL, bagging_run = 10, subsample_prop
     }
     
     # record the most frequently occurring result, favour higher resolution
-    OptimalCluster_bagging_count <- which.max(tabulate(OptimalCluster_bagging))[1]
+    OptimalCluster_bagging_count <- which.max(tabulate(
+        OptimalCluster_bagging))[1]
     
     NumberClusters <- vector()
     for (i in 1:length(windows)) {
@@ -100,9 +106,11 @@ CORE_scGPS_bagging <- function(mixedpop = NULL, bagging_run = 10, subsample_prop
     optimal_index <- which(NumberClusters == OptimalCluster_bagging_count)[1]
     
     
-    return(list(Cluster = cluster_all$clustering_param, tree = cluster_all$tree, 
-        optimalClust = OptimalCluster_bagging, cellsRemoved = cluster_all$cellsRemoved, 
-        cellsForClustering = cluster_all$cellsForClustering, optimalMax = OptimalCluster_bagging_count, 
+    return(list(Cluster = cluster_all$clustering_param, tree = cluster_all$tree,
+        optimalClust = OptimalCluster_bagging, 
+        cellsRemoved = cluster_all$cellsRemoved, 
+        cellsForClustering = cluster_all$cellsForClustering, 
+        optimalMax = OptimalCluster_bagging_count, 
         highResCluster = RareCluster_bagging, optimal_index = optimal_index))
 }
 
@@ -138,9 +146,10 @@ CORE_scGPS_bagging <- function(mixedpop = NULL, bagging_run = 10, subsample_prop
 #' test <-clustering_scGPS_bagging(mixedpop2, remove_outlier = c(1),
 #'     bagging_run = 20, subsample_proportion = .8)
 
-clustering_scGPS_bagging <- function(object = NULL, ngenes = 1500, bagging_run = 20, 
-    subsample_proportion = 0.8, windows = seq(0.025:1, by = 0.025), remove_outlier = c(0), 
-    nRounds = 1, PCA = FALSE, nPCs = 20) {
+clustering_scGPS_bagging <- function(object = NULL, ngenes = 1500, 
+    bagging_run = 20, subsample_proportion = 0.8, 
+    windows = seq(0.025:1, by = 0.025), remove_outlier = c(0), nRounds = 1, 
+    PCA = FALSE, nPCs = 20) {
     
     
     # function for the highest resolution clustering (i.e. no window applied)
@@ -154,9 +163,8 @@ clustering_scGPS_bagging <- function(object = NULL, ngenes = 1500, bagging_run =
         #-------------------------------------Work in progress--------#
         if (PCA == TRUE) {
             # perform PCA dimensionality reduction
-            print(paste0("Performing PCA analysis ", "(Note: the variance for each cell needs to be > 0)"))
-            # print('Performing PCA analysis (Note: the variance for each cell needs to be
-            # >0)')
+            print(paste0("Performing PCA analysis ", 
+                "(Note: the variance for each cell needs to be > 0)"))
             exprs_mat_topVar_PCA <- prcomp(t(exprs_mat_topVar))
             exprs_mat_t <- as.data.frame(exprs_mat_topVar_PCA$x[, 1:nPCs])
             
@@ -169,19 +177,20 @@ clustering_scGPS_bagging <- function(object = NULL, ngenes = 1500, bagging_run =
         #-------------------------------------Work in progress--------#
         
         print("Performing hierarchical clustering")
-        original.tree <- fastcluster::hclust(as.dist(dist_mat), method = "ward.D2")
+        original.tree <- fastcluster::hclust(as.dist(dist_mat), 
+            method = "ward.D2")
         # the original clusters to be used as the reference
         print("Finding clustering information")
-        original.clusters <- unname(cutreeDynamic(original.tree, distM = as.matrix(dist_mat), 
-            verbose = 0))
+        original.clusters <- unname(cutreeDynamic(original.tree, 
+            distM = as.matrix(dist_mat), verbose = 0))
         original.tree$labels <- original.clusters
-        return(list(tree = original.tree, cluster_ref = original.clusters, dist_mat = dist_mat, 
-            exprs_mat_t = exprs_mat_t))
+        return(list(tree = original.tree, cluster_ref = original.clusters,
+            dist_mat = dist_mat, exprs_mat_t = exprs_mat_t))
     }
     
     # function to remove outlier clusters
-    removeOutlierCluster <- function(object = object, remove_outlier = remove_outlier, 
-        nRounds = nRounds) {
+    removeOutlierCluster <- function(object = object, 
+        remove_outlier = remove_outlier, nRounds = nRounds) {
         
         
         # Initial Message to the user
@@ -198,15 +207,17 @@ clustering_scGPS_bagging <- function(object = NULL, ngenes = 1500, bagging_run =
         
         while (i <= nRounds) {
             filter_out <- firstRoundClustering(objectTemp)
-            cluster_toRemove <- which(filter_out$cluster_ref %in% remove_outlier)
+            cluster_toRemove <- which(filter_out$cluster_ref %in% 
+                remove_outlier)
             if (length(cluster_toRemove) > 0) {
-                print(paste0("Found ", length(cluster_toRemove), " cells as outliers at round ", 
-                  i, " ..."))
+                print(paste0("Found ", length(cluster_toRemove), 
+                    " cells as outliers at round ", i, " ..."))
                 cells_to_remove <- c(cells_to_remove, cluster_toRemove)
                 objectTemp <- object[, -cells_to_remove]
                 i <- i + 1
             } else {
-                print(paste0("No more outliers detected in filtering round ", i))
+                print(paste0("No more outliers detected in filtering round ",
+                    i))
                 i <- nRounds + 1
             }
         }
@@ -214,27 +225,31 @@ clustering_scGPS_bagging <- function(object = NULL, ngenes = 1500, bagging_run =
         filter_out <- firstRoundClustering(objectTemp)
         cluster_toRemove <- which(filter_out$cluster_ref %in% remove_outlier)
         if (length(cluster_toRemove) > 0) {
-            print(paste0("Found ", length(cluster_toRemove), " cells as outliers at round ", 
-                i, " ..."))
-            print(paste0("Select ", i, " removal rounds if you want to remove these cells"))
+            print(paste0("Found ", length(cluster_toRemove), 
+                " cells as outliers at round ", i, " ..."))
+            print(paste0("Select ", i, 
+                " removal rounds if you want to remove these cells"))
         }
         
         exprs_mat_t <- filter_out$exprs_mat_t
         if (length(cells_to_remove) > 0) {
-            output <- list(firstRound_out = filter_out, cellsRemoved = colnames(object[, 
-                cells_to_remove]), cellsForClustering = colnames(object[, -cells_to_remove]), 
+            output <- list(firstRound_out = filter_out, 
+                cellsRemoved = colnames(object[, cells_to_remove]), 
+                cellsForClustering = colnames(object[, -cells_to_remove]), 
                 exprs_mat_t = exprs_mat_t)
         } else {
-            output <- list(firstRound_out = filter_out, cellsRemoved = c("No outliers found"), 
-                cellsForClustering = "All cells are kept for clustering", exprs_mat_t = exprs_mat_t)
+            output <- list(firstRound_out = filter_out, 
+                cellsRemoved = c("No outliers found"), 
+                cellsForClustering = "All cells are kept for clustering", 
+                exprs_mat_t = exprs_mat_t)
         }
         print(paste0(dim(exprs_mat_t)[1], " cells left after filtering"))
         return(output)
     }
     
     
-    firstRoundPostRemoval <- removeOutlierCluster(object = object, remove_outlier = remove_outlier, 
-        nRounds = nRounds)
+    firstRoundPostRemoval <- removeOutlierCluster(object = object, 
+        remove_outlier = remove_outlier, nRounds = nRounds)
     firstRound_out <- firstRoundPostRemoval$firstRound_out
     
     exprs_mat_t = firstRoundPostRemoval$exprs_mat_t
@@ -252,8 +267,8 @@ clustering_scGPS_bagging <- function(object = NULL, ngenes = 1500, bagging_run =
         for (i in 1:length(windows)) {
             
             namelist = paste0("window", windows[i])
-            toadd <- as.vector(cutreeDynamic(tree, distM = as.matrix(dist_mat), minSplitHeight = windows[i], 
-                verbose = 0))
+            toadd <- as.vector(cutreeDynamic(tree, distM = as.matrix(dist_mat), 
+                minSplitHeight = windows[i], verbose = 0))
             clustering_param[[i]] <- list(toadd)
             names(clustering_param[[i]]) <- namelist
         }
@@ -262,29 +277,35 @@ clustering_scGPS_bagging <- function(object = NULL, ngenes = 1500, bagging_run =
     }
     
     # save the whole tree
-    clustering_param_all <- clustering_windows(tree = original.tree, dist_mat = dist_mat)
+    clustering_param_all <- clustering_windows(tree = original.tree, 
+        dist_mat = dist_mat)
     
     # cluster a subsample for each of the bagging runs
-    print(paste0("Running ", bagging_run, " bagging runs, with ", subsample_proportion, 
-        " subsampling..."))
+    print(paste0("Running ", bagging_run, " bagging runs, with ", 
+        subsample_proportion, " subsampling..."))
     bootstrap_list <- list()
     for (i in 1:bagging_run) {
         # subsample the distance matrix for every bagging run
-        dist_mat_bootstrap_row_idx <- sample(1:nrow(exprs_mat_t), subsample_proportion * 
-            nrow(exprs_mat_t), replace = TRUE)
-        dist_mat_bootstrap <- dist_mat[dist_mat_bootstrap_row_idx, dist_mat_bootstrap_row_idx]
+        dist_mat_bootstrap_row_idx <- sample(1:nrow(exprs_mat_t), 
+            subsample_proportion * nrow(exprs_mat_t), replace = TRUE)
+        dist_mat_bootstrap <- dist_mat[dist_mat_bootstrap_row_idx, 
+            dist_mat_bootstrap_row_idx]
         
         # tempoarily store clustering results for each run
-        iter_tree <- fastcluster::hclust(as.dist(dist_mat_bootstrap), method = "ward.D2")
-        iter_temp <- clustering_windows(tree = iter_tree, dist_mat = dist_mat_bootstrap)
+        iter_tree <- fastcluster::hclust(as.dist(dist_mat_bootstrap), 
+            method = "ward.D2")
+        iter_temp <- clustering_windows(tree = iter_tree, 
+            dist_mat = dist_mat_bootstrap)
         iter_write <- list(iter_temp)  #NEED TO PARSE CELLNAMES TO HERE
         bootstrap_list[[i]] <- iter_write
     }
     
     print("Done clustering, moving to stability calculation...")
     
-    return(list(tree = original.tree, cluster_ref = original.clusters, bootstrap_clusters = bootstrap_list, 
-        clustering_param = clustering_param_all, cellsRemoved = firstRoundPostRemoval$cellsRemoved, 
+    return(list(tree = original.tree, cluster_ref = original.clusters, 
+        bootstrap_clusters = bootstrap_list, 
+        clustering_param = clustering_param_all, 
+        cellsRemoved = firstRoundPostRemoval$cellsRemoved, 
         cellsForClustering = firstRoundPostRemoval$cellsForClustering))
     
 }

@@ -80,8 +80,8 @@ arma::mat subset_cpp(NumericMatrix m1in, NumericVector rowidx_in, NumericVector 
 
 //' Principal component analysis
 //'
-//' @description This function provides significant speed gain if the input matrix
-//' is big
+//' @description This function provides significant speed gain if the input
+//' matrix is big
 //' @param X  an R matrix (expression matrix), rows are genes, columns are cells
 //' @return a list with three list pca lists
 //' @examples

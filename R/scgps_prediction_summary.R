@@ -45,7 +45,7 @@ summary_accuracy <- function(object = NULL) {
 #' \code{training_scGPS}
 #' @return a \code{list} containing three elements, with a vector of percent
 #' maximum deviance explained, a dataframe containg information for the full 
-#' deviance, and a dataframe containing gene names and coefficients of the best 
+#' deviance, and a dataframe containing gene names and coefficients of the best
 #' model
 #' @export
 #' @examples
@@ -77,7 +77,8 @@ summary_deviance <- function(object = NULL) {
     genesSig <- object$LassoGenes
     
     GeneNames_max <- genesSig[[deviVec_max]][[1]]
-    return(list(allDeviance = deviVec, DeviMax = deviDat[[deviVec_max]][[1]], LassoGenesMax = GeneNames_max))
+    return(list(allDeviance = deviVec, DeviMax = deviDat[[deviVec_max]][[1]], 
+        LassoGenesMax = GeneNames_max))
 }
 
 
@@ -130,7 +131,8 @@ summary_prediction_lasso <- function(LSOLDA_dat = NULL, nPredSubpop = NULL) {
     
     pred_lasso_percentOnly <- pred_lasso_tranformed[-toremove]
     
-    pred_lasso_mtrx <- matrix(pred_lasso_percentOnly, nrow = nPredSubpop, byrow = FALSE)
+    pred_lasso_mtrx <- matrix(pred_lasso_percentOnly, nrow = nPredSubpop, 
+        byrow = FALSE)
     
     row_names <- pred_lasso_tranformed[toremove[c(1:nPredSubpop)]]
     
@@ -189,7 +191,8 @@ summary_prediction_lda <- function(LSOLDA_dat = NULL, nPredSubpop = NULL) {
     
     pred_lda_percentOnly <- pred_lda_tranformed[-toremove]
     
-    pred_lda_mtrx <- matrix(pred_lda_percentOnly, nrow = nPredSubpop, byrow = FALSE)
+    pred_lda_mtrx <- matrix(pred_lda_percentOnly, nrow = nPredSubpop, 
+        byrow = FALSE)
     
     row_names <- pred_lda_tranformed[toremove[c(1:nPredSubpop)]]
     
@@ -235,19 +238,23 @@ summary_prediction_lda <- function(LSOLDA_dat = NULL, nPredSubpop = NULL) {
 #'     nPredSubpop=length(unique(colData(mixedpop2)[,1])), c_selectID = 1, 
 #'     mp_selectID =2)
 #'
-reformat_LASSO <- function(c_selectID = NULL, mp_selectID = NULL, LSOLDA_dat = NULL, 
-    nPredSubpop = NULL, Nodes_group = "#7570b3", nboots = 2) {
-    LASSO_out <- summary_prediction_lasso(LSOLDA_dat = LSOLDA_dat, nPredSubpop = nPredSubpop)
+reformat_LASSO <- function(c_selectID = NULL, mp_selectID = NULL, 
+    LSOLDA_dat = NULL, nPredSubpop = NULL, Nodes_group = "#7570b3", 
+    nboots = 2) {
+
+    LASSO_out <- summary_prediction_lasso(LSOLDA_dat = LSOLDA_dat, 
+        nPredSubpop = nPredSubpop)
     LASSO_out <- as.data.frame(LASSO_out)
     temp_name <- gsub("ElasticNet for subpop", "C", LASSO_out$names)
     temp_name <- gsub(" in target mixedpop", "_MP", temp_name)
     LASSO_out$names <- temp_name
-    source <- rep(paste0("C", c_selectID, "_MP", mp_selectID), length(temp_name))
+    source <- rep(paste0("C", c_selectID, "_MP", mp_selectID), 
+        length(temp_name))
     LASSO_out$Source <- source
     LASSO_out$Node <- source
     LASSO_out$Nodes_group <- rep(Nodes_group, length(temp_name))
-    colnames(LASSO_out) <- c(paste0("Boostrap", 1:nboots), "Target", "Source", "Node", 
-        "NodeGroup")
+    colnames(LASSO_out) <- c(paste0("Boostrap", 1:nboots), "Target", 
+        "Source", "Node", "NodeGroup")
     matrx_mean <- apply(LASSO_out[, c(1:nboots)], 1, function(x) {
         mean(as.numeric(x))
     })

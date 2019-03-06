@@ -7,7 +7,8 @@
 rcpp_Eucl_distance_NotPar(mat)
 }
 \arguments{
-\item{mat}{an R matrix (expression matrix), with cells in rows and genes in columns}
+\item{mat}{an R matrix (expression matrix), with cells in rows and genes
+in columns}
 }
 \value{
 a distance matrix

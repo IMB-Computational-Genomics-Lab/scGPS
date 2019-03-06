@@ -17,9 +17,10 @@ sample1
 a list, with the name day2
 }
 \description{
-The count data set contains counts for 16990 genes for 590 cells randomly
-subsampled from day-2 cardio-differentiation population.
-The vector of clustering information contains corresponding to cells in the count matrix
+The count data set contains counts for 16990 genes for 590 cells
+randomly subsampled from day-2 cardio-differentiation population.
+The vector of clustering information contains corresponding to cells in the 
+count matrix
 }
 \author{
 Quan Nguyen, 2017-11-25

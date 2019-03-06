@@ -13,7 +13,8 @@ rcpp_parallel_distance(mat)
 a distance matrix
 }
 \description{
-This function provides fast and memory efficient distance matrix calculation
+This function provides fast and memory efficient distance matrix
+calculation
 }
 \examples{
 mat_test <-matrix(rnbinom(1000000,mu=0.01, size=10),nrow=10000)

@@ -33,7 +33,8 @@ first mixed population}
 \item{trainset_ratio}{a number specifying the proportion of cells to be part 
 of the training subpopulation}
 
-\item{LDA_run}{logical, if the LDA prediction is added to compare to ElasticNet}
+\item{LDA_run}{logical, if the LDA prediction is added to compare to 
+ElasticNet}
 }
 \value{
 a \code{list} with prediction results written in to the index 
