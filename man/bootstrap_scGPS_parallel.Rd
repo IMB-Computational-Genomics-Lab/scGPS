@@ -2,7 +2,8 @@
 % Please edit documentation in R/MainLassoLDATraining.R
 \name{bootstrap_scGPS_parallel}
 \alias{bootstrap_scGPS_parallel}
-\title{BootStrap runs for both scGPS training and prediction with parallel option}
+\title{BootStrap runs for both scGPS training and prediction
+with parallel option}
 \usage{
 bootstrap_scGPS_parallel(ncores = 4, nboots = 1, genes = genes,
   mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, c_selectID,

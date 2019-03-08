@@ -1,5 +1,5 @@
-#' Main model training function for finding the best model that characterises a
-#' subpopulation
+#' Main model training function for finding the best model
+#' that characterises a subpopulation
 #'
 #' @description  Training a haft of all cells to find optimal ElasticNet and LDA
 #' models to predict a subpopulation
@@ -558,7 +558,7 @@ predicting_scGPS <- function(listData = NULL, cluster_mixedpop2 = NULL,
         
         # write to the next list level in the list if bootstrap is used
         list_predict_clusters_ElasticNet <- c(list_predict_clusters_ElasticNet,
-         predict_clusters_ElasticNet)
+            predict_clusters_ElasticNet)
         
         # done checking---------------------------------------------------------
         # predict
@@ -584,21 +584,21 @@ predicting_scGPS <- function(listData = NULL, cluster_mixedpop2 = NULL,
                 report_LDA <- paste0("LDA for subpop ", c_selectID_2, 
                     " in target mixedpop2")
                 if (ncol(LDA_result) == 2) {
-                  LDA_cluster_idx <- which(LDA_result[, 1] == c_selectID)
-                  predict_clusters_LDA <- as.numeric(LDA_result[LDA_cluster_idx,
-                    2])/sum(as.numeric(LDA_result[, 2])) * 100
-                  print(paste0("class probability prediction LDA ",
-                    "for target subpop ", 
-                    clust, " is ", predict_clusters_LDA))
-                  # write prediction output
-                  predict_clusters_LDA <- list(report_LDA, predict_clusters_LDA)
-                  
+                    LDA_cluster_idx <- which(LDA_result[, 1] == c_selectID)
+                    predict_clusters_LDA <- as.numeric(LDA_result[
+                        LDA_cluster_idx, 2])/
+                        sum(as.numeric(LDA_result[, 2])) * 100
+                    print(paste0("class probability prediction LDA ",
+                        "for target subpop ", 
+                        clust, " is ", predict_clusters_LDA))
+                    # write prediction output
+                    predict_clusters_LDA <- list(report_LDA,
+                        predict_clusters_LDA)
                 } else {
-                  
-                  print(paste0("prediction LDA has no solution for ",
-                    "target subpop ", clust))
-                  # write prediction output
-                  predict_clusters_LDA <- list(report_LDA, "NA")
+                    print(paste0("prediction LDA has no solution for ",
+                        "target subpop ", clust))
+                    # write prediction output
+                    predict_clusters_LDA <- list(report_LDA, "NA")
                 }
                 
                 list_predict_clusters_LDA <- c(list_predict_clusters_LDA, 
@@ -689,7 +689,8 @@ bootstrap_scGPS <- function(nboots = 1, genes = genes, mixedpop1 = mixedpop1,
 }
 
 
-#' BootStrap runs for both scGPS training and prediction with parallel option
+#' BootStrap runs for both scGPS training and prediction
+#' with parallel option
 #'
 #' @description  same as bootstrap_scGPS, but with an multicore option
 #' @param listData  a \code{list} object, which contains trained results for the

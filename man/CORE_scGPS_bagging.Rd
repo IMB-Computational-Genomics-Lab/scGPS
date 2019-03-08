@@ -2,8 +2,8 @@
 % Please edit documentation in R/CORE_clustering_bagging.R
 \name{CORE_scGPS_bagging}
 \alias{CORE_scGPS_bagging}
-\title{Main clustering SCORE (CORE V2.0) Stable Clustering at Optimal REsolution 
-with bagging and bootstrapping}
+\title{Main clustering SCORE (CORE V2.0) Stable Clustering
+at Optimal REsolution with bagging and bootstrapping}
 \usage{
 CORE_scGPS_bagging(mixedpop = NULL, bagging_run = 10,
   subsample_proportion = 0.8, windows = seq(0.025:1, by = 0.025),

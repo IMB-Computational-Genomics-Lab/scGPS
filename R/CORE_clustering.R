@@ -485,12 +485,12 @@ FindStability <- function(list_clusters = NULL, cluster_ref = NULL) {
         if (length(index_0) > 2) {
             for (i in 1:(length(index_0) - 1)) {
                 if (index_0[i + 1] - index_0[i] > 1) {
-                  # assign value to the last count
-                  counter_adjusted[(index_0[i] + 1):(index_0[i + 1] - 1)] = 
-                      counter[index_0[i + 1] - 1]
-                  counter_adjusted[index_0[i]] = 1  #reset
+                    # assign value to the last count
+                    counter_adjusted[(index_0[i] + 1):(index_0[i + 1] - 1)] = 
+                        counter[index_0[i + 1] - 1]
+                    counter_adjusted[index_0[i]] = 1  #reset
                 } else {
-                  counter_adjusted[(index_0[i] + 1)] = 1
+                    counter_adjusted[(index_0[i] + 1)] = 1
                 }
             }
         }
@@ -567,7 +567,7 @@ FindOptimalStability <- function(list_clusters, run_RandIdx, bagging = FALSE,
     p <- p + geom_line(aes(x = day_melt$Height, y = day_melt$value, 
         colour = day_melt$variable), size = 2) + theme_bw() + 
         theme(axis.text = element_text(size = 24), 
-             axis.title = element_text(size = 24)) + 
+            axis.title = element_text(size = 24)) + 
         theme(legend.text = element_text(size = 24)) + 
         theme(legend.title = element_blank()) + 
         xlab("Parameter from 0.025 to 1") + ylab("Scores") + 
@@ -782,8 +782,8 @@ plot_CORE <- function(original.tree, list_clusters = NULL,
                 width1 = rowWidths[physicalTextRow[tr]]
                 nCharFit = floor(width1/charHeight/1.7/par("lheight"))
                 if (nCharFit < 1) 
-                  stop(paste0("Rows are too narrow to fit text. Consider ",
-                      "decreasing cex.rowText."))
+                    stop(paste0("Rows are too narrow to fit text. Consider ",
+                        "decreasing cex.rowText."))
                 set = textPositions[tr]
                 textLevs[[tr]] = sort(unique(rowText[, tr]))
                 textLevs[[tr]] = textLevs[[tr]][!textLevs[[tr]] %in% 
@@ -792,29 +792,29 @@ plot_CORE <- function(original.tree, list_clusters = NULL,
                 textPos[[tr]] = rep(0, nLevs)
                 orderedText = rowText[order, tr]
                 for (cl in 1:nLevs) {
-                  ind = orderedText == textLevs[[tr]][cl]
-                  sind = ind[-1]
-                  ind1 = ind[-length(ind)]
-                  starts = c(if (ind[1]) 1 else NULL, which(!ind1 & sind) + 1)
-                  ends = which(c(ind1 & !sind, ind[length(ind)]))
-                  if (length(starts) == 0) 
-                    starts = 1
-                  if (length(ends) == 0) 
-                    ends = length(ind)
-                  if (ends[1] < starts[1]) 
-                    starts = c(1, starts)
-                  if (ends[length(ends)] < starts[length(starts)]) 
-                    ends = c(ends, length(ind))
-                  lengths = ends - starts
-                  long = which.max(lengths)
-                  textPos[[tr]][cl] = switch(rowTextAlignment, 
-                      left = starts[long], center = (starts[long] + 
-                          ends[long])/2 + 0.5, right = ends[long] + 1)
+                    ind = orderedText == textLevs[[tr]][cl]
+                    sind = ind[-1]
+                    ind1 = ind[-length(ind)]
+                    starts = c(if (ind[1]) 1 else NULL, which(!ind1 & sind) + 1)
+                    ends = which(c(ind1 & !sind, ind[length(ind)]))
+                    if (length(starts) == 0) 
+                        starts = 1
+                    if (length(ends) == 0) 
+                        ends = length(ind)
+                    if (ends[1] < starts[1]) 
+                        starts = c(1, starts)
+                    if (ends[length(ends)] < starts[length(starts)]) 
+                        ends = c(ends, length(ind))
+                    lengths = ends - starts
+                    long = which.max(lengths)
+                    textPos[[tr]][cl] = switch(rowTextAlignment, 
+                        left = starts[long], center = (starts[long] + 
+                        ends[long])/2 + 0.5, right = ends[long] + 1)
                 }
                 if (rowTextAlignment == "left") {
-                  yPos = seq(from = 1, to = nCharFit, by = 1)/(nCharFit + 1)
+                    yPos = seq(from = 1, to = nCharFit, by = 1)/(nCharFit + 1)
                 } else {
-                  yPos = seq(from = nCharFit, to = 1, by = -1)/(nCharFit + 1)
+                    yPos = seq(from = nCharFit, to = 1, by = -1)/(nCharFit + 1)
                 }
                 textPosY[[tr]] = rep(yPos, ceiling(nLevs/nCharFit) + 5)[
                     1:nLevs][rank(textPos[[tr]])]

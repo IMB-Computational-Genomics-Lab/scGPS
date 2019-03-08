@@ -2,8 +2,8 @@
 % Please edit documentation in R/MainLassoLDATraining.R
 \name{training_scGPS}
 \alias{training_scGPS}
-\title{Main model training function for finding the best model that characterises a
-subpopulation}
+\title{Main model training function for finding the best model
+that characterises a subpopulation}
 \usage{
 training_scGPS(genes = NULL, cluster_mixedpop1 = NULL,
   mixedpop1 = NULL, mixedpop2 = NULL, c_selectID = NULL,
@@ -11,7 +11,7 @@ training_scGPS(genes = NULL, cluster_mixedpop1 = NULL,
   trainset_ratio = 0.5, LDA_run = FALSE)
 }
 \arguments{
-\item{genes}{a vector of gene names (for ElasticNet shrinkage); gene symbols 
+\item{genes}{a vector of gene names (for ElasticNet shrinkage); gene symbols
 must be in the same format with gene names in subpop2. Note that genes are 
 listed by the order of importance, e.g. differentially expressed genes that 
 are most significan, so that if the gene list contains too many genes, only 

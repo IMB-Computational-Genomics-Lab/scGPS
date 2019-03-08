@@ -14,7 +14,7 @@ summary_deviance(object = NULL)
 \value{
 a \code{list} containing three elements, with a vector of percent
 maximum deviance explained, a dataframe containg information for the full 
-deviance, and a dataframe containing gene names and coefficients of the best 
+deviance, and a dataframe containing gene names and coefficients of the best
 model
 }
 \description{

@@ -292,7 +292,7 @@ annotate_scGPS <- function(DEgeneList, pvalueCutoff = 0.05, gene_symbol = TRUE,
 
 add_import <- function(x = 1) {
     if (x == 1) {
-      return("required functions imported")
-      }
+        return("required functions imported")
+    }
 }
 
