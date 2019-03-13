@@ -6,8 +6,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Main model training function for finding the best model that characterises a
-subpopulation — training_scGPS • scGPS</title>
+<title>Main model training function for finding the best model
+that characterises a subpopulation — training_scGPS • scGPS</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -38,8 +38,8 @@ subpopulation — training_scGPS • scGPS</title>
 
 
 
-<meta property="og:title" content="Main model training function for finding the best model that characterises a
-subpopulation — training_scGPS" />
+<meta property="og:title" content="Main model training function for finding the best model
+that characterises a subpopulation — training_scGPS" />
 
 <meta property="og:description" content="Training a haft of all cells to find optimal ElasticNet and LDA
 models to predict a subpopulation" />
@@ -118,8 +118,8 @@ models to predict a subpopulation" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Main model training function for finding the best model that characterises a
-subpopulation</h1>
+    <h1>Main model training function for finding the best model
+that characterises a subpopulation</h1>
     
     <div class="hidden name"><code>training_scGPS.Rd</code></div>
     </div>
@@ -141,7 +141,7 @@ models to predict a subpopulation</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>genes</th>
-      <td><p>a vector of gene names (for ElasticNet shrinkage); gene symbols 
+      <td><p>a vector of gene names (for ElasticNet shrinkage); gene symbols
 must be in the same format with gene names in subpop2. Note that genes are 
 listed by the order of importance, e.g. differentially expressed genes that 
 are most significan, so that if the gene list contains too many genes, only 
@@ -209,9 +209,10 @@ of the training subpopulation</p></td>
 <span class='kw'>GeneMetadata</span> <span class='kw'>=</span> <span class='no'>day5</span>$<span class='no'>dat5geneInfo</span>, <span class='kw'>CellMetadata</span> <span class='kw'>=</span> <span class='no'>day5</span>$<span class='no'>dat5_clusters</span>)
 <span class='no'>genes</span> <span class='kw'>&lt;-</span><span class='no'>GeneList</span>
 <span class='no'>genes</span> <span class='kw'>&lt;-</span><span class='no'>genes</span>$<span class='no'>Merged_unique</span>
-<span class='no'>listData</span>  <span class='kw'>&lt;-</span> <span class='fu'>training_scGPS</span>(<span class='no'>genes</span>, <span class='kw'>cluster_mixedpop1</span> <span class='kw'>=</span> <span class='fu'>colData</span>(<span class='no'>mixedpop1</span>)[, <span class='fl'>1</span>],
-                            <span class='kw'>mixedpop1</span> <span class='kw'>=</span> <span class='no'>mixedpop1</span>, <span class='kw'>mixedpop2</span> <span class='kw'>=</span> <span class='no'>mixedpop2</span>, <span class='no'>c_selectID</span>,
-                            <span class='kw'>listData</span> <span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(), <span class='kw'>out_idx</span><span class='kw'>=</span><span class='no'>out_idx</span>, <span class='kw'>trainset_ratio</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)</div><div class='output co'>#&gt; [1] "Total 224 cells as source subpop"
+<span class='no'>listData</span>  <span class='kw'>&lt;-</span> <span class='fu'>training_scGPS</span>(<span class='no'>genes</span>,
+    <span class='kw'>cluster_mixedpop1</span> <span class='kw'>=</span> <span class='fu'>colData</span>(<span class='no'>mixedpop1</span>)[, <span class='fl'>1</span>],
+    <span class='kw'>mixedpop1</span> <span class='kw'>=</span> <span class='no'>mixedpop1</span>, <span class='kw'>mixedpop2</span> <span class='kw'>=</span> <span class='no'>mixedpop2</span>, <span class='no'>c_selectID</span>,
+    <span class='kw'>listData</span> <span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(), <span class='kw'>out_idx</span><span class='kw'>=</span><span class='no'>out_idx</span>, <span class='kw'>trainset_ratio</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)</div><div class='output co'>#&gt; [1] "Total 224 cells as source subpop"
 #&gt; [1] "Total 366 cells in remaining subpops"
 #&gt; [1] "subsampling 112 cells for training source subpop"
 #&gt; [1] "subsampling 112 cells in remaining subpops for training"
@@ -226,73 +227,68 @@ of the training subpopulation</p></td>
 #&gt; 
 #&gt; Call:  glmnet(x = as.matrix(dataset[, -which(colnames(dataset) == "Cluster_class")]),      y = as.vector(dataset$Cluster_class), family = "binomial") 
 #&gt; 
-#&gt;       Df       %Dev   Lambda
-#&gt;  [1,]  0 -3.043e-15 0.126700
-#&gt;  [2,]  1  7.871e-03 0.115500
-#&gt;  [3,]  1  1.442e-02 0.105200
-#&gt;  [4,]  1  1.987e-02 0.095870
-#&gt;  [5,]  1  2.441e-02 0.087350
-#&gt;  [6,]  3  3.211e-02 0.079590
-#&gt;  [7,]  3  4.053e-02 0.072520
-#&gt;  [8,]  3  4.773e-02 0.066080
-#&gt;  [9,]  3  5.395e-02 0.060210
-#&gt; [10,]  3  5.935e-02 0.054860
-#&gt; [11,]  3  6.407e-02 0.049990
-#&gt; [12,]  3  6.819e-02 0.045550
-#&gt; [13,]  3  7.181e-02 0.041500
-#&gt; [14,]  3  7.499e-02 0.037810
-#&gt; [15,]  3  7.779e-02 0.034450
-#&gt; [16,]  3  8.026e-02 0.031390
-#&gt; [17,]  3  8.243e-02 0.028600
-#&gt; [18,]  3  8.435e-02 0.026060
-#&gt; [19,]  3  8.603e-02 0.023750
-#&gt; [20,]  3  8.752e-02 0.021640
-#&gt; [21,]  4  8.894e-02 0.019720
-#&gt; [22,]  4  9.029e-02 0.017960
-#&gt; [23,]  4  9.147e-02 0.016370
-#&gt; [24,]  4  9.249e-02 0.014910
-#&gt; [25,]  4  9.338e-02 0.013590
-#&gt; [26,]  4  9.415e-02 0.012380
-#&gt; [27,]  4  9.481e-02 0.011280
-#&gt; [28,]  4  9.539e-02 0.010280
-#&gt; [29,]  4  9.588e-02 0.009366
-#&gt; [30,]  4  9.631e-02 0.008534
-#&gt; [31,]  4  9.667e-02 0.007776
-#&gt; [32,]  4  9.698e-02 0.007085
-#&gt; [33,]  4  9.724e-02 0.006456
-#&gt; [34,]  4  9.747e-02 0.005882
-#&gt; [35,]  4  9.766e-02 0.005360
-#&gt; [36,]  4  9.783e-02 0.004884
-#&gt; [37,]  4  9.796e-02 0.004450
-#&gt; [38,]  4  9.808e-02 0.004055
-#&gt; [39,]  4  9.818e-02 0.003694
-#&gt; [40,]  4  9.826e-02 0.003366
-#&gt; [41,]  4  9.833e-02 0.003067
-#&gt; [42,]  4  9.839e-02 0.002795
-#&gt; [43,]  4  9.844e-02 0.002546
-#&gt; [44,]  4  9.848e-02 0.002320
-#&gt; [45,]  4  9.852e-02 0.002114
-#&gt; [46,]  4  9.855e-02 0.001926
-#&gt; [47,]  4  9.857e-02 0.001755
-#&gt; [48,]  4  9.859e-02 0.001599
-#&gt; [49,]  4  9.861e-02 0.001457
-#&gt; [50,]  4  9.863e-02 0.001328
-#&gt; [51,]  4  9.864e-02 0.001210
-#&gt; [52,]  4  9.865e-02 0.001102
-#&gt; [53,]  4  9.866e-02 0.001004
-#&gt; [1] "lambda min is at location 25"
+#&gt;       Df      %Dev   Lambda
+#&gt;  [1,]  0 2.243e-15 0.114900
+#&gt;  [2,]  1 6.465e-03 0.104700
+#&gt;  [3,]  1 1.184e-02 0.095360
+#&gt;  [4,]  1 1.631e-02 0.086890
+#&gt;  [5,]  2 2.351e-02 0.079170
+#&gt;  [6,]  2 2.980e-02 0.072140
+#&gt;  [7,]  2 3.513e-02 0.065730
+#&gt;  [8,]  3 4.025e-02 0.059890
+#&gt;  [9,]  3 4.512e-02 0.054570
+#&gt; [10,]  3 4.931e-02 0.049720
+#&gt; [11,]  3 5.290e-02 0.045300
+#&gt; [12,]  3 5.595e-02 0.041280
+#&gt; [13,]  4 5.870e-02 0.037610
+#&gt; [14,]  4 6.162e-02 0.034270
+#&gt; [15,]  4 6.412e-02 0.031230
+#&gt; [16,]  4 6.627e-02 0.028450
+#&gt; [17,]  4 6.811e-02 0.025920
+#&gt; [18,]  4 6.969e-02 0.023620
+#&gt; [19,]  4 7.105e-02 0.021520
+#&gt; [20,]  4 7.221e-02 0.019610
+#&gt; [21,]  4 7.321e-02 0.017870
+#&gt; [22,]  4 7.406e-02 0.016280
+#&gt; [23,]  4 7.478e-02 0.014840
+#&gt; [24,]  4 7.540e-02 0.013520
+#&gt; [25,]  4 7.592e-02 0.012320
+#&gt; [26,]  4 7.637e-02 0.011220
+#&gt; [27,]  4 7.674e-02 0.010230
+#&gt; [28,]  4 7.706e-02 0.009317
+#&gt; [29,]  4 7.734e-02 0.008489
+#&gt; [30,]  4 7.756e-02 0.007735
+#&gt; [31,]  4 7.776e-02 0.007048
+#&gt; [32,]  4 7.792e-02 0.006422
+#&gt; [33,]  4 7.806e-02 0.005851
+#&gt; [34,]  4 7.817e-02 0.005331
+#&gt; [35,]  4 7.827e-02 0.004858
+#&gt; [36,]  4 7.835e-02 0.004426
+#&gt; [37,]  4 7.842e-02 0.004033
+#&gt; [38,]  4 7.848e-02 0.003675
+#&gt; [39,]  4 7.852e-02 0.003348
+#&gt; [40,]  4 7.856e-02 0.003051
+#&gt; [41,]  4 7.860e-02 0.002780
+#&gt; [42,]  4 7.863e-02 0.002533
+#&gt; [43,]  4 7.865e-02 0.002308
+#&gt; [44,]  4 7.867e-02 0.002103
+#&gt; [45,]  4 7.869e-02 0.001916
+#&gt; [46,]  4 7.870e-02 0.001746
+#&gt; [47,]  4 7.871e-02 0.001591
+#&gt; [48,]  4 7.872e-02 0.001449
+#&gt; [1] "lambda min is at location 17"
 #&gt; [1] "the leave-out cells in the source subpop is 112"
 #&gt; [1] "use 112 target subpops cells for leave-out test set"
 #&gt; [1] "standardizing the leave-out target and source subpops..."
 #&gt; [1] "start ElasticNet prediction for estimating accuracy..."
-#&gt; [1] "evaluation accuracy ElasticNet 0.666666666666667"</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/names'>names</a></span>(<span class='no'>listData</span>)</div><div class='output co'>#&gt; [1] "Accuracy"        "ElasticNetGenes" "Deviance"        "ElasticNetFit"  
+#&gt; [1] "evaluation accuracy ElasticNet 0.674311926605505"</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/names'>names</a></span>(<span class='no'>listData</span>)</div><div class='output co'>#&gt; [1] "Accuracy"        "ElasticNetGenes" "Deviance"        "ElasticNetFit"  
 #&gt; [5] "LDAFit"          "predictor_S1"   </div><div class='input'><span class='no'>listData</span>$<span class='no'>Accuracy</span></div><div class='output co'>#&gt; [[1]]
 #&gt; [[1]][[1]]
 #&gt; [[1]][[1]][[1]]
-#&gt; [1] 144
+#&gt; [1] 147
 #&gt; 
 #&gt; [[1]][[1]][[2]]
-#&gt; [1] 72
+#&gt; [1] 71
 #&gt; 
 #&gt; 
 #&gt; </div></pre>
@@ -314,7 +310,7 @@ of the training subpopulation</p></td>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Quan Nguyen, Michael Thompson, Anne Asenbouth.</p>
+  <p>Developed by Quan Nguyen.</p>
 </div>
 
 <div class="pkgdown">

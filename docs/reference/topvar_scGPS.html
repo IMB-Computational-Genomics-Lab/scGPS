@@ -148,8 +148,8 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>day2</span> <span class='kw'>&lt;-</span> <span class='no'>sample1</span>
-<span class='no'>mixedpop1</span> <span class='kw'>&lt;-</span><span class='fu'>NewscGPS</span>(<span class='kw'>ExpressionMatrix</span> <span class='kw'>=</span> <span class='no'>day2</span>$<span class='no'>dat2_counts</span>, <span class='kw'>GeneMetadata</span> <span class='kw'>=</span> <span class='no'>day2</span>$<span class='no'>dat2geneInfo</span>,
-                    <span class='kw'>CellMetadata</span> <span class='kw'>=</span> <span class='no'>day2</span>$<span class='no'>dat2_clusters</span>)
+<span class='no'>mixedpop1</span> <span class='kw'>&lt;-</span><span class='fu'>NewscGPS</span>(<span class='kw'>ExpressionMatrix</span> <span class='kw'>=</span> <span class='no'>day2</span>$<span class='no'>dat2_counts</span>,
+    <span class='kw'>GeneMetadata</span> <span class='kw'>=</span> <span class='no'>day2</span>$<span class='no'>dat2geneInfo</span>, <span class='kw'>CellMetadata</span> <span class='kw'>=</span> <span class='no'>day2</span>$<span class='no'>dat2_clusters</span>)
 <span class='no'>SortedExprsMat</span> <span class='kw'>&lt;-</span><span class='fu'>topvar_scGPS</span>(<span class='kw'>expression.matrix</span><span class='kw'>=</span><span class='fu'>assay</span>(<span class='no'>mixedpop1</span>))</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -167,7 +167,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Quan Nguyen, Michael Thompson, Anne Asenbouth.</p>
+  <p>Developed by Quan Nguyen.</p>
 </div>
 
 <div class="pkgdown">

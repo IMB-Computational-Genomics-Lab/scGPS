@@ -186,65 +186,68 @@ each bootstrap run</p>
 #&gt; 
 #&gt; Call:  glmnet(x = as.matrix(dataset[, -which(colnames(dataset) == "Cluster_class")]),      y = as.vector(dataset$Cluster_class), family = "binomial") 
 #&gt; 
-#&gt;       Df       %Dev   Lambda
-#&gt;  [1,]  0 -2.563e-15 0.143300
-#&gt;  [2,]  1  1.007e-02 0.130600
-#&gt;  [3,]  1  1.844e-02 0.119000
-#&gt;  [4,]  1  2.542e-02 0.108400
-#&gt;  [5,]  1  3.124e-02 0.098780
-#&gt;  [6,]  1  3.610e-02 0.090010
-#&gt;  [7,]  1  4.015e-02 0.082010
-#&gt;  [8,]  1  4.355e-02 0.074730
-#&gt;  [9,]  1  4.638e-02 0.068090
-#&gt; [10,]  1  4.875e-02 0.062040
-#&gt; [11,]  3  5.229e-02 0.056530
-#&gt; [12,]  3  5.687e-02 0.051510
-#&gt; [13,]  3  6.076e-02 0.046930
-#&gt; [14,]  3  6.408e-02 0.042760
-#&gt; [15,]  3  6.693e-02 0.038960
-#&gt; [16,]  3  6.936e-02 0.035500
-#&gt; [17,]  3  7.145e-02 0.032350
-#&gt; [18,]  3  7.324e-02 0.029470
-#&gt; [19,]  3  7.478e-02 0.026860
-#&gt; [20,]  3  7.610e-02 0.024470
-#&gt; [21,]  3  7.723e-02 0.022300
-#&gt; [22,]  3  7.819e-02 0.020310
-#&gt; [23,]  4  7.911e-02 0.018510
-#&gt; [24,]  4  7.996e-02 0.016870
-#&gt; [25,]  4  8.068e-02 0.015370
-#&gt; [26,]  4  8.130e-02 0.014000
-#&gt; [27,]  4  8.182e-02 0.012760
-#&gt; [28,]  4  8.227e-02 0.011620
-#&gt; [29,]  4  8.264e-02 0.010590
-#&gt; [30,]  4  8.296e-02 0.009651
-#&gt; [31,]  4  8.323e-02 0.008794
-#&gt; [32,]  4  8.346e-02 0.008013
-#&gt; [33,]  4  8.365e-02 0.007301
-#&gt; [34,]  4  8.381e-02 0.006652
-#&gt; [35,]  4  8.395e-02 0.006061
-#&gt; [36,]  4  8.406e-02 0.005523
-#&gt; [37,]  4  8.416e-02 0.005032
-#&gt; [38,]  4  8.424e-02 0.004585
-#&gt; [39,]  4  8.431e-02 0.004178
-#&gt; [40,]  4  8.436e-02 0.003807
-#&gt; [41,]  4  8.441e-02 0.003468
-#&gt; [42,]  4  8.445e-02 0.003160
-#&gt; [43,]  4  8.448e-02 0.002880
-#&gt; [44,]  4  8.451e-02 0.002624
-#&gt; [45,]  4  8.453e-02 0.002391
-#&gt; [46,]  4  8.455e-02 0.002178
-#&gt; [47,]  4  8.457e-02 0.001985
-#&gt; [48,]  4  8.458e-02 0.001808
-#&gt; [49,]  4  8.459e-02 0.001648
-#&gt; [50,]  4  8.460e-02 0.001501
-#&gt; [1] "lambda min is at location 13"
+#&gt;       Df    %Dev   Lambda
+#&gt;  [1,]  0 0.00000 0.170700
+#&gt;  [2,]  1 0.01428 0.155500
+#&gt;  [3,]  1 0.02616 0.141700
+#&gt;  [4,]  1 0.03608 0.129100
+#&gt;  [5,]  1 0.04435 0.117600
+#&gt;  [6,]  1 0.05128 0.107200
+#&gt;  [7,]  1 0.05707 0.097670
+#&gt;  [8,]  1 0.06192 0.088990
+#&gt;  [9,]  2 0.06742 0.081090
+#&gt; [10,]  2 0.07350 0.073880
+#&gt; [11,]  2 0.07868 0.067320
+#&gt; [12,]  2 0.08310 0.061340
+#&gt; [13,]  2 0.08690 0.055890
+#&gt; [14,]  3 0.09145 0.050930
+#&gt; [15,]  4 0.09568 0.046400
+#&gt; [16,]  4 0.09962 0.042280
+#&gt; [17,]  4 0.10300 0.038520
+#&gt; [18,]  4 0.10590 0.035100
+#&gt; [19,]  4 0.10840 0.031980
+#&gt; [20,]  4 0.11050 0.029140
+#&gt; [21,]  4 0.11240 0.026550
+#&gt; [22,]  4 0.11400 0.024190
+#&gt; [23,]  4 0.11540 0.022040
+#&gt; [24,]  4 0.11660 0.020090
+#&gt; [25,]  4 0.11760 0.018300
+#&gt; [26,]  4 0.11850 0.016680
+#&gt; [27,]  4 0.11930 0.015190
+#&gt; [28,]  4 0.11990 0.013840
+#&gt; [29,]  4 0.12050 0.012610
+#&gt; [30,]  4 0.12100 0.011490
+#&gt; [31,]  4 0.12140 0.010470
+#&gt; [32,]  4 0.12170 0.009543
+#&gt; [33,]  4 0.12210 0.008695
+#&gt; [34,]  4 0.12230 0.007922
+#&gt; [35,]  4 0.12250 0.007219
+#&gt; [36,]  4 0.12270 0.006577
+#&gt; [37,]  4 0.12290 0.005993
+#&gt; [38,]  4 0.12300 0.005461
+#&gt; [39,]  4 0.12310 0.004976
+#&gt; [40,]  4 0.12320 0.004534
+#&gt; [41,]  4 0.12330 0.004131
+#&gt; [42,]  4 0.12340 0.003764
+#&gt; [43,]  4 0.12340 0.003429
+#&gt; [44,]  4 0.12350 0.003125
+#&gt; [45,]  4 0.12350 0.002847
+#&gt; [46,]  4 0.12360 0.002594
+#&gt; [47,]  4 0.12360 0.002364
+#&gt; [48,]  4 0.12360 0.002154
+#&gt; [49,]  4 0.12360 0.001962
+#&gt; [50,]  4 0.12360 0.001788
+#&gt; [51,]  4 0.12370 0.001629
+#&gt; [52,]  4 0.12370 0.001485
+#&gt; [53,]  4 0.12370 0.001353
+#&gt; [1] "lambda min is at location 45"
 #&gt; [1] "the leave-out cells in the source subpop is 112"
 #&gt; [1] "use 112 target subpops cells for leave-out test set"
 #&gt; [1] "standardizing the leave-out target and source subpops..."
 #&gt; [1] "start ElasticNet prediction for estimating accuracy..."
-#&gt; [1] "start LDA prediction for estimating accuracy for 216 cells and 5 genes..."
-#&gt; [1] "evaluation accuracy ElasticNet 0.62962962962963"
-#&gt; [1] "evaluation accuracy LDA 0.634259259259259"
+#&gt; [1] "start LDA prediction for estimating accuracy for 215 cells and 5 genes..."
+#&gt; [1] "evaluation accuracy ElasticNet 0.651162790697674"
+#&gt; [1] "evaluation accuracy LDA 0.646511627906977"
 #&gt; [1] "done training for bootstrap 1, moving to prediction..."
 #&gt; [1] "standardizing target subpops before prediction..."
 #&gt; [1] "predicting from source to target subpop 1..."
@@ -258,7 +261,7 @@ each bootstrap run</p>
 #&gt; [1] "first 10 genes in target "
 #&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
 #&gt; [1] "running elasticNet classification..."
-#&gt; [1] "class probability prediction ElasticNet for target subpop 1 is 14.4385026737968"
+#&gt; [1] "class probability prediction ElasticNet for target subpop 1 is 21.9251336898396"
 #&gt; [1] "Number of genes in the target data, but not in model genes is 4995"
 #&gt; [1] "Number of genes in the model present in the target data is 5"
 #&gt; [1] "There are 0 genes that are in the model, but not in target subpopulations"
@@ -268,7 +271,7 @@ each bootstrap run</p>
 #&gt; [1] "first 10 genes in target "
 #&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
 #&gt; [1] "running LDA classification..."
-#&gt; [1] "class probability prediction LDA for target subpop 1 is 28.3422459893048"
+#&gt; [1] "class probability prediction LDA for target subpop 1 is 9.09090909090909"
 #&gt; [1] "predicting from source to target subpop 2..."
 #&gt; [1] "number of cells in the target subpop 2 is 140"
 #&gt; [1] "Number of genes in the target data, but not in model genes is 4995"
@@ -280,7 +283,175 @@ each bootstrap run</p>
 #&gt; [1] "first 10 genes in target "
 #&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
 #&gt; [1] "running elasticNet classification..."
-#&gt; [1] "class probability prediction ElasticNet for target subpop 2 is 52.8571428571429"
+#&gt; [1] "class probability prediction ElasticNet for target subpop 2 is 20.7142857142857"
+#&gt; [1] "Number of genes in the target data, but not in model genes is 4995"
+#&gt; [1] "Number of genes in the model present in the target data is 5"
+#&gt; [1] "There are 0 genes that are in the model, but not in target subpopulations"
+#&gt; [1] "the prediction (target) subop has 5 genes and 140 cells. The trained model has 5 genes"
+#&gt; [1] "first 10 genes in model "
+#&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
+#&gt; [1] "first 10 genes in target "
+#&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
+#&gt; [1] "running LDA classification..."
+#&gt; [1] "class probability prediction LDA for target subpop 2 is 37.1428571428571"
+#&gt; [1] "predicting from source to target subpop 3..."
+#&gt; [1] "number of cells in the target subpop 3 is 133"
+#&gt; [1] "Number of genes in the target data, but not in model genes is 4995"
+#&gt; [1] "Number of genes in the model present in the target data is 5"
+#&gt; [1] "There are 0 genes that are in the model, but not in target subpopulations"
+#&gt; [1] "the prediction (target) subop has 5 genes and 133 cells. The trained model has 5 genes"
+#&gt; [1] "first 10 genes in model "
+#&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
+#&gt; [1] "first 10 genes in target "
+#&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
+#&gt; [1] "running elasticNet classification..."
+#&gt; [1] "class probability prediction ElasticNet for target subpop 3 is 23.3082706766917"
+#&gt; [1] "Number of genes in the target data, but not in model genes is 4995"
+#&gt; [1] "Number of genes in the model present in the target data is 5"
+#&gt; [1] "There are 0 genes that are in the model, but not in target subpopulations"
+#&gt; [1] "the prediction (target) subop has 5 genes and 133 cells. The trained model has 5 genes"
+#&gt; [1] "first 10 genes in model "
+#&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
+#&gt; [1] "first 10 genes in target "
+#&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
+#&gt; [1] "running LDA classification..."
+#&gt; [1] "class probability prediction LDA for target subpop 3 is 19.5488721804511"
+#&gt; [1] "predicting from source to target subpop 4..."
+#&gt; [1] "number of cells in the target subpop 4 is 40"
+#&gt; [1] "Number of genes in the target data, but not in model genes is 4995"
+#&gt; [1] "Number of genes in the model present in the target data is 5"
+#&gt; [1] "There are 0 genes that are in the model, but not in target subpopulations"
+#&gt; [1] "the prediction (target) subop has 5 genes and 40 cells. The trained model has 5 genes"
+#&gt; [1] "first 10 genes in model "
+#&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
+#&gt; [1] "first 10 genes in target "
+#&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
+#&gt; [1] "running elasticNet classification..."
+#&gt; [1] "class probability prediction ElasticNet for target subpop 4 is 15"
+#&gt; [1] "Number of genes in the target data, but not in model genes is 4995"
+#&gt; [1] "Number of genes in the model present in the target data is 5"
+#&gt; [1] "There are 0 genes that are in the model, but not in target subpopulations"
+#&gt; [1] "the prediction (target) subop has 5 genes and 40 cells. The trained model has 5 genes"
+#&gt; [1] "first 10 genes in model "
+#&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
+#&gt; [1] "first 10 genes in target "
+#&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
+#&gt; [1] "running LDA classification..."
+#&gt; [1] "class probability prediction LDA for target subpop 4 is 17.5"
+#&gt; [1] "Total 224 cells as source subpop"
+#&gt; [1] "Total 366 cells in remaining subpops"
+#&gt; [1] "subsampling 112 cells for training source subpop"
+#&gt; [1] "subsampling 112 cells in remaining subpops for training"
+#&gt; [1] "use 6 genes for training model"
+#&gt; [1] "use 6 genes 224 cells for testing model"
+#&gt; [1] "rename remaining subpops to 2_3"
+#&gt; [1] "there are 112 cells in class 2_3 and 112 cells in class 1"
+#&gt; [1] "removing 1 genes with no variance"
+#&gt; [1] "standardizing prediction/target dataset"
+#&gt; [1] "performning elasticnet model training..."
+#&gt; [1] "performning LDA model training..."</div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; [1] "extracting deviance and best gene features..."
+#&gt; 
+#&gt; Call:  glmnet(x = as.matrix(dataset[, -which(colnames(dataset) == "Cluster_class")]),      y = as.vector(dataset$Cluster_class), family = "binomial") 
+#&gt; 
+#&gt;       Df      %Dev   Lambda
+#&gt;  [1,]  0 3.684e-15 0.201600
+#&gt;  [2,]  1 1.992e-02 0.183700
+#&gt;  [3,]  1 3.652e-02 0.167300
+#&gt;  [4,]  1 5.038e-02 0.152500
+#&gt;  [5,]  1 6.200e-02 0.138900
+#&gt;  [6,]  1 7.174e-02 0.126600
+#&gt;  [7,]  1 7.992e-02 0.115300
+#&gt;  [8,]  1 8.679e-02 0.105100
+#&gt;  [9,]  1 9.256e-02 0.095760
+#&gt; [10,]  2 9.910e-02 0.087250
+#&gt; [11,]  2 1.064e-01 0.079500
+#&gt; [12,]  2 1.127e-01 0.072440
+#&gt; [13,]  2 1.182e-01 0.066000
+#&gt; [14,]  2 1.229e-01 0.060140
+#&gt; [15,]  2 1.269e-01 0.054800
+#&gt; [16,]  2 1.304e-01 0.049930
+#&gt; [17,]  2 1.335e-01 0.045490
+#&gt; [18,]  3 1.363e-01 0.041450
+#&gt; [19,]  3 1.392e-01 0.037770
+#&gt; [20,]  3 1.416e-01 0.034410
+#&gt; [21,]  3 1.437e-01 0.031360
+#&gt; [22,]  4 1.457e-01 0.028570
+#&gt; [23,]  4 1.474e-01 0.026030
+#&gt; [24,]  4 1.489e-01 0.023720
+#&gt; [25,]  4 1.502e-01 0.021610
+#&gt; [26,]  4 1.513e-01 0.019690
+#&gt; [27,]  4 1.522e-01 0.017940
+#&gt; [28,]  4 1.530e-01 0.016350
+#&gt; [29,]  4 1.537e-01 0.014900
+#&gt; [30,]  4 1.543e-01 0.013570
+#&gt; [31,]  4 1.548e-01 0.012370
+#&gt; [32,]  4 1.552e-01 0.011270
+#&gt; [33,]  4 1.555e-01 0.010270
+#&gt; [34,]  4 1.558e-01 0.009356
+#&gt; [35,]  4 1.561e-01 0.008525
+#&gt; [36,]  4 1.563e-01 0.007767
+#&gt; [37,]  4 1.565e-01 0.007077
+#&gt; [38,]  4 1.566e-01 0.006448
+#&gt; [39,]  4 1.568e-01 0.005876
+#&gt; [40,]  4 1.569e-01 0.005354
+#&gt; [41,]  4 1.570e-01 0.004878
+#&gt; [42,]  4 1.571e-01 0.004445
+#&gt; [43,]  4 1.571e-01 0.004050
+#&gt; [44,]  4 1.572e-01 0.003690
+#&gt; [45,]  4 1.572e-01 0.003362
+#&gt; [46,]  4 1.573e-01 0.003064
+#&gt; [47,]  4 1.573e-01 0.002791
+#&gt; [48,]  4 1.573e-01 0.002543
+#&gt; [49,]  4 1.573e-01 0.002317
+#&gt; [50,]  4 1.573e-01 0.002112
+#&gt; [51,]  4 1.574e-01 0.001924
+#&gt; [52,]  4 1.574e-01 0.001753
+#&gt; [53,]  4 1.574e-01 0.001597
+#&gt; [54,]  4 1.574e-01 0.001455
+#&gt; [1] "lambda min is at location 29"
+#&gt; [1] "the leave-out cells in the source subpop is 112"
+#&gt; [1] "use 112 target subpops cells for leave-out test set"
+#&gt; [1] "standardizing the leave-out target and source subpops..."
+#&gt; [1] "start ElasticNet prediction for estimating accuracy..."
+#&gt; [1] "start LDA prediction for estimating accuracy for 215 cells and 5 genes..."
+#&gt; [1] "evaluation accuracy ElasticNet 0.655813953488372"
+#&gt; [1] "evaluation accuracy LDA 0.669767441860465"
+#&gt; [1] "done training for bootstrap 2, moving to prediction..."
+#&gt; [1] "standardizing target subpops before prediction..."
+#&gt; [1] "predicting from source to target subpop 1..."
+#&gt; [1] "number of cells in the target subpop 1 is 187"
+#&gt; [1] "Number of genes in the target data, but not in model genes is 4995"
+#&gt; [1] "Number of genes in the model present in the target data is 5"
+#&gt; [1] "There are 0 genes that are in the model, but not in target subpopulations"
+#&gt; [1] "the prediction (target) subop has 5 genes and 187 cells. The trained model has 5 genes"
+#&gt; [1] "first 10 genes in model "
+#&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
+#&gt; [1] "first 10 genes in target "
+#&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
+#&gt; [1] "running elasticNet classification..."
+#&gt; [1] "class probability prediction ElasticNet for target subpop 1 is 6.41711229946524"
+#&gt; [1] "Number of genes in the target data, but not in model genes is 4995"
+#&gt; [1] "Number of genes in the model present in the target data is 5"
+#&gt; [1] "There are 0 genes that are in the model, but not in target subpopulations"
+#&gt; [1] "the prediction (target) subop has 5 genes and 187 cells. The trained model has 5 genes"
+#&gt; [1] "first 10 genes in model "
+#&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
+#&gt; [1] "first 10 genes in target "
+#&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
+#&gt; [1] "running LDA classification..."
+#&gt; [1] "class probability prediction LDA for target subpop 1 is 0.53475935828877"
+#&gt; [1] "predicting from source to target subpop 2..."
+#&gt; [1] "number of cells in the target subpop 2 is 140"
+#&gt; [1] "Number of genes in the target data, but not in model genes is 4995"
+#&gt; [1] "Number of genes in the model present in the target data is 5"
+#&gt; [1] "There are 0 genes that are in the model, but not in target subpopulations"
+#&gt; [1] "the prediction (target) subop has 5 genes and 140 cells. The trained model has 5 genes"
+#&gt; [1] "first 10 genes in model "
+#&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
+#&gt; [1] "first 10 genes in target "
+#&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
+#&gt; [1] "running elasticNet classification..."
+#&gt; [1] "class probability prediction ElasticNet for target subpop 2 is 19.2857142857143"
 #&gt; [1] "Number of genes in the target data, but not in model genes is 4995"
 #&gt; [1] "Number of genes in the model present in the target data is 5"
 #&gt; [1] "There are 0 genes that are in the model, but not in target subpopulations"
@@ -302,7 +473,7 @@ each bootstrap run</p>
 #&gt; [1] "first 10 genes in target "
 #&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
 #&gt; [1] "running elasticNet classification..."
-#&gt; [1] "class probability prediction ElasticNet for target subpop 3 is 91.7293233082707"
+#&gt; [1] "class probability prediction ElasticNet for target subpop 3 is 5.26315789473684"
 #&gt; [1] "Number of genes in the target data, but not in model genes is 4995"
 #&gt; [1] "Number of genes in the model present in the target data is 5"
 #&gt; [1] "There are 0 genes that are in the model, but not in target subpopulations"
@@ -312,7 +483,7 @@ each bootstrap run</p>
 #&gt; [1] "first 10 genes in target "
 #&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
 #&gt; [1] "running LDA classification..."
-#&gt; [1] "class probability prediction LDA for target subpop 3 is 38.3458646616541"
+#&gt; [1] "class probability prediction LDA for target subpop 3 is 2.25563909774436"
 #&gt; [1] "predicting from source to target subpop 4..."
 #&gt; [1] "number of cells in the target subpop 4 is 40"
 #&gt; [1] "Number of genes in the target data, but not in model genes is 4995"
@@ -324,7 +495,7 @@ each bootstrap run</p>
 #&gt; [1] "first 10 genes in target "
 #&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
 #&gt; [1] "running elasticNet classification..."
-#&gt; [1] "class probability prediction ElasticNet for target subpop 4 is 75"
+#&gt; [1] "class probability prediction ElasticNet for target subpop 4 is 12.5"
 #&gt; [1] "Number of genes in the target data, but not in model genes is 4995"
 #&gt; [1] "Number of genes in the model present in the target data is 5"
 #&gt; [1] "There are 0 genes that are in the model, but not in target subpopulations"
@@ -334,180 +505,11 @@ each bootstrap run</p>
 #&gt; [1] "first 10 genes in target "
 #&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
 #&gt; [1] "running LDA classification..."
-#&gt; [1] "class probability prediction LDA for target subpop 4 is 27.5"
-#&gt; [1] "Total 224 cells as source subpop"
-#&gt; [1] "Total 366 cells in remaining subpops"
-#&gt; [1] "subsampling 112 cells for training source subpop"
-#&gt; [1] "subsampling 112 cells in remaining subpops for training"
-#&gt; [1] "use 6 genes for training model"
-#&gt; [1] "use 6 genes 224 cells for testing model"
-#&gt; [1] "rename remaining subpops to 2_3"
-#&gt; [1] "there are 112 cells in class 2_3 and 112 cells in class 1"
-#&gt; [1] "removing 1 genes with no variance"
-#&gt; [1] "standardizing prediction/target dataset"
-#&gt; [1] "performning elasticnet model training..."
-#&gt; [1] "performning LDA model training..."</div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; <span class='warning'>Warning: variables are collinear</span></div><div class='output co'>#&gt; [1] "extracting deviance and best gene features..."
-#&gt; 
-#&gt; Call:  glmnet(x = as.matrix(dataset[, -which(colnames(dataset) == "Cluster_class")]),      y = as.vector(dataset$Cluster_class), family = "binomial") 
-#&gt; 
-#&gt;       Df       %Dev    Lambda
-#&gt;  [1,]  0 -3.044e-15 0.1466000
-#&gt;  [2,]  1  1.054e-02 0.1336000
-#&gt;  [3,]  1  1.931e-02 0.1217000
-#&gt;  [4,]  1  2.662e-02 0.1109000
-#&gt;  [5,]  1  3.270e-02 0.1011000
-#&gt;  [6,]  2  4.060e-02 0.0920900
-#&gt;  [7,]  2  4.849e-02 0.0839100
-#&gt;  [8,]  3  5.560e-02 0.0764600
-#&gt;  [9,]  3  6.338e-02 0.0696600
-#&gt; [10,]  3  7.008e-02 0.0634800
-#&gt; [11,]  3  7.590e-02 0.0578400
-#&gt; [12,]  3  8.099e-02 0.0527000
-#&gt; [13,]  3  8.545e-02 0.0480200
-#&gt; [14,]  4  8.950e-02 0.0437500
-#&gt; [15,]  4  9.311e-02 0.0398600
-#&gt; [16,]  4  9.631e-02 0.0363200
-#&gt; [17,]  4  9.915e-02 0.0331000
-#&gt; [18,]  4  1.017e-01 0.0301600
-#&gt; [19,]  4  1.039e-01 0.0274800
-#&gt; [20,]  4  1.060e-01 0.0250400
-#&gt; [21,]  4  1.077e-01 0.0228100
-#&gt; [22,]  4  1.093e-01 0.0207900
-#&gt; [23,]  4  1.108e-01 0.0189400
-#&gt; [24,]  4  1.120e-01 0.0172600
-#&gt; [25,]  4  1.131e-01 0.0157200
-#&gt; [26,]  4  1.141e-01 0.0143300
-#&gt; [27,]  4  1.150e-01 0.0130500
-#&gt; [28,]  4  1.158e-01 0.0118900
-#&gt; [29,]  4  1.164e-01 0.0108400
-#&gt; [30,]  4  1.170e-01 0.0098750
-#&gt; [31,]  4  1.175e-01 0.0089970
-#&gt; [32,]  4  1.180e-01 0.0081980
-#&gt; [33,]  4  1.184e-01 0.0074700
-#&gt; [34,]  4  1.187e-01 0.0068060
-#&gt; [35,]  4  1.190e-01 0.0062020
-#&gt; [36,]  4  1.192e-01 0.0056510
-#&gt; [37,]  4  1.194e-01 0.0051490
-#&gt; [38,]  4  1.196e-01 0.0046910
-#&gt; [39,]  4  1.198e-01 0.0042750
-#&gt; [40,]  4  1.199e-01 0.0038950
-#&gt; [41,]  4  1.200e-01 0.0035490
-#&gt; [42,]  4  1.201e-01 0.0032340
-#&gt; [43,]  4  1.202e-01 0.0029460
-#&gt; [44,]  4  1.202e-01 0.0026850
-#&gt; [45,]  4  1.203e-01 0.0024460
-#&gt; [46,]  4  1.203e-01 0.0022290
-#&gt; [47,]  4  1.204e-01 0.0020310
-#&gt; [48,]  4  1.204e-01 0.0018500
-#&gt; [49,]  4  1.205e-01 0.0016860
-#&gt; [50,]  4  1.205e-01 0.0015360
-#&gt; [51,]  4  1.205e-01 0.0014000
-#&gt; [52,]  4  1.205e-01 0.0012750
-#&gt; [53,]  4  1.205e-01 0.0011620
-#&gt; [54,]  4  1.205e-01 0.0010590
-#&gt; [55,]  4  1.205e-01 0.0009648
-#&gt; [1] "lambda min is at location 36"
-#&gt; [1] "the leave-out cells in the source subpop is 112"
-#&gt; [1] "use 112 target subpops cells for leave-out test set"
-#&gt; [1] "standardizing the leave-out target and source subpops..."
-#&gt; [1] "start ElasticNet prediction for estimating accuracy..."
-#&gt; [1] "start LDA prediction for estimating accuracy for 216 cells and 5 genes..."
-#&gt; [1] "evaluation accuracy ElasticNet 0.638888888888889"
-#&gt; [1] "evaluation accuracy LDA 0.652777777777778"
-#&gt; [1] "done training for bootstrap 2, moving to prediction..."
-#&gt; [1] "standardizing target subpops before prediction..."
-#&gt; [1] "predicting from source to target subpop 1..."
-#&gt; [1] "number of cells in the target subpop 1 is 187"
-#&gt; [1] "Number of genes in the target data, but not in model genes is 4995"
-#&gt; [1] "Number of genes in the model present in the target data is 5"
-#&gt; [1] "There are 0 genes that are in the model, but not in target subpopulations"
-#&gt; [1] "the prediction (target) subop has 5 genes and 187 cells. The trained model has 5 genes"
-#&gt; [1] "first 10 genes in model "
-#&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
-#&gt; [1] "first 10 genes in target "
-#&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
-#&gt; [1] "running elasticNet classification..."
-#&gt; [1] "class probability prediction ElasticNet for target subpop 1 is 57.2192513368984"
-#&gt; [1] "Number of genes in the target data, but not in model genes is 4995"
-#&gt; [1] "Number of genes in the model present in the target data is 5"
-#&gt; [1] "There are 0 genes that are in the model, but not in target subpopulations"
-#&gt; [1] "the prediction (target) subop has 5 genes and 187 cells. The trained model has 5 genes"
-#&gt; [1] "first 10 genes in model "
-#&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
-#&gt; [1] "first 10 genes in target "
-#&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
-#&gt; [1] "running LDA classification..."
-#&gt; [1] "class probability prediction LDA for target subpop 1 is 34.2245989304813"
-#&gt; [1] "predicting from source to target subpop 2..."
-#&gt; [1] "number of cells in the target subpop 2 is 140"
-#&gt; [1] "Number of genes in the target data, but not in model genes is 4995"
-#&gt; [1] "Number of genes in the model present in the target data is 5"
-#&gt; [1] "There are 0 genes that are in the model, but not in target subpopulations"
-#&gt; [1] "the prediction (target) subop has 5 genes and 140 cells. The trained model has 5 genes"
-#&gt; [1] "first 10 genes in model "
-#&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
-#&gt; [1] "first 10 genes in target "
-#&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
-#&gt; [1] "running elasticNet classification..."
-#&gt; [1] "class probability prediction ElasticNet for target subpop 2 is 61.4285714285714"
-#&gt; [1] "Number of genes in the target data, but not in model genes is 4995"
-#&gt; [1] "Number of genes in the model present in the target data is 5"
-#&gt; [1] "There are 0 genes that are in the model, but not in target subpopulations"
-#&gt; [1] "the prediction (target) subop has 5 genes and 140 cells. The trained model has 5 genes"
-#&gt; [1] "first 10 genes in model "
-#&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
-#&gt; [1] "first 10 genes in target "
-#&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
-#&gt; [1] "running LDA classification..."
-#&gt; [1] "class probability prediction LDA for target subpop 2 is 46.4285714285714"
-#&gt; [1] "predicting from source to target subpop 3..."
-#&gt; [1] "number of cells in the target subpop 3 is 133"
-#&gt; [1] "Number of genes in the target data, but not in model genes is 4995"
-#&gt; [1] "Number of genes in the model present in the target data is 5"
-#&gt; [1] "There are 0 genes that are in the model, but not in target subpopulations"
-#&gt; [1] "the prediction (target) subop has 5 genes and 133 cells. The trained model has 5 genes"
-#&gt; [1] "first 10 genes in model "
-#&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
-#&gt; [1] "first 10 genes in target "
-#&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
-#&gt; [1] "running elasticNet classification..."
-#&gt; [1] "class probability prediction ElasticNet for target subpop 3 is 89.4736842105263"
-#&gt; [1] "Number of genes in the target data, but not in model genes is 4995"
-#&gt; [1] "Number of genes in the model present in the target data is 5"
-#&gt; [1] "There are 0 genes that are in the model, but not in target subpopulations"
-#&gt; [1] "the prediction (target) subop has 5 genes and 133 cells. The trained model has 5 genes"
-#&gt; [1] "first 10 genes in model "
-#&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
-#&gt; [1] "first 10 genes in target "
-#&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
-#&gt; [1] "running LDA classification..."
-#&gt; [1] "class probability prediction LDA for target subpop 3 is 48.1203007518797"
-#&gt; [1] "predicting from source to target subpop 4..."
-#&gt; [1] "number of cells in the target subpop 4 is 40"
-#&gt; [1] "Number of genes in the target data, but not in model genes is 4995"
-#&gt; [1] "Number of genes in the model present in the target data is 5"
-#&gt; [1] "There are 0 genes that are in the model, but not in target subpopulations"
-#&gt; [1] "the prediction (target) subop has 5 genes and 40 cells. The trained model has 5 genes"
-#&gt; [1] "first 10 genes in model "
-#&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
-#&gt; [1] "first 10 genes in target "
-#&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
-#&gt; [1] "running elasticNet classification..."
-#&gt; [1] "class probability prediction ElasticNet for target subpop 4 is 75"
-#&gt; [1] "Number of genes in the target data, but not in model genes is 4995"
-#&gt; [1] "Number of genes in the model present in the target data is 5"
-#&gt; [1] "There are 0 genes that are in the model, but not in target subpopulations"
-#&gt; [1] "the prediction (target) subop has 5 genes and 40 cells. The trained model has 5 genes"
-#&gt; [1] "first 10 genes in model "
-#&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
-#&gt; [1] "first 10 genes in target "
-#&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
-#&gt; [1] "running LDA classification..."
-#&gt; [1] "class probability prediction LDA for target subpop 4 is 45"</div><div class='input'><span class='fu'>summary_prediction_lda</span>(<span class='kw'>LSOLDA_dat</span><span class='kw'>=</span><span class='no'>LSOLDA_dat</span>, <span class='kw'>nPredSubpop</span><span class='kw'>=</span><span class='fl'>4</span>)</div><div class='output co'>#&gt;                 V1               V2                                names
-#&gt; 1 28.3422459893048 34.2245989304813 LDA for subpop 1 in target mixedpop2
-#&gt; 2 21.4285714285714 46.4285714285714 LDA for subpop 2 in target mixedpop2
-#&gt; 3 38.3458646616541 48.1203007518797 LDA for subpop 3 in target mixedpop2
-#&gt; 4             27.5               45 LDA for subpop 4 in target mixedpop2</div><div class='input'>
+#&gt; [1] "class probability prediction LDA for target subpop 4 is 2.5"</div><div class='input'><span class='fu'>summary_prediction_lda</span>(<span class='kw'>LSOLDA_dat</span><span class='kw'>=</span><span class='no'>LSOLDA_dat</span>, <span class='kw'>nPredSubpop</span><span class='kw'>=</span><span class='fl'>4</span>)</div><div class='output co'>#&gt;                 V1               V2                                names
+#&gt; 1 9.09090909090909 0.53475935828877 LDA for subpop 1 in target mixedpop2
+#&gt; 2 37.1428571428571 21.4285714285714 LDA for subpop 2 in target mixedpop2
+#&gt; 3 19.5488721804511 2.25563909774436 LDA for subpop 3 in target mixedpop2
+#&gt; 4             17.5              2.5 LDA for subpop 4 in target mixedpop2</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -525,7 +527,7 @@ each bootstrap run</p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Quan Nguyen, Michael Thompson, Anne Asenbouth.</p>
+  <p>Developed by Quan Nguyen.</p>
 </div>
 
 <div class="pkgdown">
