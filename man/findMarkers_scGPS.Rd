@@ -21,6 +21,9 @@ estimation}
 
 \item{dispersion_method}{one of the options c( 'pooled', 'pooled-CR', 
 per-condition', 'blind' )}
+
+\item{sharing_Mode}{one of the options c("maximum", "fit-only", 
+"gene-est-only")}
 }
 \value{
 a \code{list} containing sorted DESeq analysis results
@@ -40,7 +43,7 @@ DEgenes <- findMarkers_scGPS(expression_matrix=assay(mixedpop1),
                         selected_cluster=c(1,2),
                         fitType = "parametric", 
                         dispersion_method = "blind",
-						   sharing_Mode="fit-only"
+                        sharing_Mode="fit-only"
                         )
 names(DEgenes)
 }
