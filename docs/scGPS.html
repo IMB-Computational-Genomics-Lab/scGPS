@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Homepage • scGPS</title>
+<title>1. Installation instruction • scGPS</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
@@ -37,7 +37,7 @@
 
 
 
-<meta property="og:title" content="Homepage" />
+<meta property="og:title" content="1. Installation instruction" />
 
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -113,54 +113,16 @@
 <div class="row">
   <div class="contents col-md-9">
     <div class="page-header">
-      <h1>Homepage</h1>
+      <h1>1. Installation instruction</h1>
     </div>
 
 
 <hr>
-<p>title: “scGPS introduction” author: “Quan Nguyen” date: “<code>r Sys.Date()</code>” output: pdf_document: toc: true highlight: tango html_document: standalone: true highlight: tango self-contained: true keep_md: true toc: true vignette: &gt; %\VignetteIndexEntry{Multi-format vignettes} \usepackage[utf8]{inputenc} %\VignetteEngine{knitr::multiformat} —</p>
-<p>```{r setup, out.width = ‘100%’, include = FALSE} knitr::opts_chunk$set( collapse = TRUE, comment = “#&gt;”, fig.path = “man/figures/” )</p>
-<div id="homepage" class="section level1">
-
-<p>knitr::include_graphics(“./docs/reference/figures/packagePlan.png”)</p>
-</div>
-<div id="knitropts_chunkset" class="section level1">
-<h1 class="hasAnchor">
-<a href="#knitropts_chunkset" class="anchor"></a>knitr::opts_chunk$set(</h1>
-</div>
-<div id="fig-path--docsreferencefigures" class="section level1">
-<h1 class="hasAnchor">
-<a href="#fig-path--docsreferencefigures" class="anchor"></a>fig.path = “./docs/reference/figures/”</h1>
-</div>
-<div id="section" class="section level1">
-<h1 class="hasAnchor">
-<a href="#section" class="anchor"></a>)</h1>
-</div>
-<div id="owd-setwdusersquan-nguyendocumentspowell_group_macquanallcodesscgpsvignettes" class="section level1">
-<h1 class="hasAnchor">
-<a href="#owd-setwdusersquan-nguyendocumentspowell_group_macquanallcodesscgpsvignettes" class="anchor"></a>owd = setwd(‘/Users/quan.nguyen/Documents/Powell_group_MacQuan/AllCodes/scGPS/vignettes/’)</h1>
-</div>
-<div id="setwdowd" class="section level1">
-<h1 class="hasAnchor">
-<a href="#setwdowd" class="anchor"></a>setwd(owd)</h1>
-<p>```</p>
-</div>
+<p>title: “scGPS introduction” author: “Quan Nguyen and Michael Thompson” date: “<code>r Sys.Date()</code>” output: rmarkdown::html_vignette vignette: &gt; %\VignetteIndexEntry{Vignettes} %\VignetteEngine{knitr::rmarkdown} \usepackage[utf8]{inputenc} —</p>
+<p><code>{r setup, out.width = '100%', include = FALSE, eval = FALSE} knitr::opts_chunk$set(   collapse = TRUE,   comment = "#&gt;",   fig.path = "man/figures/",   fig.keep = 'all' ) #Homepage  knitr::include_graphics("./man/figures/packagePlan.png")</code></p>
 <div id="installation-instruction" class="section level1">
-<h1 class="hasAnchor">
-<a href="#installation-instruction" class="anchor"></a>1. Installation instruction</h1>
-<p>```{r, eval = FALSE}</p>
-</div>
-<div id="prior-to-installing-scgps-you-need-to-install-the-summarizedexperiment" class="section level1">
-<h1 class="hasAnchor">
-<a href="#prior-to-installing-scgps-you-need-to-install-the-summarizedexperiment" class="anchor"></a>Prior to installing scGPS you need to install the SummarizedExperiment</h1>
-</div>
-<div id="bioconductor-package-as-the-following" class="section level1">
-<h1 class="hasAnchor">
-<a href="#bioconductor-package-as-the-following" class="anchor"></a>bioconductor package as the following</h1>
-</div>
-<div id="sourcehttpsbioconductor-orgbioclite-r-bioclitesummarizedexperiment" class="section level1">
-<h1 class="hasAnchor">
-<a href="#sourcehttpsbioconductor-orgbioclite-r-bioclitesummarizedexperiment" class="anchor"></a>source(‘<a href="https://bioconductor.org/biocLite.R" class="uri">https://bioconductor.org/biocLite.R</a>’) biocLite(‘SummarizedExperiment’)</h1>
+
+<p>```{r installation, eval = FALSE}</p>
 </div>
 <div id="to-install-scgps-from-github-depending-on-the-configuration-of-the-local" class="section level1">
 <h1 class="hasAnchor">
@@ -209,142 +171,174 @@
 <a href="#using-devtools-to-load-and-install-functions" class="anchor"></a>using devtools to load and install functions</h1>
 <p>devtools::document()</p>
 </div>
-<div id="update-the-namespace-using-the-update_namespace-sh" class="section level1">
-<h1 class="hasAnchor">
-<a href="#update-the-namespace-using-the-update_namespace-sh" class="anchor"></a>update the NAMESPACE using the update_NAMESPACE.sh</h1>
-<p>sh update_NAMESPACE.sh</p>
-</div>
-<div id="for-window-system-to-update-the-namespace-copy-and-paste-the-content-of-the-file-namespace_toadd_cpp_links-to-end-of-the-file-namespace" class="section level1">
-<h1 class="hasAnchor">
-<a href="#for-window-system-to-update-the-namespace-copy-and-paste-the-content-of-the-file-namespace_toadd_cpp_links-to-end-of-the-file-namespace" class="anchor"></a>for window system, to update the NAMESPACE: copy and paste the content of the file NAMESPACE_toAdd_cpp_links to end of the file NAMESPACE</h1>
-</div>
 <div id="load-the-package-to-the-workspace" class="section level1">
 <h1 class="hasAnchor">
 <a href="#load-the-package-to-the-workspace" class="anchor"></a>load the package to the workspace</h1>
-<p>devtools::load_all() ```</p>
+<p>devtools::load_all()</p>
+<p>```</p>
 </div>
 <div id="a-simple-workflow-of-the-scgps" class="section level1">
 <h1 class="hasAnchor">
 <a href="#a-simple-workflow-of-the-scgps" class="anchor"></a>2. A simple workflow of the scGPS:</h1>
 <p><em>The purpose of this workflow is to solve the following task: given a mixed population with known subpopulations, estimate transition scores between these subpopulation</em></p>
-<div id="setup-scgps-objects" class="section level2">
+<div id="create-scgps-objects" class="section level2">
 <h2 class="hasAnchor">
-<a href="#setup-scgps-objects" class="anchor"></a>2.1 Setup scGPS objects</h2>
-<p>```{r, warning = FALSE, message = FALSE}</p>
+<a href="#create-scgps-objects" class="anchor"></a>2.1 Create scGPS objects</h2>
+<p>```{r scGPS_object, warning = FALSE, message = FALSE}</p>
 </div>
 </div>
 <div id="load-mixed-population-1-loaded-from-sample1-dataset-named-it-as-day2" class="section level1">
 <h1 class="hasAnchor">
 <a href="#load-mixed-population-1-loaded-from-sample1-dataset-named-it-as-day2" class="anchor"></a>load mixed population 1 (loaded from sample1 dataset, named it as day2)</h1>
-<p>devtools::load_all()</p>
-<p>day2 &lt;- sample1</p>
-<p>mixedpop1 &lt;- NewscGPS_SME(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)</p>
+<p>devtools::load_all(“/Users/quan.nguyen/Documents/Powell_group_MacQuan/AllCodes/scGPS”)</p>
+</div>
+<div id="devtoolsload_allcuserss5125601desktopnew2scgps" class="section level1">
+<h1 class="hasAnchor">
+<a href="#devtoolsload_allcuserss5125601desktopnew2scgps" class="anchor"></a>devtools::load_all(“C:/Users/s5125601/Desktop/new2/scGPS”)</h1>
+<p>day2 &lt;- sample1 mixedpop1 &lt;- NewscGPS(ExpressionMatrix = day2$dat2_counts, GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)</p>
 </div>
 <div id="load-mixed-population-2-loaded-from-sample2-dataset-named-it-as-day5" class="section level1">
 <h1 class="hasAnchor">
 <a href="#load-mixed-population-2-loaded-from-sample2-dataset-named-it-as-day5" class="anchor"></a>load mixed population 2 (loaded from sample2 dataset, named it as day5)</h1>
-<p>day5 &lt;- sample2 mixedpop2 &lt;- NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)</p>
+<p>day5 &lt;- sample2 mixedpop2 &lt;- NewscGPS(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)</p>
+<p><code>##2.2 Run prediction</code>{r prediction, warning = FALSE, message = FALSE}</p>
+</div>
+<div id="select-a-subpopulation" class="section level1">
+<h1 class="hasAnchor">
+<a href="#select-a-subpopulation" class="anchor"></a>select a subpopulation</h1>
+<p>c_selectID &lt;- 1</p>
 </div>
 <div id="load-gene-list-this-can-be-any-lists-of-user-selected-genes" class="section level1">
 <h1 class="hasAnchor">
 <a href="#load-gene-list-this-can-be-any-lists-of-user-selected-genes" class="anchor"></a>load gene list (this can be any lists of user selected genes)</h1>
 <p>genes &lt;- GeneList genes &lt;- genes$Merged_unique</p>
 </div>
-<div id="select-a-subpopulation" class="section level1">
+<div id="load-cluster-information" class="section level1">
 <h1 class="hasAnchor">
-<a href="#select-a-subpopulation" class="anchor"></a>select a subpopulation</h1>
-<p>c_selectID &lt;- 1</p>
-<p><code>##2.2 Run predictions</code>{r}</p>
+<a href="#load-cluster-information" class="anchor"></a>load cluster information</h1>
+<p>cluster_mixedpop1 &lt;- colData(mixedpop1)[,1] cluster_mixedpop2 &lt;- colData(mixedpop2)[,1]</p>
 </div>
-<div id="run-the-test-bootstrap" class="section level1">
+<div id="run-training-running-nboots-3-here-but-recommend-to-use-nboots-50-100" class="section level1">
 <h1 class="hasAnchor">
-<a href="#run-the-test-bootstrap" class="anchor"></a>run the test bootstrap</h1>
-<p>LSOLDA_dat &lt;- bootstrap_scGPS(nboots = 2, mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, genes = genes, c_selectID, listData = list())</p>
-<p><code>##2.3 Summarise results</code>{r}</p>
-<p>LSOLDA_dat &lt;- bootstrap_scGPS(nboots = 2, mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, genes = genes, c_selectID, listData = list())</p>
+<a href="#run-training-running-nboots-3-here-but-recommend-to-use-nboots-50-100" class="anchor"></a>run training (running nboots = 3 here, but recommend to use nboots = 50-100)</h1>
+<p>LSOLDA_dat &lt;- bootstrap_scGPS(nboots = 3, mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, genes = genes, c_selectID = c_selectID, listData = list(), cluster_mixedpop1 = cluster_mixedpop1, cluster_mixedpop2 = cluster_mixedpop2, trainset_ratio = 0.7)</p>
+<p><code>##2.3 Summarise results</code>{r summarise_results, warning = FALSE, message = FALSE}</p>
 </div>
 <div id="display-the-list-of-result-information-in-the-lasolda_dat-object" class="section level1">
 <h1 class="hasAnchor">
 <a href="#display-the-list-of-result-information-in-the-lasolda_dat-object" class="anchor"></a>display the list of result information in the LASOLDA_dat object</h1>
-<p>names(LSOLDA_dat) LSOLDA_dat$LassoPredict LSOLDA_dat$LDAPredict</p>
+<p>names(LSOLDA_dat) LSOLDA_dat$ElasticNetPredict LSOLDA_dat$LDAPredict</p>
 </div>
 <div id="summary-results-lda" class="section level1">
 <h1 class="hasAnchor">
 <a href="#summary-results-lda" class="anchor"></a>summary results LDA</h1>
-<p>summary_prediction_lda(LSOLDA_dat = LSOLDA_dat, nPredSubpop = 4)</p>
+<p>sum_pred_lda &lt;- summary_prediction_lda(LSOLDA_dat = LSOLDA_dat, nPredSubpop = 4)</p>
 </div>
-<div id="summary-results-lasso" class="section level1">
+<div id="summary-results-lasso-to-show-the-percent-of-cells-classified-as-cells-belonging" class="section level1">
 <h1 class="hasAnchor">
-<a href="#summary-results-lasso" class="anchor"></a>summary results Lasso</h1>
-<p>summary_prediction_lasso(LSOLDA_dat = LSOLDA_dat, nPredSubpop = 4)</p>
+<a href="#summary-results-lasso-to-show-the-percent-of-cells-classified-as-cells-belonging" class="anchor"></a>summary results Lasso to show the percent of cells classified as cells belonging</h1>
+<p>sum_pred_lasso &lt;- summary_prediction_lasso(LSOLDA_dat = LSOLDA_dat, nPredSubpop = 4)</p>
 </div>
-<div id="summary-deviance" class="section level1">
+<div id="plot-summary-results" class="section level1">
 <h1 class="hasAnchor">
-<a href="#summary-deviance" class="anchor"></a>summary deviance</h1>
-<p>summary_deviance(object = LSOLDA_dat) ```</p>
+<a href="#plot-summary-results" class="anchor"></a>plot summary results</h1>
+<p>plot_sum &lt;-function(sum_dat){ sum_dat_tf &lt;- t(sum_dat) sum_dat_tf &lt;- na.omit(sum_dat_tf) sum_dat_tf &lt;- apply(sum_dat[, -ncol(sum_dat)],1, function(x){as.numeric(as.vector(x))}) sum_dat$names &lt;- gsub(“for subpop”,“sp”, sum_dat$names ) sum_dat$names &lt;- gsub(“in target mixedpop”,“in p”, sum_dat$names) colnames(sum_dat_tf) &lt;- sum_dat$names boxplot(sum_dat_tf, las=2) } plot_sum(sum_pred_lasso) plot_sum(sum_pred_lda)</p>
+</div>
+<div id="summary-accuracy-to-check-the-model-accuracy-in-the-leave-out-test-set" class="section level1">
+<h1 class="hasAnchor">
+<a href="#summary-accuracy-to-check-the-model-accuracy-in-the-leave-out-test-set" class="anchor"></a>summary accuracy to check the model accuracy in the leave-out test set</h1>
+<p>summary_accuracy(object = LSOLDA_dat)</p>
+</div>
+<div id="summary-maximum-deviance-explained-by-the-model" class="section level1">
+<h1 class="hasAnchor">
+<a href="#summary-maximum-deviance-explained-by-the-model" class="anchor"></a>summary maximum deviance explained by the model</h1>
+<p>summary_deviance(object = LSOLDA_dat)</p>
+<p>```</p>
 </div>
 <div id="a-complete-workflow-of-the-scgps" class="section level1">
 <h1 class="hasAnchor">
 <a href="#a-complete-workflow-of-the-scgps" class="anchor"></a>3. A complete workflow of the scGPS:</h1>
 <p><em>The purpose of this workflow is to solve the following task: given an unknown mixed population, find clusters and estimate relationship between clusters</em></p>
-<div id="identify-clusters-in-a-using-core" class="section level2">
+<div id="identify-clusters-in-a-dataset-using-core" class="section level2">
 <h2 class="hasAnchor">
-<a href="#identify-clusters-in-a-using-core" class="anchor"></a>3.1 Identify clusters in a using CORE</h2>
-<p><em>(skip this step if clusters are known)</em> ```{r, warning = FALSE, message = FALSE}</p>
+<a href="#identify-clusters-in-a-dataset-using-core" class="anchor"></a>3.1 Identify clusters in a dataset using CORE</h2>
+<p><em>(skip this step if clusters are known)</em> ```{r CORE, warning = FALSE, message = FALSE}</p>
 </div>
 </div>
-<div id="lets-find-clustering-information-in-an-expresion-data" class="section level1">
+<div id="find-clustering-information-in-an-expresion-data-using-core" class="section level1">
 <h1 class="hasAnchor">
-<a href="#lets-find-clustering-information-in-an-expresion-data" class="anchor"></a>Let’s find clustering information in an expresion data</h1>
-<p>day5 &lt;- sample2 cellnames &lt;- colnames(day5$dat5_counts) cluster &lt;-day5$dat5_clusters cellnames &lt;-data.frame(“Cluster”=cluster, “cellBarcodes” = cellnames) mixedpop2 &lt;-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo, CellMetadata = cellnames )</p>
-<p>CORE_cluster &lt;- CORE_scGPS(mixedpop2, remove_outlier = c(0), PCA=FALSE)</p>
-<p><code>##3.2 Visualise all cluster results in all iterations</code>{r}</p>
-</div>
-<div id="plot-with-default-colors" class="section level1">
-<h1 class="hasAnchor">
-<a href="#plot-with-default-colors" class="anchor"></a>plot with default colors</h1>
-<p>plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster)</p>
-</div>
-<div id="lets-find-the-core-clusters" class="section level1">
-<h1 class="hasAnchor">
-<a href="#lets-find-the-core-clusters" class="anchor"></a>let’s find the CORE clusters</h1>
+<a href="#find-clustering-information-in-an-expresion-data-using-core" class="anchor"></a>find clustering information in an expresion data using CORE</h1>
+<p>day5 &lt;- sample2 cellnames &lt;- colnames(day5$dat5_counts) cluster &lt;-day5$dat5_clusters cellnames &lt;-data.frame(“Cluster”=cluster, “cellBarcodes” = cellnames) mixedpop2 &lt;-NewscGPS(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo, CellMetadata = cellnames )</p>
 <p>CORE_cluster &lt;- CORE_scGPS(mixedpop2, remove_outlier = c(0), PCA=FALSE)</p>
 </div>
-<div id="lets-plot-all-clusters" class="section level1">
+<div id="to-update-the-clustering-information-users-can" class="section level1">
 <h1 class="hasAnchor">
-<a href="#lets-plot-all-clusters" class="anchor"></a>let’s plot all clusters</h1>
-<p>plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster)</p>
+<a href="#to-update-the-clustering-information-users-can" class="anchor"></a>to update the clustering information, users can …</h1>
+<p>key_height &lt;- CORE_cluster$optimalClust$KeyStats$Height optimal_res &lt;- CORE_cluster$optimalClust$OptimalRes optimal_index = which(key_height == optimal_res)</p>
+<p>clustering_after_outlier_removal &lt;- unname(unlist(CORE_cluster$Cluster[[optimal_index]])) corresponding_cells_after_outlier_removal &lt;- CORE_cluster$cellsForClustering original_cells_before_removal &lt;- colData(mixedpop2)[,2] corresponding_index &lt;- match(corresponding_cells_after_outlier_removal, original_cells_before_removal )</p>
 </div>
-<div id="you-can-customise-the-cluster-color-bars-provide-color_branch-values" class="section level1">
+<div id="check-the-matching" class="section level1">
 <h1 class="hasAnchor">
-<a href="#you-can-customise-the-cluster-color-bars-provide-color_branch-values" class="anchor"></a>you can customise the cluster color bars (provide color_branch values)</h1>
-<p>plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster, color_branch = c(“#208eb7”, “#6ce9d3”, “#1c5e39”, “#8fca40”, “#154975”, “#b1c8eb”))</p>
+<a href="#check-the-matching" class="anchor"></a>check the matching</h1>
+<p>identical(as.character(original_cells_before_removal[corresponding_index]),corresponding_cells_after_outlier_removal)</p>
 </div>
-<div id="you-can-customise-the-cluster-color-bars-provide-color_branch-values-1" class="section level1">
+<div id="create-new-object-with-the-new-clustering-after-removing-outliers" class="section level1">
 <h1 class="hasAnchor">
-<a href="#you-can-customise-the-cluster-color-bars-provide-color_branch-values-1" class="anchor"></a>you can customise the cluster color bars (provide color_branch values)</h1>
-<p>plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster, color_branch = c(“#208eb7”, “#6ce9d3”, “#1c5e39”, “#8fca40”, “#154975”, “#b1c8eb”)) ```</p>
-<div id="plot-the-optimal-clustering-result" class="section level2">
+<a href="#create-new-object-with-the-new-clustering-after-removing-outliers" class="anchor"></a>create new object with the new clustering after removing outliers</h1>
+<p>mixedpop2_post_clustering &lt;- mixedpop2[,corresponding_index] colData(mixedpop2_post_clustering)[,1] &lt;- clustering_after_outlier_removal</p>
+<p>```</p>
+<div id="identify-clusters-in-a-dataset-using-score-stable-clustering-at-optimal-resolution" class="section level2">
 <h2 class="hasAnchor">
-<a href="#plot-the-optimal-clustering-result" class="anchor"></a>3.3 Plot the optimal clustering result</h2>
-<pre class="{r}"><code>#extract optimal index identified by CORE_scGPS
-optimal_index = which(CORE_cluster$optimalClust$KeyStats$Height == CORE_cluster$optimalClust$OptimalRes)
-
-#plot the optimal result
-plot_optimal_CORE(original_tree= CORE_cluster$tree, optimal_cluster = unlist(CORE_cluster$Cluster[optimal_index]), shift = -100)</code></pre>
+<a href="#identify-clusters-in-a-dataset-using-score-stable-clustering-at-optimal-resolution" class="anchor"></a>3.2 Identify clusters in a dataset using SCORE (Stable Clustering at Optimal REsolution)</h2>
+<p><em>(skip this step if clusters are known)</em> <em>(SCORE aims to get stable subpopulation results, by introducing bagging aggregation and bootstrapping to the CORE algorithm)</em> ```{r SCORE with bagging, warning = FALSE, message = FALSE}</p>
 </div>
+</div>
+<div id="find-clustering-information-in-an-expresion-data-using-score" class="section level1">
+<h1 class="hasAnchor">
+<a href="#find-clustering-information-in-an-expresion-data-using-score" class="anchor"></a>find clustering information in an expresion data using SCORE</h1>
+<p>day5 &lt;- sample2 cellnames &lt;- colnames(day5$dat5_counts) cluster &lt;-day5$dat5_clusters cellnames &lt;-data.frame(“Cluster”=cluster, “cellBarcodes” = cellnames) mixedpop2 &lt;-NewscGPS(ExpressionMatrix = day5$dat5_counts, GeneMetadata = day5$dat5geneInfo, CellMetadata = cellnames )</p>
+<p>SCORE_test &lt;- CORE_scGPS_bagging(mixedpop2, remove_outlier = c(0), PCA=FALSE, bagging_run = 20, subsample_proportion = .8)</p>
+<p>```</p>
+<div id="visualise-all-cluster-results-in-all-iterations" class="section level2">
+<h2 class="hasAnchor">
+<a href="#visualise-all-cluster-results-in-all-iterations" class="anchor"></a>3.3 Visualise all cluster results in all iterations</h2>
+<p>```{r visualisation, dev=‘CairoPDF’} dev.off()</p>
+</div>
+<div id="plot-core-clustering" class="section level2">
+<h2 class="hasAnchor">
+<a href="#plot-core-clustering" class="anchor"></a>3.2.1 plot CORE clustering</h2>
+<p>p1 &lt;- plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster, color_branch = c(“#208eb7”, “#6ce9d3”, “#1c5e39”, “#8fca40”, “#154975”, “#b1c8eb”)) p1</p>
+</div>
+</div>
+<div id="extract-optimal-index-identified-by-core_scgps" class="section level1">
+<h1 class="hasAnchor">
+<a href="#extract-optimal-index-identified-by-core_scgps" class="anchor"></a>extract optimal index identified by CORE_scGPS</h1>
+<p>key_height &lt;- CORE_cluster$optimalClust$KeyStats$Height optimal_res &lt;- CORE_cluster$optimalClust$OptimalRes optimal_index = which(key_height == optimal_res)</p>
+</div>
+<div id="plot-one-optimal-clustering-bar" class="section level1">
+<h1 class="hasAnchor">
+<a href="#plot-one-optimal-clustering-bar" class="anchor"></a>plot one optimal clustering bar</h1>
+<p>plot_optimal_CORE(original_tree= CORE_cluster$tree, optimal_cluster = unlist(CORE_cluster$Cluster[optimal_index]), shift = -2000)</p>
+<div id="plot-score-clustering" class="section level2">
+<h2 class="hasAnchor">
+<a href="#plot-score-clustering" class="anchor"></a>3.2.2 plot SCORE clustering</h2>
+<p>plot_CORE(SCORE_test$tree, list_clusters = SCORE_test$Cluster)#plot all clustering bars</p>
+</div>
+</div>
+<div id="plot-one-stable-optimal-clustering-bar" class="section level1">
+<h1 class="hasAnchor">
+<a href="#plot-one-stable-optimal-clustering-bar" class="anchor"></a>plot one stable optimal clustering bar</h1>
+<p>plot_optimal_CORE(original_tree= SCORE_test$tree, optimal_cluster = unlist(SCORE_test$Cluster[SCORE_test$optimal_index]), shift = -100)</p>
+<p>```</p>
 <div id="compare-clustering-results-with-other-dimensional-reduction-methods-e-g--cidr" class="section level2">
 <h2 class="hasAnchor">
 <a href="#compare-clustering-results-with-other-dimensional-reduction-methods-e-g--cidr" class="anchor"></a>3.4 Compare clustering results with other dimensional reduction methods (e.g., CIDR)</h2>
-<pre class="{r}"><code>library(cidr)
-t &lt;- CIDR_scGPS(expression.matrix=assay(mixedpop2))
-p2 &lt;-plotReduced_scGPS(t, color_fac = factor(colData(mixedpop2)[,1]),palletes =1:length(unique(colData(mixedpop2)[,1])))
-p2</code></pre>
+<p><code>{r compare_clustering} library(cidr) t &lt;- CIDR_scGPS(expression.matrix=assay(mixedpop2)) p2 &lt;-plotReduced_scGPS(t, color_fac = factor(colData(mixedpop2)[,1]),palletes =1:length(unique(colData(mixedpop2)[,1]))) p2</code></p>
 </div>
 <div id="find-gene-markers-and-annotate-clusters" class="section level2">
 <h2 class="hasAnchor">
 <a href="#find-gene-markers-and-annotate-clusters" class="anchor"></a>3.5 Find gene markers and annotate clusters</h2>
-<p>```{r, warning = FALSE, message = FALSE}</p>
+<p>```{r find_markers, warning = FALSE, message = FALSE}</p>
 </div>
 </div>
 <div id="load-gene-list-this-can-be-any-lists-of-user-selected-genes-1" class="section level1">
@@ -359,7 +353,10 @@ p2</code></pre>
 <div id="cluster-information-is-requied-for-findmarkers_scgps--here-we-use-core-results-" class="section level1">
 <h1 class="hasAnchor">
 <a href="#cluster-information-is-requied-for-findmarkers_scgps--here-we-use-core-results-" class="anchor"></a>cluster information is requied for findMarkers_scGPS. Here, we use CORE results.</h1>
-<p>Optimal_index &lt;- which( CORE_cluster$optimalClust$KeyStats$Height == CORE_cluster$optimalClust$OptimalRes) colData(mixedpop2)[,1] &lt;- unlist(CORE_cluster$Cluster[[Optimal_index]])</p>
+</div>
+<div id="coldatamixedpop21---unlistscore_testclusterscore_testoptimal_index" class="section level1">
+<h1 class="hasAnchor">
+<a href="#coldatamixedpop21---unlistscore_testclusterscore_testoptimal_index" class="anchor"></a>colData(mixedpop2)[,1] &lt;- unlist(SCORE_test$Cluster[SCORE_test$optimal_index])</h1>
 <p>suppressMessages(library(locfit)) suppressMessages(library(DESeq))</p>
 <p>DEgenes &lt;- findMarkers_scGPS(expression_matrix=assay(mixedpop2), cluster = colData(mixedpop2)[,1], selected_cluster=unique(colData(mixedpop2)[,1]))</p>
 </div>
@@ -375,7 +372,7 @@ p2</code></pre>
 <div id="you-can-annotate-the-identified-clusters" class="section level1">
 <h1 class="hasAnchor">
 <a href="#you-can-annotate-the-identified-clusters" class="anchor"></a>you can annotate the identified clusters</h1>
-<p>DEgeneList_3vsOthers &lt;- DEgenes$DE_Subpop3vsRemaining$id</p>
+<p>DEgeneList_1vsOthers &lt;- DEgenes$DE_Subpop1vsRemaining$id</p>
 </div>
 <div id="users-need-to-check-the-format-of-the-gene-input-to-make-sure-they-are-consistent-to" class="section level1">
 <h1 class="hasAnchor">
@@ -384,7 +381,6 @@ p2</code></pre>
 <div id="the-gene-names-in-the-expression-matrix" class="section level1">
 <h1 class="hasAnchor">
 <a href="#the-gene-names-in-the-expression-matrix" class="anchor"></a>the gene names in the expression matrix</h1>
-<p>DEgeneList_3vsOthers &lt;-gsub(“_.*“,”“, DEgeneList_3vsOthers )</p>
 </div>
 <div id="the-following-command-saves-the-file-pathwayenrichment-xlsx-to-the-working-dir" class="section level1">
 <h1 class="hasAnchor">
@@ -393,13 +389,12 @@ p2</code></pre>
 <div id="use-500-top-de-genes" class="section level1">
 <h1 class="hasAnchor">
 <a href="#use-500-top-de-genes" class="anchor"></a>use 500 top DE genes</h1>
-<p>suppressMessages(library(DOSE)) suppressMessages(library(ReactomePA)) suppressMessages(library(clusterProfiler))</p>
-<p>enrichment_test &lt;- annotate_scGPS(DEgeneList_3vsOthers[1:500], pvalueCutoff=0.05, gene_symbol=TRUE,output_filename = “PathwayEnrichment.xlsx”, output_path = NULL )</p>
+<p>suppressMessages(library(DOSE)) suppressMessages(library(ReactomePA)) suppressMessages(library(clusterProfiler)) enrichment_test &lt;- annotate_scGPS(DEgeneList_1vsOthers[1:500], pvalueCutoff=0.05, gene_symbol=TRUE)</p>
 </div>
 <div id="the-enrichment-outputs-can-be-displayed-by-running" class="section level1">
 <h1 class="hasAnchor">
 <a href="#the-enrichment-outputs-can-be-displayed-by-running" class="anchor"></a>the enrichment outputs can be displayed by running</h1>
-<p>dotplot(enrichment_test, showCategory=15)</p>
+<p>dotplot(enrichment_test, showCategory=10, font.size = 6)</p>
 <p>```</p>
 </div>
 <div id="relationship-between-clusters-within-one-sample-or-between-two-samples" class="section level1">
@@ -409,63 +404,97 @@ p2</code></pre>
 <div id="start-the-scgps-prediction-to-find-relationship-between-clusters" class="section level2">
 <h2 class="hasAnchor">
 <a href="#start-the-scgps-prediction-to-find-relationship-between-clusters" class="anchor"></a>4.1 Start the scGPS prediction to find relationship between clusters</h2>
-<p>```{r, warning = FALSE, message = FALSE}</p>
+<p>```{r scGPS_prediction, warning = FALSE, message = FALSE}</p>
 </div>
 </div>
 <div id="select-a-subpopulation-and-input-gene-list" class="section level1">
 <h1 class="hasAnchor">
 <a href="#select-a-subpopulation-and-input-gene-list" class="anchor"></a>select a subpopulation, and input gene list</h1>
-<p>c_selectID &lt;- 1 genes = DEgenes$DE_Subpop1vsRemaining$id[1:500]</p>
+<p>c_selectID &lt;- 1</p>
 </div>
-<div id="format-gene-names" class="section level1">
+<div id="note-make-sure-the-format-for-genes-input-here-is-the-same-to-the-format-for-genes-in-the-mixedpop1-and-mixedpop2" class="section level1">
 <h1 class="hasAnchor">
-<a href="#format-gene-names" class="anchor"></a>format gene names</h1>
-<p>genes &lt;- gsub(“_.*“,”“, genes)</p>
+<a href="#note-make-sure-the-format-for-genes-input-here-is-the-same-to-the-format-for-genes-in-the-mixedpop1-and-mixedpop2" class="anchor"></a>note make sure the format for genes input here is the same to the format for genes in the mixedpop1 and mixedpop2</h1>
+<p>genes = DEgenes$DE_Subpop1vsRemaining$id[1:500]</p>
 </div>
 <div id="run-the-test-bootstrap-with-nboots-2-runs" class="section level1">
 <h1 class="hasAnchor">
 <a href="#run-the-test-bootstrap-with-nboots-2-runs" class="anchor"></a>run the test bootstrap with nboots = 2 runs</h1>
-<p>sink(“temp”) LSOLDA_dat &lt;- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop2, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list()) sink()</p>
+<p>cluster_mixedpop1 &lt;- colData(mixedpop1)[,1] cluster_mixedpop2 &lt;- colData(mixedpop2)[,1]</p>
+<p>sink(“temp”) LSOLDA_dat &lt;- bootstrap_scGPS(nboots = 2, mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, genes = genes, c_selectID = c_selectID, listData = list(), cluster_mixedpop1 = cluster_mixedpop1, cluster_mixedpop2 = cluster_mixedpop2)</p>
+<p>sink()</p>
 <p>```</p>
 <div id="display-summary-results-for-the-prediction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#display-summary-results-for-the-prediction" class="anchor"></a>4.2 Display summary results for the prediction</h2>
-<pre class="{r}"><code>#get the number of rows for the summary matrix 
-row_cluster &lt;-length(unique(colData(mixedpop2)[,1]))
-
-#summary results LDA
-summary_prediction_lda(LSOLDA_dat=LSOLDA_dat, nPredSubpop = row_cluster )
-
-#summary results Lasso
-summary_prediction_lasso(LSOLDA_dat=LSOLDA_dat, nPredSubpop = row_cluster)
-
-#summary deviance 
-summary_deviance(LSOLDA_dat)
-</code></pre>
+<p>```{r summarise_prediction}</p>
 </div>
-<div id="plot-the-relationship-between-clusters" class="section level2">
+</div>
+<div id="get-the-number-of-rows-for-the-summary-matrix" class="section level1">
+<h1 class="hasAnchor">
+<a href="#get-the-number-of-rows-for-the-summary-matrix" class="anchor"></a>get the number of rows for the summary matrix</h1>
+<p>row_cluster &lt;-length(unique(colData(mixedpop2)[,1]))</p>
+</div>
+<div id="summary-results-lda-to-to-show-the-percent-of-cells-classified-as-cells-belonging-by-lda-classifier" class="section level1">
+<h1 class="hasAnchor">
+<a href="#summary-results-lda-to-to-show-the-percent-of-cells-classified-as-cells-belonging-by-lda-classifier" class="anchor"></a>summary results LDA to to show the percent of cells classified as cells belonging by LDA classifier</h1>
+<p>summary_prediction_lda(LSOLDA_dat=LSOLDA_dat, nPredSubpop = row_cluster )</p>
+</div>
+<div id="summary-results-lasso-to-show-the-percent-of-cells-classified-as-cells-belonging-by-lasso-classifier" class="section level1">
+<h1 class="hasAnchor">
+<a href="#summary-results-lasso-to-show-the-percent-of-cells-classified-as-cells-belonging-by-lasso-classifier" class="anchor"></a>summary results Lasso to show the percent of cells classified as cells belonging by Lasso classifier</h1>
+<p>summary_prediction_lasso(LSOLDA_dat=LSOLDA_dat, nPredSubpop = row_cluster)</p>
+</div>
+<div id="summary-maximum-deviance-explained-by-the-model-during-the-model-training" class="section level1">
+<h1 class="hasAnchor">
+<a href="#summary-maximum-deviance-explained-by-the-model-during-the-model-training" class="anchor"></a>summary maximum deviance explained by the model during the model training</h1>
+<p>summary_deviance(object = LSOLDA_dat)</p>
+</div>
+<div id="summary-accuracy-to-check-the-model-accuracy-in-the-leave-out-test-set-1" class="section level1">
+<h1 class="hasAnchor">
+<a href="#summary-accuracy-to-check-the-model-accuracy-in-the-leave-out-test-set-1" class="anchor"></a>summary accuracy to check the model accuracy in the leave-out test set</h1>
+<p>summary_accuracy(object = LSOLDA_dat)</p>
+<p>```</p>
+<div id="plot-the-relationship-between-clusters-in-one-sample" class="section level2">
 <h2 class="hasAnchor">
-<a href="#plot-the-relationship-between-clusters" class="anchor"></a>4.3 Plot the relationship between clusters</h2>
+<a href="#plot-the-relationship-between-clusters-in-one-sample" class="anchor"></a>4.3 Plot the relationship between clusters in one sample</h2>
 <p><em>Here we look at one example use case to find relationship between clusters within one sample or between two sample</em></p>
-<p>```{r,warning = FALSE, message = FALSE}</p>
+<p>```{r prediction_one_sample, warning = FALSE, message = FALSE}</p>
 </div>
 </div>
 <div id="run-prediction-for-3-clusters" class="section level1">
 <h1 class="hasAnchor">
 <a href="#run-prediction-for-3-clusters" class="anchor"></a>run prediction for 3 clusters</h1>
-<p>c_selectID &lt;- 1 genes = DEgenes$DE_Subpop1vsRemaining$id[1:200] #top 200 gene markers distinguishing cluster 1 genes &lt;- gsub(“_.*“,”“, genes)</p>
-<p>LSOLDA_dat1 &lt;- bootstrap_scGPS(nboots = 1,mixedpop1 = mixedpop2, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list())</p>
-<p>c_selectID &lt;- 2 genes = DEgenes$DE_Subpop2vsRemaining$id[1:200] genes &lt;- gsub(“_.*“,”“, genes) LSOLDA_dat2 &lt;- bootstrap_scGPS(nboots = 1,mixedpop1 = mixedpop2, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list())</p>
-<p>c_selectID &lt;- 3 genes = DEgenes$DE_Subpop3vsRemaining$id[1:200] genes &lt;- gsub(“_.*“,”“, genes) LSOLDA_dat3 &lt;- bootstrap_scGPS(nboots = 1,mixedpop1 = mixedpop2, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list())</p>
+<p>cluster_mixedpop1 &lt;- colData(mixedpop1)[,1] cluster_mixedpop2 &lt;- colData(mixedpop2)[,1]</p>
+</div>
+<div id="cluster_mixedpop2---as-numericas-vectorcoldatamixedpop21" class="section level1">
+<h1 class="hasAnchor">
+<a href="#cluster_mixedpop2---as-numericas-vectorcoldatamixedpop21" class="anchor"></a>cluster_mixedpop2 &lt;- as.numeric(as.vector(colData(mixedpop2)[,1]))</h1>
+<p>c_selectID &lt;- 1 genes = DEgenes$DE_Subpop1vsRemaining$id[1:200] #top 200 gene markers distinguishing cluster 1</p>
+<p>LSOLDA_dat1 &lt;- bootstrap_scGPS(nboots = 2, mixedpop1 = mixedpop2, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(), cluster_mixedpop1 = cluster_mixedpop2, cluster_mixedpop2 = cluster_mixedpop2)</p>
+<p>c_selectID &lt;- 2 genes = DEgenes$DE_Subpop2vsRemaining$id[1:200]</p>
+<p>LSOLDA_dat2 &lt;- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop2, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(), cluster_mixedpop1 = cluster_mixedpop2, cluster_mixedpop2 = cluster_mixedpop2)</p>
+<p>c_selectID &lt;- 3 genes = DEgenes$DE_Subpop3vsRemaining$id[1:200] LSOLDA_dat3 &lt;- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop2, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(), cluster_mixedpop1 = cluster_mixedpop2, cluster_mixedpop2 = cluster_mixedpop2)</p>
+<p>c_selectID &lt;- 4 genes = DEgenes$DE_Subpop4vsRemaining$id[1:200] LSOLDA_dat4 &lt;- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop2, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(), cluster_mixedpop1 = cluster_mixedpop2, cluster_mixedpop2 = cluster_mixedpop2)</p>
 </div>
 <div id="prepare-table-input-for-sankey-plot" class="section level1">
 <h1 class="hasAnchor">
 <a href="#prepare-table-input-for-sankey-plot" class="anchor"></a>prepare table input for sankey plot</h1>
-<p>reformat_LASSO &lt;-function(c_selectID = NULL, s_selectID = NULL, LSOLDA_dat = NULL, nPredSubpop = row_cluster, Nodes_group = “#7570b3”){ LASSO_out &lt;- summary_prediction_lasso(LSOLDA_dat=LSOLDA_dat, nPredSubpop = nPredSubpop) LASSO_out &lt;-as.data.frame(LASSO_out) temp_name &lt;- gsub(“LASSO for subpop”, “C”, LASSO_out$names) temp_name &lt;- gsub(" in target mixedpop“,”S“, temp_name) LASSO_out$names &lt;-temp_name source &lt;-rep(paste0(”C“,c_selectID,”S“,s_selectID), length(temp_name)) LASSO_out$Source &lt;- source LASSO_out$Node &lt;- source LASSO_out$Nodes_group &lt;- rep(Nodes_group, length(temp_name)) colnames(LASSO_out) &lt;-c(”Value“,”Target“,”Source“,”Node“,”NodeGroup“) LASSO_out$Value &lt;- as.numeric(as.vector(LASSO_out$Value)) return(LASSO_out) }</p>
-<p>LASSO_C1S2 &lt;- reformat_LASSO(c_selectID=1, s_selectID =2, LSOLDA_dat=LSOLDA_dat1, nPredSubpop = row_cluster, Nodes_group = “#7570b3”)</p>
-<p>LASSO_C2S2 &lt;- reformat_LASSO(c_selectID=2, s_selectID =2, LSOLDA_dat=LSOLDA_dat2, nPredSubpop = row_cluster, Nodes_group = “#1b9e77”)</p>
-<p>LASSO_C3S2 &lt;- reformat_LASSO(c_selectID=3, s_selectID =2, LSOLDA_dat=LSOLDA_dat3, nPredSubpop = row_cluster, Nodes_group = “#e7298a”)</p>
-<p>combined &lt;- rbind(LASSO_C1S2,LASSO_C2S2,LASSO_C3S2 ) combined &lt;- combined[is.na(combined$Value) != TRUE,] combined_D3obj &lt;-list(Nodes=combined[,4:5], Links=combined[,c(3,2,1)])</p>
+<p>LASSO_C1S2 &lt;- reformat_LASSO(c_selectID=1, mp_selectID = 2, LSOLDA_dat=LSOLDA_dat1, nPredSubpop = length(unique(colData(mixedpop2)[,1])), Nodes_group =“#7570b3”)</p>
+<p>LASSO_C2S2 &lt;- reformat_LASSO(c_selectID=2, mp_selectID =2, LSOLDA_dat=LSOLDA_dat2, nPredSubpop = length(unique(colData(mixedpop2)[,1])), Nodes_group =“#1b9e77”)</p>
+<p>LASSO_C3S2 &lt;- reformat_LASSO(c_selectID=3, mp_selectID =2, LSOLDA_dat=LSOLDA_dat3, nPredSubpop = length(unique(colData(mixedpop2)[,1])), Nodes_group =“#e7298a”)</p>
+<p>LASSO_C4S2 &lt;- reformat_LASSO(c_selectID=4, mp_selectID =2, LSOLDA_dat=LSOLDA_dat4, nPredSubpop = length(unique(colData(mixedpop2)[,1])), Nodes_group =“#00FFFF”)</p>
+<p>combined &lt;- rbind(LASSO_C1S2,LASSO_C2S2,LASSO_C3S2, LASSO_C4S2 ) combined &lt;- combined[is.na(combined$Value) != TRUE,]</p>
+<p>nboots = 2</p>
+</div>
+<div id="links-source-target-value" class="section level1">
+<h1 class="hasAnchor">
+<a href="#links-source-target-value" class="anchor"></a>links: source, target, value</h1>
+</div>
+<div id="source-node-nodegroup" class="section level1">
+<h1 class="hasAnchor">
+<a href="#source-node-nodegroup" class="anchor"></a>source: node, nodegroup</h1>
+<p>combined_D3obj &lt;-list(Nodes=combined[,(nboots+3):(nboots+4)], Links=combined[,c((nboots+2):(nboots+1),ncol(combined))])</p>
 <p>library(networkD3)</p>
 <p>Node_source &lt;- as.vector(sort(unique(combined_D3obj$Links$Source))) Node_target &lt;- as.vector(sort(unique(combined_D3obj$Links$Target))) Node_all &lt;-unique(c(Node_source, Node_target))</p>
 </div>
@@ -486,33 +515,63 @@ summary_deviance(LSOLDA_dat)
 <div id="savenetworkp1-file-paste0pathsubpopulation_net-html" class="section level1">
 <h1 class="hasAnchor">
 <a href="#savenetworkp1-file-paste0pathsubpopulation_net-html" class="anchor"></a>saveNetwork(p1, file = paste0(path,‘Subpopulation_Net.html’))</h1>
-<div id="r-setting-information" class="section level2">
+<p>```</p>
+<div id="plot-the-relationship-between-clusters-in-two-samples" class="section level2">
 <h2 class="hasAnchor">
-<a href="#r-setting-information" class="anchor"></a>R Setting Information</h2>
+<a href="#plot-the-relationship-between-clusters-in-two-samples" class="anchor"></a>4.3 Plot the relationship between clusters in two samples</h2>
+<p><em>Here we look at one example use case to find relationship between clusters within one sample or between two sample</em></p>
+<p>```{r prediction_two_samples,warning = FALSE, message = FALSE}</p>
 </div>
 </div>
-<div id="sessioninfo" class="section level1">
+<div id="run-prediction-for-3-clusters-1" class="section level1">
 <h1 class="hasAnchor">
-<a href="#sessioninfo" class="anchor"></a>sessionInfo()</h1>
+<a href="#run-prediction-for-3-clusters-1" class="anchor"></a>run prediction for 3 clusters</h1>
+<p>cluster_mixedpop1 &lt;- colData(mixedpop1)[,1] cluster_mixedpop2 &lt;- colData(mixedpop2)[,1] row_cluster &lt;-length(unique(colData(mixedpop2)[,1]))</p>
+<p>c_selectID &lt;- 1 genes = DEgenes$DE_Subpop1vsRemaining$id[1:200] #top 200 gene markers distinguishing cluster 1 LSOLDA_dat1 &lt;- bootstrap_scGPS(nboots = 2, mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(), cluster_mixedpop1 = cluster_mixedpop1, cluster_mixedpop2 = cluster_mixedpop2)</p>
+<p>c_selectID &lt;- 2 genes = DEgenes$DE_Subpop2vsRemaining$id[1:200] LSOLDA_dat2 &lt;- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(), cluster_mixedpop1 = cluster_mixedpop1, cluster_mixedpop2 = cluster_mixedpop2)</p>
+<p>c_selectID &lt;- 3 genes = DEgenes$DE_Subpop3vsRemaining$id[1:200] LSOLDA_dat3 &lt;- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(), cluster_mixedpop1 = cluster_mixedpop1, cluster_mixedpop2 = cluster_mixedpop2)</p>
 </div>
-<div id="rmarkdownrenderusersquan-nguyendocumentspowell_group_macquanallcodesscgpsvignettesvignette-rmdhtml_documenttoc-true-toc_depth-3" class="section level1">
+<div id="prepare-table-input-for-sankey-plot-1" class="section level1">
 <h1 class="hasAnchor">
-<a href="#rmarkdownrenderusersquan-nguyendocumentspowell_group_macquanallcodesscgpsvignettesvignette-rmdhtml_documenttoc-true-toc_depth-3" class="anchor"></a>rmarkdown::render(“/Users/quan.nguyen/Documents/Powell_group_MacQuan/AllCodes/scGPS/vignettes/vignette.Rmd”,html_document(toc = TRUE, toc_depth = 3))</h1>
+<a href="#prepare-table-input-for-sankey-plot-1" class="anchor"></a>prepare table input for sankey plot</h1>
+<p>LASSO_C1S1 &lt;- reformat_LASSO(c_selectID=1, mp_selectID = 1, LSOLDA_dat=LSOLDA_dat1, nPredSubpop = row_cluster, Nodes_group = “#7570b3”)</p>
+<p>LASSO_C2S1 &lt;- reformat_LASSO(c_selectID=2, mp_selectID = 1, LSOLDA_dat=LSOLDA_dat2, nPredSubpop = row_cluster, Nodes_group = “#1b9e77”)</p>
+<p>LASSO_C3S1 &lt;- reformat_LASSO(c_selectID=3, mp_selectID = 1, LSOLDA_dat=LSOLDA_dat3, nPredSubpop = row_cluster, Nodes_group = “#e7298a”)</p>
+<p>combined &lt;- rbind(LASSO_C1S1,LASSO_C2S1,LASSO_C3S1)</p>
+<p>nboots = 2</p>
 </div>
-<div id="rmarkdownrenderusersquan-nguyendocumentspowell_group_macquanallcodesscgpsvignettesvignette-rmdpdf_documenttoc-true-toc_depth-3" class="section level1">
+<div id="links-source-target-value-1" class="section level1">
 <h1 class="hasAnchor">
-<a href="#rmarkdownrenderusersquan-nguyendocumentspowell_group_macquanallcodesscgpsvignettesvignette-rmdpdf_documenttoc-true-toc_depth-3" class="anchor"></a>rmarkdown::render(“/Users/quan.nguyen/Documents/Powell_group_MacQuan/AllCodes/scGPS/vignettes/vignette.Rmd”,pdf_document(toc = TRUE, toc_depth = 3))</h1>
+<a href="#links-source-target-value-1" class="anchor"></a>links: source, target, value</h1>
+</div>
+<div id="source-node-nodegroup-1" class="section level1">
+<h1 class="hasAnchor">
+<a href="#source-node-nodegroup-1" class="anchor"></a>source: node, nodegroup</h1>
+<p>combined_D3obj &lt;-list(Nodes=combined[,(nboots+3):(nboots+4)], Links=combined[,c((nboots+2):(nboots+1),ncol(combined))]) combined &lt;- combined[is.na(combined$Value) != TRUE,]</p>
+<p>library(networkD3)</p>
+<p>Node_source &lt;- as.vector(sort(unique(combined_D3obj$Links$Source))) Node_target &lt;- as.vector(sort(unique(combined_D3obj$Links$Target))) Node_all &lt;-unique(c(Node_source, Node_target))</p>
+</div>
+<div id="assign-ids-for-source-start-from-0-1" class="section level1">
+<h1 class="hasAnchor">
+<a href="#assign-ids-for-source-start-from-0-1" class="anchor"></a>assign IDs for Source (start from 0)</h1>
+<p>Source &lt;-combined_D3obj$Links$Source Target &lt;- combined_D3obj$Links$Target</p>
+<p>for(i in 1:length(Node_all)){ Source[Source==Node_all[i]] &lt;-i-1 Target[Target==Node_all[i]] &lt;-i-1 }</p>
+<p>combined_D3obj$Links$Source &lt;- as.numeric(Source) combined_D3obj$Links$Target &lt;- as.numeric(Target) combined_D3obj$Links$LinkColor &lt;- combined$NodeGroup</p>
+</div>
+<div id="prepare-node-info-1" class="section level1">
+<h1 class="hasAnchor">
+<a href="#prepare-node-info-1" class="anchor"></a>prepare node info</h1>
+<p>node_df &lt;-data.frame(Node=Node_all) node_df$id &lt;-as.numeric(c(0, 1:(length(Node_all)-1)))</p>
+<p>suppressMessages(library(dplyr)) n &lt;- length(unique(node_df$Node)) getPalette = colorRampPalette(RColorBrewer::brewer.pal(9, “Set1”)) Color = getPalette(n) node_df$color &lt;- Color suppressMessages(library(networkD3)) p1&lt;-sankeyNetwork(Links =combined_D3obj$Links, Nodes = node_df, Value = “Value”, NodeGroup =“color”, LinkGroup = “LinkColor”, NodeID=“Node”, Source=“Source”, Target=“Target”, fontSize = 22 ) p1</p>
+</div>
+<div id="savenetworkp1-file-paste0pathsubpopulation_net-html-1" class="section level1">
+<h1 class="hasAnchor">
+<a href="#savenetworkp1-file-paste0pathsubpopulation_net-html-1" class="anchor"></a>saveNetwork(p1, file = paste0(path,‘Subpopulation_Net.html’))</h1>
 <p>```</p>
-<p>```{r, eval = FALSE}</p>
+<div id="annotation-scgps-prediction-can-be-used-to-compare-scgps-clusters-with-a-reference-dataset-to-see-which-cluster-is-most-similar-to-the-reference" class="section level2">
+<h2 class="hasAnchor">
+<a href="#annotation-scgps-prediction-can-be-used-to-compare-scgps-clusters-with-a-reference-dataset-to-see-which-cluster-is-most-similar-to-the-reference" class="anchor"></a>4.4 Annotation: scGPS prediction can be used to compare scGPS clusters with a reference dataset to see which cluster is most similar to the reference</h2>
 </div>
-<div id="install-release-version-from-cran" class="section level1">
-<h1 class="hasAnchor">
-<a href="#install-release-version-from-cran" class="anchor"></a>Install release version from CRAN</h1>
-</div>
-<div id="install-packagespkgdown" class="section level1">
-<h1 class="hasAnchor">
-<a href="#install-packagespkgdown" class="anchor"></a>install.packages(“pkgdown”)</h1>
-<p>```</p>
 </div>
 
 
@@ -523,7 +582,7 @@ summary_deviance(LSOLDA_dat)
 
       <footer>
       <div class="copyright">
-  <p>Developed by Quan Nguyen.</p>
+  <p>Developed by Quan Nguyen, Michael Thompson, Anne Asenbouth.</p>
 </div>
 
 <div class="pkgdown">

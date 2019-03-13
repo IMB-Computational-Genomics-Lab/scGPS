@@ -211,67 +211,63 @@ inputting to this prediction step</p></td>
 #&gt; 
 #&gt; Call:  glmnet(x = as.matrix(dataset[, -which(colnames(dataset) == "Cluster_class")]),      y = as.vector(dataset$Cluster_class), family = "binomial") 
 #&gt; 
-#&gt;       Df       %Dev    Lambda
-#&gt;  [1,]  0 -3.366e-15 0.0993300
-#&gt;  [2,]  1  4.842e-03 0.0905100
-#&gt;  [3,]  2  1.037e-02 0.0824700
-#&gt;  [4,]  3  1.736e-02 0.0751400
-#&gt;  [5,]  3  2.556e-02 0.0684700
-#&gt;  [6,]  3  3.259e-02 0.0623800
-#&gt;  [7,]  3  3.867e-02 0.0568400
-#&gt;  [8,]  3  4.399e-02 0.0517900
-#&gt;  [9,]  3  4.867e-02 0.0471900
-#&gt; [10,]  3  5.283e-02 0.0430000
-#&gt; [11,]  3  5.653e-02 0.0391800
-#&gt; [12,]  3  5.985e-02 0.0357000
-#&gt; [13,]  3  6.283e-02 0.0325300
-#&gt; [14,]  3  6.551e-02 0.0296400
-#&gt; [15,]  3  6.794e-02 0.0270000
-#&gt; [16,]  3  7.012e-02 0.0246100
-#&gt; [17,]  3  7.210e-02 0.0224200
-#&gt; [18,]  3  7.388e-02 0.0204300
-#&gt; [19,]  3  7.548e-02 0.0186100
-#&gt; [20,]  3  7.692e-02 0.0169600
-#&gt; [21,]  3  7.820e-02 0.0154500
-#&gt; [22,]  3  7.936e-02 0.0140800
-#&gt; [23,]  3  8.040e-02 0.0128300
-#&gt; [24,]  3  8.132e-02 0.0116900
-#&gt; [25,]  3  8.213e-02 0.0106500
-#&gt; [26,]  3  8.285e-02 0.0097050
-#&gt; [27,]  3  8.349e-02 0.0088430
-#&gt; [28,]  3  8.405e-02 0.0080570
-#&gt; [29,]  3  8.454e-02 0.0073410
-#&gt; [30,]  3  8.497e-02 0.0066890
-#&gt; [31,]  3  8.534e-02 0.0060950
-#&gt; [32,]  3  8.567e-02 0.0055530
-#&gt; [33,]  3  8.595e-02 0.0050600
-#&gt; [34,]  3  8.619e-02 0.0046110
-#&gt; [35,]  3  8.640e-02 0.0042010
-#&gt; [36,]  3  8.658e-02 0.0038280
-#&gt; [37,]  4  8.673e-02 0.0034880
-#&gt; [38,]  4  8.687e-02 0.0031780
-#&gt; [39,]  4  8.699e-02 0.0028960
-#&gt; [40,]  4  8.709e-02 0.0026380
-#&gt; [41,]  4  8.717e-02 0.0024040
-#&gt; [42,]  4  8.725e-02 0.0021900
-#&gt; [43,]  4  8.731e-02 0.0019960
-#&gt; [44,]  4  8.736e-02 0.0018180
-#&gt; [45,]  4  8.740e-02 0.0016570
-#&gt; [46,]  4  8.744e-02 0.0015100
-#&gt; [47,]  4  8.747e-02 0.0013760
-#&gt; [48,]  4  8.750e-02 0.0012530
-#&gt; [49,]  4  8.752e-02 0.0011420
-#&gt; [50,]  4  8.754e-02 0.0010410
-#&gt; [51,]  4  8.755e-02 0.0009482
-#&gt; [52,]  4  8.757e-02 0.0008639
-#&gt; [53,]  4  8.758e-02 0.0007872
-#&gt; [54,]  4  8.759e-02 0.0007173
+#&gt;       Df      %Dev   Lambda
+#&gt;  [1,]  0 4.487e-15 0.133400
+#&gt;  [2,]  1 8.726e-03 0.121500
+#&gt;  [3,]  1 1.598e-02 0.110700
+#&gt;  [4,]  1 2.202e-02 0.100900
+#&gt;  [5,]  2 2.995e-02 0.091940
+#&gt;  [6,]  2 3.778e-02 0.083780
+#&gt;  [7,]  2 4.441e-02 0.076330
+#&gt;  [8,]  2 5.005e-02 0.069550
+#&gt;  [9,]  2 5.487e-02 0.063370
+#&gt; [10,]  2 5.901e-02 0.057740
+#&gt; [11,]  3 6.308e-02 0.052610
+#&gt; [12,]  3 6.690e-02 0.047940
+#&gt; [13,]  3 7.019e-02 0.043680
+#&gt; [14,]  3 7.303e-02 0.039800
+#&gt; [15,]  3 7.548e-02 0.036260
+#&gt; [16,]  4 7.786e-02 0.033040
+#&gt; [17,]  4 8.006e-02 0.030110
+#&gt; [18,]  4 8.196e-02 0.027430
+#&gt; [19,]  4 8.362e-02 0.025000
+#&gt; [20,]  4 8.505e-02 0.022780
+#&gt; [21,]  4 8.630e-02 0.020750
+#&gt; [22,]  4 8.737e-02 0.018910
+#&gt; [23,]  4 8.830e-02 0.017230
+#&gt; [24,]  4 8.911e-02 0.015700
+#&gt; [25,]  4 8.979e-02 0.014300
+#&gt; [26,]  4 9.038e-02 0.013030
+#&gt; [27,]  4 9.089e-02 0.011880
+#&gt; [28,]  4 9.132e-02 0.010820
+#&gt; [29,]  4 9.169e-02 0.009859
+#&gt; [30,]  4 9.201e-02 0.008983
+#&gt; [31,]  4 9.227e-02 0.008185
+#&gt; [32,]  4 9.250e-02 0.007458
+#&gt; [33,]  4 9.269e-02 0.006795
+#&gt; [34,]  4 9.285e-02 0.006192
+#&gt; [35,]  4 9.299e-02 0.005642
+#&gt; [36,]  4 9.311e-02 0.005140
+#&gt; [37,]  4 9.320e-02 0.004684
+#&gt; [38,]  4 9.328e-02 0.004268
+#&gt; [39,]  4 9.335e-02 0.003889
+#&gt; [40,]  4 9.341e-02 0.003543
+#&gt; [41,]  4 9.346e-02 0.003228
+#&gt; [42,]  4 9.350e-02 0.002942
+#&gt; [43,]  4 9.353e-02 0.002680
+#&gt; [44,]  4 9.356e-02 0.002442
+#&gt; [45,]  4 9.359e-02 0.002225
+#&gt; [46,]  4 9.361e-02 0.002027
+#&gt; [47,]  4 9.362e-02 0.001847
+#&gt; [48,]  4 9.364e-02 0.001683
+#&gt; [49,]  4 9.365e-02 0.001534
+#&gt; [50,]  4 9.366e-02 0.001397
 #&gt; [1] "lambda min is at location 12"
 #&gt; [1] "the leave-out cells in the source subpop is 112"
 #&gt; [1] "use 112 target subpops cells for leave-out test set"
 #&gt; [1] "standardizing the leave-out target and source subpops..."
 #&gt; [1] "start ElasticNet prediction for estimating accuracy..."
-#&gt; [1] "evaluation accuracy ElasticNet 0.661971830985915"</div><div class='input'><span class='no'>listData</span>  <span class='kw'>&lt;-</span> <span class='fu'>predicting_scGPS</span>(<span class='kw'>listData</span> <span class='kw'>=</span><span class='no'>listData</span>,  <span class='kw'>mixedpop2</span> <span class='kw'>=</span> <span class='no'>mixedpop2</span>,
+#&gt; [1] "evaluation accuracy ElasticNet 0.648148148148148"</div><div class='input'><span class='no'>listData</span>  <span class='kw'>&lt;-</span> <span class='fu'>predicting_scGPS</span>(<span class='kw'>listData</span> <span class='kw'>=</span><span class='no'>listData</span>,  <span class='kw'>mixedpop2</span> <span class='kw'>=</span> <span class='no'>mixedpop2</span>,
     <span class='kw'>out_idx</span><span class='kw'>=</span><span class='no'>out_idx</span>, <span class='kw'>cluster_mixedpop2</span> <span class='kw'>=</span> <span class='fu'>colData</span>(<span class='no'>mixedpop2</span>)[, <span class='fl'>1</span>],
     <span class='kw'>c_selectID</span> <span class='kw'>=</span> <span class='no'>c_selectID</span>)</div><div class='output co'>#&gt; [1] "standardizing target subpops before prediction..."
 #&gt; [1] "predicting from source to target subpop 1..."
@@ -285,7 +281,7 @@ inputting to this prediction step</p></td>
 #&gt; [1] "first 10 genes in target "
 #&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
 #&gt; [1] "running elasticNet classification..."
-#&gt; [1] "class probability prediction ElasticNet for target subpop 1 is 50.2673796791444"
+#&gt; [1] "class probability prediction ElasticNet for target subpop 1 is 3.20855614973262"
 #&gt; [1] "predicting from source to target subpop 2..."
 #&gt; [1] "number of cells in the target subpop 2 is 140"
 #&gt; [1] "Number of genes in the target data, but not in model genes is 4995"
@@ -297,7 +293,7 @@ inputting to this prediction step</p></td>
 #&gt; [1] "first 10 genes in target "
 #&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
 #&gt; [1] "running elasticNet classification..."
-#&gt; [1] "class probability prediction ElasticNet for target subpop 2 is 8.57142857142857"
+#&gt; [1] "class probability prediction ElasticNet for target subpop 2 is 25.7142857142857"
 #&gt; [1] "predicting from source to target subpop 3..."
 #&gt; [1] "number of cells in the target subpop 3 is 133"
 #&gt; [1] "Number of genes in the target data, but not in model genes is 4995"
@@ -309,7 +305,7 @@ inputting to this prediction step</p></td>
 #&gt; [1] "first 10 genes in target "
 #&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
 #&gt; [1] "running elasticNet classification..."
-#&gt; [1] "class probability prediction ElasticNet for target subpop 3 is 46.6165413533835"
+#&gt; [1] "class probability prediction ElasticNet for target subpop 3 is 7.5187969924812"
 #&gt; [1] "predicting from source to target subpop 4..."
 #&gt; [1] "number of cells in the target subpop 4 is 40"
 #&gt; [1] "Number of genes in the target data, but not in model genes is 4995"
@@ -321,7 +317,7 @@ inputting to this prediction step</p></td>
 #&gt; [1] "first 10 genes in target "
 #&gt; [1] "GATA4"  "VIM"    "SNAI2"  "GJA1"   "TMEM88"
 #&gt; [1] "running elasticNet classification..."
-#&gt; [1] "class probability prediction ElasticNet for target subpop 4 is 32.5"</div><div class='input'>
+#&gt; [1] "class probability prediction ElasticNet for target subpop 4 is 17.5"</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -341,7 +337,7 @@ inputting to this prediction step</p></td>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Quan Nguyen.</p>
+  <p>Developed by Quan Nguyen, Michael Thompson, Anne Asenbouth.</p>
 </div>
 
 <div class="pkgdown">

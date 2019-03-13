@@ -228,67 +228,69 @@ of the training subpopulation</p></td>
 #&gt; Call:  glmnet(x = as.matrix(dataset[, -which(colnames(dataset) == "Cluster_class")]),      y = as.vector(dataset$Cluster_class), family = "binomial") 
 #&gt; 
 #&gt;       Df      %Dev   Lambda
-#&gt;  [1,]  0 2.243e-15 0.114900
-#&gt;  [2,]  1 6.465e-03 0.104700
-#&gt;  [3,]  1 1.184e-02 0.095360
-#&gt;  [4,]  1 1.631e-02 0.086890
-#&gt;  [5,]  2 2.351e-02 0.079170
-#&gt;  [6,]  2 2.980e-02 0.072140
-#&gt;  [7,]  2 3.513e-02 0.065730
-#&gt;  [8,]  3 4.025e-02 0.059890
-#&gt;  [9,]  3 4.512e-02 0.054570
-#&gt; [10,]  3 4.931e-02 0.049720
-#&gt; [11,]  3 5.290e-02 0.045300
-#&gt; [12,]  3 5.595e-02 0.041280
-#&gt; [13,]  4 5.870e-02 0.037610
-#&gt; [14,]  4 6.162e-02 0.034270
-#&gt; [15,]  4 6.412e-02 0.031230
-#&gt; [16,]  4 6.627e-02 0.028450
-#&gt; [17,]  4 6.811e-02 0.025920
-#&gt; [18,]  4 6.969e-02 0.023620
-#&gt; [19,]  4 7.105e-02 0.021520
-#&gt; [20,]  4 7.221e-02 0.019610
-#&gt; [21,]  4 7.321e-02 0.017870
-#&gt; [22,]  4 7.406e-02 0.016280
-#&gt; [23,]  4 7.478e-02 0.014840
-#&gt; [24,]  4 7.540e-02 0.013520
-#&gt; [25,]  4 7.592e-02 0.012320
-#&gt; [26,]  4 7.637e-02 0.011220
-#&gt; [27,]  4 7.674e-02 0.010230
-#&gt; [28,]  4 7.706e-02 0.009317
-#&gt; [29,]  4 7.734e-02 0.008489
-#&gt; [30,]  4 7.756e-02 0.007735
-#&gt; [31,]  4 7.776e-02 0.007048
-#&gt; [32,]  4 7.792e-02 0.006422
-#&gt; [33,]  4 7.806e-02 0.005851
-#&gt; [34,]  4 7.817e-02 0.005331
-#&gt; [35,]  4 7.827e-02 0.004858
-#&gt; [36,]  4 7.835e-02 0.004426
-#&gt; [37,]  4 7.842e-02 0.004033
-#&gt; [38,]  4 7.848e-02 0.003675
-#&gt; [39,]  4 7.852e-02 0.003348
-#&gt; [40,]  4 7.856e-02 0.003051
-#&gt; [41,]  4 7.860e-02 0.002780
-#&gt; [42,]  4 7.863e-02 0.002533
-#&gt; [43,]  4 7.865e-02 0.002308
-#&gt; [44,]  4 7.867e-02 0.002103
-#&gt; [45,]  4 7.869e-02 0.001916
-#&gt; [46,]  4 7.870e-02 0.001746
-#&gt; [47,]  4 7.871e-02 0.001591
-#&gt; [48,]  4 7.872e-02 0.001449
-#&gt; [1] "lambda min is at location 17"
+#&gt;  [1,]  0 2.243e-15 0.126800
+#&gt;  [2,]  1 7.874e-03 0.115500
+#&gt;  [3,]  1 1.442e-02 0.105200
+#&gt;  [4,]  1 1.987e-02 0.095890
+#&gt;  [5,]  1 2.441e-02 0.087370
+#&gt;  [6,]  1 2.819e-02 0.079610
+#&gt;  [7,]  2 3.293e-02 0.072540
+#&gt;  [8,]  2 3.779e-02 0.066090
+#&gt;  [9,]  2 4.190e-02 0.060220
+#&gt; [10,]  2 4.540e-02 0.054870
+#&gt; [11,]  2 4.838e-02 0.050000
+#&gt; [12,]  3 5.137e-02 0.045560
+#&gt; [13,]  3 5.451e-02 0.041510
+#&gt; [14,]  3 5.723e-02 0.037820
+#&gt; [15,]  3 5.959e-02 0.034460
+#&gt; [16,]  3 6.164e-02 0.031400
+#&gt; [17,]  3 6.343e-02 0.028610
+#&gt; [18,]  3 6.498e-02 0.026070
+#&gt; [19,]  3 6.633e-02 0.023750
+#&gt; [20,]  3 6.749e-02 0.021640
+#&gt; [21,]  3 6.851e-02 0.019720
+#&gt; [22,]  3 6.938e-02 0.017970
+#&gt; [23,]  3 7.014e-02 0.016370
+#&gt; [24,]  3 7.079e-02 0.014920
+#&gt; [25,]  3 7.135e-02 0.013590
+#&gt; [26,]  3 7.183e-02 0.012380
+#&gt; [27,]  4 7.229e-02 0.011280
+#&gt; [28,]  4 7.272e-02 0.010280
+#&gt; [29,]  4 7.309e-02 0.009369
+#&gt; [30,]  4 7.340e-02 0.008536
+#&gt; [31,]  4 7.366e-02 0.007778
+#&gt; [32,]  4 7.388e-02 0.007087
+#&gt; [33,]  4 7.407e-02 0.006457
+#&gt; [34,]  4 7.423e-02 0.005884
+#&gt; [35,]  4 7.436e-02 0.005361
+#&gt; [36,]  4 7.448e-02 0.004885
+#&gt; [37,]  4 7.457e-02 0.004451
+#&gt; [38,]  4 7.465e-02 0.004055
+#&gt; [39,]  4 7.472e-02 0.003695
+#&gt; [40,]  4 7.478e-02 0.003367
+#&gt; [41,]  4 7.482e-02 0.003068
+#&gt; [42,]  4 7.486e-02 0.002795
+#&gt; [43,]  4 7.490e-02 0.002547
+#&gt; [44,]  4 7.492e-02 0.002321
+#&gt; [45,]  4 7.495e-02 0.002115
+#&gt; [46,]  4 7.497e-02 0.001927
+#&gt; [47,]  4 7.498e-02 0.001756
+#&gt; [48,]  4 7.500e-02 0.001600
+#&gt; [49,]  4 7.501e-02 0.001457
+#&gt; [50,]  4 7.502e-02 0.001328
+#&gt; [1] "lambda min is at location 18"
 #&gt; [1] "the leave-out cells in the source subpop is 112"
 #&gt; [1] "use 112 target subpops cells for leave-out test set"
 #&gt; [1] "standardizing the leave-out target and source subpops..."
 #&gt; [1] "start ElasticNet prediction for estimating accuracy..."
-#&gt; [1] "evaluation accuracy ElasticNet 0.674311926605505"</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/names'>names</a></span>(<span class='no'>listData</span>)</div><div class='output co'>#&gt; [1] "Accuracy"        "ElasticNetGenes" "Deviance"        "ElasticNetFit"  
+#&gt; [1] "evaluation accuracy ElasticNet 0.682242990654206"</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/names'>names</a></span>(<span class='no'>listData</span>)</div><div class='output co'>#&gt; [1] "Accuracy"        "ElasticNetGenes" "Deviance"        "ElasticNetFit"  
 #&gt; [5] "LDAFit"          "predictor_S1"   </div><div class='input'><span class='no'>listData</span>$<span class='no'>Accuracy</span></div><div class='output co'>#&gt; [[1]]
 #&gt; [[1]][[1]]
 #&gt; [[1]][[1]][[1]]
-#&gt; [1] 147
+#&gt; [1] 146
 #&gt; 
 #&gt; [[1]][[1]][[2]]
-#&gt; [1] 71
+#&gt; [1] 68
 #&gt; 
 #&gt; 
 #&gt; </div></pre>
@@ -310,7 +312,7 @@ of the training subpopulation</p></td>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Quan Nguyen.</p>
+  <p>Developed by Quan Nguyen, Michael Thompson, Anne Asenbouth.</p>
 </div>
 
 <div class="pkgdown">
