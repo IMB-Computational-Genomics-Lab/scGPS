@@ -118,7 +118,8 @@ plotReduced_scGPS <- function(reduced_dat, color_fac = NULL, dims = c(1, 2),
 #'                         cluster = colData(mixedpop1)[,1],
 #'                         selected_cluster=c(1,2),
 #'                         fitType = "parametric", 
-#'                         dispersion_method = "blind"
+#'                         dispersion_method = "blind",
+#' 						   sharing_Mode="fit-only"
 #'                         )
 #'names(DEgenes)
 
@@ -126,7 +127,8 @@ plotReduced_scGPS <- function(reduced_dat, color_fac = NULL, dims = c(1, 2),
 
 findMarkers_scGPS <- function(expression_matrix = NULL, cluster = NULL, 
     selected_cluster = NULL, fitType = "local", 
-    dispersion_method = "per-condition") {
+    dispersion_method = "per-condition",
+    sharing_Mode = "maximum") {
     DE_exprsMat <- round(expression_matrix + 1)
     
     DE_results <- list()
@@ -150,7 +152,7 @@ findMarkers_scGPS <- function(expression_matrix = NULL, cluster = NULL,
         cds = DESeq::estimateSizeFactors(cds)
         #library(locfit)
         cds = DESeq::estimateDispersions(cds, method = dispersion_method, 
-            fitType = fitType)
+            fitType = fitType, sharingMode = sharing_Mode)
         print(paste0("Done estimate dispersions. ",
             "Start nbinom test for cluster ", as.character(cl_id), "..."))
         res1 = DESeq::nbinomTest(cds, "Others", as.character(cl_id))
