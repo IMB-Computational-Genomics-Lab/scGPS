@@ -6,7 +6,7 @@
 \usage{
 findMarkers_scGPS(expression_matrix = NULL, cluster = NULL,
   selected_cluster = NULL, fitType = "local",
-  dispersion_method = "per-condition")
+  dispersion_method = "per-condition", sharing_Mode = "maximum")
 }
 \arguments{
 \item{expression_matrix}{is  a normalised expression matrix.}
@@ -39,7 +39,8 @@ DEgenes <- findMarkers_scGPS(expression_matrix=assay(mixedpop1),
                         cluster = colData(mixedpop1)[,1],
                         selected_cluster=c(1,2),
                         fitType = "parametric", 
-                        dispersion_method = "blind"
+                        dispersion_method = "blind",
+						   sharing_Mode="fit-only"
                         )
 names(DEgenes)
 }
