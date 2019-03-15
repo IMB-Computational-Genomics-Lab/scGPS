@@ -210,10 +210,10 @@ plot_optimal_CORE(original_tree= SCORE_test$tree,
 ```
   
 ##3.4 Compare clustering results with other dimensional reduction methods
-##(e.g., CIDR)
+##(e.g., tSNE or CIDR)
 ```{r compare_clustering}
-library(cidr)
-t <- CIDR_scGPS(expression.matrix=assay(mixedpop2))
+#library(cidr)
+t <- tSNE_scGPS(expression.matrix=assay(mixedpop2))
 p2 <-plotReduced_scGPS(t, color_fac = factor(colData(mixedpop2)[,1]),
     palletes =1:length(unique(colData(mixedpop2)[,1])))
 p2
