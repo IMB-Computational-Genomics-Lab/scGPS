@@ -34,10 +34,10 @@ plot PCA, tSNE, and CIDR reduced datasets
 day2 <- sample1
 mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, 
     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
-CIDR_dim <-CIDR_scGPS(expression.matrix=assay(mixedpop1))
-p <- plotReduced_scGPS(CIDR_dim, color_fac = factor(colData(mixedpop1)[,1]),
-    palletes =1:length(unique(colData(mixedpop1)[,1])))
-plot(p)
+#CIDR_dim <-CIDR_scGPS(expression.matrix=assay(mixedpop1))
+#p <- plotReduced_scGPS(CIDR_dim, color_fac = factor(colData(mixedpop1)[,1]),
+#     palletes =1:length(unique(colData(mixedpop1)[,1])))
+#plot(p)
 tSNE_dim <-tSNE_scGPS(expression.mat=assay(mixedpop1))
 p2 <- plotReduced_scGPS(tSNE_dim, color_fac = factor(colData(mixedpop1)[,1]),
     palletes =1:length(unique(colData(mixedpop1)[,1])))

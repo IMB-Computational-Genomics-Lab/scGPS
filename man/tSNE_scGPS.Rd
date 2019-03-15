@@ -2,7 +2,7 @@
 % Please edit documentation in R/DimReduction.R
 \name{tSNE_scGPS}
 \alias{tSNE_scGPS}
-\title{tSNE}
+\title{CIDR}
 \usage{
 tSNE_scGPS(expression.mat = NULL, topgenes = 1500, scale = TRUE,
   thet = 0.5, perp = 30)
@@ -25,6 +25,20 @@ a tSNE reduced matrix containing three tSNE dimensions
 }
 \description{
 calculate tSNE from top variable genes
+}
+\details{
+description calculate CIDR using top variable genes
+param expression.matrix An expression matrix, with genes in rows
+param ngenes number of genes used for clustering calculations.
+return a CIDR reduced matrix for the top 20 components
+export
+examples
+day2 <- sample1
+mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, 
+    GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
+t <-CIDR_scGPS(expression.matrix=assay(mixedpop1))
+
+tSNE
 }
 \examples{
 day2 <- sample1
