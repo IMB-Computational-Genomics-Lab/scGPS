@@ -104,6 +104,8 @@ plotReduced_scGPS <- function(reduced_dat, color_fac = NULL, dims = c(1, 2),
 #' estimation
 #' @param dispersion_method one of the options c( 'pooled', 'pooled-CR', 
 #' per-condition', 'blind' )
+#' @param sharing_Mode one of the options c("maximum", "fit-only", 
+#' "gene-est-only")
 #' @return a \code{list} containing sorted DESeq analysis results
 #' @export
 #' @author Quan Nguyen, 2017-11-25
@@ -119,7 +121,7 @@ plotReduced_scGPS <- function(reduced_dat, color_fac = NULL, dims = c(1, 2),
 #'                         selected_cluster=c(1,2),
 #'                         fitType = "parametric", 
 #'                         dispersion_method = "blind",
-#' 						   sharing_Mode="fit-only"
+#'                         sharing_Mode="fit-only"
 #'                         )
 #'names(DEgenes)
 
