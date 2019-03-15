@@ -35,7 +35,6 @@ Suggests:
   Matrix (>= 1.2),
   testthat,
   knitr,
-  cidr,
   parallel,
   rmarkdown,
   RColorBrewer,
