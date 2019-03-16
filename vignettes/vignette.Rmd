@@ -213,7 +213,7 @@ plot_optimal_CORE(original_tree= SCORE_test$tree,
 ##(e.g., tSNE or CIDR)
 ```{r compare_clustering}
 #library(cidr)
-t <- tSNE_scGPS(expression.matrix=assay(mixedpop2))
+t <- tSNE_scGPS(expression.mat=assay(mixedpop2))
 p2 <-plotReduced_scGPS(t, color_fac = factor(colData(mixedpop2)[,1]),
     palletes =1:length(unique(colData(mixedpop2)[,1])))
 p2
