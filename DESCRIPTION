@@ -7,7 +7,7 @@ Authors@R: c(
     person("Michael", "Thompson",role=c("aut")),
     person("Anne", "Asenbouth",role=c("aut"))
     )
-Description: The package implements two main algorithms to answer two key questions: a CORE (Clustering at Optimal REsolution) to find subpopulations, followed by scGPS to investigate the relationships between subpopulations. A compatible software that can run CORE is ascend R package.
+Description: The package implements two main algorithms to answer two key questions: a SCORE (Stable Clustering at Optimal REsolution) to find subpopulations, followed by scGPS to investigate the relationships between subpopulations.
 Encoding: UTF-8
 LazyData: true
 License: GPL-3
