@@ -32,7 +32,7 @@
 #' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, 
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 #' test <- CORE_scGPS_bagging(mixedpop2, remove_outlier = c(1), PCA=FALSE,
-#'     bagging_run = 20, subsample_proportion = .8)
+#'     bagging_run = 10, subsample_proportion = .8)
 #' plot_CORE(test$tree, list_clusters = test$Cluster)
 #' plot_optimal_CORE(original_tree= test$tree,
 #'     optimal_cluster = unlist(test$Cluster[test$optimal_index]), shift = -100)
@@ -40,7 +40,7 @@
 #' @export
 #' @author Quan Nguyen, 2018-05-11
 
-CORE_scGPS_bagging <- function(mixedpop = NULL, bagging_run = 10, 
+CORE_scGPS_bagging <- function(mixedpop = NULL, bagging_run = 20, 
     subsample_proportion = 0.8, windows = seq(0.025:1, by = 0.025), 
     remove_outlier = c(0), nRounds = 1, PCA = FALSE, nPCs = 20, ngenes = 1500) {
     
@@ -144,7 +144,7 @@ CORE_scGPS_bagging <- function(mixedpop = NULL, bagging_run = 10,
 #' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, 
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 #' test <-clustering_scGPS_bagging(mixedpop2, remove_outlier = c(1),
-#'     bagging_run = 20, subsample_proportion = .8)
+#'     bagging_run = 10, subsample_proportion = .8)
 
 clustering_scGPS_bagging <- function(object = NULL, ngenes = 1500, 
     bagging_run = 20, subsample_proportion = 0.8, 
