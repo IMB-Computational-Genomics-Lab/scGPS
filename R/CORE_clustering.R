@@ -902,17 +902,12 @@ plot_CORE <- function(original.tree, list_clusters = NULL,
 #' day5 <- sample2
 #' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, 
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
-#' cluster_all <-clustering_scGPS(object=mixedpop2)
-#' stab_df <- FindStability(list_clusters=cluster_all$list_clusters,
-#'     cluster_ref = cluster_all$cluster_ref)
-#' optimal_stab <- FindOptimalStability(list_clusters = cluster_all, stab_df)
 #' CORE_cluster <- CORE_scGPS(mixedpop2, remove_outlier = c(0))
-#' plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster)
 #' key_height <- CORE_cluster$optimalClust$KeyStats$Height
 #' optimal_res <- CORE_cluster$optimalClust$OptimalRes
 #' optimal_index = which(key_height == optimal_res)
 #' plot_optimal_CORE(original_tree= CORE_cluster$tree, 
-#' optimal_cluster = unlist(CORE_cluster$Cluster[optimal_index]), shift = -2000)
+#'     optimal_cluster = unlist(CORE_cluster$Cluster[optimal_index]), shift = -2000)
 #'
 
 plot_optimal_CORE <- function(original_tree, optimal_cluster = NULL, 
