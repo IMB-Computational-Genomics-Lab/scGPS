@@ -193,21 +193,8 @@ findMarkers_scGPS <- function(expression_matrix = NULL, cluster = NULL,
 #' @return write enrichment test output to a file and an enrichment test object 
 #' for plotting
 #' @examples
-#' day2 <- sample1
-#' mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, 
-#'     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
-#' day5 <- sample2
-#' mixedpop2 <-NewscGPS(ExpressionMatrix = day5$dat5_counts, 
-#'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 #' genes <-GeneList
-#' genes <-genes$Merged_unique
-#' cluster_mixedpop1 <- colData(mixedpop1)[,1]
-#' cluster_mixedpop2 <- colData(mixedpop2)[,1]
-#' c_selectID <- 2
-#' LSOLDA_dat <- bootstrap_scGPS(nboots = 2, mixedpop1 = mixedpop1, 
-#'     mixedpop2 = mixedpop2, genes=genes, listData =list(), 
-#'     cluster_mixedpop1 = cluster_mixedpop1, 
-#'     cluster_mixedpop2 = cluster_mixedpop2, c_selectID = c_selectID)
+#' genes <-genes$Merged_unique[1:50]
 #' enrichment_test <- annotate_scGPS(genes, pvalueCutoff=0.05, 
 #'     gene_symbol=TRUE, species = 'human')
 #' clusterProfiler::dotplot(enrichment_test, showCategory=15)
