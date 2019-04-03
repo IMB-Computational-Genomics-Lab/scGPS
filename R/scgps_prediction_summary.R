@@ -16,7 +16,7 @@
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 #' genes <-GeneList
 #' genes <-genes$Merged_unique
-#' LSOLDA_dat <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop1, 
+#' LSOLDA_dat <- bootstrap_scGPS(nboots = 1,mixedpop1 = mixedpop1, 
 #'     mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
 #'     cluster_mixedpop1 = colData(mixedpop1)[,1],
 #'     cluster_mixedpop2=colData(mixedpop2)[,1])
@@ -106,7 +106,7 @@ summary_deviance <- function(object = NULL) {
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 #' genes <-GeneList
 #' genes <-genes$Merged_unique
-#' LSOLDA_dat <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop1, 
+#' LSOLDA_dat <- bootstrap_scGPS(nboots = 1,mixedpop1 = mixedpop1, 
 #'     mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
 #'     cluster_mixedpop1 = colData(mixedpop1)[,1],
 #'     cluster_mixedpop2=colData(mixedpop2)[,1])
@@ -168,7 +168,7 @@ summary_prediction_lasso <- function(LSOLDA_dat = NULL, nPredSubpop = NULL) {
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 #' genes <-GeneList
 #' genes <-genes$Merged_unique
-#' LSOLDA_dat <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop1, 
+#' LSOLDA_dat <- bootstrap_scGPS(nboots = 1,mixedpop1 = mixedpop1, 
 #' mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
 #'     cluster_mixedpop1 = colData(mixedpop1)[,1],
 #'     cluster_mixedpop2=colData(mixedpop2)[,1])
@@ -230,13 +230,13 @@ summary_prediction_lda <- function(LSOLDA_dat = NULL, nPredSubpop = NULL) {
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 #' genes <-GeneList
 #' genes <-genes$Merged_unique
-#' LSOLDA_dat <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop1, 
+#' LSOLDA_dat <- bootstrap_scGPS(nboots = 2, mixedpop1 = mixedpop1, 
 #'     mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
 #'     cluster_mixedpop1 = colData(mixedpop1)[,1],
 #'     cluster_mixedpop2=colData(mixedpop2)[,1])
 #' reformat_LASSO(LSOLDA_dat=LSOLDA_dat, 
 #'     nPredSubpop=length(unique(colData(mixedpop2)[,1])), c_selectID = 1, 
-#'     mp_selectID =2)
+#'     mp_selectID =2, nboots = 2)
 #'
 reformat_LASSO <- function(c_selectID = NULL, mp_selectID = NULL, 
     LSOLDA_dat = NULL, nPredSubpop = NULL, Nodes_group = "#7570b3", 

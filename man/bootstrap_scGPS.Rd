@@ -58,7 +58,7 @@ genes <-genes$Merged_unique
 cluster_mixedpop1 <- colData(mixedpop1)[,1]
 cluster_mixedpop2 <- colData(mixedpop2)[,1]
 c_selectID <- 2
-test <- bootstrap_scGPS(nboots = 2, mixedpop1 = mixedpop1, 
+test <- bootstrap_scGPS(nboots = 1, mixedpop1 = mixedpop1, 
     mixedpop2 = mixedpop2, genes=genes, listData =list(), 
     cluster_mixedpop1 = cluster_mixedpop1, 
     cluster_mixedpop2 = cluster_mixedpop2, c_selectID = c_selectID)

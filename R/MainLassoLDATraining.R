@@ -659,7 +659,7 @@ predicting_scGPS <- function(listData = NULL, cluster_mixedpop2 = NULL,
 #' cluster_mixedpop1 <- colData(mixedpop1)[,1]
 #' cluster_mixedpop2 <- colData(mixedpop2)[,1]
 #' c_selectID <- 2
-#' test <- bootstrap_scGPS(nboots = 2, mixedpop1 = mixedpop1, 
+#' test <- bootstrap_scGPS(nboots = 1, mixedpop1 = mixedpop1, 
 #'     mixedpop2 = mixedpop2, genes=genes, listData =list(), 
 #'     cluster_mixedpop1 = cluster_mixedpop1, 
 #'     cluster_mixedpop2 = cluster_mixedpop2, c_selectID = c_selectID)
@@ -719,7 +719,7 @@ bootstrap_scGPS <- function(nboots = 1, genes = genes, mixedpop1 = mixedpop1,
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 #' genes <-GeneList
 #' genes <-genes$Merged_unique
-#' #prl_boots <- bootstrap_scGPS_parallel(ncores = 4, nboots = 2, genes=genes,
+#' #prl_boots <- bootstrap_scGPS_parallel(ncores = 4, nboots = 1, genes=genes,
 #' #    mixedpop1 = mixedpop2, mixedpop2 = mixedpop2,  c_selectID=1,
 #' #    listData =list())
 #' #prl_boots[[1]]$ElasticNetPredict

@@ -31,7 +31,7 @@
 #' cellnames <-data.frame('Cluster'=cluster, 'cellBarcodes' = cellnames)
 #' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, 
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
-#' test <- CORE_scGPS(mixedpop2, remove_outlier = c(1), PCA=FALSE, nPCs=20,
+#' test <- CORE_scGPS(mixedpop2, remove_outlier = c(0), PCA=FALSE, nPCs=20,
 #'     ngenes=1500)
 #' @export
 #' @author Quan Nguyen, 2017-11-25
@@ -111,7 +111,7 @@ CORE_Subcluster_scGPS <- function(mixedpop = NULL, windows = seq(0.025:1,
 #' day5 <- sample2
 #' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, 
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
-#' test <-clustering_scGPS(mixedpop2, remove_outlier = c(1))
+#' test <-clustering_scGPS(mixedpop2, remove_outlier = c(0))
 
 clustering_scGPS <- function(object = NULL, ngenes = 1500, 
     windows = seq(0.025:1, by = 0.025), remove_outlier = c(0), nRounds = 1, 

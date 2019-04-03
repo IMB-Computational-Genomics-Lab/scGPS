@@ -51,7 +51,7 @@ cluster <-day5$dat5_clusters
 cellnames <-data.frame('Cluster'=cluster, 'cellBarcodes' = cellnames)
 mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, 
     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
-test <- CORE_scGPS(mixedpop2, remove_outlier = c(1), PCA=FALSE, nPCs=20,
+test <- CORE_scGPS(mixedpop2, remove_outlier = c(0), PCA=FALSE, nPCs=20,
     ngenes=1500)
 }
 \author{

@@ -118,7 +118,8 @@ plotReduced_scGPS <- function(reduced_dat, color_fac = NULL, dims = c(1, 2),
 #'# and dispersion_method options
 #'DEgenes <- findMarkers_scGPS(expression_matrix=assay(mixedpop1),
 #'                         cluster = colData(mixedpop1)[,1],
-#'                         selected_cluster=c(1,2),
+#'                         selected_cluster=c(1), #can also run for more
+#'                         #than one clusters, e.g.selected_cluster = c(1,2)
 #'                         fitType = "parametric", 
 #'                         dispersion_method = "blind",
 #'                         sharing_Mode="fit-only"

@@ -32,11 +32,9 @@
 #' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, 
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 #' test <- CORE_scGPS_bagging(mixedpop2, remove_outlier = c(0), PCA=FALSE,
-#'     bagging_run = 5, subsample_proportion = .7)
-#' plot_CORE(test$tree, list_clusters = test$Cluster)
-#' plot_optimal_CORE(original_tree= test$tree,
-#'     optimal_cluster = unlist(test$Cluster[test$optimal_index]), shift = -100)
-#'
+#'     bagging_run = 2, subsample_proportion = .7)
+#' table(test$Cluster)
+
 #' @export
 #' @author Quan Nguyen, 2018-05-11
 
@@ -144,7 +142,7 @@ CORE_scGPS_bagging <- function(mixedpop = NULL, bagging_run = 20,
 #' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, 
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 #' test <-clustering_scGPS_bagging(mixedpop2, remove_outlier = c(0),
-#'     bagging_run = 5, subsample_proportion = .7)
+#'     bagging_run = 2, subsample_proportion = .7)
 
 clustering_scGPS_bagging <- function(object = NULL, ngenes = 1500, 
     bagging_run = 20, subsample_proportion = 0.8, 

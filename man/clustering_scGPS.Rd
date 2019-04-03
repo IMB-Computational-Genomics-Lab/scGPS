@@ -37,7 +37,7 @@ performs 40 clustering runs or more depending on windows
 day5 <- sample2
 mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, 
     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
-test <-clustering_scGPS(mixedpop2, remove_outlier = c(1))
+test <-clustering_scGPS(mixedpop2, remove_outlier = c(0))
 }
 \author{
 Quan Nguyen, 2017-11-25
