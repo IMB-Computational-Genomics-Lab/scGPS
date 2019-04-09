@@ -320,7 +320,7 @@ summary_accuracy(object = LSOLDA_dat)
 *Here we look at one example use case to find relationship between clusters
 #within one sample or between two sample*
 
-```{r prediction_one_sample, warning = FALSE, message = FALSE}
+```{r prediction_one_sample, warning = FALSE, message = FALSE, eval = FALSE}
 #run prediction for 3 clusters 
 cluster_mixedpop1 <- colData(mixedpop1)[,1]
 cluster_mixedpop2 <- colData(mixedpop2)[,1]
