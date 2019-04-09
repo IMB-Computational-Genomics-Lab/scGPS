@@ -56,7 +56,7 @@ devtools::load_all()
 *estimate transition scores between these subpopulation.*
 
 ##2.1 Create scGPS objects
-```{r scGPS_object, warning = FALSE, message = FALSE, eval = FALSE}
+```{r scGPS_object, warning = FALSE, message = FALSE}
 
 # load mixed population 1 (loaded from sample1 dataset, named it as day2)
 path_scPGS = getwd()
@@ -73,7 +73,7 @@ mixedpop2 <- NewscGPS(ExpressionMatrix = day5$dat5_counts,
 
 ```
 ##2.2 Run prediction
-```{r prediction, warning = FALSE, message = FALSE, eval = FALSE}
+```{r prediction, warning = FALSE, message = FALSE}
 
 # select a subpopulation
 c_selectID <- 1
@@ -91,7 +91,7 @@ LSOLDA_dat <- bootstrap_scGPS(nboots = 3, mixedpop1 = mixedpop1,
 
 ```
 ##2.3 Summarise results 
-```{r summarise_results, warning = FALSE, message = FALSE, eval = FALSE}
+```{r summarise_results, warning = FALSE, message = FALSE}
 
 # display the list of result information in the LASOLDA_dat object 
 names(LSOLDA_dat)

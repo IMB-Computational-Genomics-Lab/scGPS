@@ -1,7 +1,7 @@
 Package: scGPS
 Type: Package
 Title: A complete analysis of single cell subpopulations, from identifying subpopulations to analysing their relationship (scGPS = single cell Global Predictions of Subpopulation)
-Version: 0.99.9
+Version: 0.99.10
 Authors@R: c(
     person("Quan", "Nguyen", email="quan.nguyen@uq.edu.au", role=c("aut", "cre")),
     person("Michael", "Thompson",role=c("aut")),
