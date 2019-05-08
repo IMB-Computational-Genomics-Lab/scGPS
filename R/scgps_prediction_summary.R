@@ -1,8 +1,8 @@
 #' @name summary_accuracy
 #' @title get percent accuracy for Lasso model, from \code{n} bootstraps
-#' @description The training results from \code{training_scGPS} were written to
+#' @description The training results from \code{training} were written to
 #' @param object is a list containing the training results from 
-# \code{training_scGPS} the object \code{LSOLDA_dat},
+# \code{training} the object \code{LSOLDA_dat},
 #' the \code{summary_accuracy} summarise \code{n} bootstraps
 #' @return a vector of percent accuracy for the selected subpopulation
 #' @export
@@ -16,7 +16,7 @@
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 #' genes <-GeneList
 #' genes <-genes$Merged_unique
-#' LSOLDA_dat <- bootstrap_scGPS(nboots = 1,mixedpop1 = mixedpop1, 
+#' LSOLDA_dat <- bootstrap(nboots = 1,mixedpop1 = mixedpop1, 
 #'     mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
 #'     cluster_mixedpop1 = colData(mixedpop1)[,1],
 #'     cluster_mixedpop2=colData(mixedpop2)[,1])
@@ -36,13 +36,13 @@ summary_accuracy <- function(object = NULL) {
 #' @name summary_deviance
 #' @title get percent deviance explained for Lasso model, 
 #' from \code{n} bootstraps
-#' @description the training results from \code{training_scGPS} were written to
+#' @description the training results from \code{training} were written to
 #' the object \code{LSOLDA_dat}, the \code{summary_devidance} summarises 
 #' deviance explained for \code{n} bootstrap runs and also returns the best
 #' deviance matrix for plotting, as well as the best matrix with Lasso genes 
 #' and coefficients
 #' @param object is a list containing the training results from 
-#' \code{training_scGPS}
+#' \code{training}
 #' @return a \code{list} containing three elements, with a vector of percent
 #' maximum deviance explained, a dataframe containg information for the full 
 #' deviance, and a dataframe containing gene names and coefficients of the best
@@ -59,7 +59,7 @@ summary_accuracy <- function(object = NULL) {
 #'                     CellMetadata = day5$dat5_clusters)
 #' genes <-GeneList
 #' genes <-genes$Merged_unique
-#' LSOLDA_dat <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop1, 
+#' LSOLDA_dat <- bootstrap(nboots = 2,mixedpop1 = mixedpop1, 
 #'     mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
 #'     cluster_mixedpop1 = colData(mixedpop1)[,1],
 #'     cluster_mixedpop2=colData(mixedpop2)[,1])
@@ -85,11 +85,11 @@ summary_deviance <- function(object = NULL) {
 #' @name summary_prediction_lasso
 #' @title get percent deviance explained for Lasso model, from \code{n} 
 #' bootstraps
-#' @description the training results from \code{training_scGPS} were written to
+#' @description the training results from \code{training} were written to
 #' the object \code{LSOLDA_dat}, the \code{summary_prediction} summarises 
 #' prediction for \code{n} bootstrap runs
 #' @param LSOLDA_dat is a list containing the training results from 
-#' \code{training_scGPS}
+#' \code{training}
 #' @param nPredSubpop is the number of subpopulations in the target mixed 
 #' population
 #' @return a dataframe containg information for the Lasso prediction 
@@ -106,7 +106,7 @@ summary_deviance <- function(object = NULL) {
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 #' genes <-GeneList
 #' genes <-genes$Merged_unique
-#' LSOLDA_dat <- bootstrap_scGPS(nboots = 1,mixedpop1 = mixedpop1, 
+#' LSOLDA_dat <- bootstrap(nboots = 1,mixedpop1 = mixedpop1, 
 #'     mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
 #'     cluster_mixedpop1 = colData(mixedpop1)[,1],
 #'     cluster_mixedpop2=colData(mixedpop2)[,1])
@@ -145,13 +145,13 @@ summary_prediction_lasso <- function(LSOLDA_dat = NULL, nPredSubpop = NULL) {
 
 #' @name summary_prediction_lda
 #' @title get percent deviance explained for LDA model, from \code{n} bootstraps
-#' @description the training results from \code{training_scGPS} were written to
+#' @description the training results from \code{training} were written to
 #' the object \code{LSOLDA_dat}, the \code{summary_prediction} summarises 
 #' prediction explained for \code{n} bootstrap runs and also returns the best
 #' deviance matrix for plotting, as well as the best matrix with Lasso genes
 #' and coefficients
 #' @param LSOLDA_dat is a list containing the training results from 
-#' \code{training_scGPS}
+#' \code{training}
 #' @param nPredSubpop is the number of subpopulations in the target mixed 
 #' population
 #' @return a dataframe containg information for the LDA prediction 
@@ -168,7 +168,7 @@ summary_prediction_lasso <- function(LSOLDA_dat = NULL, nPredSubpop = NULL) {
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 #' genes <-GeneList
 #' genes <-genes$Merged_unique
-#' LSOLDA_dat <- bootstrap_scGPS(nboots = 1,mixedpop1 = mixedpop1, 
+#' LSOLDA_dat <- bootstrap(nboots = 1,mixedpop1 = mixedpop1, 
 #' mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
 #'     cluster_mixedpop1 = colData(mixedpop1)[,1],
 #'     cluster_mixedpop2=colData(mixedpop2)[,1])
@@ -206,12 +206,12 @@ summary_prediction_lda <- function(LSOLDA_dat = NULL, nPredSubpop = NULL) {
 
 #' @name reformat_LASSO
 #' @title summarise bootstrap runs for Lasso model, from \code{n} bootstraps
-#' @description the training and prediction results from \code{bootstrap_scGPS}
+#' @description the training and prediction results from \code{bootstrap}
 #' were written to the object \code{LSOLDA_dat}, the \code{reformat_LASSO}
 #' summarises prediction for \code{n} bootstrap runs
 #' @param c_selectID  is the original cluster to be projected
 #' @param mp_selectID  is the target mixedpop to project to
-#' @param LSOLDA_dat is the results from the bootstrap_scGPS
+#' @param LSOLDA_dat is the results from the bootstrap
 #' @param nPredSubpop is the number of clusters in the target mixedpop 
 #' \code{row_cluster <-length(unique(target_cluster))}
 #' @param Nodes_group string representation of hexidecimal color code for node
@@ -230,7 +230,7 @@ summary_prediction_lda <- function(LSOLDA_dat = NULL, nPredSubpop = NULL) {
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 #' genes <-GeneList
 #' genes <-genes$Merged_unique
-#' LSOLDA_dat <- bootstrap_scGPS(nboots = 2, mixedpop1 = mixedpop1, 
+#' LSOLDA_dat <- bootstrap(nboots = 2, mixedpop1 = mixedpop1, 
 #'     mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
 #'     cluster_mixedpop1 = colData(mixedpop1)[,1],
 #'     cluster_mixedpop2=colData(mixedpop2)[,1])

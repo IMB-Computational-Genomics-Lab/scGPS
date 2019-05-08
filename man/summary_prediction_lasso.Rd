@@ -9,7 +9,7 @@ summary_prediction_lasso(LSOLDA_dat = NULL, nPredSubpop = NULL)
 }
 \arguments{
 \item{LSOLDA_dat}{is a list containing the training results from 
-\code{training_scGPS}}
+\code{training}}
 
 \item{nPredSubpop}{is the number of subpopulations in the target mixed 
 population}
@@ -20,7 +20,7 @@ results, each column
 contains prediction results for all subpopulations from each bootstrap run
 }
 \description{
-the training results from \code{training_scGPS} were written to
+the training results from \code{training} were written to
 the object \code{LSOLDA_dat}, the \code{summary_prediction} summarises 
 prediction for \code{n} bootstrap runs
 }
@@ -34,7 +34,7 @@ mixedpop2 <-NewscGPS(ExpressionMatrix = day5$dat5_counts,
     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 genes <-GeneList
 genes <-genes$Merged_unique
-LSOLDA_dat <- bootstrap_scGPS(nboots = 1,mixedpop1 = mixedpop1, 
+LSOLDA_dat <- bootstrap(nboots = 1,mixedpop1 = mixedpop1, 
     mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
     cluster_mixedpop1 = colData(mixedpop1)[,1],
     cluster_mixedpop2=colData(mixedpop2)[,1])

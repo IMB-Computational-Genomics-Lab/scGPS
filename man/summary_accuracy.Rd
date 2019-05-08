@@ -14,7 +14,7 @@ the \code{summary_accuracy} summarise \code{n} bootstraps}
 a vector of percent accuracy for the selected subpopulation
 }
 \description{
-The training results from \code{training_scGPS} were written to
+The training results from \code{training} were written to
 }
 \examples{
 c_selectID<-1
@@ -26,7 +26,7 @@ mixedpop2 <-NewscGPS(ExpressionMatrix = day5$dat5_counts,
     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 genes <-GeneList
 genes <-genes$Merged_unique
-LSOLDA_dat <- bootstrap_scGPS(nboots = 1,mixedpop1 = mixedpop1, 
+LSOLDA_dat <- bootstrap(nboots = 1,mixedpop1 = mixedpop1, 
     mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
     cluster_mixedpop1 = colData(mixedpop1)[,1],
     cluster_mixedpop2=colData(mixedpop2)[,1])

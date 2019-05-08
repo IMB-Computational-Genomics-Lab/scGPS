@@ -39,14 +39,14 @@
 #' GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 #' genes <-GeneList
 #' genes <-genes$Merged_unique
-#' listData  <- training_scGPS(genes, 
+#' listData  <- training(genes, 
 #'     cluster_mixedpop1 = colData(mixedpop1)[, 1],
 #'     mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, c_selectID,
 #'     listData =list(), out_idx=out_idx, trainset_ratio = 0.5)
 #' names(listData)
 #' listData$Accuracy
 
-training_scGPS <- function(genes = NULL, cluster_mixedpop1 = NULL, 
+training <- function(genes = NULL, cluster_mixedpop1 = NULL, 
     mixedpop1 = NULL, mixedpop2 = NULL, c_selectID = NULL, listData = list(), 
     out_idx = 1, standardize = TRUE, trainset_ratio = 0.5, LDA_run = FALSE) {
     # subsammpling--------------------------------------------------------------
@@ -393,7 +393,7 @@ training_scGPS <- function(genes = NULL, cluster_mixedpop1 = NULL,
 #' @param cluster_mixedpop2 a vector of cluster assignment for mixedpop2
 #' @param standardize a logical of whether to standardize the data 
 #' @param LDA_run logical, if the LDA prediction is added to compare to 
-#' ElasticNet, the LDA model needs to be trained from the training_scGPS before
+#' ElasticNet, the LDA model needs to be trained from the training before
 #' inputting to this prediction step
 #' @param c_selectID a number to specify the trained cluster used for prediction
 #' @return a \code{list} with prediction results written in to the index
@@ -411,16 +411,16 @@ training_scGPS <- function(genes = NULL, cluster_mixedpop1 = NULL,
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 #' genes <-GeneList
 #' genes <-genes$Merged_unique
-#' listData  <- training_scGPS(genes, 
+#' listData  <- training(genes, 
 #'     cluster_mixedpop1 = colData(mixedpop1)[, 1], mixedpop1 = mixedpop1, 
 #'     mixedpop2 = mixedpop2, c_selectID, listData =list(), out_idx=out_idx)
-#' listData  <- predicting_scGPS(listData =listData,  mixedpop2 = mixedpop2, 
+#' listData  <- predicting(listData =listData,  mixedpop2 = mixedpop2, 
 #'     out_idx=out_idx, cluster_mixedpop2 = colData(mixedpop2)[, 1], 
 #'     c_selectID = c_selectID)
 #'
 
 
-predicting_scGPS <- function(listData = NULL, cluster_mixedpop2 = NULL, 
+predicting <- function(listData = NULL, cluster_mixedpop2 = NULL, 
     mixedpop2 = NULL, out_idx = NULL, standardize = TRUE, LDA_run = FALSE, 
     c_selectID = NULL) {
     # predictor_S1 is the dataset used for the training phase 
@@ -626,7 +626,7 @@ predicting_scGPS <- function(listData = NULL, cluster_mixedpop2 = NULL,
 #' subpopulations in the new mixed population after training the model for a 
 #' subpopulation in the first mixed population. The number of bootstraps to be 
 #' run can be specified.
-#' @seealso \code{\link{bootstrap_scGPS_parallel}} for parallel options
+#' @seealso \code{\link{bootstrap_parallel}} for parallel options
 #' @param listData  a \code{list} object, which contains trained results for the
 #' first mixed population
 #' @param mixedpop1 a \linkS4class{SingleCellExperiment} object from a mixed 
@@ -659,7 +659,7 @@ predicting_scGPS <- function(listData = NULL, cluster_mixedpop2 = NULL,
 #' cluster_mixedpop1 <- colData(mixedpop1)[,1]
 #' cluster_mixedpop2 <- colData(mixedpop2)[,1]
 #' c_selectID <- 2
-#' test <- bootstrap_scGPS(nboots = 1, mixedpop1 = mixedpop1, 
+#' test <- bootstrap(nboots = 1, mixedpop1 = mixedpop1, 
 #'     mixedpop2 = mixedpop2, genes=genes, listData =list(), 
 #'     cluster_mixedpop1 = cluster_mixedpop1, 
 #'     cluster_mixedpop2 = cluster_mixedpop2, c_selectID = c_selectID)
@@ -667,20 +667,20 @@ predicting_scGPS <- function(listData = NULL, cluster_mixedpop2 = NULL,
 #' test$ElasticNetPredict
 #' test$LDAPredict
 
-bootstrap_scGPS <- function(nboots = 1, genes = genes, mixedpop1 = mixedpop1, 
+bootstrap <- function(nboots = 1, genes = genes, mixedpop1 = mixedpop1, 
     mixedpop2 = mixedpop2, c_selectID = NULL, listData = list(), 
     cluster_mixedpop1 = NULL, cluster_mixedpop2 = NULL, trainset_ratio = 0.5, 
     LDA_run = TRUE) {
     
     for (out_idx in 1:nboots) {
-        listData <- training_scGPS(genes = genes, mixedpop1 = mixedpop1, 
+        listData <- training(genes = genes, mixedpop1 = mixedpop1, 
             mixedpop2 = mixedpop2, trainset_ratio = trainset_ratio, c_selectID,
             listData = listData, out_idx = out_idx, 
             cluster_mixedpop1 = cluster_mixedpop1, standardize = TRUE, 
             LDA_run = LDA_run)
         print(paste0("done training for bootstrap ", out_idx,
             ", moving to prediction..."))
-        listData <- predicting_scGPS(listData = listData, mixedpop2 = mixedpop2,
+        listData <- predicting(listData = listData, mixedpop2 = mixedpop2,
             out_idx = out_idx, standardize = TRUE, 
             cluster_mixedpop2 = cluster_mixedpop2, 
             LDA_run = LDA_run, c_selectID = c_selectID)
@@ -692,7 +692,7 @@ bootstrap_scGPS <- function(nboots = 1, genes = genes, mixedpop1 = mixedpop1,
 #' BootStrap runs for both scGPS training and prediction
 #' with parallel option
 #'
-#' @description  same as bootstrap_scGPS, but with an multicore option
+#' @description  same as bootstrap, but with an multicore option
 #' @param listData  a \code{list} object, which contains trained results for the
 #' first mixed population
 #' @param mixedpop1 a \linkS4class{SingleCellExperiment} object from a mixed 
@@ -719,24 +719,24 @@ bootstrap_scGPS <- function(nboots = 1, genes = genes, mixedpop1 = mixedpop1,
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 #' genes <-GeneList
 #' genes <-genes$Merged_unique
-#' #prl_boots <- bootstrap_scGPS_parallel(ncores = 4, nboots = 1, genes=genes,
+#' #prl_boots <- bootstrap_parallel(ncores = 4, nboots = 1, genes=genes,
 #' #    mixedpop1 = mixedpop2, mixedpop2 = mixedpop2,  c_selectID=1,
 #' #    listData =list())
 #' #prl_boots[[1]]$ElasticNetPredict
 #' #prl_boots[[1]]$LDAPredict
 #'
 
-bootstrap_scGPS_parallel <- function(ncores = 4, nboots = 1, genes = genes, 
+bootstrap_parallel <- function(ncores = 4, nboots = 1, genes = genes, 
     mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, c_selectID, listData = list(),
     cluster_mixedpop1 = NULL, cluster_mixedpop2 = NULL) {
     
     bootstrap_single <- function(genes = genes, mixedpop1 = mixedpop1, 
         mixedpop2 = mixedpop2, c_selectID = c_selectID, out_idx = 1, 
         listData = list(), cluster_mixedpop1 = NULL, cluster_mixedpop2 = NULL) {
-        listData <- training_scGPS(genes = genes, mixedpop1 = mixedpop1, 
+        listData <- training(genes = genes, mixedpop1 = mixedpop1, 
             mixedpop2 = mixedpop2, c_selectID, listData = listData, 
             out_idx = 1, cluster_mixedpop1 = cluster_mixedpop1)
-        listData <- predicting_scGPS(listData = listData, mixedpop2 = mixedpop2,
+        listData <- predicting(listData = listData, mixedpop2 = mixedpop2,
             out_idx = 1, standardize = TRUE, 
             cluster_mixedpop2 = cluster_mixedpop2)
         return(listData)

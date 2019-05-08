@@ -9,7 +9,7 @@ summary_deviance(object = NULL)
 }
 \arguments{
 \item{object}{is a list containing the training results from 
-\code{training_scGPS}}
+\code{training}}
 }
 \value{
 a \code{list} containing three elements, with a vector of percent
@@ -18,7 +18,7 @@ deviance, and a dataframe containing gene names and coefficients of the best
 model
 }
 \description{
-the training results from \code{training_scGPS} were written to
+the training results from \code{training} were written to
 the object \code{LSOLDA_dat}, the \code{summary_devidance} summarises 
 deviance explained for \code{n} bootstrap runs and also returns the best
 deviance matrix for plotting, as well as the best matrix with Lasso genes 
@@ -35,7 +35,7 @@ mixedpop2 <-NewscGPS(ExpressionMatrix = day5$dat5_counts,
                     CellMetadata = day5$dat5_clusters)
 genes <-GeneList
 genes <-genes$Merged_unique
-LSOLDA_dat <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop1, 
+LSOLDA_dat <- bootstrap(nboots = 2,mixedpop1 = mixedpop1, 
     mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
     cluster_mixedpop1 = colData(mixedpop1)[,1],
     cluster_mixedpop2=colData(mixedpop2)[,1])

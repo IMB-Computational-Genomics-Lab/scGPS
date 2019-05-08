@@ -8,9 +8,9 @@
 #' day2 <- sample1
 #' mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, 
 #'     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
-#' SortedExprsMat <-topvar_scGPS(expression.matrix=assay(mixedpop1))
+#' SortedExprsMat <-topvar(expression.matrix=assay(mixedpop1))
 
-topvar_scGPS <- function(expression.matrix = NULL, ngenes = 1500) {
+topvar <- function(expression.matrix = NULL, ngenes = 1500) {
     CalcRowVariance <- function(x) {
         row.variance <- rowSums((x - rowMeans(x))^2)/(dim(x)[2] - 1)
         return(row.variance)
@@ -40,17 +40,17 @@ topvar_scGPS <- function(expression.matrix = NULL, ngenes = 1500) {
 #' day2 <- sample1
 #' mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, 
 #'     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
-#' #CIDR_dim <-CIDR_scGPS(expression.matrix=assay(mixedpop1))
-#' #p <- plotReduced_scGPS(CIDR_dim, color_fac = factor(colData(mixedpop1)[,1]),
+#' #CIDR_dim <-CIDR(expression.matrix=assay(mixedpop1))
+#' #p <- plotReduced(CIDR_dim, color_fac = factor(colData(mixedpop1)[,1]),
 #' #     palletes =1:length(unique(colData(mixedpop1)[,1])))
 #' #plot(p)
-#' tSNE_dim <-tSNE_scGPS(expression.mat=assay(mixedpop1))
-#' p2 <- plotReduced_scGPS(tSNE_dim, color_fac = factor(colData(mixedpop1)[,1]),
+#' tSNE_dim <-tSNE(expression.mat=assay(mixedpop1))
+#' p2 <- plotReduced(tSNE_dim, color_fac = factor(colData(mixedpop1)[,1]),
 #'     palletes =1:length(unique(colData(mixedpop1)[,1])))
 #' plot(p2)
 #'
 
-plotReduced_scGPS <- function(reduced_dat, color_fac = NULL, dims = c(1, 2), 
+plotReduced <- function(reduced_dat, color_fac = NULL, dims = c(1, 2), 
     dimNames = c("Dim1", "Dim2"), palletes = NULL, legend_title = "Cluster") {
     reduced_dat_toPlot <- as.data.frame(reduced_dat[, dims])
     sample_num <- length(unique(color_fac))
@@ -116,7 +116,7 @@ plotReduced_scGPS <- function(reduced_dat, color_fac = NULL, dims = c(1, 2),
 #' # depending on the data, the DESeq::estimateDispersions function requires
 #' # suitable fitType
 #'# and dispersion_method options
-#'DEgenes <- findMarkers_scGPS(expression_matrix=assay(mixedpop1),
+#'DEgenes <- findMarkers(expression_matrix=assay(mixedpop1),
 #'                         cluster = colData(mixedpop1)[,1],
 #'                         selected_cluster=c(1), #can also run for more
 #'                         #than one clusters, e.g.selected_cluster = c(1,2)
@@ -128,7 +128,7 @@ plotReduced_scGPS <- function(reduced_dat, color_fac = NULL, dims = c(1, 2),
 
 
 
-findMarkers_scGPS <- function(expression_matrix = NULL, cluster = NULL, 
+findMarkers <- function(expression_matrix = NULL, cluster = NULL, 
     selected_cluster = NULL, fitType = "local", 
     dispersion_method = "per-condition",
     sharing_Mode = "maximum") {
@@ -178,11 +178,11 @@ findMarkers_scGPS <- function(expression_matrix = NULL, cluster = NULL,
     return(DE_results)
 }
 
-#' annotate_scGPS functionally annotates the identified clusters
+#' annotate functionally annotates the identified clusters
 #'
 #' @description often we need to label clusters with unique biological 
 #' characters. One of the common approach to annotate a cluster is to perform 
-#' functional enrichment analysis. The annotate_scGPS implements ReactomePA and
+#' functional enrichment analysis. The annotate implements ReactomePA and
 #' clusterProfiler for this analysis type in R. The function require 
 #' installation of several databases as described below.
 #' @param DEgeneList is a vector of gene symbols, convertable to ENTREZID
@@ -195,7 +195,7 @@ findMarkers_scGPS <- function(expression_matrix = NULL, cluster = NULL,
 #' @examples
 #' genes <-GeneList
 #' genes <-genes$Merged_unique[1:50]
-#' enrichment_test <- annotate_scGPS(genes, pvalueCutoff=0.05, 
+#' enrichment_test <- annotate(genes, pvalueCutoff=0.05, 
 #'     gene_symbol=TRUE, species = 'human')
 #' clusterProfiler::dotplot(enrichment_test, showCategory=15)
 #'
@@ -212,7 +212,7 @@ findMarkers_scGPS <- function(expression_matrix = NULL, cluster = NULL,
 # type='source') Done installation needed for reactome pathway analysis reactome
 # in R----------------------------
 
-annotate_scGPS <- function(DEgeneList, pvalueCutoff = 0.05, gene_symbol = TRUE,
+annotate <- function(DEgeneList, pvalueCutoff = 0.05, gene_symbol = TRUE,
     species = "human") {
     # assumming the geneList is gene symbol (common for 10X data)
     if (species == "human") {

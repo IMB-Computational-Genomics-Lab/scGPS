@@ -13,7 +13,7 @@ reformat_LASSO(c_selectID = NULL, mp_selectID = NULL,
 
 \item{mp_selectID}{is the target mixedpop to project to}
 
-\item{LSOLDA_dat}{is the results from the bootstrap_scGPS}
+\item{LSOLDA_dat}{is the results from the bootstrap}
 
 \item{nPredSubpop}{is the number of clusters in the target mixedpop 
 \code{row_cluster <-length(unique(target_cluster))}}
@@ -28,7 +28,7 @@ each column
 contains prediction results for all subpopulations from each bootstrap run
 }
 \description{
-the training and prediction results from \code{bootstrap_scGPS}
+the training and prediction results from \code{bootstrap}
 were written to the object \code{LSOLDA_dat}, the \code{reformat_LASSO}
 summarises prediction for \code{n} bootstrap runs
 }
@@ -42,7 +42,7 @@ mixedpop2 <-NewscGPS(ExpressionMatrix = day5$dat5_counts,
     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 genes <-GeneList
 genes <-genes$Merged_unique
-LSOLDA_dat <- bootstrap_scGPS(nboots = 2, mixedpop1 = mixedpop1, 
+LSOLDA_dat <- bootstrap(nboots = 2, mixedpop1 = mixedpop1, 
     mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
     cluster_mixedpop1 = colData(mixedpop1)[,1],
     cluster_mixedpop2=colData(mixedpop2)[,1])

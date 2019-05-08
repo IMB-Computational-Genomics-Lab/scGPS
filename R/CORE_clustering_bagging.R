@@ -31,19 +31,19 @@
 #' #day5$dat5_counts needs to be in a matrix format
 #' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, 
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
-#' test <- CORE_scGPS_bagging(mixedpop2, remove_outlier = c(0), PCA=FALSE,
+#' test <- CORE_bagging(mixedpop2, remove_outlier = c(0), PCA=FALSE,
 #'     bagging_run = 2, subsample_proportion = .7)
 #' table(test$Cluster)
 
 #' @export
 #' @author Quan Nguyen, 2018-05-11
 
-CORE_scGPS_bagging <- function(mixedpop = NULL, bagging_run = 20, 
+CORE_bagging <- function(mixedpop = NULL, bagging_run = 20, 
     subsample_proportion = 0.8, windows = seq(0.025:1, by = 0.025), 
     remove_outlier = c(0), nRounds = 1, PCA = FALSE, nPCs = 20, ngenes = 1500) {
     
     # perform the clustering runs
-    cluster_all <- clustering_scGPS_bagging(object = mixedpop, 
+    cluster_all <- clustering_bagging(object = mixedpop, 
         windows = windows, bagging_run = bagging_run, 
         subsample_proportion = subsample_proportion, 
         remove_outlier = remove_outlier, ngenes = ngenes, nRounds = nRounds, 
@@ -141,10 +141,10 @@ CORE_scGPS_bagging <- function(mixedpop = NULL, bagging_run = 20,
 #' day5 <- sample2
 #' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, 
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
-#' test <-clustering_scGPS_bagging(mixedpop2, remove_outlier = c(0),
+#' test <-clustering_bagging(mixedpop2, remove_outlier = c(0),
 #'     bagging_run = 2, subsample_proportion = .7)
 
-clustering_scGPS_bagging <- function(object = NULL, ngenes = 1500, 
+clustering_bagging <- function(object = NULL, ngenes = 1500, 
     bagging_run = 20, subsample_proportion = 0.8, 
     windows = seq(0.025:1, by = 0.025), remove_outlier = c(0), nRounds = 1, 
     PCA = FALSE, nPCs = 20) {
@@ -155,7 +155,7 @@ clustering_scGPS_bagging <- function(object = NULL, ngenes = 1500,
         exprs_mat <- assay(object)
         # take the top variable genes
         print("Identifying top variable genes")
-        exprs_mat_topVar <- topvar_scGPS(exprs_mat, ngenes = ngenes)
+        exprs_mat_topVar <- topvar(exprs_mat, ngenes = ngenes)
         # tranpose so that cells are in rows
         exprs_mat_t <- t(exprs_mat_topVar)
         #-------------------------------------Work in progress--------#

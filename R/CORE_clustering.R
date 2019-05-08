@@ -31,14 +31,14 @@
 #' cellnames <-data.frame('Cluster'=cluster, 'cellBarcodes' = cellnames)
 #' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, 
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
-#' test <- CORE_scGPS(mixedpop2, remove_outlier = c(0), PCA=FALSE, nPCs=20,
+#' test <- CORE(mixedpop2, remove_outlier = c(0), PCA=FALSE, nPCs=20,
 #'     ngenes=1500)
 #' @export
 #' @author Quan Nguyen, 2017-11-25
 
-CORE_scGPS <- function(mixedpop = NULL, windows = seq(0.025:1, by = 0.025), 
+CORE <- function(mixedpop = NULL, windows = seq(0.025:1, by = 0.025), 
     remove_outlier = c(0), nRounds = 1, PCA = FALSE, nPCs = 20, ngenes = 1500) {
-    cluster_all <- clustering_scGPS(object = mixedpop, windows = windows, 
+    cluster_all <- clustering(object = mixedpop, windows = windows, 
         remove_outlier = remove_outlier, 
         nRounds = nRounds, PCA = PCA, nPCs = nPCs)
     
@@ -54,7 +54,7 @@ CORE_scGPS <- function(mixedpop = NULL, windows = seq(0.025:1, by = 0.025),
 
 #' Subclustering (optional) after running CORE 'test'
 #'
-#' @description  CORE_Subcluster_scGPS allows re-cluster the CORE clustering 
+#' @description  CORE_Subcluster allows re-cluster the CORE clustering 
 #' result
 #' @param mixedpop is a \linkS4class{SingleCellExperiment} object from the train
 #' mixed population
@@ -68,14 +68,14 @@ CORE_scGPS <- function(mixedpop = NULL, windows = seq(0.025:1, by = 0.025),
 #' day5 <- sample2
 #' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts,
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
-#' test <- CORE_scGPS(mixedpop2,remove_outlier= c(0))
+#' test <- CORE(mixedpop2,remove_outlier= c(0))
 #' @export
 #' @author Quan Nguyen, 2017-11-25
 
-CORE_Subcluster_scGPS <- function(mixedpop = NULL, windows = seq(0.025:1, 
+CORE_Subcluster <- function(mixedpop = NULL, windows = seq(0.025:1, 
     by = 0.025), select_cell_index = NULL, ngenes = 1500) {
     
-    cluster_all <- SubClustering_scGPS(object = mixedpop, windows = windows, 
+    cluster_all <- SubClustering(object = mixedpop, windows = windows, 
         select_cell_index = select_cell_index, ngenes = ngenes)
     
     stab_df <- FindStability(list_clusters = cluster_all$list_clusters, 
@@ -111,9 +111,9 @@ CORE_Subcluster_scGPS <- function(mixedpop = NULL, windows = seq(0.025:1,
 #' day5 <- sample2
 #' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, 
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
-#' test <-clustering_scGPS(mixedpop2, remove_outlier = c(0))
+#' test <-clustering(mixedpop2, remove_outlier = c(0))
 
-clustering_scGPS <- function(object = NULL, ngenes = 1500, 
+clustering <- function(object = NULL, ngenes = 1500, 
     windows = seq(0.025:1, by = 0.025), remove_outlier = c(0), nRounds = 1, 
     PCA = FALSE, nPCs = 20) {
     
@@ -123,7 +123,7 @@ clustering_scGPS <- function(object = NULL, ngenes = 1500,
         exprs_mat <- assay(object)
         # take the top variable genes
         print("Identifying top variable genes")
-        exprs_mat_topVar <- topvar_scGPS(exprs_mat, ngenes = ngenes)
+        exprs_mat_topVar <- topvar(exprs_mat, ngenes = ngenes)
         # exprs_mat_t <- t(exprs_mat_topVar)
         if (PCA == TRUE) {
             # perform PCA dimensionality reduction
@@ -255,18 +255,18 @@ clustering_scGPS <- function(object = NULL, ngenes = 1500,
 #' day5 <- sample2
 #' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, 
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
-#' test_SubClustering <-SubClustering_scGPS(mixedpop2,
+#' test_SubClustering <-SubClustering(mixedpop2,
 #'     select_cell_index = c(1:100))
 
 
-SubClustering_scGPS <- function(object = NULL, ngenes = 1500, 
+SubClustering <- function(object = NULL, ngenes = 1500, 
     windows = seq(0.025:1, by = 0.025), select_cell_index = NULL) {
     
     print("Calculating distance matrix")
     # function for the highest resolution clustering (i.e. no window applied)
     Clustering <- function(object = NULL) {
         exprs_mat <- assay(object)
-        exprs_mat_topVar <- topvar_scGPS(exprs_mat, ngenes = ngenes)
+        exprs_mat_topVar <- topvar(exprs_mat, ngenes = ngenes)
         # take the top variable genes
         exprs_mat_t <- t(exprs_mat_topVar)
         dist_mat <- rcpp_parallel_distance(exprs_mat_t)
@@ -334,7 +334,7 @@ SubClustering_scGPS <- function(object = NULL, ngenes = 1500,
 #' day5 <- sample2
 #' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts,
 #' GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
-#' cluster_all <-clustering_scGPS(object=mixedpop2)
+#' cluster_all <-clustering(object=mixedpop2)
 #'
 #' randIndex(table(unlist(cluster_all$list_clusters[[1]]), 
 #' cluster_all$cluster_ref))
@@ -399,7 +399,7 @@ randIndex <- function(tab, adjust = TRUE) {
 #' day5 <- sample2
 #' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, 
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
-#' cluster_all <-clustering_scGPS(object=mixedpop2)
+#' cluster_all <-clustering(object=mixedpop2)
 #' stab_df <- FindStability(list_clusters=cluster_all$list_clusters,
 #'                          cluster_ref = cluster_all$cluster_ref)
 #' @export
@@ -526,7 +526,7 @@ FindStability <- function(list_clusters = NULL, cluster_ref = NULL) {
 #' day5 <- sample2
 #' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, 
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
-#' cluster_all <-clustering_scGPS(object=mixedpop2)
+#' cluster_all <-clustering(object=mixedpop2)
 #' stab_df <- FindStability(list_clusters=cluster_all$list_clusters,
 #'                          cluster_ref = cluster_all$cluster_ref)
 #' optimal_stab <- FindOptimalStability(list_clusters = 
@@ -642,7 +642,7 @@ FindOptimalStability <- function(list_clusters, run_RandIdx, bagging = FALSE,
 #' cellnames <-data.frame('Cluster'=cluster, 'cellBarcodes' = cellnames)
 #' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts,
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = cellnames)
-#' CORE_cluster <- CORE_scGPS(mixedpop2, remove_outlier = c(0))
+#' CORE_cluster <- CORE(mixedpop2, remove_outlier = c(0))
 #' plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster)
 
 plot_CORE <- function(original.tree, list_clusters = NULL, 
@@ -902,7 +902,7 @@ plot_CORE <- function(original.tree, list_clusters = NULL,
 #' day5 <- sample2
 #' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, 
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
-#' CORE_cluster <- CORE_scGPS(mixedpop2, remove_outlier = c(0))
+#' CORE_cluster <- CORE(mixedpop2, remove_outlier = c(0))
 #' key_height <- CORE_cluster$optimalClust$KeyStats$Height
 #' optimal_res <- CORE_cluster$optimalClust$OptimalRes
 #' optimal_index = which(key_height == optimal_res)

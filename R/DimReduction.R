@@ -11,16 +11,16 @@
 #' day2 <- sample1
 #' mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, 
 #'     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
-#' t <-PCA_scGPS(expression.matrix=assay(mixedpop1))
+#' t <-PCA(expression.matrix=assay(mixedpop1))
 #'
 
 
-PCA_scGPS <- function(expression.matrix = NULL, ngenes = 1500, scaling = TRUE, 
+PCA <- function(expression.matrix = NULL, ngenes = 1500, scaling = TRUE, 
     npcs = 50) {
     
     print(paste0("Preparing PCA inputs using the top ", as.integer(ngenes),
         " genes ..."))
-    subset.matrix <- topvar_scGPS(expression.matrix = expression.matrix,
+    subset.matrix <- topvar(expression.matrix = expression.matrix,
         ngenes = ngenes)
     
     # transpose to perform pca for cells in rows
@@ -53,10 +53,10 @@ PCA_scGPS <- function(expression.matrix = NULL, ngenes = 1500, scaling = TRUE,
 ##' day2 <- sample1
 ##' mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, 
 ##'     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
-##' t <-CIDR_scGPS(expression.matrix=assay(mixedpop1))
+##' t <-CIDR(expression.matrix=assay(mixedpop1))
 ##'
-#CIDR_scGPS <- function(expression.matrix = NULL, ngenes = 1500) {
-#    subset.matrix <- topvar_scGPS(expression.matrix = expression.matrix, 
+#CIDR <- function(expression.matrix = NULL, ngenes = 1500) {
+#    subset.matrix <- topvar(expression.matrix = expression.matrix, 
 #        ngenes = 1500)
 #    print("building cidr object...")
 #    sData <- cidr::scDataConstructor(subset.matrix)
@@ -92,11 +92,11 @@ PCA_scGPS <- function(expression.matrix = NULL, ngenes = 1500, scaling = TRUE,
 #' day2 <- sample1
 #' mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, 
 #'     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
-#' t <-tSNE_scGPS(expression.mat = assay(mixedpop1))
+#' t <-tSNE(expression.mat = assay(mixedpop1))
 #'
-tSNE_scGPS <- function(expression.mat = NULL, topgenes = 1500, scale = TRUE, 
+tSNE <- function(expression.mat = NULL, topgenes = 1500, scale = TRUE, 
     thet = 0.5, perp = 30) {
-    reducedDat <- PCA_scGPS(expression.matrix = expression.mat, 
+    reducedDat <- PCA(expression.matrix = expression.mat, 
         ngenes = topgenes, scaling = scale)
     reducedDat <- reducedDat$reduced_dat
     print("Running tSNE ...")
