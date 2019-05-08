@@ -260,7 +260,6 @@ annotate <- function(DEgeneList, pvalueCutoff = 0.05, gene_symbol = TRUE,
 #' @description temp function to import packages to namespace using devtools
 #' @useDynLib scGPS
 #' @importFrom Rcpp evalCpp
-#' @exportPattern '^[[:alpha:]]+'
 #' @import glmnet
 #' @import caret
 #' @import dplyr
