@@ -1,13 +1,19 @@
 Package: scGPS
 Type: Package
-Title: A complete analysis of single cell subpopulations, from identifying subpopulations to analysing their relationship (scGPS = single cell Global Predictions of Subpopulation)
+Title: A complete analysis of single cell subpopulations, from identifying
+    subpopulations to analysing their relationship
+    (scGPS = single cell Global Predictions of Subpopulation)
 Version: 0.99.13
 Authors@R: c(
-    person("Quan", "Nguyen", email="quan.nguyen@uq.edu.au", role=c("aut", "cre")),
+    person("Quan", "Nguyen", email="quan.nguyen@uq.edu.au", 
+    role=c("aut", "cre")),
     person("Michael", "Thompson",role=c("aut")),
     person("Anne", "Asenbouth",role=c("aut"))
     )
-Description: The package implements two main algorithms to answer two key questions: a SCORE (Stable Clustering at Optimal REsolution) to find subpopulations, followed by scGPS to investigate the relationships between subpopulations.
+Description: The package implements two main algorithms to answer two key
+    questions: a SCORE (Stable Clustering at Optimal REsolution) to find
+    subpopulations, followed by scGPS to investigate the relationships between
+    subpopulations.
 Encoding: UTF-8
 LazyData: true
 License: GPL-3
