@@ -39,14 +39,12 @@ git clone https://github.com/IMB-Computational-Genomics-Lab/scGPS
 # then check in scGPS/src if any of the precompiled (e.g.  those with *.so and
 # *.o) files exist and delete them before recompiling
 
-# create a Makevars file in the scGPS/src with one line: PKG_LIBS =
-# $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
-
-# then with the scGPS as the R working directory, manually recompile scGPS in R
-# using devtools to load and install functions
-devtools::document()
+# then with the scGPS as the R working directory, manually install and load
+# using devtools functionality
+# Install the package
+devtools::install()
 #load the package to the workspace 
-devtools::load_all()
+library(scGPS)
 
 ```
 
@@ -59,8 +57,7 @@ devtools::load_all()
 ```{r scGPS_object, warning = FALSE, message = FALSE}
 
 # load mixed population 1 (loaded from sample1 dataset, named it as day2)
-path_scPGS = getwd()
-devtools::load_all(path_scPGS) 
+library(scGPS)
 
 day2 <- sample1
 mixedpop1 <- NewscGPS(ExpressionMatrix = day2$dat2_counts,
@@ -84,7 +81,7 @@ genes <- genes$Merged_unique
 cluster_mixedpop1 <- colData(mixedpop1)[,1]
 cluster_mixedpop2 <- colData(mixedpop2)[,1]
 #run training (running nboots = 3 here, but recommend to use nboots = 50-100)
-LSOLDA_dat <- bootstrap_scGPS(nboots = 3, mixedpop1 = mixedpop1, 
+LSOLDA_dat <- bootstrap(nboots = 3, mixedpop1 = mixedpop1, 
     mixedpop2 = mixedpop2, genes = genes, c_selectID  = c_selectID,
     listData = list(), cluster_mixedpop1 = cluster_mixedpop1, 
     cluster_mixedpop2 = cluster_mixedpop2, trainset_ratio = 0.7)
@@ -142,7 +139,7 @@ summary_deviance(object = LSOLDA_dat)
 # mixedpop2 <-NewscGPS(ExpressionMatrix = day5$dat5_counts,
 #                      GeneMetadata = day5$dat5geneInfo, CellMetadata = cellnames)
 # 
-# CORE_cluster <- CORE_scGPS(mixedpop2, remove_outlier = c(0), PCA=FALSE)
+# CORE_cluster <- CORE(mixedpop2, remove_outlier = c(0), PCA=FALSE)
 # 
 # # to update the clustering information, users can ...
 # key_height <- CORE_cluster$optimalClust$KeyStats$Height
@@ -179,7 +176,7 @@ summary_deviance(object = LSOLDA_dat)
 # mixedpop2 <-NewscGPS(ExpressionMatrix = day5$dat5_counts,
 #                      GeneMetadata = day5$dat5geneInfo, CellMetadata = cellnames )
 # 
-# SCORE_test <- CORE_scGPS_bagging(mixedpop2, remove_outlier = c(0), PCA=FALSE,
+# SCORE_test <- CORE_bagging(mixedpop2, remove_outlier = c(0), PCA=FALSE,
 #                                  bagging_run = 20, subsample_proportion = .8)
 # 
 # ```
@@ -192,7 +189,7 @@ summary_deviance(object = LSOLDA_dat)
 #                 color_branch = c("#208eb7", "#6ce9d3", "#1c5e39", "#8fca40", "#154975",
 #                                  "#b1c8eb"))
 # p1
-# #extract optimal index identified by CORE_scGPS
+# #extract optimal index identified by CORE
 # key_height <- CORE_cluster$optimalClust$KeyStats$Height
 # optimal_res <- CORE_cluster$optimalClust$OptimalRes
 # optimal_index = which(key_height == optimal_res)
@@ -215,8 +212,8 @@ summary_deviance(object = LSOLDA_dat)
 # ##(e.g., tSNE or CIDR)
 # ```{r compare_clustering, eval = FALSE}
 # #library(cidr)
-# t <- tSNE_scGPS(expression.mat=assay(mixedpop2))
-# p2 <-plotReduced_scGPS(t, color_fac = factor(colData(mixedpop2)[,1]),
+# t <- tSNE(expression.mat=assay(mixedpop2))
+# p2 <-plotReduced(t, color_fac = factor(colData(mixedpop2)[,1]),
 #                        palletes =1:length(unique(colData(mixedpop2)[,1])))
 # p2
 # ```
@@ -229,7 +226,7 @@ summary_deviance(object = LSOLDA_dat)
 # genes <-genes$Merged_unique
 # 
 # #the gene list can also be objectively identified by differential expression
-# #analysis cluster information is requied for findMarkers_scGPS. Here, we use
+# #analysis cluster information is requied for findMarkers. Here, we use
 # #CORE results.
 # 
 # #colData(mixedpop2)[,1] <- unlist(SCORE_test$Cluster[SCORE_test$optimal_index])
@@ -237,7 +234,7 @@ summary_deviance(object = LSOLDA_dat)
 # suppressMessages(library(locfit))
 # suppressMessages(library(DESeq))
 # 
-# DEgenes <- findMarkers_scGPS(expression_matrix=assay(mixedpop2),
+# DEgenes <- findMarkers(expression_matrix=assay(mixedpop2),
 #                              cluster = colData(mixedpop2)[,1],
 #                              selected_cluster=unique(colData(mixedpop2)[,1]))
 # 
@@ -257,7 +254,7 @@ summary_deviance(object = LSOLDA_dat)
 # suppressMessages(library(DOSE))
 # suppressMessages(library(ReactomePA))
 # suppressMessages(library(clusterProfiler))
-# enrichment_test <- annotate_scGPS(DEgeneList_1vsOthers[1:500],
+# enrichment_test <- annotate(DEgeneList_1vsOthers[1:500],
 #                                   pvalueCutoff=0.05, gene_symbol=TRUE)
 # 
 # #the enrichment outputs can be displayed by running
@@ -286,7 +283,7 @@ summary_deviance(object = LSOLDA_dat)
 # cluster_mixedpop2 <- colData(mixedpop2)[,1]
 # 
 # sink("temp")
-# LSOLDA_dat <- bootstrap_scGPS(nboots = 2, mixedpop1 = mixedpop1,
+# LSOLDA_dat <- bootstrap(nboots = 2, mixedpop1 = mixedpop1,
 #                               mixedpop2 = mixedpop2, genes = genes, c_selectID  = c_selectID,
 #                               listData = list(),
 #                               cluster_mixedpop1 = cluster_mixedpop1,
@@ -332,7 +329,7 @@ summary_deviance(object = LSOLDA_dat)
 # #top 200 gene markers distinguishing cluster 1
 # genes = DEgenes$DE_Subpop1vsRemaining$id[1:200]
 # 
-# LSOLDA_dat1 <- bootstrap_scGPS(nboots = 2, mixedpop1 = mixedpop2,
+# LSOLDA_dat1 <- bootstrap(nboots = 2, mixedpop1 = mixedpop2,
 #                                mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
 #                                cluster_mixedpop1 = cluster_mixedpop2,
 #                                cluster_mixedpop2 = cluster_mixedpop2)
@@ -340,21 +337,21 @@ summary_deviance(object = LSOLDA_dat)
 # c_selectID <- 2
 # genes = DEgenes$DE_Subpop2vsRemaining$id[1:200]
 # 
-# LSOLDA_dat2 <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop2,
+# LSOLDA_dat2 <- bootstrap(nboots = 2,mixedpop1 = mixedpop2,
 #                                mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
 #                                cluster_mixedpop1 = cluster_mixedpop2,
 #                                cluster_mixedpop2 = cluster_mixedpop2)
 # 
 # c_selectID <- 3
 # genes = DEgenes$DE_Subpop3vsRemaining$id[1:200]
-# LSOLDA_dat3 <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop2,
+# LSOLDA_dat3 <- bootstrap(nboots = 2,mixedpop1 = mixedpop2,
 #                                mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
 #                                cluster_mixedpop1 = cluster_mixedpop2,
 #                                cluster_mixedpop2 = cluster_mixedpop2)
 # 
 # c_selectID <- 4
 # genes = DEgenes$DE_Subpop4vsRemaining$id[1:200]
-# LSOLDA_dat4 <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop2,
+# LSOLDA_dat4 <- bootstrap(nboots = 2,mixedpop1 = mixedpop2,
 #                                mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
 #                                cluster_mixedpop1 = cluster_mixedpop2,
 #                                cluster_mixedpop2 = cluster_mixedpop2)
@@ -441,7 +438,7 @@ summary_deviance(object = LSOLDA_dat)
 # c_selectID <- 1
 # #top 200 gene markers distinguishing cluster 1
 # genes = DEgenes$DE_Subpop1vsRemaining$id[1:200]
-# LSOLDA_dat1 <- bootstrap_scGPS(nboots = 2, mixedpop1 = mixedpop1,
+# LSOLDA_dat1 <- bootstrap(nboots = 2, mixedpop1 = mixedpop1,
 #                                mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
 #                                cluster_mixedpop1 = cluster_mixedpop1,
 #                                cluster_mixedpop2 = cluster_mixedpop2)
@@ -449,14 +446,14 @@ summary_deviance(object = LSOLDA_dat)
 # 
 # c_selectID <- 2
 # genes = DEgenes$DE_Subpop2vsRemaining$id[1:200]
-# LSOLDA_dat2 <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop1,
+# LSOLDA_dat2 <- bootstrap(nboots = 2,mixedpop1 = mixedpop1,
 #                                mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
 #                                cluster_mixedpop1 = cluster_mixedpop1,
 #                                cluster_mixedpop2 = cluster_mixedpop2)
 # 
 # c_selectID <- 3
 # genes = DEgenes$DE_Subpop3vsRemaining$id[1:200]
-# LSOLDA_dat3 <- bootstrap_scGPS(nboots = 2,mixedpop1 = mixedpop1,
+# LSOLDA_dat3 <- bootstrap(nboots = 2,mixedpop1 = mixedpop1,
 #                                mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
 #                                cluster_mixedpop1 = cluster_mixedpop1,
 #                                cluster_mixedpop2 = cluster_mixedpop2)
@@ -521,9 +518,9 @@ summary_deviance(object = LSOLDA_dat)
 # 
 # ##4.4 Annotation: scGPS prediction can be used to compare scGPS clusters with
 # ##a reference dataset to see which cluster is most similar to the reference
+```
 
 
-
-
-
+```{r session_info, include=TRUE, echo=TRUE, results='markup'}
+devtools::session_info()
 ```
