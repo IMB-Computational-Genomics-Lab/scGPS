@@ -2,7 +2,7 @@
 % Please edit documentation in R/Utilities.R
 \name{add_import}
 \alias{add_import}
-\title{Add imports}
+\title{add_import}
 \usage{
 add_import(x = 1)
 }
@@ -13,7 +13,7 @@ add_import(x = 1)
 a message
 }
 \description{
-temp function to import packages to namespace using devtools
+temp function to import packages to namespace using devtools/roxygen
 }
 \examples{
 add_import()
