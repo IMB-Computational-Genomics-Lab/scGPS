@@ -4,6 +4,7 @@
 #' @param expression.matrix is a matrix with genes in rows and cells in columns
 #' @return a subsetted expression matrix with the top n most variable genes
 #' @param ngenes number of genes used for clustering calculations.
+#' @export
 #' @examples
 #' day2 <- sample1
 #' mixedpop1 <-new_scGPS_object(ExpressionMatrix = day2$dat2_counts, 
@@ -35,6 +36,7 @@ top_var <- function(expression.matrix = NULL, ngenes = 1500) {
 #' @param dims an integer of the number of dimestions
 #' @param dimNames a vector of the names of the dimensions
 #' @param legend_title title of the plot's legend
+#' @export
 #' @return a matrix with the top 20 CIDR dimensions
 #' @examples
 #' day2 <- sample1
@@ -190,6 +192,7 @@ find_markers <- function(expression_matrix = NULL, cluster = NULL,
 #' @param gene_symbol logical of whether the geneList is a gene symbol
 #' @param species is the selection of 'human' or 'mouse', default to 'human' 
 #' genes
+#' @export
 #' @return write enrichment test output to a file and an enrichment test object 
 #' for plotting
 #' @examples
@@ -259,8 +262,8 @@ annotate <- function(DEgeneList, pvalueCutoff = 0.05, gene_symbol = TRUE,
 #' add_import
 #'
 #' @description temp function to import packages to namespace using devtools/roxygen
+#' @name add_import
 #' @useDynLib scGPS
-#' @exportPattern '^[[:alpha:]]+'
 #' @importFrom Rcpp evalCpp
 #' @import glmnet
 #' @import caret
@@ -278,14 +281,19 @@ annotate <- function(DEgeneList, pvalueCutoff = 0.05, gene_symbol = TRUE,
 #' @importFrom grDevices colorRampPalette
 #' @importFrom graphics abline layout par plot
 #' @importFrom utils head
-#' @param x a dummy variable for the temp function 
-#' @return a message 
-#' @examples
-#' add_import()
 
-add_import <- function(x = 1) {
-    if (x == 1) {
-        return("required functions imported")
-    }
-}
+NULL
+
+
+
+# #' @param x a dummy variable for the temp function 
+# #' @return a message 
+# #' @examples
+# #' add_import()
+
+# add_import <- function(x = 1) {
+#     if (x == 1) {
+#         return("required functions imported")
+#     }
+# }
 

@@ -3,18 +3,6 @@
 \name{add_import}
 \alias{add_import}
 \title{add_import}
-\usage{
-add_import(x = 1)
-}
-\arguments{
-\item{x}{a dummy variable for the temp function}
-}
-\value{
-a message
-}
 \description{
 temp function to import packages to namespace using devtools/roxygen
-}
-\examples{
-add_import()
 }

@@ -10,6 +10,7 @@ using namespace Rcpp;
 //' @param x A numeric vector
 //' @param y A numeric vector
 //' @return a numeric distance
+//' @export
 //' @examples
 //' x <-matrix(rnbinom(1000,mu=0.01, size=10),nrow=1000)
 //' x <- x[1,]
@@ -27,6 +28,7 @@ double distvec(NumericVector x, NumericVector y){
 //'
 //' @param x A numeric matrix
 //' @return a distance matrix
+//' @export
 //' @examples
 //' mat_test <-matrix(rnbinom(1000,mu=0.01, size=10),nrow=1000)
 //' calcDist(mat_test)
@@ -54,6 +56,7 @@ NumericMatrix calcDist(NumericMatrix x){
 //'
 //' @param x A numeric matrix
 //' @return a distance matrix
+//' @export
 //' @examples
 //' mat_test <-matrix(rnbinom(1000,mu=0.01, size=10),nrow=1000)
 //' #library(microbenchmark)

@@ -6,6 +6,7 @@
 #' @param x A numeric vector
 #' @param y A numeric vector
 #' @return a numeric distance
+#' @export
 #' @examples
 #' x <-matrix(rnbinom(1000,mu=0.01, size=10),nrow=1000)
 #' x <- x[1,]
@@ -21,6 +22,7 @@ distvec <- function(x, y) {
 #'
 #' @param x A numeric matrix
 #' @return a distance matrix
+#' @export
 #' @examples
 #' mat_test <-matrix(rnbinom(1000,mu=0.01, size=10),nrow=1000)
 #' calcDist(mat_test)
@@ -33,6 +35,7 @@ calcDist <- function(x) {
 #'
 #' @param x A numeric matrix
 #' @return a distance matrix
+#' @export
 #' @examples
 #' mat_test <-matrix(rnbinom(1000,mu=0.01, size=10),nrow=1000)
 #' #library(microbenchmark)
@@ -49,6 +52,7 @@ calcDistArma <- function(x) {
 #' calculation
 #' @param mat an R matrix (expression matrix), rows are genes, columns are cells
 #' @return a distance matrix
+#' @export
 #' @examples
 #' mat_test <-matrix(rnbinom(1000000,mu=0.01, size=10),nrow=10000)
 #' #library(microbenchmark)
@@ -63,6 +67,7 @@ rcpp_parallel_distance <- function(mat) {
 #' @param mat an R matrix (expression matrix), with cells in rows and genes
 #' in columns
 #' @return a distance matrix
+#' @export
 #' @examples
 #' mat_test <-matrix(rnbinom(100000,mu=0.01, size=10),nrow=1000)
 #' #library(microbenchmark)
@@ -76,6 +81,7 @@ rcpp_Eucl_distance_NotPar <- function(mat) {
 #'
 #' @param x integer.
 #' @return a scalar value
+#' @export
 #' @examples
 #' mean_cpp(c(1:10^6))
 #'
@@ -88,6 +94,7 @@ mean_cpp <- function(x) {
 #' @param x a vector of gene expression.
 #' @param bias degree of freedom
 #' @return a variance value
+#' @export
 #' @examples
 #'var_cpp(c(1:10^6))
 #'
@@ -99,6 +106,7 @@ var_cpp <- function(x, bias = TRUE) {
 #'
 #' @param X  an R matrix (expression matrix)
 #' @return a transposed matrix
+#' @export
 #' @examples
 #' mat_test <-matrix(rnbinom(1000000,mu=0.01, size=10),nrow=100)
 #' tp_mat <- tp_cpp(mat_test)
@@ -112,6 +120,7 @@ tp_cpp <- function(X) {
 #' @param rowidx_in a numeric vector of rows to keep
 #' @param colidx_in a numeric vector of columns to keep
 #' @return a subsetted matrix
+#' @export
 #' @examples
 #' mat_test <-matrix(rnbinom(1000000,mu=0.01, size=10),nrow=100)
 #' subset_mat <- subset_cpp(mat_test, rowidx_in=c(1:10), colidx_in=c(100:500))
@@ -126,6 +135,7 @@ subset_cpp <- function(m1in, rowidx_in, colidx_in) {
 #' matrix is big
 #' @param X  an R matrix (expression matrix), rows are genes, columns are cells
 #' @return a list with three list pca lists
+#' @export
 #' @examples
 #' mat_test <-matrix(rnbinom(1000000,mu=0.01, size=10),nrow=1000)
 #' #library(microbenchmark)

@@ -6,6 +6,7 @@ using namespace arma;
 //'
 //' @param x integer.
 //' @return a scalar value
+//' @export
 //' @examples
 //' mean_cpp(c(1:10^6))
 //'
@@ -27,6 +28,7 @@ double mean_cpp(NumericVector x){
 //' @param x a vector of gene expression.
 //' @param bias degree of freedom
 //' @return a variance value
+//' @export
 //' @examples
 //'var_cpp(c(1:10^6))
 //'
@@ -48,6 +50,7 @@ double var_cpp(NumericVector x, bool bias = true){
 //'
 //' @param X  an R matrix (expression matrix)
 //' @return a transposed matrix
+//' @export
 //' @examples
 //' mat_test <-matrix(rnbinom(1000000,mu=0.01, size=10),nrow=100)
 //' tp_mat <- tp_cpp(mat_test)
@@ -63,6 +66,7 @@ arma::mat tp_cpp(const arma::mat X) {
 //' @param rowidx_in a numeric vector of rows to keep
 //' @param colidx_in a numeric vector of columns to keep
 //' @return a subsetted matrix
+//' @export
 //' @examples
 //' mat_test <-matrix(rnbinom(1000000,mu=0.01, size=10),nrow=100)
 //' subset_mat <- subset_cpp(mat_test, rowidx_in=c(1:10), colidx_in=c(100:500))
@@ -84,6 +88,7 @@ arma::mat subset_cpp(NumericMatrix m1in, NumericVector rowidx_in, NumericVector 
 //' matrix is big
 //' @param X  an R matrix (expression matrix), rows are genes, columns are cells
 //' @return a list with three list pca lists
+//' @export
 //' @examples
 //' mat_test <-matrix(rnbinom(1000000,mu=0.01, size=10),nrow=1000)
 //' #library(microbenchmark)

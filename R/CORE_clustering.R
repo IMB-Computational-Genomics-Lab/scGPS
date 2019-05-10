@@ -635,6 +635,7 @@ find_optimal_stability <- function(list_clusters, run_RandIdx, bagging = FALSE,
 #' of unique colors should be equal or larger than the number of clusters). This
 #' parameter allows better selection of colors for the display.
 #' @return a plot with clustering bars underneath the tree
+#' @export
 #' @examples
 #' day5 <- sample2
 #' cellnames <- colnames(day5$dat5_counts)
