@@ -148,7 +148,7 @@ find_markers <- function(expression_matrix = NULL, cluster = NULL,
         condition_cluster[(length(mainCl_idx) + 1):ncol(diff_mat)] <- 
             rep(as.character(cl_id), length(cl_index))
         
-        print(paste0("Start estimate dispersions for cluster ", 
+        message(paste0("Start estimate dispersions for cluster ", 
             as.character(cl_id), "..."))
         # Note: the local fit option requires the library
         cds = DESeq::newCountDataSet(diff_mat, condition_cluster)
@@ -156,13 +156,13 @@ find_markers <- function(expression_matrix = NULL, cluster = NULL,
         #library(locfit)
         cds = DESeq::estimateDispersions(cds, method = dispersion_method, 
             fitType = fitType, sharingMode = sharing_Mode)
-        print(paste0("Done estimate dispersions. ",
+        message(paste0("Done estimate dispersions. ",
             "Start nbinom test for cluster ", as.character(cl_id), "..."))
         res1 = DESeq::nbinomTest(cds, "Others", as.character(cl_id))
-        print(paste0("Done nbinom test for cluster ", as.character(cl_id),
+        message(paste0("Done nbinom test for cluster ", as.character(cl_id),
             " ..."))
         # adjust folchange
-        print(paste0("Adjust foldchange by subtracting basemean to 1..."))
+        message(paste0("Adjust foldchange by subtracting basemean to 1..."))
         res1 <- mutate(res1, AdjustedFC = (res1$baseMeanB - 1)/
             (res1$baseMeanA - 1))
         res1 <- mutate(res1, AdjustedLogFC = log2((res1$baseMeanB - 1)/
@@ -220,10 +220,10 @@ annotate <- function(DEgeneList, pvalueCutoff = 0.05, gene_symbol = TRUE,
             convert_to_gene_ID = clusterProfiler::bitr(DEgeneList, 
                 fromType = "SYMBOL", toType = "ENTREZID", 
                 OrgDb = "org.Hs.eg.db")
-            print("Original gene number in geneList")
-            print(length(DEgeneList))
-            print("Number of genes successfully converted")
-            print(nrow(convert_to_gene_ID))
+            message("Original gene number in geneList")
+            message(length(DEgeneList))
+            message("Number of genes successfully converted")
+            message(nrow(convert_to_gene_ID))
         } else {
             stop("The list must contain human gene symbols")
         }
@@ -232,10 +232,10 @@ annotate <- function(DEgeneList, pvalueCutoff = 0.05, gene_symbol = TRUE,
             convert_to_gene_ID = clusterProfiler::bitr(DEgeneList, 
                 fromType = "SYMBOL", toType = "ENTREZID",
                 OrgDb = "org.Mm.eg.db")
-            print("Original gene number in geneList")
-            print(length(DEgeneList))
-            print("Number of genes successfully converted")
-            print(nrow(convert_to_gene_ID))
+            message("Original gene number in geneList")
+            message(length(DEgeneList))
+            message("Number of genes successfully converted")
+            message(nrow(convert_to_gene_ID))
         } else {
             stop("The list must contain mouse gene symbols")
         }

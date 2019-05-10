@@ -154,14 +154,14 @@ clustering_bagging <- function(object = NULL, ngenes = 1500,
     first_round_clustering <- function(object = NULL) {
         exprs_mat <- assay(object)
         # take the top variable genes
-        print("Identifying top variable genes")
+        message("Identifying top variable genes")
         exprs_mat_topVar <- top_var(exprs_mat, ngenes = ngenes)
         # tranpose so that cells are in rows
         exprs_mat_t <- t(exprs_mat_topVar)
         #-------------------------------------Work in progress--------#
         if (PCA == TRUE) {
             # perform PCA dimensionality reduction
-            print(paste0("Performing PCA analysis ", 
+            message(paste0("Performing PCA analysis ", 
                 "(Note: the variance for each cell needs to be > 0)"))
             exprs_mat_topVar_PCA <- prcomp(t(exprs_mat_topVar))
             exprs_mat_t <- as.data.frame(exprs_mat_topVar_PCA$x[, 1:nPCs])
@@ -170,15 +170,15 @@ clustering_bagging <- function(object = NULL, ngenes = 1500,
         
         
         # calculate distance matrix for the rows
-        print("Calculating distance matrix")
+        message("Calculating distance matrix")
         dist_mat <- rcpp_parallel_distance(as.matrix(exprs_mat_t))
         #-------------------------------------Work in progress--------#
         
-        print("Performing hierarchical clustering")
+        message("Performing hierarchical clustering")
         original.tree <- fastcluster::hclust(as.dist(dist_mat), 
             method = "ward.D2")
         # the original clusters to be used as the reference
-        print("Finding clustering information")
+        message("Finding clustering information")
         original.clusters <- unname(cutreeDynamic(original.tree, 
             distM = as.matrix(dist_mat), verbose = 0))
         original.tree$labels <- original.clusters
@@ -193,9 +193,9 @@ clustering_bagging <- function(object = NULL, ngenes = 1500,
         
         # Initial Message to the user
         if (nRounds == 1) {
-            print(paste0("Performing ", nRounds, " round of filtering"))
+            message(paste0("Performing ", nRounds, " round of filtering"))
         } else {
-            print(paste0("Performing ", nRounds, " rounds of filtering"))
+            message(paste0("Performing ", nRounds, " rounds of filtering"))
         }
         
         # loop for the number of filtering rounds
@@ -208,13 +208,13 @@ clustering_bagging <- function(object = NULL, ngenes = 1500,
             cluster_toRemove <- which(filter_out$cluster_ref %in% 
                 remove_outlier)
             if (length(cluster_toRemove) > 0) {
-                print(paste0("Found ", length(cluster_toRemove), 
+                message(paste0("Found ", length(cluster_toRemove), 
                     " cells as outliers at round ", i, " ..."))
                 cells_to_remove <- c(cells_to_remove, cluster_toRemove)
                 objectTemp <- object[, -cells_to_remove]
                 i <- i + 1
             } else {
-                print(paste0("No more outliers detected in filtering round ",
+                message(paste0("No more outliers detected in filtering round ",
                     i))
                 i <- nRounds + 1
             }
@@ -223,9 +223,9 @@ clustering_bagging <- function(object = NULL, ngenes = 1500,
         filter_out <- first_round_clustering(objectTemp)
         cluster_toRemove <- which(filter_out$cluster_ref %in% remove_outlier)
         if (length(cluster_toRemove) > 0) {
-            print(paste0("Found ", length(cluster_toRemove), 
+            message(paste0("Found ", length(cluster_toRemove), 
                 " cells as outliers at round ", i, " ..."))
-            print(paste0("Select ", i, 
+            message(paste0("Select ", i, 
                 " removal rounds if you want to remove these cells"))
         }
         
@@ -241,7 +241,7 @@ clustering_bagging <- function(object = NULL, ngenes = 1500,
                 cellsForClustering = "All cells are kept for clustering", 
                 exprs_mat_t = exprs_mat_t)
         }
-        print(paste0(dim(exprs_mat_t)[1], " cells left after filtering"))
+        message(paste0(dim(exprs_mat_t)[1], " cells left after filtering"))
         return(output)
     }
     
@@ -279,7 +279,7 @@ clustering_bagging <- function(object = NULL, ngenes = 1500,
         dist_mat = dist_mat)
     
     # cluster a subsample for each of the bagging runs
-    print(paste0("Running ", bagging_run, " bagging runs, with ", 
+    message(paste0("Running ", bagging_run, " bagging runs, with ", 
         subsample_proportion, " subsampling..."))
     bootstrap_list <- list()
     for (i in 1:bagging_run) {
@@ -298,7 +298,7 @@ clustering_bagging <- function(object = NULL, ngenes = 1500,
         bootstrap_list[[i]] <- iter_write
     }
     
-    print("Done clustering, moving to stability calculation...")
+    message("Done clustering, moving to stability calculation...")
     
     return(list(tree = original.tree, cluster_ref = original.clusters, 
         bootstrap_clusters = bootstrap_list, 

@@ -122,14 +122,14 @@ clustering <- function(object = NULL, ngenes = 1500,
     first_round_clustering <- function(object = NULL) {
         exprs_mat <- assay(object)
         # take the top variable genes
-        print("Identifying top variable genes")
+        message("Identifying top variable genes")
         exprs_mat_topVar <- top_var(exprs_mat, ngenes = ngenes)
         # exprs_mat_t <- t(exprs_mat_topVar)
         if (PCA == TRUE) {
             # perform PCA dimensionality reduction
-            print(paste0("Performing PCA analysis (Note: the variance for ",
+            message(paste0("Performing PCA analysis (Note: the variance for ",
                 "each cell needs to be >0)"))
-            # print('Performing PCA analysis (Note: the variance for each cell 
+            # message('Performing PCA analysis (Note: the variance for each cell 
             # needs to be >0)')
             exprs_mat_topVar_PCA <- prcomp(t(exprs_mat_topVar))
             exprs_mat_t <- as.data.frame(exprs_mat_topVar_PCA$x[, 1:nPCs])
@@ -139,13 +139,13 @@ clustering <- function(object = NULL, ngenes = 1500,
         }  # tranpose so that cells are in rows
         
         # calculate distance matrix for the rows
-        print("Calculating distance matrix")
+        message("Calculating distance matrix")
         dist_mat <- rcpp_parallel_distance(as.matrix(exprs_mat_t))
-        print("Performing hierarchical clustering")
+        message("Performing hierarchical clustering")
         original.tree <- fastcluster::hclust(as.dist(dist_mat), 
             method = "ward.D2")
         # the original clusters to be used as the reference
-        print("Finding clustering information")
+        message("Finding clustering information")
         original.clusters <- unname(cutreeDynamic(original.tree, 
             distM = as.matrix(dist_mat), verbose = 0, 
             minClusterSize = round(ncol(dist_mat)/100)))
@@ -160,9 +160,9 @@ clustering <- function(object = NULL, ngenes = 1500,
         
         # Initial Message to the user
         if (nRounds == 1) {
-            print(paste0("Performing ", nRounds, " round of filtering"))
+            message(paste0("Performing ", nRounds, " round of filtering"))
         } else {
-            print(paste0("Performing ", nRounds, " rounds of filtering"))
+            message(paste0("Performing ", nRounds, " rounds of filtering"))
         }
         
         # loop for the number of filtering rounds
@@ -175,13 +175,13 @@ clustering <- function(object = NULL, ngenes = 1500,
             cluster_toRemove <- which(
                 filter_out$cluster_ref %in% remove_outlier)
             if (length(cluster_toRemove) > 0) {
-                print(paste0("Found ", length(cluster_toRemove), 
+                message(paste0("Found ", length(cluster_toRemove), 
                     " cells as outliers at round ", i, " ..."))
                 cells_to_remove <- c(cells_to_remove, cluster_toRemove)
                 objectTemp <- object[, -cells_to_remove]
                 i <- i + 1
             } else {
-                print(paste0("No more outliers detected in filtering round ", 
+                message(paste0("No more outliers detected in filtering round ", 
                     i))
                 i <- nRounds + 1
             }
@@ -190,9 +190,9 @@ clustering <- function(object = NULL, ngenes = 1500,
         filter_out <- first_round_clustering(objectTemp)
         cluster_toRemove <- which(filter_out$cluster_ref %in% remove_outlier)
         if (length(cluster_toRemove) > 0) {
-            print(paste0("Found ", length(cluster_toRemove), 
+            message(paste0("Found ", length(cluster_toRemove), 
                 " cells as outliers at round ", i, " ..."))
-            print(paste0("Select ", i, 
+            message(paste0("Select ", i, 
                 " removal rounds if you want to remove these cells"))
         }
         
@@ -225,13 +225,13 @@ clustering <- function(object = NULL, ngenes = 1500,
             distM = as.matrix(dist_mat), minSplitHeight = windows[i], 
             verbose = 0))
         
-        print(paste0("writing clustering result for run ", i))
+        message(paste0("writing clustering result for run ", i))
         clustering_param[[i]] <- list(toadd)
         names(clustering_param[[i]]) <- namelist
     }
     
     names(clustering_param[[i]]) <- "cluster_ref"
-    print("Done clustering, moving to stability calculation...")
+    message("Done clustering, moving to stability calculation...")
     return(list(list_clusters = clustering_param, tree = original.tree,
         cluster_ref = original.clusters, 
         cellsRemoved = firstRoundPostRemoval$cellsRemoved, 
@@ -262,7 +262,7 @@ clustering <- function(object = NULL, ngenes = 1500,
 sub_clustering <- function(object = NULL, ngenes = 1500, 
     windows = seq(0.025:1, by = 0.025), select_cell_index = NULL) {
     
-    print("Calculating distance matrix")
+    message("Calculating distance matrix")
     # function for the highest resolution clustering (i.e. no window applied)
     top_level_clustering <- function(object = NULL) {
         exprs_mat <- assay(object)
@@ -270,11 +270,11 @@ sub_clustering <- function(object = NULL, ngenes = 1500,
         # take the top variable genes
         exprs_mat_t <- t(exprs_mat_topVar)
         dist_mat <- rcpp_parallel_distance(exprs_mat_t)
-        print("Performing hierarchical clustering")
+        message("Performing hierarchical clustering")
         original.tree <- fastcluster::hclust(as.dist(dist_mat), 
             method = "ward.D2")
         # the original clusters to be used as the reference
-        print("Finding clustering information")
+        message("Finding clustering information")
         original.clusters <- unname(cutreeDynamic(original.tree, 
             distM = as.matrix(dist_mat), verbose = 0))
         original.tree$labels <- original.clusters
@@ -308,13 +308,13 @@ sub_clustering <- function(object = NULL, ngenes = 1500,
             distM = as.matrix(dist_mat), minSplitHeight = windows[i],
             verbose = 0))
         
-        print(paste0("writing clustering result for run ", i))
+        message(paste0("writing clustering result for run ", i))
         clustering_param[[i]] <- list(toadd)
         names(clustering_param[[i]]) <- namelist
     }
     
     names(clustering_param[[i]]) <- "cluster_ref"
-    print("Done clustering, moving to stability calculation...")
+    message("Done clustering, moving to stability calculation...")
     return(list(list_clusters = clustering_param, tree = original.tree, 
         cluster_ref = original.clusters, 
         cellsRemoved = SelectCluster_out$cellsRemoved, 
@@ -499,7 +499,7 @@ find_stability <- function(list_clusters = NULL, cluster_ref = NULL) {
     
     
     run_RandIdx$stability_count <- counter_adjusted
-    print("Done calculating stability...")
+    message("Done calculating stability...")
     return(run_RandIdx)
     #---------------------------------------------------------------------------
     # Done stability score of the cluster results
@@ -536,7 +536,7 @@ find_stability <- function(list_clusters = NULL, cluster_ref = NULL) {
 
 find_optimal_stability <- function(list_clusters, run_RandIdx, bagging = FALSE, 
     windows = seq(0.025:1, by = 0.025)) {
-    print("Start finding optimal clustering...")
+    message("Start finding optimal clustering...")
     
     window_param <- length(windows)
     
@@ -610,7 +610,7 @@ find_optimal_stability <- function(list_clusters, run_RandIdx, bagging = FALSE,
             OptimalClust = KeyStats$Cluster_count[optimal_param], 
             KeyStats = KeyStats)
     } else {
-        print("Done finding optimal clustering...")
+        message("Done finding optimal clustering...")
         # Final result
         output <- list(StabilityPlot = p, KeyStats = KeyStats, 
             OptimalRes = KeyStats$Height[optimal_param], 
@@ -921,7 +921,7 @@ plot_optimal_CORE <- function(original_tree, optimal_cluster = NULL,
         values <- col_vector
     }
     
-    print("Ordering and assigning labels...")
+    message("Ordering and assigning labels...")
     dendro.obj <- as.dendrogram(original_tree)
     # Sort clusters by order in dendrogram
     ordered.clusters <- optimal_cluster[stats::order.dendrogram(dendro.obj)]
@@ -939,8 +939,8 @@ plot_optimal_CORE <- function(original_tree, optimal_cluster = NULL,
     for (i in 2:length(dendro.labels)) {
         index_to_overwriteNA[i] <- sum(dendro.labels[1:i - 1]) + 
             round(dendro.labels[i]/2)
-        print(i)
-        print(index_to_overwriteNA)
+        message(i)
+        message(index_to_overwriteNA)
     }
     
     branch_names <- rep(NA, length(optimal_cluster))
@@ -957,9 +957,9 @@ plot_optimal_CORE <- function(original_tree, optimal_cluster = NULL,
     
     # make branch lines bigger
     coloured.dendro <- dendextend::set(coloured.dendro, "branches_lwd", 2)
-    print("Plotting the colored dendrogram now....")
+    message("Plotting the colored dendrogram now....")
     plot(coloured.dendro)
-    print("Plotting the bar underneath now....")
+    message("Plotting the bar underneath now....")
     dendro.colours <- unique(dendextend::get_leaves_branches_col(
         coloured.dendro))
     coloured.order <- stats::order.dendrogram(coloured.dendro)

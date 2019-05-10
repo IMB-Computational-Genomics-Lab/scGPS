@@ -18,7 +18,7 @@
 PCA <- function(expression.matrix = NULL, ngenes = 1500, scaling = TRUE, 
     npcs = 50) {
     
-    print(paste0("Preparing PCA inputs using the top ", as.integer(ngenes),
+    message(paste0("Preparing PCA inputs using the top ", as.integer(ngenes),
         " genes ..."))
     subset.matrix <- top_var(expression.matrix = expression.matrix,
         ngenes = ngenes)
@@ -29,7 +29,7 @@ PCA <- function(expression.matrix = NULL, ngenes = 1500, scaling = TRUE,
     #     CalcColVariance(transposed.matrix) > 0]
     
     # Compute PCA
-    print("Computing PCA values...")
+    message("Computing PCA values...")
     if (scaling == TRUE) {
         pca.result <- stats::prcomp(pca.input.matrix, scale = TRUE)
     } else {
@@ -65,7 +65,7 @@ tSNE <- function(expression.mat = NULL, topgenes = 1500, scale = TRUE,
     reducedDat <- PCA(expression.matrix = expression.mat, 
         ngenes = topgenes, scaling = scale)
     reducedDat <- reducedDat$reduced_dat
-    print("Running tSNE ...")
+    message("Running tSNE ...")
     tsne <- Rtsne::Rtsne(reducedDat, pca = TRUE, perplexity = perp, 
         theta = thet, ignore_duplicates = TRUE)
     return(tsne$Y)
