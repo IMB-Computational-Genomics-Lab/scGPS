@@ -444,8 +444,10 @@ predicting <- function(listData = NULL, cluster_mixedpop2 = NULL,
         ori_dat_2 <- t(apply(ori_dat_2, 1, standardizing))
     }
     
-    list_predict_clusters_ElasticNet <- list()
-    list_predict_clusters_LDA <- list()
+    list_predict_clusters_ElasticNet <- vector(mode = "list",
+        length = length(unique(my.clusters)))
+    list_predict_clusters_LDA <- vector(mode = "list",
+        length = length(unique(my.clusters)))
     
     for (clust in unique(my.clusters)) {
         message(paste0("predicting from source to target subpop ", clust, "..."))

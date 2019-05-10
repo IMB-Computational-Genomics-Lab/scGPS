@@ -50,7 +50,7 @@ CORE_bagging <- function(mixedpop = NULL, bagging_run = 20,
         PCA = PCA, nPCs = nPCs)
     
     # find the optimal stability for each of the bagging runs
-    optimal_stab <- list()
+    optimal_stab <- vector(mode = "list", length = bagging_run)
     for (i in 1:bagging_run) {
         stab_df <- find_stability(list_clusters = 
             cluster_all$bootstrap_clusters[[i]][[1]], 
@@ -260,7 +260,7 @@ clustering_bagging <- function(object = NULL, ngenes = 1500,
     # function that performs clustering for each window
     clustering_windows <- function(tree = original.tree, dist_mat = dist_mat) {
         
-        clustering_param <- list()
+        clustering_param <- vector(mode = "list", length = length(windows))
         
         for (i in 1:length(windows)) {
             
@@ -281,7 +281,7 @@ clustering_bagging <- function(object = NULL, ngenes = 1500,
     # cluster a subsample for each of the bagging runs
     message(paste0("Running ", bagging_run, " bagging runs, with ", 
         subsample_proportion, " subsampling..."))
-    bootstrap_list <- list()
+    bootstrap_list <- vector(mode = "list", length = bagging_run)
     for (i in 1:bagging_run) {
         # subsample the distance matrix for every bagging run
         dist_mat_bootstrap_row_idx <- sample(1:nrow(exprs_mat_t), 

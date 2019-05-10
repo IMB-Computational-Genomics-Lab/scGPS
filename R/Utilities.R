@@ -136,7 +136,8 @@ find_markers <- function(expression_matrix = NULL, cluster = NULL,
     sharing_Mode = "maximum") {
     DE_exprsMat <- round(expression_matrix + 1)
     
-    DE_results <- list()
+    DE_results <- vector(mode = "list", 
+        length = length(unique(selected_cluster)))
     for (cl_id in unique(selected_cluster)) {
         # arrange clusters and exprs matrix
         cl_index <- which(as.character(cluster) == as.character(cl_id))

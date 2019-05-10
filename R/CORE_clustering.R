@@ -217,7 +217,7 @@ clustering <- function(object = NULL, ngenes = 1500,
     original.clusters <- firstRound_out$cluster_ref
     dist_mat <- firstRound_out$dist_mat
     
-    clustering_param <- list()
+    clustering_param <- vector(mode = "list", length = length(windows))
     for (i in 1:length(windows)) {
         
         namelist = paste0("window", windows[i])
@@ -300,7 +300,7 @@ sub_clustering <- function(object = NULL, ngenes = 1500,
     original.clusters <- SelectCluster_out$sub_clustering_out$cluster_ref
     dist_mat <- SelectCluster_out$sub_clustering_out$dist_mat
     
-    clustering_param <- list()
+    clustering_param <- vector(mode = "list", length = length(windows))
     for (i in 1:length(windows)) {
         
         namelist = paste0("window", windows[i])
@@ -411,8 +411,9 @@ find_stability <- function(list_clusters = NULL, cluster_ref = NULL) {
     #---------------------------------------------------------------------------
     # End function for calculating randindex
     #---------------------------------------------------------------------------
-    cluster_index_consec <- list()
-    cluster_index_ref <- list()
+    cluster_index_consec <- vector(mode = "list", 
+        length = length(list_clusters))
+    cluster_index_ref <- vector(mode = "list", length = length(list_clusters))
     
     cluster_index_consec[[1]] <- 1
     cluster_index_ref[[1]] <- rand_index(table(unlist(list_clusters[[1]]), 
@@ -775,9 +776,9 @@ plot_CORE <- function(original.tree, list_clusters = NULL,
         if (!is.null(rowText)) {
             rowTextAlignment = match.arg(rowTextAlignment)
             rowText = as.matrix(rowText)
-            textPos = list()
-            textPosY = list()
-            textLevs = list()
+            textPos = vector(mode = "list", length = nTextRows)
+            textPosY = vector(mode = "list", length = nTextRows)
+            textLevs = vector(mode = "list", length = nTextRows)
             for (tr in 1:nTextRows) {
                 charHeight = max(strheight(rowText[, tr], cex = cex.rowText))
                 width1 = rowWidths[physicalTextRow[tr]]
