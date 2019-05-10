@@ -9,7 +9,7 @@
 #' @return a list containing PCA results and variance explained
 #' @examples
 #' day2 <- sample1
-#' mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, 
+#' mixedpop1 <-new_scGPS_object(ExpressionMatrix = day2$dat2_counts, 
 #'     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
 #' t <-PCA(expression.matrix=assay(mixedpop1))
 #'
@@ -20,7 +20,7 @@ PCA <- function(expression.matrix = NULL, ngenes = 1500, scaling = TRUE,
     
     print(paste0("Preparing PCA inputs using the top ", as.integer(ngenes),
         " genes ..."))
-    subset.matrix <- topvar(expression.matrix = expression.matrix,
+    subset.matrix <- top_var(expression.matrix = expression.matrix,
         ngenes = ngenes)
     
     # transpose to perform pca for cells in rows
@@ -56,7 +56,7 @@ PCA <- function(expression.matrix = NULL, ngenes = 1500, scaling = TRUE,
 #' @return a tSNE reduced matrix containing three tSNE dimensions
 #' @examples
 #' day2 <- sample1
-#' mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, 
+#' mixedpop1 <-new_scGPS_object(ExpressionMatrix = day2$dat2_counts, 
 #'     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
 #' t <-tSNE(expression.mat = assay(mixedpop1))
 #'

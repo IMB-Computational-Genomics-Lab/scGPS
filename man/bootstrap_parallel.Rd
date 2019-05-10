@@ -42,10 +42,10 @@ same as bootstrap, but with an multicore option
 }
 \examples{
 day2 <- sample1
-mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, 
+mixedpop1 <-new_scGPS_object(ExpressionMatrix = day2$dat2_counts, 
     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
 day5 <- sample2
-mixedpop2 <-NewscGPS(ExpressionMatrix = day5$dat5_counts, 
+mixedpop2 <-new_scGPS_object(ExpressionMatrix = day5$dat5_counts, 
     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 genes <-GeneList
 genes <-genes$Merged_unique

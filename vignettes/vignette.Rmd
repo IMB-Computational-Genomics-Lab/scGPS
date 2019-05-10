@@ -60,12 +60,12 @@ library(scGPS)
 library(scGPS)
 
 day2 <- sample1
-mixedpop1 <- NewscGPS(ExpressionMatrix = day2$dat2_counts,
+mixedpop1 <- new_scGPS_object(ExpressionMatrix = day2$dat2_counts,
     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
 
 # load mixed population 2 (loaded from sample2 dataset, named it as day5)
 day5 <- sample2
-mixedpop2 <- NewscGPS(ExpressionMatrix = day5$dat5_counts,
+mixedpop2 <- new_scGPS_object(ExpressionMatrix = day5$dat5_counts,
     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 
 ```
@@ -136,7 +136,7 @@ summary_deviance(object = LSOLDA_dat)
 # cellnames <- colnames(day5$dat5_counts)
 # cluster <-day5$dat5_clusters
 # cellnames <-data.frame("Cluster"=cluster, "cellBarcodes" = cellnames)
-# mixedpop2 <-NewscGPS(ExpressionMatrix = day5$dat5_counts,
+# mixedpop2 <-new_scGPS_object(ExpressionMatrix = day5$dat5_counts,
 #                      GeneMetadata = day5$dat5geneInfo, CellMetadata = cellnames)
 # 
 # CORE_cluster <- CORE(mixedpop2, remove_outlier = c(0), PCA=FALSE)
@@ -173,7 +173,7 @@ summary_deviance(object = LSOLDA_dat)
 # cellnames <- colnames(day5$dat5_counts)
 # cluster <-day5$dat5_clusters
 # cellnames <-data.frame("Cluster"=cluster, "cellBarcodes" = cellnames)
-# mixedpop2 <-NewscGPS(ExpressionMatrix = day5$dat5_counts,
+# mixedpop2 <-new_scGPS_object(ExpressionMatrix = day5$dat5_counts,
 #                      GeneMetadata = day5$dat5geneInfo, CellMetadata = cellnames )
 # 
 # SCORE_test <- CORE_bagging(mixedpop2, remove_outlier = c(0), PCA=FALSE,
@@ -226,7 +226,7 @@ summary_deviance(object = LSOLDA_dat)
 # genes <-genes$Merged_unique
 # 
 # #the gene list can also be objectively identified by differential expression
-# #analysis cluster information is requied for findMarkers. Here, we use
+# #analysis cluster information is requied for find_markers. Here, we use
 # #CORE results.
 # 
 # #colData(mixedpop2)[,1] <- unlist(SCORE_test$Cluster[SCORE_test$optimal_index])
@@ -234,7 +234,7 @@ summary_deviance(object = LSOLDA_dat)
 # suppressMessages(library(locfit))
 # suppressMessages(library(DESeq))
 # 
-# DEgenes <- findMarkers(expression_matrix=assay(mixedpop2),
+# DEgenes <- find_markers(expression_matrix=assay(mixedpop2),
 #                              cluster = colData(mixedpop2)[,1],
 #                              selected_cluster=unique(colData(mixedpop2)[,1]))
 # 

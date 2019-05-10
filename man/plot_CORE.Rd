@@ -26,7 +26,7 @@ day5 <- sample2
 cellnames <- colnames(day5$dat5_counts)
 cluster <-day5$dat5_clusters
 cellnames <-data.frame('Cluster'=cluster, 'cellBarcodes' = cellnames)
-mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts,
+mixedpop2 <-new_summarized_scGPS_object(ExpressionMatrix = day5$dat5_counts,
     GeneMetadata = day5$dat5geneInfo, CellMetadata = cellnames)
 CORE_cluster <- CORE(mixedpop2, remove_outlier = c(0))
 plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster)

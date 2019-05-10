@@ -29,7 +29,7 @@
 #' cellnames <- colnames(day5$dat5_counts)
 #' cluster <-day5$dat5_clusters
 #' cellnames <-data.frame('Cluster'=cluster, 'cellBarcodes' = cellnames)
-#' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, 
+#' mixedpop2 <-new_summarized_scGPS_object(ExpressionMatrix = day5$dat5_counts, 
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 #' test <- CORE(mixedpop2, remove_outlier = c(0), PCA=FALSE, nPCs=20,
 #'     ngenes=1500)
@@ -42,9 +42,9 @@ CORE <- function(mixedpop = NULL, windows = seq(0.025:1, by = 0.025),
         remove_outlier = remove_outlier, 
         nRounds = nRounds, PCA = PCA, nPCs = nPCs)
     
-    stab_df <- FindStability(list_clusters = cluster_all$list_clusters,
+    stab_df <- find_stability(list_clusters = cluster_all$list_clusters,
         cluster_ref = cluster_all$cluster_ref)
-    optimal_stab <- FindOptimalStability(
+    optimal_stab <- find_optimal_stability(
         list_clusters = cluster_all$list_clusters, stab_df, windows = windows)
     
     return(list(Cluster = cluster_all$list_clusters, tree = cluster_all$tree,
@@ -52,9 +52,9 @@ CORE <- function(mixedpop = NULL, windows = seq(0.025:1, by = 0.025),
         cellsForClustering = cluster_all$cellsForClustering))
 }
 
-#' Subclustering (optional) after running CORE 'test'
+#' sub_clustering (optional) after running CORE 'test'
 #'
-#' @description  CORE_Subcluster allows re-cluster the CORE clustering 
+#' @description  CORE_subcluster allows re-cluster the CORE clustering 
 #' result
 #' @param mixedpop is a \linkS4class{SingleCellExperiment} object from the train
 #' mixed population
@@ -66,22 +66,22 @@ CORE <- function(mixedpop = NULL, windows = seq(0.025:1, by = 0.025),
 #' selected optimal resolution
 #' @examples
 #' day5 <- sample2
-#' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts,
+#' mixedpop2 <-new_summarized_scGPS_object(ExpressionMatrix = day5$dat5_counts,
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 #' test <- CORE(mixedpop2,remove_outlier= c(0))
 #' @export
 #' @author Quan Nguyen, 2017-11-25
 
-CORE_Subcluster <- function(mixedpop = NULL, windows = seq(0.025:1, 
+CORE_subcluster <- function(mixedpop = NULL, windows = seq(0.025:1, 
     by = 0.025), select_cell_index = NULL, ngenes = 1500) {
     
-    cluster_all <- SubClustering(object = mixedpop, windows = windows, 
+    cluster_all <- sub_clustering(object = mixedpop, windows = windows, 
         select_cell_index = select_cell_index, ngenes = ngenes)
     
-    stab_df <- FindStability(list_clusters = cluster_all$list_clusters, 
+    stab_df <- find_stability(list_clusters = cluster_all$list_clusters, 
         cluster_ref = cluster_all$cluster_ref)
     
-    optimal_stab <- FindOptimalStability(
+    optimal_stab <- find_optimal_stability(
         list_clusters = cluster_all$list_clusters, stab_df)
     
     return(list(Cluster = cluster_all$list_clusters, tree = cluster_all$tree, 
@@ -109,7 +109,7 @@ CORE_Subcluster <- function(mixedpop = NULL, windows = seq(0.025:1,
 #' @author Quan Nguyen, 2017-11-25
 #' @examples
 #' day5 <- sample2
-#' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, 
+#' mixedpop2 <-new_summarized_scGPS_object(ExpressionMatrix = day5$dat5_counts, 
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 #' test <-clustering(mixedpop2, remove_outlier = c(0))
 
@@ -119,11 +119,11 @@ clustering <- function(object = NULL, ngenes = 1500,
     
     # function for the highest resolution clustering (i.e. no window applied, 
     # no cell removal)
-    firstRoundClustering <- function(object = NULL) {
+    first_round_clustering <- function(object = NULL) {
         exprs_mat <- assay(object)
         # take the top variable genes
         print("Identifying top variable genes")
-        exprs_mat_topVar <- topvar(exprs_mat, ngenes = ngenes)
+        exprs_mat_topVar <- top_var(exprs_mat, ngenes = ngenes)
         # exprs_mat_t <- t(exprs_mat_topVar)
         if (PCA == TRUE) {
             # perform PCA dimensionality reduction
@@ -155,7 +155,7 @@ clustering <- function(object = NULL, ngenes = 1500,
     }
     
     # function to remove outlier clusters
-    removeOutlierCluster <- function(object = object, 
+    remove_outlier_cluster <- function(object = object, 
         remove_outlier = remove_outlier, nRounds = nRounds) {
         
         # Initial Message to the user
@@ -171,7 +171,7 @@ clustering <- function(object = NULL, ngenes = 1500,
         cells_to_remove <- c()
         
         while (i <= nRounds) {
-            filter_out <- firstRoundClustering(objectTemp)
+            filter_out <- first_round_clustering(objectTemp)
             cluster_toRemove <- which(
                 filter_out$cluster_ref %in% remove_outlier)
             if (length(cluster_toRemove) > 0) {
@@ -187,7 +187,7 @@ clustering <- function(object = NULL, ngenes = 1500,
             }
         }
         
-        filter_out <- firstRoundClustering(objectTemp)
+        filter_out <- first_round_clustering(objectTemp)
         cluster_toRemove <- which(filter_out$cluster_ref %in% remove_outlier)
         if (length(cluster_toRemove) > 0) {
             print(paste0("Found ", length(cluster_toRemove), 
@@ -209,7 +209,7 @@ clustering <- function(object = NULL, ngenes = 1500,
     }
     
     
-    firstRoundPostRemoval <- removeOutlierCluster(object = object, 
+    firstRoundPostRemoval <- remove_outlier_cluster(object = object, 
         remove_outlier = remove_outlier, nRounds = nRounds)
     firstRound_out <- firstRoundPostRemoval$firstRound_out
     # return variables for the next step
@@ -239,7 +239,7 @@ clustering <- function(object = NULL, ngenes = 1500,
     
 }
 
-#' Subclustering for selected cells
+#' sub_clustering for selected cells
 #'
 #' @description  performs 40 clustering runs or more depending on windows
 #' @param object is a \linkS4class{SingleCellExperiment} object from the
@@ -253,20 +253,20 @@ clustering <- function(object = NULL, ngenes = 1500,
 #' @author Quan Nguyen, 2018-01-31
 #' @examples
 #' day5 <- sample2
-#' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, 
+#' mixedpop2 <-new_summarized_scGPS_object(ExpressionMatrix = day5$dat5_counts, 
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
-#' test_SubClustering <-SubClustering(mixedpop2,
+#' test_sub_clustering <-sub_clustering(mixedpop2,
 #'     select_cell_index = c(1:100))
 
 
-SubClustering <- function(object = NULL, ngenes = 1500, 
+sub_clustering <- function(object = NULL, ngenes = 1500, 
     windows = seq(0.025:1, by = 0.025), select_cell_index = NULL) {
     
     print("Calculating distance matrix")
     # function for the highest resolution clustering (i.e. no window applied)
-    Clustering <- function(object = NULL) {
+    top_level_clustering <- function(object = NULL) {
         exprs_mat <- assay(object)
-        exprs_mat_topVar <- topvar(exprs_mat, ngenes = ngenes)
+        exprs_mat_topVar <- top_var(exprs_mat, ngenes = ngenes)
         # take the top variable genes
         exprs_mat_t <- t(exprs_mat_topVar)
         dist_mat <- rcpp_parallel_distance(exprs_mat_t)
@@ -282,23 +282,23 @@ SubClustering <- function(object = NULL, ngenes = 1500,
             dist_mat = dist_mat))
     }
     
-    Select_out <- function(object = NULL, select_cell_index = NULL) {
+    select_out <- function(object = NULL, select_cell_index = NULL) {
         
-        Clustering_out <- Clustering(object[, select_cell_index])
+        Clustering_out <- top_level_clustering(object[, select_cell_index])
         
-        return(list(SubClustering_out = Clustering_out, 
+        return(list(sub_clustering_out = Clustering_out, 
             cellsRemoved = colnames(object[, -select_cell_index]), 
             cellsForClustering = colnames(object[, select_cell_index])))
     }
     
     
-    SelectCluster_out <- Select_out(object = object, 
+    SelectCluster_out <- select_out(object = object, 
         select_cell_index = select_cell_index)
     
     # return variables for the next step
-    original.tree <- SelectCluster_out$SubClustering_out$tree
-    original.clusters <- SelectCluster_out$SubClustering_out$cluster_ref
-    dist_mat <- SelectCluster_out$SubClustering_out$dist_mat
+    original.tree <- SelectCluster_out$sub_clustering_out$tree
+    original.clusters <- SelectCluster_out$sub_clustering_out$cluster_ref
+    dist_mat <- SelectCluster_out$sub_clustering_out$dist_mat
     
     clustering_param <- list()
     for (i in 1:length(windows)) {
@@ -329,14 +329,14 @@ SubClustering <- function(object = NULL, ngenes = 1500,
 #' (adapted from the function by Steve Horvath and Luohua Jiang, UCLA, 2003)
 #' @param tab a table containing different clustering results in rows
 #' @param adjust a logical of whether to use the adjusted rand index
-#' @return a randIndex value
+#' @return a rand_index value
 #' @examples
 #' day5 <- sample2
-#' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts,
+#' mixedpop2 <-new_summarized_scGPS_object(ExpressionMatrix = day5$dat5_counts,
 #' GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 #' cluster_all <-clustering(object=mixedpop2)
 #'
-#' randIndex(table(unlist(cluster_all$list_clusters[[1]]), 
+#' rand_index(table(unlist(cluster_all$list_clusters[[1]]), 
 #' cluster_all$cluster_ref))
 #'
 #' @export
@@ -344,8 +344,8 @@ SubClustering <- function(object = NULL, ngenes = 1500,
 #'
 
 
-randIndex <- function(tab, adjust = TRUE) {
-    choosenew <- function(n, k) {
+rand_index <- function(tab, adjust = TRUE) {
+    choose_new <- function(n, k) {
         n <- c(n)
         out1 <- rep(0, length(n))
         for (i in c(1:length(n))) {
@@ -367,22 +367,22 @@ randIndex <- function(tab, adjust = TRUE) {
     for (i in 1:m) {
         c <- 0
         for (j in 1:n) {
-            a <- a + choosenew(tab[i, j], 2)
+            a <- a + choose_new(tab[i, j], 2)
             nj <- sum(tab[, j])
-            c <- c + choosenew(nj, 2)
+            c <- c + choose_new(nj, 2)
         }
         ni <- sum(tab[i, ])
-        b <- b + choosenew(ni, 2)
+        b <- b + choose_new(ni, 2)
         nn <- nn + ni
     }
     if (adjust) {
-        d <- choosenew(nn, 2)
+        d <- choose_new(nn, 2)
         adrand <- (a - (b * c)/d)/(0.5 * (b + c) - (b * c)/d)
         adrand
     } else {
         b <- b - a
         c <- c - a
-        d <- choosenew(nn, 2) - a - b - c
+        d <- choose_new(nn, 2) - a - b - c
         rand <- (a + d)/(a + b + c + d)
         rand
     }
@@ -394,19 +394,19 @@ randIndex <- function(tab, adjust = TRUE) {
 #' adjusted Randindex
 #' @param list_clusters is a object from the iterative clustering runs
 #' @param cluster_ref is a object from the reference cluster
-#' @return a \code{data frame} with stability scores and randIndex results
+#' @return a \code{data frame} with stability scores and rand_index results
 #' @examples
 #' day5 <- sample2
-#' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, 
+#' mixedpop2 <-new_summarized_scGPS_object(ExpressionMatrix = day5$dat5_counts, 
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 #' cluster_all <-clustering(object=mixedpop2)
-#' stab_df <- FindStability(list_clusters=cluster_all$list_clusters,
+#' stab_df <- find_stability(list_clusters=cluster_all$list_clusters,
 #'                          cluster_ref = cluster_all$cluster_ref)
 #' @export
 #' @author Quan Nguyen, 2017-11-25
 #'
 
-FindStability <- function(list_clusters = NULL, cluster_ref = NULL) {
+find_stability <- function(list_clusters = NULL, cluster_ref = NULL) {
     
     #---------------------------------------------------------------------------
     # End function for calculating randindex
@@ -415,13 +415,13 @@ FindStability <- function(list_clusters = NULL, cluster_ref = NULL) {
     cluster_index_ref <- list()
     
     cluster_index_consec[[1]] <- 1
-    cluster_index_ref[[1]] <- randIndex(table(unlist(list_clusters[[1]]), 
+    cluster_index_ref[[1]] <- rand_index(table(unlist(list_clusters[[1]]), 
         cluster_ref))
     
     for (i in 2:(length(list_clusters))) {
-        cluster_index_consec[[i]] <- randIndex(table(unlist(list_clusters[[i]]),
+        cluster_index_consec[[i]] <- rand_index(table(unlist(list_clusters[[i]]),
             unlist(list_clusters[[i - 1]])))
-        cluster_index_ref[[i]] <- randIndex(table(unlist(list_clusters[[i]]), 
+        cluster_index_ref[[i]] <- rand_index(table(unlist(list_clusters[[i]]), 
             cluster_ref))
     }
     
@@ -524,17 +524,17 @@ FindStability <- function(list_clusters = NULL, cluster_ref = NULL) {
 #' @author Quan Nguyen, 2017-11-25
 #' @examples
 #' day5 <- sample2
-#' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, 
+#' mixedpop2 <-new_summarized_scGPS_object(ExpressionMatrix = day5$dat5_counts, 
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 #' cluster_all <-clustering(object=mixedpop2)
-#' stab_df <- FindStability(list_clusters=cluster_all$list_clusters,
+#' stab_df <- find_stability(list_clusters=cluster_all$list_clusters,
 #'                          cluster_ref = cluster_all$cluster_ref)
-#' optimal_stab <- FindOptimalStability(list_clusters = 
+#' optimal_stab <- find_optimal_stability(list_clusters = 
 #'     cluster_all$list_clusters, stab_df, bagging = FALSE)
 #'
 
 
-FindOptimalStability <- function(list_clusters, run_RandIdx, bagging = FALSE, 
+find_optimal_stability <- function(list_clusters, run_RandIdx, bagging = FALSE, 
     windows = seq(0.025:1, by = 0.025)) {
     print("Start finding optimal clustering...")
     
@@ -640,7 +640,7 @@ FindOptimalStability <- function(list_clusters, run_RandIdx, bagging = FALSE,
 #' cellnames <- colnames(day5$dat5_counts)
 #' cluster <-day5$dat5_clusters
 #' cellnames <-data.frame('Cluster'=cluster, 'cellBarcodes' = cellnames)
-#' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts,
+#' mixedpop2 <-new_summarized_scGPS_object(ExpressionMatrix = day5$dat5_counts,
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = cellnames)
 #' CORE_cluster <- CORE(mixedpop2, remove_outlier = c(0))
 #' plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster)
@@ -668,7 +668,7 @@ plot_CORE <- function(original.tree, list_clusters = NULL,
     # remove branch labels
     original.tree$labels <- rep("", length(original.tree$labels))
     
-    plotDendroAndColors <- function(dendro, colors, groupLabels = NULL, 
+    plot_dendro_and_colours <- function(dendro, colors, groupLabels = NULL, 
         rowText = NULL, rowTextAlignment = c("left", "center", "right"), 
         rowTextIgnore = NULL, textPositions = NULL, setLayout = TRUE, 
         autoColorHeight = TRUE, colorHeight = 0.2, rowWidths = NULL, 
@@ -697,7 +697,7 @@ plot_CORE <- function(original.tree, list_clusters = NULL,
         if (!is.null(abHeight)) 
             abline(h = abHeight, col = abCol)
         par(mar = c(marAll[1], marAll[2], 0, marAll[4]))
-        plotColorUnderTree(dendro, colors, groupLabels, 
+        plot_colour_under_tree(dendro, colors, groupLabels, 
             cex.rowLabels = cex.colorLabels, rowText = rowText, 
             rowTextAlignment = rowTextAlignment, rowTextIgnore = rowTextIgnore, 
             textPositions = textPositions, cex.rowText = cex.rowText, 
@@ -706,15 +706,15 @@ plot_CORE <- function(original.tree, list_clusters = NULL,
             par(mar = oldMar)
     }
     #---------------------------------------------------------------------------
-    # plotColorUnderTree
+    # plot_colour_under_tree
     #---------------------------------------------------------------------------
-    plotColorUnderTree <- function(dendro, colors, rowLabels = NULL, 
+    plot_colour_under_tree <- function(dendro, colors, rowLabels = NULL, 
         rowWidths = NULL, rowText = NULL, 
         rowTextAlignment = c("left", "center", "right"), rowTextIgnore = NULL, 
         textPositions = NULL, addTextGuide = TRUE, cex.rowLabels = 1, 
         cex.rowText = 0.8, ...) {
         
-        plotOrderedColors(dendro$order, colors = colors, rowLabels = rowLabels, 
+        plot_ordered_colours(dendro$order, colors = colors, rowLabels = rowLabels, 
             rowWidths = rowWidths, rowText = rowText, 
             rowTextAlignment = rowTextAlignment, rowTextIgnore = rowTextIgnore, 
             textPositions = textPositions, addTextGuide = addTextGuide, 
@@ -722,9 +722,9 @@ plot_CORE <- function(original.tree, list_clusters = NULL,
             startAt = 0, ...)
     }
     #---------------------------------------------------------------------------
-    # plotOrderedColors
+    # plot_ordered_colours
     #---------------------------------------------------------------------------
-    plotOrderedColors <- function(order, colors, rowLabels = NULL, 
+    plot_ordered_colours <- function(order, colors, rowLabels = NULL, 
         rowWidths = NULL, rowText = NULL, 
         rowTextAlignment = c("left", "center", "right"), rowTextIgnore = NULL, 
         textPositions = NULL, addTextGuide = TRUE, cex.rowLabels = 1, 
@@ -758,7 +758,7 @@ plot_CORE <- function(original.tree, list_clusters = NULL,
             rowWidths = rep(ystep, nColorRows + nTextRows)
         } else {
             if (length(rowWidths) != nRows) 
-                stop(paste0("plotOrderedColors: Length of 'rowWidths' must ",
+                stop(paste0("plot_ordered_colours: Length of 'rowWidths' must ",
                     "equal the total number of rows."))
             rowWidths = rowWidths/sum(rowWidths)
         }
@@ -877,7 +877,7 @@ plot_CORE <- function(original.tree, list_clusters = NULL,
     }
     colnames(col_all2) <- gsub("V", "", colnames(col_all2))
     
-    plotDendroAndColors(original.tree, col_all2)
+    plot_dendro_and_colours(original.tree, col_all2)
     
 }
 
@@ -900,7 +900,7 @@ plot_CORE <- function(original.tree, list_clusters = NULL,
 #' @author Quan Nguyen, 2017-11-25
 #' @examples
 #' day5 <- sample2
-#' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, 
+#' mixedpop2 <-new_summarized_scGPS_object(ExpressionMatrix = day5$dat5_counts, 
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 #' CORE_cluster <- CORE(mixedpop2, remove_outlier = c(0))
 #' key_height <- CORE_cluster$optimalClust$KeyStats$Height

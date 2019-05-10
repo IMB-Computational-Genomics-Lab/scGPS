@@ -35,7 +35,7 @@ performs 40 clustering runs or more depending on windows
 }
 \examples{
 day5 <- sample2
-mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, 
+mixedpop2 <-new_summarized_scGPS_object(ExpressionMatrix = day5$dat5_counts, 
     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 test <-clustering(mixedpop2, remove_outlier = c(0))
 }

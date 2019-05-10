@@ -6,16 +6,16 @@
 #' @param ngenes number of genes used for clustering calculations.
 #' @examples
 #' day2 <- sample1
-#' mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, 
+#' mixedpop1 <-new_scGPS_object(ExpressionMatrix = day2$dat2_counts, 
 #'     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
-#' SortedExprsMat <-topvar(expression.matrix=assay(mixedpop1))
+#' SortedExprsMat <-top_var(expression.matrix=assay(mixedpop1))
 
-topvar <- function(expression.matrix = NULL, ngenes = 1500) {
-    CalcRowVariance <- function(x) {
+top_var <- function(expression.matrix = NULL, ngenes = 1500) {
+    calc_row_variance <- function(x) {
         row.variance <- rowSums((x - rowMeans(x))^2)/(dim(x)[2] - 1)
         return(row.variance)
     }
-    gene.variance <- CalcRowVariance(expression.matrix)
+    gene.variance <- calc_row_variance(expression.matrix)
     names(gene.variance) <- rownames(expression.matrix)
     sorted.gene.variance <- gene.variance[order(gene.variance, 
         decreasing = TRUE)]
@@ -38,19 +38,19 @@ topvar <- function(expression.matrix = NULL, ngenes = 1500) {
 #' @return a matrix with the top 20 CIDR dimensions
 #' @examples
 #' day2 <- sample1
-#' mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, 
+#' mixedpop1 <-new_scGPS_object(ExpressionMatrix = day2$dat2_counts, 
 #'     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
 #' #CIDR_dim <-CIDR(expression.matrix=assay(mixedpop1))
-#' #p <- plotReduced(CIDR_dim, color_fac = factor(colData(mixedpop1)[,1]),
+#' #p <- plot_reduced(CIDR_dim, color_fac = factor(colData(mixedpop1)[,1]),
 #' #     palletes =1:length(unique(colData(mixedpop1)[,1])))
 #' #plot(p)
 #' tSNE_dim <-tSNE(expression.mat=assay(mixedpop1))
-#' p2 <- plotReduced(tSNE_dim, color_fac = factor(colData(mixedpop1)[,1]),
+#' p2 <- plot_reduced(tSNE_dim, color_fac = factor(colData(mixedpop1)[,1]),
 #'     palletes =1:length(unique(colData(mixedpop1)[,1])))
 #' plot(p2)
 #'
 
-plotReduced <- function(reduced_dat, color_fac = NULL, dims = c(1, 2), 
+plot_reduced <- function(reduced_dat, color_fac = NULL, dims = c(1, 2), 
     dimNames = c("Dim1", "Dim2"), palletes = NULL, legend_title = "Cluster") {
     reduced_dat_toPlot <- as.data.frame(reduced_dat[, dims])
     sample_num <- length(unique(color_fac))
@@ -111,12 +111,12 @@ plotReduced <- function(reduced_dat, color_fac = NULL, dims = c(1, 2),
 #' @author Quan Nguyen, 2017-11-25
 #' @examples
 #' day2 <- sample1
-#' mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, 
+#' mixedpop1 <-new_scGPS_object(ExpressionMatrix = day2$dat2_counts, 
 #'     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
 #' # depending on the data, the DESeq::estimateDispersions function requires
 #' # suitable fitType
 #'# and dispersion_method options
-#'DEgenes <- findMarkers(expression_matrix=assay(mixedpop1),
+#'DEgenes <- find_markers(expression_matrix=assay(mixedpop1),
 #'                         cluster = colData(mixedpop1)[,1],
 #'                         selected_cluster=c(1), #can also run for more
 #'                         #than one clusters, e.g.selected_cluster = c(1,2)
@@ -128,7 +128,7 @@ plotReduced <- function(reduced_dat, color_fac = NULL, dims = c(1, 2),
 
 
 
-findMarkers <- function(expression_matrix = NULL, cluster = NULL, 
+find_markers <- function(expression_matrix = NULL, cluster = NULL, 
     selected_cluster = NULL, fitType = "local", 
     dispersion_method = "per-condition",
     sharing_Mode = "maximum") {
@@ -256,9 +256,11 @@ annotate <- function(DEgeneList, pvalueCutoff = 0.05, gene_symbol = TRUE,
 }
 
 
-#' Add imports
-#' @description temp function to import packages to namespace using devtools
+#' add_import
+#'
+#' @description temp function to import packages to namespace using devtools/roxygen
 #' @useDynLib scGPS
+#' @exportPattern '^[[:alpha:]]+'
 #' @importFrom Rcpp evalCpp
 #' @import glmnet
 #' @import caret

@@ -52,7 +52,7 @@ cellnames<-colnames(day5$dat5_counts)
 cluster <-day5$dat5_clusters
 cellnames <- data.frame('cluster' = cluster, 'cellBarcodes' = cellnames)
 #day5$dat5_counts needs to be in a matrix format
-mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, 
+mixedpop2 <-new_summarized_scGPS_object(ExpressionMatrix = day5$dat5_counts, 
     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 test <- CORE_bagging(mixedpop2, remove_outlier = c(0), PCA=FALSE,
     bagging_run = 2, subsample_proportion = .7)

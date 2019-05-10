@@ -29,7 +29,7 @@
 #' cluster <-day5$dat5_clusters
 #' cellnames <- data.frame('cluster' = cluster, 'cellBarcodes' = cellnames)
 #' #day5$dat5_counts needs to be in a matrix format
-#' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, 
+#' mixedpop2 <-new_summarized_scGPS_object(ExpressionMatrix = day5$dat5_counts, 
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 #' test <- CORE_bagging(mixedpop2, remove_outlier = c(0), PCA=FALSE,
 #'     bagging_run = 2, subsample_proportion = .7)
@@ -52,12 +52,12 @@ CORE_bagging <- function(mixedpop = NULL, bagging_run = 20,
     # find the optimal stability for each of the bagging runs
     optimal_stab <- list()
     for (i in 1:bagging_run) {
-        stab_df <- FindStability(list_clusters = 
+        stab_df <- find_stability(list_clusters = 
             cluster_all$bootstrap_clusters[[i]][[1]], 
             cluster_ref = unname(unlist(
             cluster_all$bootstrap_clusters[[i]][[1]][[1]])))
         
-        optimal_stab[[i]] <- FindOptimalStability(list_clusters = 
+        optimal_stab[[i]] <- find_optimal_stability(list_clusters = 
             cluster_all$bootstrap_clusters[[i]][[1]], 
             stab_df, bagging = TRUE, windows = windows)
     }
@@ -139,7 +139,7 @@ CORE_bagging <- function(mixedpop = NULL, bagging_run = 20,
 #' @author Quan Nguyen, 2017-11-25
 #' @examples
 #' day5 <- sample2
-#' mixedpop2 <-NewscGPS_SME(ExpressionMatrix = day5$dat5_counts, 
+#' mixedpop2 <-new_summarized_scGPS_object(ExpressionMatrix = day5$dat5_counts, 
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 #' test <-clustering_bagging(mixedpop2, remove_outlier = c(0),
 #'     bagging_run = 2, subsample_proportion = .7)
@@ -151,11 +151,11 @@ clustering_bagging <- function(object = NULL, ngenes = 1500,
     
     
     # function for the highest resolution clustering (i.e. no window applied)
-    firstRoundClustering <- function(object = NULL) {
+    first_round_clustering <- function(object = NULL) {
         exprs_mat <- assay(object)
         # take the top variable genes
         print("Identifying top variable genes")
-        exprs_mat_topVar <- topvar(exprs_mat, ngenes = ngenes)
+        exprs_mat_topVar <- top_var(exprs_mat, ngenes = ngenes)
         # tranpose so that cells are in rows
         exprs_mat_t <- t(exprs_mat_topVar)
         #-------------------------------------Work in progress--------#
@@ -187,7 +187,7 @@ clustering_bagging <- function(object = NULL, ngenes = 1500,
     }
     
     # function to remove outlier clusters
-    removeOutlierCluster <- function(object = object, 
+    remove_outlier_cluster <- function(object = object, 
         remove_outlier = remove_outlier, nRounds = nRounds) {
         
         
@@ -204,7 +204,7 @@ clustering_bagging <- function(object = NULL, ngenes = 1500,
         cells_to_remove <- c()
         
         while (i <= nRounds) {
-            filter_out <- firstRoundClustering(objectTemp)
+            filter_out <- first_round_clustering(objectTemp)
             cluster_toRemove <- which(filter_out$cluster_ref %in% 
                 remove_outlier)
             if (length(cluster_toRemove) > 0) {
@@ -220,7 +220,7 @@ clustering_bagging <- function(object = NULL, ngenes = 1500,
             }
         }
         
-        filter_out <- firstRoundClustering(objectTemp)
+        filter_out <- first_round_clustering(objectTemp)
         cluster_toRemove <- which(filter_out$cluster_ref %in% remove_outlier)
         if (length(cluster_toRemove) > 0) {
             print(paste0("Found ", length(cluster_toRemove), 
@@ -246,7 +246,7 @@ clustering_bagging <- function(object = NULL, ngenes = 1500,
     }
     
     
-    firstRoundPostRemoval <- removeOutlierCluster(object = object, 
+    firstRoundPostRemoval <- remove_outlier_cluster(object = object, 
         remove_outlier = remove_outlier, nRounds = nRounds)
     firstRound_out <- firstRoundPostRemoval$firstRound_out
     

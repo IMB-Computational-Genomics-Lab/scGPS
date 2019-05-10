@@ -1,9 +1,9 @@
 
 # Constructor function for the scgps object of the SingleCellExperiment class
 #'
-#' NewscGPS
+#' new_scGPS_object
 #'
-#' \code{\link{NewscGPS}} generates a scGPS object in the 
+#' \code{\link{new_scGPS_object}} generates a scGPS object in the 
 #' \linkS4class{SingleCellExperiment} class for use with the scGPS package. This
 #' object contains an expression matrix, associated metadata (cells, genes,
 #' clusters). The data are expected to be normalised counts.
@@ -26,13 +26,13 @@
 #' @export
 #' @examples
 #' day2 <- sample1
-#' t <-NewscGPS(ExpressionMatrix = day2$dat2_counts, 
+#' t <-new_scGPS_object(ExpressionMatrix = day2$dat2_counts, 
 #'     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
 #' colData(t); show(t); colnames(t)
 #' @author Quan Nguyen, 2018-04-06
 #'
 #'
-NewscGPS <- function(ExpressionMatrix = NULL, GeneMetadata = NULL, 
+new_scGPS_object <- function(ExpressionMatrix = NULL, GeneMetadata = NULL, 
     CellMetadata = NULL) {
     # Check that we have the essential arguments - an expression matrix
     arg.check <- list(ExpressionMatrix = missing(ExpressionMatrix), 
@@ -63,9 +63,9 @@ NewscGPS <- function(ExpressionMatrix = NULL, GeneMetadata = NULL,
 
 # Constructor function for the scgps object of the SummarizedExperiment class
 #'
-#' NewscGPS_SME
+#' new_summarized_scGPS_object
 #'
-#' \code{\link{NewscGPS}} generates a scGPS object in the 
+#' \code{\link{new_scGPS_object}} generates a scGPS object in the 
 #' \linkS4class{SingleCellExperiment} class for use with the scGPS package. This
 #' object contains an expression matrix, associated metadata (cells, genes,
 #' clusters). The data are expected to be normalised counts.
@@ -88,14 +88,14 @@ NewscGPS <- function(ExpressionMatrix = NULL, GeneMetadata = NULL,
 #' @export
 #' @examples
 #' day2 <- sample1
-#' t <-NewscGPS_SME(ExpressionMatrix = day2$dat2_counts, 
+#' t <-new_summarized_scGPS_object(ExpressionMatrix = day2$dat2_counts, 
 #'     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
 #' colData(t); show(t); colnames(t)
 #' @author Quan Nguyen, 2017-11-25
 #'
 #'
 #'
-NewscGPS_SME <- function(ExpressionMatrix = NULL, GeneMetadata = NULL, 
+new_summarized_scGPS_object <- function(ExpressionMatrix = NULL, GeneMetadata = NULL, 
     CellMetadata = NULL) {
     # Check that we have the essential arguments - an expression matrix
     arg.check <- list(ExpressionMatrix = missing(ExpressionMatrix), 

@@ -28,7 +28,7 @@ calculate tSNE from top variable genes
 }
 \examples{
 day2 <- sample1
-mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, 
+mixedpop1 <-new_scGPS_object(ExpressionMatrix = day2$dat2_counts, 
     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
 t <-tSNE(expression.mat = assay(mixedpop1))
 
