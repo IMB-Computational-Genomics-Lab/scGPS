@@ -42,40 +42,6 @@ PCA <- function(expression.matrix = NULL, ngenes = 1500, scaling = TRUE,
 }
 
 
-##' CIDR
-##'
-##' description calculate CIDR using top variable genes
-##' param expression.matrix An expression matrix, with genes in rows
-##' param ngenes number of genes used for clustering calculations.
-##' return a CIDR reduced matrix for the top 20 components
-##' export
-##' examples
-##' day2 <- sample1
-##' mixedpop1 <-NewscGPS(ExpressionMatrix = day2$dat2_counts, 
-##'     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
-##' t <-CIDR(expression.matrix=assay(mixedpop1))
-##'
-#CIDR <- function(expression.matrix = NULL, ngenes = 1500) {
-#    subset.matrix <- topvar(expression.matrix = expression.matrix, 
-#        ngenes = 1500)
-#    print("building cidr object...")
-#    sData <- cidr::scDataConstructor(subset.matrix)
-#    print("determine dropout candidates...")
-#    sData <- cidr::determineDropoutCandidates(sData)
-#    print("determine the imputation weighting threshold...")
-#    sData <- cidr::wThreshold(sData)
-#    print("computes the _CIDR_ dissimilarity matrix...")
-#    sData <- cidr::scDissim(sData)
-#    print("PCA plot with proportion of variance explained...")
-#    sData <- cidr::scPCA(sData)  #plotPC = FALSE)
-#    print("find the number of PC...")
-#    sData <- cidr::nPC(sData)
-#    print("perform clustering...")
-#    sData <- cidr::scCluster(sData)
-#    cidr_PCA_20 <- sData@PC[, 1:20]
-#    return(cidr_PCA_20)
-#}
-
 #' tSNE
 #'
 #' @description calculate tSNE from top variable genes
