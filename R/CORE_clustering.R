@@ -593,10 +593,10 @@ find_optimal_stability <- function(list_clusters, run_RandIdx, bagging = FALSE,
     if ((St[window_param] > 0.5) && (St[window_param] == St_max)) {
         optimal_param = window_param
     } else {
-        concat_St <- vector()
+        concat_St <- vector(mode = "double", length = window_param)
         for (i in 1:window_param) {
             if (Cluster_count[i] != min(Cluster_count)) {
-                concat_St <- c(concat_St, St[i])
+                concat_St[i] <- St[i]
             }
         }
         optimal_param = which.max(concat_St)[1]
