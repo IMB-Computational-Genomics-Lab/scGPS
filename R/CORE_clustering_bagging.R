@@ -159,7 +159,7 @@ clustering_bagging <- function(object = NULL, ngenes = 1500,
         # tranpose so that cells are in rows
         exprs_mat_t <- t(exprs_mat_topVar)
         #-------------------------------------Work in progress--------#
-        if (PCA == TRUE) {
+        if (PCA) {
             # perform PCA dimensionality reduction
             message(paste0("Performing PCA analysis ", 
                 "(Note: the variance for each cell needs to be > 0)"))

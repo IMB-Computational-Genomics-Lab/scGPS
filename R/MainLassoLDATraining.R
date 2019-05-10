@@ -149,7 +149,7 @@ training <- function(genes = NULL, cluster_mixedpop1 = NULL,
         return(X)
     }
     
-    if (standardize == TRUE) {
+    if (standardize) {
         message("standardizing prediction/target dataset")
         dataset <- t(apply(dataset, 1, standardizing))  
         #dataset is transposed after standardised and scaled
@@ -166,7 +166,7 @@ training <- function(genes = NULL, cluster_mixedpop1 = NULL,
         family = "binomial", type.measure = "class")
     
     # fit LDA
-    if (LDA_run == TRUE) {
+    if (LDA_run) {
         message("performning LDA model training...")
         trainControl <- trainControl(method = "repeatedcv", number = 10, 
             repeats = 3)
@@ -287,7 +287,7 @@ training <- function(genes = NULL, cluster_mixedpop1 = NULL,
     }
     
     # standardizing the leave-out target and source subpops
-    if (standardize == TRUE) {
+    if (standardize) {
         message("standardizing the leave-out target and source subpops...")
         predictor_S2 <- t(apply(predictor_S2, 1, standardizing))
     }
@@ -300,7 +300,7 @@ training <- function(genes = NULL, cluster_mixedpop1 = NULL,
         s = cvfit$lambda.min)
     
     # Evaluation: predict LDA
-    if (LDA_run == TRUE) {
+    if (LDA_run) {
         message(paste0("start LDA prediction for estimating accuracy for ", 
             nrow(predictor_S2), " cells and ", ncol(predictor_S2), " genes..."))
         lda_predict <- predict(fit.lda, predictor_S2)
@@ -339,7 +339,7 @@ training <- function(genes = NULL, cluster_mixedpop1 = NULL,
     message(paste0("evaluation accuracy ElasticNet ", 
         accurate/(accurate + inaccurate)))
     # for LDA
-    if (LDA_run == TRUE) {
+    if (LDA_run) {
         predict_cluster_dat_LDA <- as.data.frame(lda_predict)
         predict_cluster_dat_LDA$cellnames <- row.names(predictor_S2)
         # merge original and predicted datasets
@@ -365,7 +365,7 @@ training <- function(genes = NULL, cluster_mixedpop1 = NULL,
     listData$ElasticNetGenes[[out_idx]] <- list(sub_cvfit_out)
     listData$Deviance[[out_idx]] <- list(dat_DE_fm_DE)
     listData$ElasticNetFit[[out_idx]] <- list(cvfit)
-    if (LDA_run == TRUE) {
+    if (LDA_run) {
         listData$LDAFit[[out_idx]] <- list(fit.lda)
     } else {
         listData$LDAFit[[out_idx]] <- list(NA)
@@ -439,7 +439,7 @@ predicting <- function(listData = NULL, cluster_mixedpop2 = NULL,
         return(X)
     }
     
-    if (standardize == TRUE) {
+    if (standardize) {
         message("standardizing target subpops before prediction...")
         ori_dat_2 <- t(apply(ori_dat_2, 1, standardizing))
     }
@@ -563,7 +563,7 @@ predicting <- function(listData = NULL, cluster_mixedpop2 = NULL,
         # done checking---------------------------------------------------------
         # predict
         # LDA:
-        if (LDA_run == TRUE) 
+        if (LDA_run) 
             {
                 # newdataset <- as.data.frame(t(ori_dat_2[,cluster_select])) 
                 # for better LDA conversion, the target data should not be 
@@ -610,7 +610,7 @@ predicting <- function(listData = NULL, cluster_mixedpop2 = NULL,
     # prediction result
     listData$ElasticNetPredict[out_idx] <- list(
         list_predict_clusters_ElasticNet)
-    if (LDA_run == TRUE) {
+    if (LDA_run) {
         listData$LDAPredict[out_idx] <- list(list_predict_clusters_LDA)
     } else {
         listData$LDAPredict[out_idx] <- list(NA)

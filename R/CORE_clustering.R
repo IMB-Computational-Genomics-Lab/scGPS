@@ -125,7 +125,7 @@ clustering <- function(object = NULL, ngenes = 1500,
         message("Identifying top variable genes")
         exprs_mat_topVar <- top_var(exprs_mat, ngenes = ngenes)
         # exprs_mat_t <- t(exprs_mat_topVar)
-        if (PCA == TRUE) {
+        if (PCA) {
             # perform PCA dimensionality reduction
             message(paste0("Performing PCA analysis (Note: the variance for ",
                 "each cell needs to be >0)"))
@@ -605,7 +605,7 @@ find_optimal_stability <- function(list_clusters, run_RandIdx, bagging = FALSE,
         }
     }
     
-    if (bagging == TRUE) {
+    if (bagging) {
         output <- list(HighestRes = KeyStats$Cluster_count[1], 
             OptimalClust = KeyStats$Cluster_count[optimal_param], 
             KeyStats = KeyStats)

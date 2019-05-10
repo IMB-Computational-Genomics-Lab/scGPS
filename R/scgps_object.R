@@ -45,8 +45,8 @@ new_scGPS_object <- function(ExpressionMatrix = NULL, GeneMetadata = NULL,
         stop(msg)
     }
     
-    if (is.data.frame(ExpressionMatrix) == FALSE &
-        is.matrix(ExpressionMatrix) == FALSE) {
+    if (!is.data.frame(ExpressionMatrix) &
+        !is.matrix(ExpressionMatrix)) {
         stop(paste0("Please supply an expression matrix in one of the ", 
             "following formats: data.frame or matrix"))
     }
@@ -109,7 +109,7 @@ new_summarized_scGPS_object <- function(ExpressionMatrix = NULL, GeneMetadata = 
     }
     
     # Check data formats (to do: can add a series of checking here)
-    if (is.matrix(ExpressionMatrix) == FALSE) {
+    if (!is.matrix(ExpressionMatrix)) {
         stop("Please supply an expression data in the matrix format")
     }
     

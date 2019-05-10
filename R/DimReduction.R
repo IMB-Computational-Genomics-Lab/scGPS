@@ -30,13 +30,9 @@ PCA <- function(expression.matrix = NULL, ngenes = 1500, scaling = TRUE,
     
     # Compute PCA
     message("Computing PCA values...")
-    if (scaling == TRUE) {
-        pca.result <- stats::prcomp(pca.input.matrix, scale = TRUE)
-    } else {
-        pca.result <- stats::prcomp(pca.input.matrix, scale = FALSE)
-    }
-    
+    pca.result <- stats::prcomp(pca.input.matrix, scale = scaling)
     pca.percent.var <- pca.result$sdev^2/sum(pca.result$sdev^2)
+
     return(list(reduced_dat = pca.result$x[, 1:npcs], 
         variance = pca.percent.var))
 }

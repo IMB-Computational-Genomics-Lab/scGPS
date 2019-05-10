@@ -231,7 +231,7 @@ annotate <- function(DEgeneList, pvalueCutoff = 0.05, gene_symbol = TRUE,
             stop("The list must contain human gene symbols")
         }
     } else if (species == "mouse") {
-        if (gene_symbol == TRUE) {
+        if (gene_symbol) {
             convert_to_gene_ID = clusterProfiler::bitr(DEgeneList, 
                 fromType = "SYMBOL", toType = "ENTREZID",
                 OrgDb = "org.Mm.eg.db")
@@ -283,17 +283,3 @@ annotate <- function(DEgeneList, pvalueCutoff = 0.05, gene_symbol = TRUE,
 #' @importFrom utils head
 
 NULL
-
-
-
-# #' @param x a dummy variable for the temp function 
-# #' @return a message 
-# #' @examples
-# #' add_import()
-
-# add_import <- function(x = 1) {
-#     if (x == 1) {
-#         return("required functions imported")
-#     }
-# }
-
