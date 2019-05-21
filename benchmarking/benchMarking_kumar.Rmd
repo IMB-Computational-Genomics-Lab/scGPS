@@ -11,6 +11,7 @@ output: html_document
 
 #Github Installation
 devtools::install_github("IMB-Computational-Genomics-Lab/scGPS")
+library(scGPS)
 
 #Manual Installation with scGPS in working directory
 #devtools::load_all()
@@ -71,10 +72,10 @@ kumar_dat_GeneMetaData <- rownames(SCE)
 kumar_dat_GeneMetaData <- data.frame("GeneSymbol" = kumar_dat_GeneMetaData)
 
 #Store Data in scGPS format
-mixedpop <-NewscGPS_SME(ExpressionMatrix = kumar_dat_exprs, GeneMetadata = kumar_dat_GeneMetaData, CellMetadata = kumar_dat_cellnames)
+mixedpop <- new_summarized_scGPS_object(ExpressionMatrix = kumar_dat_exprs, GeneMetadata = kumar_dat_GeneMetaData, CellMetadata = kumar_dat_cellnames)
 
 #Cluster and plot data using SCORE
-CORE_cluster_bagging <- CORE_scGPS_bagging(mixedpop, remove_outlier = c(0), PCA=FALSE, bagging_run = 50, subsample_proportion = .8)
+CORE_cluster_bagging <- CORE_bagging(mixedpop, remove_outlier = c(0), PCA=FALSE, bagging_run = 50, subsample_proportion = .8)
 plot_CORE(CORE_cluster_bagging$tree, list_clusters = CORE_cluster_bagging$Cluster)
 plot_optimal_CORE(original_tree= CORE_cluster_bagging$tree, optimal_cluster = unlist(CORE_cluster_bagging$Cluster[CORE_cluster_bagging$optimal_index]), shift = -100)
 
