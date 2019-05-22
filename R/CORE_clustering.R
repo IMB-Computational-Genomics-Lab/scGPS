@@ -24,7 +24,7 @@
 #' @return a \code{list} with clustering results of all iterations, and a 
 #' selected optimal resolution
 #' @examples
-#' day5 <- sample2
+#' day5 <- day_5_cardio_cell_sample
 #' #day5$dat5_counts needs to be in a matrix format
 #' cellnames <- colnames(day5$dat5_counts)
 #' cluster <-day5$dat5_clusters
@@ -65,7 +65,7 @@ CORE <- function(mixedpop = NULL, windows = seq(0.025:1, by = 0.025),
 #' @return a \code{list} with clustering results of all iterations, and a 
 #' selected optimal resolution
 #' @examples
-#' day5 <- sample2
+#' day5 <- day_5_cardio_cell_sample
 #' mixedpop2 <-new_summarized_scGPS_object(ExpressionMatrix = day5$dat5_counts,
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 #' test <- CORE(mixedpop2,remove_outlier= c(0))
@@ -108,7 +108,7 @@ CORE_subcluster <- function(mixedpop = NULL, windows = seq(0.025:1,
 #' @export
 #' @author Quan Nguyen, 2017-11-25
 #' @examples
-#' day5 <- sample2
+#' day5 <- day_5_cardio_cell_sample
 #' mixedpop2 <-new_summarized_scGPS_object(ExpressionMatrix = day5$dat5_counts, 
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 #' test <-clustering(mixedpop2, remove_outlier = c(0))
@@ -252,7 +252,7 @@ clustering <- function(object = NULL, ngenes = 1500,
 #' @export
 #' @author Quan Nguyen, 2018-01-31
 #' @examples
-#' day5 <- sample2
+#' day5 <- day_5_cardio_cell_sample
 #' mixedpop2 <-new_summarized_scGPS_object(ExpressionMatrix = day5$dat5_counts, 
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 #' test_sub_clustering <-sub_clustering(mixedpop2,
@@ -331,7 +331,7 @@ sub_clustering <- function(object = NULL, ngenes = 1500,
 #' @param adjust a logical of whether to use the adjusted rand index
 #' @return a rand_index value
 #' @examples
-#' day5 <- sample2
+#' day5 <- day_5_cardio_cell_sample
 #' mixedpop2 <-new_summarized_scGPS_object(ExpressionMatrix = day5$dat5_counts,
 #' GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 #' cluster_all <-clustering(object=mixedpop2)
@@ -396,7 +396,7 @@ rand_index <- function(tab, adjust = TRUE) {
 #' @param cluster_ref is a object from the reference cluster
 #' @return a \code{data frame} with stability scores and rand_index results
 #' @examples
-#' day5 <- sample2
+#' day5 <- day_5_cardio_cell_sample
 #' mixedpop2 <-new_summarized_scGPS_object(ExpressionMatrix = day5$dat5_counts, 
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 #' cluster_all <-clustering(object=mixedpop2)
@@ -524,7 +524,7 @@ find_stability <- function(list_clusters = NULL, cluster_ref = NULL) {
 #' @export
 #' @author Quan Nguyen, 2017-11-25
 #' @examples
-#' day5 <- sample2
+#' day5 <- day_5_cardio_cell_sample
 #' mixedpop2 <-new_summarized_scGPS_object(ExpressionMatrix = day5$dat5_counts, 
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 #' cluster_all <-clustering(object=mixedpop2)
@@ -638,7 +638,7 @@ find_optimal_stability <- function(list_clusters, run_RandIdx, bagging = FALSE,
 #' @return a plot with clustering bars underneath the tree
 #' @export
 #' @examples
-#' day5 <- sample2
+#' day5 <- day_5_cardio_cell_sample
 #' cellnames <- colnames(day5$dat5_counts)
 #' cluster <-day5$dat5_clusters
 #' cellnames <-data.frame('Cluster'=cluster, 'cellBarcodes' = cellnames)
@@ -901,7 +901,7 @@ plot_CORE <- function(original.tree, list_clusters = NULL,
 #' result
 #' @author Quan Nguyen, 2017-11-25
 #' @examples
-#' day5 <- sample2
+#' day5 <- day_5_cardio_cell_sample
 #' mixedpop2 <-new_summarized_scGPS_object(ExpressionMatrix = day5$dat5_counts, 
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 #' CORE_cluster <- CORE(mixedpop2, remove_outlier = c(0))

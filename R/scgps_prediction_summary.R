@@ -8,13 +8,13 @@
 #' @export
 #' @examples
 #' c_selectID<-1
-#' day2 <- sample1
+#' day2 <- day_2_cardio_cell_sample
 #' mixedpop1 <-new_scGPS_object(ExpressionMatrix = day2$dat2_counts, 
 #'     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
-#' day5 <- sample2
+#' day5 <- day_5_cardio_cell_sample
 #' mixedpop2 <-new_scGPS_object(ExpressionMatrix = day5$dat5_counts, 
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
-#' genes <-GeneList
+#' genes <-training_gene_sample
 #' genes <-genes$Merged_unique
 #' LSOLDA_dat <- bootstrap(nboots = 1,mixedpop1 = mixedpop1, 
 #'     mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
@@ -50,14 +50,14 @@ summary_accuracy <- function(object = NULL) {
 #' @export
 #' @examples
 #' c_selectID<-1
-#' day2 <- sample1
+#' day2 <- day_2_cardio_cell_sample
 #' mixedpop1 <-new_scGPS_object(ExpressionMatrix = day2$dat2_counts, 
 #'     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
-#' day5 <- sample2
+#' day5 <- day_5_cardio_cell_sample
 #' mixedpop2 <-new_scGPS_object(ExpressionMatrix = day5$dat5_counts, 
 #'     GeneMetadata = day5$dat5geneInfo,
 #'                     CellMetadata = day5$dat5_clusters)
-#' genes <-GeneList
+#' genes <-training_gene_sample
 #' genes <-genes$Merged_unique
 #' LSOLDA_dat <- bootstrap(nboots = 2,mixedpop1 = mixedpop1, 
 #'     mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
@@ -98,13 +98,13 @@ summary_deviance <- function(object = NULL) {
 #' @export
 #' @examples
 #' c_selectID<-1
-#' day2 <- sample1
+#' day2 <- day_2_cardio_cell_sample
 #' mixedpop1 <-new_scGPS_object(ExpressionMatrix = day2$dat2_counts, 
 #'     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
-#' day5 <- sample2
+#' day5 <- day_5_cardio_cell_sample
 #' mixedpop2 <-new_scGPS_object(ExpressionMatrix = day5$dat5_counts, 
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
-#' genes <-GeneList
+#' genes <-training_gene_sample
 #' genes <-genes$Merged_unique
 #' LSOLDA_dat <- bootstrap(nboots = 1,mixedpop1 = mixedpop1, 
 #'     mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
@@ -160,13 +160,13 @@ summary_prediction_lasso <- function(LSOLDA_dat = NULL, nPredSubpop = NULL) {
 #' @export
 #' @examples
 #' c_selectID<-1
-#' day2 <- sample1
+#' day2 <- day_2_cardio_cell_sample
 #' mixedpop1 <-new_scGPS_object(ExpressionMatrix = day2$dat2_counts, 
 #' GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
-#' day5 <- sample2
+#' day5 <- day_5_cardio_cell_sample
 #' mixedpop2 <-new_scGPS_object(ExpressionMatrix = day5$dat5_counts, 
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
-#' genes <-GeneList
+#' genes <-training_gene_sample
 #' genes <-genes$Merged_unique
 #' LSOLDA_dat <- bootstrap(nboots = 1,mixedpop1 = mixedpop1, 
 #' mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
@@ -222,13 +222,13 @@ summary_prediction_lda <- function(LSOLDA_dat = NULL, nPredSubpop = NULL) {
 #' @export
 #' @examples
 #' c_selectID<-1
-#' day2 <- sample1
+#' day2 <- day_2_cardio_cell_sample
 #' mixedpop1 <-new_scGPS_object(ExpressionMatrix = day2$dat2_counts, 
 #'     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
-#' day5 <- sample2
+#' day5 <- day_5_cardio_cell_sample
 #' mixedpop2 <-new_scGPS_object(ExpressionMatrix = day5$dat5_counts, 
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
-#' genes <-GeneList
+#' genes <-training_gene_sample
 #' genes <-genes$Merged_unique
 #' LSOLDA_dat <- bootstrap(nboots = 2, mixedpop1 = mixedpop1, 
 #'     mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),

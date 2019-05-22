@@ -27,7 +27,7 @@ CORE_subcluster allows re-cluster the CORE clustering
 result
 }
 \examples{
-day5 <- sample2
+day5 <- day_5_cardio_cell_sample
 mixedpop2 <-new_summarized_scGPS_object(ExpressionMatrix = day5$dat5_counts,
     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 test <- CORE(mixedpop2,remove_outlier= c(0))

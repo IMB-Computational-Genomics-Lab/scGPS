@@ -35,7 +35,7 @@ object contains an expression matrix, associated metadata (cells, genes,
 clusters). The data are expected to be normalised counts.
 }
 \examples{
-day2 <- sample1
+day2 <- day_2_cardio_cell_sample
 t <-new_summarized_scGPS_object(ExpressionMatrix = day2$dat2_counts, 
     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
 colData(t); show(t); colnames(t)

@@ -6,9 +6,9 @@
 #' count matrix
 #' @return a list, with the name day2
 #' @docType data
-#' @usage sample1
+#' @usage day_2_cardio_cell_sample
 #' @format a list instance, containing a count matrix and a vector with 
 #' clustering information
 #' @source Dr Joseph Powell's laboratory, IMB, UQ
 #' @author Quan Nguyen, 2017-11-25
-"sample1"
+"day_2_cardio_cell_sample"

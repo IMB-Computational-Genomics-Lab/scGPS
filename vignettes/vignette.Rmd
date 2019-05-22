@@ -56,15 +56,15 @@ library(scGPS)
 ##2.1 Create scGPS objects
 ```{r scGPS_object, warning = FALSE, message = FALSE}
 
-# load mixed population 1 (loaded from sample1 dataset, named it as day2)
+# load mixed population 1 (loaded from day_2_cardio_cell_sample dataset, named it as day2)
 library(scGPS)
 
-day2 <- sample1
+day2 <- day_2_cardio_cell_sample
 mixedpop1 <- new_scGPS_object(ExpressionMatrix = day2$dat2_counts,
     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
 
-# load mixed population 2 (loaded from sample2 dataset, named it as day5)
-day5 <- sample2
+# load mixed population 2 (loaded from day_5_cardio_cell_sample dataset, named it as day5)
+day5 <- day_5_cardio_cell_sample
 mixedpop2 <- new_scGPS_object(ExpressionMatrix = day5$dat5_counts,
     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 
@@ -75,7 +75,7 @@ mixedpop2 <- new_scGPS_object(ExpressionMatrix = day5$dat5_counts,
 # select a subpopulation
 c_selectID <- 1
 # load gene list (this can be any lists of user selected genes)
-genes <- GeneList
+genes <- training_gene_sample
 genes <- genes$Merged_unique
 # load cluster information 
 cluster_mixedpop1 <- colData(mixedpop1)[,1]
@@ -132,7 +132,7 @@ summary_deviance(object = LSOLDA_dat)
 #   ```{r CORE, warning = FALSE, message = FALSE, eval = FALSE}
 # 
 # # find clustering information in an expresion data using CORE
-# day5 <- sample2
+# day5 <- day_5_cardio_cell_sample
 # cellnames <- colnames(day5$dat5_counts)
 # cluster <-day5$dat5_clusters
 # cellnames <-data.frame("Cluster"=cluster, "cellBarcodes" = cellnames)
@@ -169,7 +169,7 @@ summary_deviance(object = LSOLDA_dat)
 #   ```{r SCORE with bagging, warning = FALSE, message = FALSE, eval = FALSE}
 # 
 # # find clustering information in an expresion data using SCORE
-# day5 <- sample2
+# day5 <- day_5_cardio_cell_sample
 # cellnames <- colnames(day5$dat5_counts)
 # cluster <-day5$dat5_clusters
 # cellnames <-data.frame("Cluster"=cluster, "cellBarcodes" = cellnames)
@@ -222,7 +222,7 @@ summary_deviance(object = LSOLDA_dat)
 # 
 # ```{r find_markers, warning = FALSE, message = FALSE, eval = FALSE}
 # #load gene list (this can be any lists of user-selected genes)
-# genes <-GeneList
+# genes <-training_gene_sample
 # genes <-genes$Merged_unique
 # 
 # #the gene list can also be objectively identified by differential expression

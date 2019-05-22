@@ -6,7 +6,7 @@
 #' @param ngenes number of genes used for clustering calculations.
 #' @export
 #' @examples
-#' day2 <- sample1
+#' day2 <- day_2_cardio_cell_sample
 #' mixedpop1 <-new_scGPS_object(ExpressionMatrix = day2$dat2_counts, 
 #'     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
 #' SortedExprsMat <-top_var(expression.matrix=assay(mixedpop1))
@@ -39,7 +39,7 @@ top_var <- function(expression.matrix = NULL, ngenes = 1500) {
 #' @export
 #' @return a matrix with the top 20 CIDR dimensions
 #' @examples
-#' day2 <- sample1
+#' day2 <- day_2_cardio_cell_sample
 #' mixedpop1 <-new_scGPS_object(ExpressionMatrix = day2$dat2_counts, 
 #'     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
 #' #CIDR_dim <-CIDR(expression.matrix=assay(mixedpop1))
@@ -112,7 +112,7 @@ plot_reduced <- function(reduced_dat, color_fac = NULL, dims = c(1, 2),
 #' @export
 #' @author Quan Nguyen, 2017-11-25
 #' @examples
-#' day2 <- sample1
+#' day2 <- day_2_cardio_cell_sample
 #' mixedpop1 <-new_scGPS_object(ExpressionMatrix = day2$dat2_counts, 
 #'     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
 #' # depending on the data, the DESeq::estimateDispersions function requires
@@ -197,7 +197,7 @@ find_markers <- function(expression_matrix = NULL, cluster = NULL,
 #' @return write enrichment test output to a file and an enrichment test object 
 #' for plotting
 #' @examples
-#' genes <-GeneList
+#' genes <-training_gene_sample
 #' genes <-genes$Merged_unique[1:50]
 #' enrichment_test <- annotate(genes, pvalueCutoff=0.05, 
 #'     gene_symbol=TRUE, species = 'human')

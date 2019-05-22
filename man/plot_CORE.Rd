@@ -22,7 +22,7 @@ a plot with clustering bars underneath the tree
 This function plots CORE and all clustering results underneath
 }
 \examples{
-day5 <- sample2
+day5 <- day_5_cardio_cell_sample
 cellnames <- colnames(day5$dat5_counts)
 cluster <-day5$dat5_clusters
 cellnames <-data.frame('Cluster'=cluster, 'cellBarcodes' = cellnames)

@@ -41,13 +41,13 @@ a \code{list} with prediction results written in to the index
 same as bootstrap, but with an multicore option
 }
 \examples{
-day2 <- sample1
+day2 <- day_2_cardio_cell_sample
 mixedpop1 <-new_scGPS_object(ExpressionMatrix = day2$dat2_counts, 
     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
-day5 <- sample2
+day5 <- day_5_cardio_cell_sample
 mixedpop2 <-new_scGPS_object(ExpressionMatrix = day5$dat5_counts, 
     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
-genes <-GeneList
+genes <-training_gene_sample
 genes <-genes$Merged_unique
 #prl_boots <- bootstrap_parallel(ncores = 4, nboots = 1, genes=genes,
 #    mixedpop1 = mixedpop2, mixedpop2 = mixedpop2,  c_selectID=1,

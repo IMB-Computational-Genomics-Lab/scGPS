@@ -31,7 +31,7 @@ a matrix with the top 20 CIDR dimensions
 plot PCA, tSNE, and CIDR reduced datasets
 }
 \examples{
-day2 <- sample1
+day2 <- day_2_cardio_cell_sample
 mixedpop1 <-new_scGPS_object(ExpressionMatrix = day2$dat2_counts, 
     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
 #CIDR_dim <-CIDR(expression.matrix=assay(mixedpop1))

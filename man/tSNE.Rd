@@ -27,7 +27,7 @@ a tSNE reduced matrix containing three tSNE dimensions
 calculate tSNE from top variable genes
 }
 \examples{
-day2 <- sample1
+day2 <- day_2_cardio_cell_sample
 mixedpop1 <-new_scGPS_object(ExpressionMatrix = day2$dat2_counts, 
     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
 t <-tSNE(expression.mat = assay(mixedpop1))

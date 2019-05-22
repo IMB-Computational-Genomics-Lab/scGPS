@@ -19,7 +19,7 @@ Comparing clustering results Function for calculating randindex
 (adapted from the function by Steve Horvath and Luohua Jiang, UCLA, 2003)
 }
 \examples{
-day5 <- sample2
+day5 <- day_5_cardio_cell_sample
 mixedpop2 <-new_summarized_scGPS_object(ExpressionMatrix = day5$dat5_counts,
 GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 cluster_all <-clustering(object=mixedpop2)

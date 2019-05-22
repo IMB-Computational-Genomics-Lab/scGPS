@@ -25,7 +25,7 @@
 #' @seealso \linkS4class{SingleCellExperiment}
 #' @export
 #' @examples
-#' day2 <- sample1
+#' day2 <- day_2_cardio_cell_sample
 #' t <-new_scGPS_object(ExpressionMatrix = day2$dat2_counts, 
 #'     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
 #' colData(t); show(t); colnames(t)
@@ -87,7 +87,7 @@ new_scGPS_object <- function(ExpressionMatrix = NULL, GeneMetadata = NULL,
 #' @seealso \linkS4class{SingleCellExperiment}
 #' @export
 #' @examples
-#' day2 <- sample1
+#' day2 <- day_2_cardio_cell_sample
 #' t <-new_summarized_scGPS_object(ExpressionMatrix = day2$dat2_counts, 
 #'     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
 #' colData(t); show(t); colnames(t)

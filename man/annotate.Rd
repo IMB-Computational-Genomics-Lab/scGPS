@@ -29,7 +29,7 @@ clusterProfiler for this analysis type in R. The function require
 installation of several databases as described below.
 }
 \examples{
-genes <-GeneList
+genes <-training_gene_sample
 genes <-genes$Merged_unique[1:50]
 enrichment_test <- annotate(genes, pvalueCutoff=0.05, 
     gene_symbol=TRUE, species = 'human')

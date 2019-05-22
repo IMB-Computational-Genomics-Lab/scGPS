@@ -31,13 +31,13 @@
 #'
 #' c_selectID<-1
 #' out_idx<-1
-#' day2 <- sample1
+#' day2 <- day_2_cardio_cell_sample
 #' mixedpop1 <-new_scGPS_object(ExpressionMatrix = day2$dat2_counts, 
 #'     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
-#' day5 <- sample2
+#' day5 <- day_5_cardio_cell_sample
 #' mixedpop2 <-new_scGPS_object(ExpressionMatrix = day5$dat5_counts,
 #' GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
-#' genes <-GeneList
+#' genes <-training_gene_sample
 #' genes <-genes$Merged_unique
 #' listData  <- training(genes, 
 #'     cluster_mixedpop1 = colData(mixedpop1)[, 1],
@@ -403,13 +403,13 @@ training <- function(genes = NULL, cluster_mixedpop1 = NULL,
 #' @examples
 #' c_selectID<-1
 #' out_idx<-1
-#' day2 <- sample1
+#' day2 <- day_2_cardio_cell_sample
 #' mixedpop1 <-new_scGPS_object(ExpressionMatrix = day2$dat2_counts, 
 #'     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
-#' day5 <- sample2
+#' day5 <- day_5_cardio_cell_sample
 #' mixedpop2 <-new_scGPS_object(ExpressionMatrix = day5$dat5_counts, 
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
-#' genes <-GeneList
+#' genes <-training_gene_sample
 #' genes <-genes$Merged_unique
 #' listData  <- training(genes, 
 #'     cluster_mixedpop1 = colData(mixedpop1)[, 1], mixedpop1 = mixedpop1, 
@@ -650,13 +650,13 @@ predicting <- function(listData = NULL, cluster_mixedpop2 = NULL,
 #' @export
 #' @author Quan Nguyen, 2017-11-25
 #' @examples
-#' day2 <- sample1
+#' day2 <- day_2_cardio_cell_sample
 #' mixedpop1 <-new_scGPS_object(ExpressionMatrix = day2$dat2_counts, 
 #'     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
-#' day5 <- sample2
+#' day5 <- day_5_cardio_cell_sample
 #' mixedpop2 <-new_scGPS_object(ExpressionMatrix = day5$dat5_counts, 
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
-#' genes <-GeneList
+#' genes <-training_gene_sample
 #' genes <-genes$Merged_unique
 #' cluster_mixedpop1 <- colData(mixedpop1)[,1]
 #' cluster_mixedpop2 <- colData(mixedpop2)[,1]
@@ -713,13 +713,13 @@ bootstrap <- function(nboots = 1, genes = genes, mixedpop1 = mixedpop1,
 #' @export
 #' @author Quan Nguyen, 2017-11-25
 #' @examples
-#' day2 <- sample1
+#' day2 <- day_2_cardio_cell_sample
 #' mixedpop1 <-new_scGPS_object(ExpressionMatrix = day2$dat2_counts, 
 #'     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
-#' day5 <- sample2
+#' day5 <- day_5_cardio_cell_sample
 #' mixedpop2 <-new_scGPS_object(ExpressionMatrix = day5$dat5_counts, 
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
-#' genes <-GeneList
+#' genes <-training_gene_sample
 #' genes <-genes$Merged_unique
 #' #prl_boots <- bootstrap_parallel(ncores = 4, nboots = 1, genes=genes,
 #' #    mixedpop1 = mixedpop2, mixedpop2 = mixedpop2,  c_selectID=1,

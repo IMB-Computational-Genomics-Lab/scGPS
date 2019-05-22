@@ -42,7 +42,7 @@ subsamples cells for each bagging run and performs 40
 clustering runs or more depending on windows.
 }
 \examples{
-day5 <- sample2
+day5 <- day_5_cardio_cell_sample
 mixedpop2 <-new_summarized_scGPS_object(ExpressionMatrix = day5$dat5_counts, 
     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 test <-clustering_bagging(mixedpop2, remove_outlier = c(0),

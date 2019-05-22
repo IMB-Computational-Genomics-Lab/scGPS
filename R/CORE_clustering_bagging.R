@@ -24,7 +24,7 @@
 #' selected
 #' optimal resolution
 #' @examples
-#' day5 <- sample2
+#' day5 <- day_5_cardio_cell_sample
 #' cellnames<-colnames(day5$dat5_counts)
 #' cluster <-day5$dat5_clusters
 #' cellnames <- data.frame('cluster' = cluster, 'cellBarcodes' = cellnames)
@@ -138,7 +138,7 @@ CORE_bagging <- function(mixedpop = NULL, bagging_run = 20,
 #' @export
 #' @author Quan Nguyen, 2017-11-25
 #' @examples
-#' day5 <- sample2
+#' day5 <- day_5_cardio_cell_sample
 #' mixedpop2 <-new_summarized_scGPS_object(ExpressionMatrix = day5$dat5_counts, 
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 #' test <-clustering_bagging(mixedpop2, remove_outlier = c(0),

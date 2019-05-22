@@ -29,7 +29,7 @@ function to plot the resulting dendrogram with the branch colors represent
 clutering results
 }
 \examples{
-day5 <- sample2
+day5 <- day_5_cardio_cell_sample
 mixedpop2 <-new_summarized_scGPS_object(ExpressionMatrix = day5$dat5_counts, 
     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 CORE_cluster <- CORE(mixedpop2, remove_outlier = c(0))

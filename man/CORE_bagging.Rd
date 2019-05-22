@@ -47,7 +47,7 @@ analysis to find a stable clustering result and detect rare clusters mixed
 population.
 }
 \examples{
-day5 <- sample2
+day5 <- day_5_cardio_cell_sample
 cellnames<-colnames(day5$dat5_counts)
 cluster <-day5$dat5_clusters
 cellnames <- data.frame('cluster' = cluster, 'cellBarcodes' = cellnames)

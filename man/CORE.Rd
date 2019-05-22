@@ -44,7 +44,7 @@ to select the number of optimisation tree height windows for increasing
 resolution
 }
 \examples{
-day5 <- sample2
+day5 <- day_5_cardio_cell_sample
 #day5$dat5_counts needs to be in a matrix format
 cellnames <- colnames(day5$dat5_counts)
 cluster <-day5$dat5_clusters

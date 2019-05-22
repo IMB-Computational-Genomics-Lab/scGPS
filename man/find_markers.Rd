@@ -32,7 +32,7 @@ a \code{list} containing sorted DESeq analysis results
 Find DE genes from comparing one clust vs remaining
 }
 \examples{
-day2 <- sample1
+day2 <- day_2_cardio_cell_sample
 mixedpop1 <-new_scGPS_object(ExpressionMatrix = day2$dat2_counts, 
     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
 # depending on the data, the DESeq::estimateDispersions function requires
