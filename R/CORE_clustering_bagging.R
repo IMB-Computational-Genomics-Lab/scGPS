@@ -33,7 +33,6 @@
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 #' test <- CORE_bagging(mixedpop2, remove_outlier = c(0), PCA=FALSE,
 #'     bagging_run = 2, subsample_proportion = .7)
-#' table(test$Cluster)
 
 #' @export
 #' @author Quan Nguyen, 2018-05-11

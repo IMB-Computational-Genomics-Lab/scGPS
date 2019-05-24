@@ -185,7 +185,9 @@ training <- function(genes = NULL, cluster_mixedpop1 = NULL,
     cvfit_out$name <- row.names(cvfit_out)
     sub_cvfit_out <- cvfit_out[cvfit_out$`1` != 0, ]
     # Extract deviance explained
-    t_DE <- as.matrix(print(cvfit$glmnet.fit))
+    log <- capture.output({
+    	t_DE <- as.matrix(print(cvfit$glmnet.fit))
+    	})
     dat_DE <- as.data.frame(t_DE)
     colnames(dat_DE) <- c("Dfd", "Deviance", "lambda")
     # Get the coordinate for lambda that produces minimum error
