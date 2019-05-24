@@ -281,6 +281,6 @@ annotate <- function(DEgeneList, pvalueCutoff = 0.05, gene_symbol = TRUE,
 #' @importFrom stats as.dist coef na.omit prcomp predict sd as.dendrogram
 #' @importFrom grDevices colorRampPalette
 #' @importFrom graphics abline layout par plot
-#' @importFrom utils head
+#' @importFrom utils head capture.output
 
 NULL
