@@ -8,7 +8,7 @@ using namespace arma;
 //' @return a scalar value
 //' @export
 //' @examples
-//' mean_cpp(c(1:10^6))
+//' mean_cpp(seq_len(10^6))
 //'
 // [[Rcpp::export]]
 double mean_cpp(NumericVector x){
@@ -30,7 +30,7 @@ double mean_cpp(NumericVector x){
 //' @return a variance value
 //' @export
 //' @examples
-//'var_cpp(c(1:10^6))
+//'var_cpp(seq_len(10^6))
 //'
 // [[Rcpp::export]]
 

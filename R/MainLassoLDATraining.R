@@ -80,7 +80,7 @@ training <- function(genes = NULL, cluster_mixedpop1 = NULL,
     # select top 500 genes for the gene list used in the model------------------
     # The DE_result is a sorted list by p-values
     if (length(genes) > 500) {
-        genes <- genes[1:500]
+        genes <- genes[seq_len(500)]
     }
     # select genes in both mixedpop1 and mixedpop2
     names1 <- elementMetadata(mixedpop1)[, 1]
@@ -98,8 +98,8 @@ training <- function(genes = NULL, cluster_mixedpop1 = NULL,
     predictor_S1 <- mixedpop1[genes_in_both_idx1, c(subpop1_train_indx, 
         subremaining1_train_indx)]
     predictor_S1 <- assay(predictor_S1)
-    message(paste0("use ", dim(predictor_S1)[1], " genes ", dim(predictor_S1)[2],
-        " cells for testing model"))
+    message(paste0("use ", dim(predictor_S1)[1], " genes ", 
+        dim(predictor_S1)[2], " cells for testing model"))
     # generate categorical response
     
     # assign class labels############ rename the group of remaining clusters
@@ -186,20 +186,20 @@ training <- function(genes = NULL, cluster_mixedpop1 = NULL,
     sub_cvfit_out <- cvfit_out[cvfit_out$`1` != 0, ]
     # Extract deviance explained
     log <- utils::capture.output({
-    	t_DE <- as.matrix(print(cvfit$glmnet.fit))
-    	})
+        t_DE <- as.matrix(print(cvfit$glmnet.fit))
+        })
     dat_DE <- as.data.frame(t_DE)
     colnames(dat_DE) <- c("Dfd", "Deviance", "lambda")
     # Get the coordinate for lambda that produces minimum error
     dat_DE_Lambda_idx <- c()
-    for (i in (1:nrow(dat_DE))) {
+    for (i in seq_len(nrow(dat_DE))) {
         if (dat_DE$lambda[i] == round(cvfit$lambda.min, 
             nchar(dat_DE$lambda[i]) - 2)) {
             dat_DE_Lambda_idx <- c(dat_DE_Lambda_idx, i)
         }
     }
     if (length(dat_DE_Lambda_idx) > 0) {
-        dat_DE <- dat_DE[1:dat_DE_Lambda_idx[1], ]
+        dat_DE <- dat_DE[seq_len(dat_DE_Lambda_idx[1]), ]
         message(paste0("lambda min is at location ", dat_DE_Lambda_idx[1]))
     } else {
         message("no lambda min found, please check output ...")
@@ -218,7 +218,8 @@ training <- function(genes = NULL, cluster_mixedpop1 = NULL,
     # Keep all cells except for those used in the training set note that:
     # subpop1cluster_indx is for the total cells in the source subpop
     # subpop1_train_indx is for the subsampled cells as in
-    # subpop1cluster_indx[sample(1:ncol(mixedpop1),subsampling , replace = F)]
+    # subpop1cluster_indx[sample(seq_len(ncol(mixedpop1)),subsampling ,
+    #     replace = F)]
     
     cluster_select_indx_Round2 <- subpop1cluster_indx[-which(subpop1cluster_indx
         %in% subpop1_train_indx)]
@@ -452,7 +453,8 @@ predicting <- function(listData = NULL, cluster_mixedpop2 = NULL,
         length = length(unique(my.clusters)))
     
     for (clust in unique(my.clusters)) {
-        message(paste0("predicting from source to target subpop ", clust, "..."))
+        message(paste0("predicting from source to target subpop ", clust, 
+            "..."))
         c_selectID_2 <- clust
         cluster_select <- which(my.clusters == c_selectID_2)  #select cells
         message(paste0("number of cells in the target subpop ", clust, " is ", 
@@ -676,7 +678,7 @@ bootstrap <- function(nboots = 1, genes = genes, mixedpop1 = mixedpop1,
     cluster_mixedpop1 = NULL, cluster_mixedpop2 = NULL, trainset_ratio = 0.5, 
     LDA_run = TRUE) {
     
-    for (out_idx in 1:nboots) {
+    for (out_idx in seq_len(nboots)) {
         listData <- training(genes = genes, mixedpop1 = mixedpop1, 
             mixedpop2 = mixedpop2, trainset_ratio = trainset_ratio, c_selectID,
             listData = listData, out_idx = out_idx, 
@@ -750,7 +752,7 @@ bootstrap_parallel <- function(ncores = 4, nboots = 1, genes = genes,
         progressbar = TRUE))
     
     
-    listData <- BiocParallel::bplapply(1:nboots, bootstrap_single, 
+    listData <- BiocParallel::bplapply(seq_len(nboots), bootstrap_single, 
         genes = genes, mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, 
         c_selectID = c_selectID, listData = list())
     return(listData)

@@ -20,7 +20,7 @@ top_var <- function(expression.matrix = NULL, ngenes = 1500) {
     names(gene.variance) <- rownames(expression.matrix)
     sorted.gene.variance <- gene.variance[order(gene.variance, 
         decreasing = TRUE)]
-    top.genes <- sorted.gene.variance[1:ngenes]
+    top.genes <- sorted.gene.variance[seq_len(ngenes)]
     subset.matrix <- expression.matrix[names(top.genes), ]
     return(subset.matrix)
 }
@@ -44,11 +44,11 @@ top_var <- function(expression.matrix = NULL, ngenes = 1500) {
 #'     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
 #' #CIDR_dim <-CIDR(expression.matrix=assay(mixedpop1))
 #' #p <- plot_reduced(CIDR_dim, color_fac = factor(colData(mixedpop1)[,1]),
-#' #     palletes =1:length(unique(colData(mixedpop1)[,1])))
+#' #     palletes = seq_len(length(unique(colData(mixedpop1)[,1]))))
 #' #plot(p)
 #' tSNE_dim <-tSNE(expression.mat=assay(mixedpop1))
 #' p2 <- plot_reduced(tSNE_dim, color_fac = factor(colData(mixedpop1)[,1]),
-#'     palletes =1:length(unique(colData(mixedpop1)[,1])))
+#'     palletes = seq_len(length(unique(colData(mixedpop1)[,1]))))
 #' plot(p2)
 #'
 
@@ -67,8 +67,9 @@ plot_reduced <- function(reduced_dat, color_fac = NULL, dims = c(1, 2),
     p <- qplot(x = reduced_dat[, dims[1]], y = reduced_dat[, dims[2]], 
         alpha = I(0.7), geom = "point", color = color_fac) + theme_bw()
     p <- p + ylab(dimNames[2]) + xlab(dimNames[1]) + 
-        scale_color_manual(name = legend_title, values = palletes[1:sample_num],
-        limits = sort(as.character(as.vector(unique(color_fac)))))
+        scale_color_manual(name = legend_title, 
+            values = palletes[seq_len(sample_num)],
+            limits = sort(as.character(as.vector(unique(color_fac)))))
     p <- p + theme(panel.border = element_rect(colour = "black", fill = NA, 
         size = 1.5)) + theme(legend.position = "bottom") + 
         theme(text = element_text(size = 20))
@@ -77,13 +78,14 @@ plot_reduced <- function(reduced_dat, color_fac = NULL, dims = c(1, 2),
         geom_density(data = reduced_dat_toPlot, aes(reduced_dat_toPlot$Dim2, 
             ..count.., fill = color_fac), size = 0.2, alpha = 0.7) + 
         coord_flip() + scale_fill_manual(name = "Samples", 
-            values = palletes[1:sample_num], 
+            values = palletes[seq_len(sample_num)], 
             limits = sort(as.character(as.vector(unique(color_fac)))))
     
     xaxis <- cowplot::axis_canvas(p, axis = "x") + 
         geom_density(data = reduced_dat_toPlot, aes(reduced_dat_toPlot$Dim1,
             ..count.., fill = color_fac), size = 0.4, alpha = 0.7) + 
-        scale_fill_manual(name = "Samples", values = palletes[1:sample_num], 
+        scale_fill_manual(name = "Samples",
+            values = palletes[seq_len(sample_num)], 
             limits = sort(as.character(as.vector(unique(color_fac)))))
     
     p1_x <- cowplot::insert_xaxis_grob(p, xaxis, grid::unit(0.2, "null"), 
@@ -146,9 +148,10 @@ find_markers <- function(expression_matrix = NULL, cluster = NULL,
         # start DE
         
         condition_cluster = as.vector(cluster)
-        condition_cluster[1:length(mainCl_idx)] <- rep("Others", 
+        condition_cluster[seq_len(length(mainCl_idx))] <- rep("Others", 
             length(mainCl_idx))
-        condition_cluster[(length(mainCl_idx) + 1):ncol(diff_mat)] <- 
+        condition_cluster[
+            seq(from = (length(mainCl_idx) + 1), to = ncol(diff_mat))] <- 
             rep(as.character(cl_id), length(cl_index))
         
         message(paste0("Start estimate dispersions for cluster ", 
@@ -198,7 +201,7 @@ find_markers <- function(expression_matrix = NULL, cluster = NULL,
 #' for plotting
 #' @examples
 #' genes <-training_gene_sample
-#' genes <-genes$Merged_unique[1:50]
+#' genes <-genes$Merged_unique[seq_len(50)]
 #' enrichment_test <- annotate(genes, pvalueCutoff=0.05, 
 #'     gene_symbol=TRUE, species = 'human')
 #' clusterProfiler::dotplot(enrichment_test, showCategory=15)
@@ -262,7 +265,7 @@ annotate <- function(DEgeneList, pvalueCutoff = 0.05, gene_symbol = TRUE,
 
 #' add_import
 #'
-#' @description temp function to import packages to namespace using devtools/roxygen
+#' @description import packages to namespace
 #' @name add_import
 #' @useDynLib scGPS
 #' @importFrom Rcpp evalCpp

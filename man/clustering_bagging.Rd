@@ -5,8 +5,9 @@
 \title{HC clustering for a number of resolutions}
 \usage{
 clustering_bagging(object = NULL, ngenes = 1500, bagging_run = 20,
-  subsample_proportion = 0.8, windows = seq(0.025:1, by = 0.025),
-  remove_outlier = c(0), nRounds = 1, PCA = FALSE, nPCs = 20)
+  subsample_proportion = 0.8, windows = seq(from = 0.025, to = 1, by =
+  0.025), remove_outlier = c(0), nRounds = 1, PCA = FALSE,
+  nPCs = 20)
 }
 \arguments{
 \item{object}{is a \linkS4class{SingleCellExperiment} object from the train

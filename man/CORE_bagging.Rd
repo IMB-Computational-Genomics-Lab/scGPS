@@ -6,9 +6,9 @@
 at Optimal REsolution with bagging and bootstrapping}
 \usage{
 CORE_bagging(mixedpop = NULL, bagging_run = 20,
-  subsample_proportion = 0.8, windows = seq(0.025:1, by = 0.025),
-  remove_outlier = c(0), nRounds = 1, PCA = FALSE, nPCs = 20,
-  ngenes = 1500)
+  subsample_proportion = 0.8, windows = seq(from = 0.025, to = 1, by =
+  0.025), remove_outlier = c(0), nRounds = 1, PCA = FALSE,
+  nPCs = 20, ngenes = 1500)
 }
 \arguments{
 \item{mixedpop}{is a \linkS4class{SingleCellExperiment} object from the train

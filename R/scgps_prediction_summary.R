@@ -116,8 +116,8 @@ summary_deviance <- function(object = NULL) {
 
 summary_prediction_lasso <- function(LSOLDA_dat = NULL, nPredSubpop = NULL) {
     pred_lasso <- LSOLDA_dat$ElasticNetPredict
-    for (i in 1:length(pred_lasso)) {
-        for (j in 1:length(pred_lasso[[i]])) {
+    for (i in seq_len(length(pred_lasso))) {
+        for (j in seq_len(length(pred_lasso[[i]]))) {
             if (identical(pred_lasso[[i]][[j]], numeric(0))) {
                 pred_lasso[[i]][[j]] <- "NA"
             }
@@ -134,7 +134,7 @@ summary_prediction_lasso <- function(LSOLDA_dat = NULL, nPredSubpop = NULL) {
     pred_lasso_mtrx <- matrix(pred_lasso_percentOnly, nrow = nPredSubpop, 
         byrow = FALSE)
     
-    row_names <- pred_lasso_tranformed[toremove[c(1:nPredSubpop)]]
+    row_names <- pred_lasso_tranformed[toremove[seq_len(nPredSubpop)]]
     
     pred_lasso_mtrx <- as.data.frame(pred_lasso_mtrx)
     
@@ -177,8 +177,8 @@ summary_prediction_lasso <- function(LSOLDA_dat = NULL, nPredSubpop = NULL) {
 
 summary_prediction_lda <- function(LSOLDA_dat = NULL, nPredSubpop = NULL) {
     pred_lda <- LSOLDA_dat$LDAPredict
-    for (i in 1:length(pred_lda)) {
-        for (j in 1:length(pred_lda[[i]])) {
+    for (i in seq_len(length(pred_lda))) {
+        for (j in seq_len(length(pred_lda[[i]]))) {
             if (identical(pred_lda[[i]][[j]], numeric(0))) {
                 pred_lda[[i]][[j]] <- "NA"
             }
@@ -194,7 +194,7 @@ summary_prediction_lda <- function(LSOLDA_dat = NULL, nPredSubpop = NULL) {
     pred_lda_mtrx <- matrix(pred_lda_percentOnly, nrow = nPredSubpop, 
         byrow = FALSE)
     
-    row_names <- pred_lda_tranformed[toremove[c(1:nPredSubpop)]]
+    row_names <- pred_lda_tranformed[toremove[seq_len(nPredSubpop)]]
     
     pred_lda_mtrx <- as.data.frame(pred_lda_mtrx)
     
@@ -253,9 +253,9 @@ reformat_LASSO <- function(c_selectID = NULL, mp_selectID = NULL,
     LASSO_out$Source <- source
     LASSO_out$Node <- source
     LASSO_out$Nodes_group <- rep(Nodes_group, length(temp_name))
-    colnames(LASSO_out) <- c(paste0("Boostrap", 1:nboots), "Target", 
+    colnames(LASSO_out) <- c(paste0("Boostrap", seq_len(nboots)), "Target", 
         "Source", "Node", "NodeGroup")
-    matrx_mean <- apply(LASSO_out[, c(1:nboots)], 1, function(x) {
+    matrx_mean <- apply(LASSO_out[, seq_len(nboots)], 1, function(x) {
         mean(as.numeric(x))
     })
     

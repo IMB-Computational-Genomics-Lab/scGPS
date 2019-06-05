@@ -4,8 +4,8 @@
 \alias{sub_clustering}
 \title{sub_clustering for selected cells}
 \usage{
-sub_clustering(object = NULL, ngenes = 1500, windows = seq(0.025:1,
-  by = 0.025), select_cell_index = NULL)
+sub_clustering(object = NULL, ngenes = 1500, windows = seq(from =
+  0.025, to = 1, by = 0.025), select_cell_index = NULL)
 }
 \arguments{
 \item{object}{is a \linkS4class{SingleCellExperiment} object from the
@@ -29,7 +29,7 @@ day5 <- day_5_cardio_cell_sample
 mixedpop2 <-new_summarized_scGPS_object(ExpressionMatrix = day5$dat5_counts, 
     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 test_sub_clustering <-sub_clustering(mixedpop2,
-    select_cell_index = c(1:100))
+    select_cell_index = c(seq_len(100)))
 }
 \author{
 Quan Nguyen, 2018-01-31

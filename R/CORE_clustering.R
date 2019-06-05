@@ -36,8 +36,9 @@
 #' @export
 #' @author Quan Nguyen, 2017-11-25
 
-CORE <- function(mixedpop = NULL, windows = seq(0.025:1, by = 0.025), 
-    remove_outlier = c(0), nRounds = 1, PCA = FALSE, nPCs = 20, ngenes = 1500) {
+CORE <- function(mixedpop = NULL, windows = seq(from = 0.025, to = 1,
+    by = 0.025), remove_outlier = c(0), nRounds = 1, PCA = FALSE, nPCs = 20,
+    ngenes = 1500) {
     cluster_all <- clustering(object = mixedpop, windows = windows, 
         remove_outlier = remove_outlier, 
         nRounds = nRounds, PCA = PCA, nPCs = nPCs)
@@ -72,7 +73,7 @@ CORE <- function(mixedpop = NULL, windows = seq(0.025:1, by = 0.025),
 #' @export
 #' @author Quan Nguyen, 2017-11-25
 
-CORE_subcluster <- function(mixedpop = NULL, windows = seq(0.025:1, 
+CORE_subcluster <- function(mixedpop = NULL, windows = seq(from = 0.025, to = 1,
     by = 0.025), select_cell_index = NULL, ngenes = 1500) {
     
     cluster_all <- sub_clustering(object = mixedpop, windows = windows, 
@@ -114,8 +115,8 @@ CORE_subcluster <- function(mixedpop = NULL, windows = seq(0.025:1,
 #' test <-clustering(mixedpop2, remove_outlier = c(0))
 
 clustering <- function(object = NULL, ngenes = 1500, 
-    windows = seq(0.025:1, by = 0.025), remove_outlier = c(0), nRounds = 1, 
-    PCA = FALSE, nPCs = 20) {
+    windows = seq(from = 0.025, to = 1, by = 0.025), remove_outlier = c(0),
+    nRounds = 1, PCA = FALSE, nPCs = 20) {
     
     # function for the highest resolution clustering (i.e. no window applied, 
     # no cell removal)
@@ -129,10 +130,10 @@ clustering <- function(object = NULL, ngenes = 1500,
             # perform PCA dimensionality reduction
             message(paste0("Performing PCA analysis (Note: the variance for ",
                 "each cell needs to be >0)"))
-            # message('Performing PCA analysis (Note: the variance for each cell 
+            # message('Performing PCA analysis (Note: the variance for each cell
             # needs to be >0)')
             exprs_mat_topVar_PCA <- prcomp(t(exprs_mat_topVar))
-            exprs_mat_t <- as.data.frame(exprs_mat_topVar_PCA$x[, 1:nPCs])
+            exprs_mat_t <- as.data.frame(exprs_mat_topVar_PCA$x[,seq_len(nPCs)])
             
         } else {
             exprs_mat_t <- t(exprs_mat_topVar)
@@ -218,7 +219,7 @@ clustering <- function(object = NULL, ngenes = 1500,
     dist_mat <- firstRound_out$dist_mat
     
     clustering_param <- vector(mode = "list", length = length(windows))
-    for (i in 1:length(windows)) {
+    for (i in seq_len(length(windows))) {
         
         namelist = paste0("window", windows[i])
         toadd <- as.vector(cutreeDynamic(original.tree, 
@@ -256,11 +257,11 @@ clustering <- function(object = NULL, ngenes = 1500,
 #' mixedpop2 <-new_summarized_scGPS_object(ExpressionMatrix = day5$dat5_counts, 
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 #' test_sub_clustering <-sub_clustering(mixedpop2,
-#'     select_cell_index = c(1:100))
+#'     select_cell_index = c(seq_len(100)))
 
 
 sub_clustering <- function(object = NULL, ngenes = 1500, 
-    windows = seq(0.025:1, by = 0.025), select_cell_index = NULL) {
+    windows = seq(from = 0.025, to = 1, by = 0.025), select_cell_index = NULL) {
     
     message("Calculating distance matrix")
     # function for the highest resolution clustering (i.e. no window applied)
@@ -301,7 +302,7 @@ sub_clustering <- function(object = NULL, ngenes = 1500,
     dist_mat <- SelectCluster_out$sub_clustering_out$dist_mat
     
     clustering_param <- vector(mode = "list", length = length(windows))
-    for (i in 1:length(windows)) {
+    for (i in seq_along(length(windows))) {
         
         namelist = paste0("window", windows[i])
         toadd <- as.vector(cutreeDynamic(original.tree, 
@@ -348,7 +349,7 @@ rand_index <- function(tab, adjust = TRUE) {
     choose_new <- function(n, k) {
         n <- c(n)
         out1 <- rep(0, length(n))
-        for (i in c(1:length(n))) {
+        for (i in seq_len(length(n))) {
             if (n[i] < k) {
                 out1[i] <- 0
             } else {
@@ -364,9 +365,9 @@ rand_index <- function(tab, adjust = TRUE) {
     nn <- 0
     m <- nrow(tab)
     n <- ncol(tab)
-    for (i in 1:m) {
+    for (i in seq_len(m)) {
         c <- 0
-        for (j in 1:n) {
+        for (j in seq_len(n)) {
             a <- a + choose_new(tab[i, j], 2)
             nj <- sum(tab[, j])
             c <- c + choose_new(nj, 2)
@@ -419,8 +420,9 @@ find_stability <- function(list_clusters = NULL, cluster_ref = NULL) {
     cluster_index_ref[[1]] <- rand_index(table(unlist(list_clusters[[1]]), 
         cluster_ref))
     
-    for (i in 2:(length(list_clusters))) {
-        cluster_index_consec[[i]] <- rand_index(table(unlist(list_clusters[[i]]),
+    for (i in seq(from = 2, to = length(list_clusters), by = 1)) {
+        cluster_index_consec[[i]] <- 
+            rand_index(table(unlist(list_clusters[[i]]),
             unlist(list_clusters[[i - 1]])))
         cluster_index_ref[[i]] <- rand_index(table(unlist(list_clusters[[i]]), 
             cluster_ref))
@@ -440,7 +442,7 @@ find_stability <- function(list_clusters = NULL, cluster_ref = NULL) {
     counter = rep(0, length(stability))
     
     counter[1] = 1
-    for (i in 2:length(stability) - 1) {
+    for (i in seq(from = 2, to = length(stability) - 1)) {
         if (stability[i] == stability[i + 1]) {
             counter[i + 1] <- counter[i] + 1
         } else {
@@ -451,7 +453,7 @@ find_stability <- function(list_clusters = NULL, cluster_ref = NULL) {
     # second get the counter location where there is no change
     counter_0 = counter
     
-    for (i in 1:(length(counter) - 1)) {
+    for (i in seq_len((length(counter) - 1))) {
         if (counter_0[i] == 1 & counter_0[i + 1] == 1) {
             counter_0[i] = 0
         }
@@ -468,7 +470,7 @@ find_stability <- function(list_clusters = NULL, cluster_ref = NULL) {
         if (index_0[1] == 1) {
             counter_adjusted[1] = 1
         } else {
-            counter_adjusted[1:index_0[1] - 1] <- counter[index_0[1] - 1]
+            counter_adjusted[seq_len(index_0[1] - 1)] <- counter[index_0[1] - 1]
         }
         
         # setup counter 0 on the last left
@@ -477,18 +479,18 @@ find_stability <- function(list_clusters = NULL, cluster_ref = NULL) {
             counter_adjusted[index_0[length_id0]] = 1
         } else {
             length_id0 <- length(index_0)
-            counter_adjusted[(index_0[length_id0] + 1):length(counter)] <- 
-                counter[length(counter)]
+            counter_adjusted[seq(from = (index_0[length_id0] + 1),
+                to = length(counter))] <- counter[length(counter)]
             counter_adjusted[index_0[length_id0]] = 1
         }
         
         # setup counter 0 in the middle (index_0 >=3)
         if (length(index_0) > 2) {
-            for (i in 1:(length(index_0) - 1)) {
+            for (i in seq(length(index_0) - 1)) {
                 if (index_0[i + 1] - index_0[i] > 1) {
                     # assign value to the last count
-                    counter_adjusted[(index_0[i] + 1):(index_0[i + 1] - 1)] = 
-                        counter[index_0[i + 1] - 1]
+                    counter_adjusted[(seq(from = index_0[i] + 1,
+                    to = index_0[i + 1] - 1))] = counter[index_0[i + 1] - 1]
                     counter_adjusted[index_0[i]] = 1  #reset
                 } else {
                     counter_adjusted[(index_0[i] + 1)] = 1
@@ -536,7 +538,7 @@ find_stability <- function(list_clusters = NULL, cluster_ref = NULL) {
 
 
 find_optimal_stability <- function(list_clusters, run_RandIdx, bagging = FALSE, 
-    windows = seq(0.025:1, by = 0.025)) {
+    windows = seq(from = 0.025, to = 1, by = 0.025)) {
     message("Start finding optimal clustering...")
     
     window_param <- length(windows)
@@ -595,7 +597,7 @@ find_optimal_stability <- function(list_clusters, run_RandIdx, bagging = FALSE,
         optimal_param = window_param
     } else {
         concat_St <- vector(mode = "double", length = window_param)
-        for (i in 1:window_param) {
+        for (i in seq_len(window_param)) {
             if (Cluster_count[i] != min(Cluster_count)) {
                 concat_St[i] <- St[i]
             }
@@ -689,7 +691,7 @@ plot_CORE <- function(original.tree, list_clusters = NULL,
         if (autoColorHeight) 
             colorHeight = 0.2 + 0.3 * (1 - exp(-(nRows - 1)/6))
         if (setLayout) 
-            layout(matrix(c(1:2), 2, 1), heights = c(1 - colorHeight, 
+            layout(matrix(c(1, 2), 2, 1), heights = c(1 - colorHeight, 
                 colorHeight))
         par(mar = c(0, marAll[2], marAll[3], marAll[4]))
         plot(dendro, labels = dendroLabels, cex = cex.dendroLabels, ...)
@@ -716,8 +718,8 @@ plot_CORE <- function(original.tree, list_clusters = NULL,
         textPositions = NULL, addTextGuide = TRUE, cex.rowLabels = 1, 
         cex.rowText = 0.8, ...) {
         
-        plot_ordered_colours(dendro$order, colors = colors, rowLabels = rowLabels, 
-            rowWidths = rowWidths, rowText = rowText, 
+        plot_ordered_colours(dendro$order, colors = colors, 
+            rowLabels = rowLabels, rowWidths = rowWidths, rowText = rowText, 
             rowTextAlignment = rowTextAlignment, rowTextIgnore = rowTextIgnore, 
             textPositions = textPositions, addTextGuide = addTextGuide, 
             cex.rowLabels = cex.rowLabels, cex.rowText = cex.rowText, 
@@ -749,9 +751,9 @@ plot_CORE <- function(original.tree, list_clusters = NULL,
         charWidth = strwidth("W")/2
         if (!is.null(rowText)) {
             if (is.null(textPositions)) 
-                textPositions = c(1:nColorRows)
+                textPositions = seq_len(nColorRows)
             if (is.logical(textPositions)) 
-                textPositions = c(1:nColorRows)[textPositions]
+                textPositions = seq_len(nColorRows)[textPositions]
             nTextRows = length(textPositions)
         } else nTextRows = 0
         nRows = nColorRows + nTextRows
@@ -767,19 +769,19 @@ plot_CORE <- function(original.tree, list_clusters = NULL,
         hasText = rep(0, nColorRows)
         hasText[textPositions] = 1
         csPosition = cumsum(c(0, hasText[-nColorRows]))
-        colorRows = c(1:nColorRows) + csPosition
+        colorRows = seq_len(nColorRows) + csPosition
         rowType = rep(2, nRows)
         rowType[colorRows] = 1
-        physicalTextRow = c(1:nRows)[rowType == 2]
-        yBottom = c(0, cumsum(rowWidths[nRows:1]))
-        yTop = cumsum(rowWidths[nRows:1])
+        physicalTextRow = seq_len(nRows)[rowType == 2]
+        yBottom = c(0, cumsum(rowWidths[seq(from = nRows, to = 1)]))
+        yTop = cumsum(rowWidths[seq(from = nRows, to = 1)])
         if (!is.null(rowText)) {
             rowTextAlignment = match.arg(rowTextAlignment)
             rowText = as.matrix(rowText)
             textPos = vector(mode = "list", length = nTextRows)
             textPosY = vector(mode = "list", length = nTextRows)
             textLevs = vector(mode = "list", length = nTextRows)
-            for (tr in 1:nTextRows) {
+            for (tr in seq_len(nTextRows)) {
                 charHeight = max(strheight(rowText[, tr], cex = cex.rowText))
                 width1 = rowWidths[physicalTextRow[tr]]
                 nCharFit = floor(width1/charHeight/1.7/par("lheight"))
@@ -793,7 +795,7 @@ plot_CORE <- function(original.tree, list_clusters = NULL,
                 nLevs = length(textLevs[[tr]])
                 textPos[[tr]] = rep(0, nLevs)
                 orderedText = rowText[order, tr]
-                for (cl in 1:nLevs) {
+                for (cl in seq_len(nLevs)) {
                     ind = orderedText == textLevs[[tr]][cl]
                     sind = ind[-1]
                     ind1 = ind[-length(ind)]
@@ -819,16 +821,16 @@ plot_CORE <- function(original.tree, list_clusters = NULL,
                     yPos = seq(from = nCharFit, to = 1, by = -1)/(nCharFit + 1)
                 }
                 textPosY[[tr]] = rep(yPos, ceiling(nLevs/nCharFit) + 5)[
-                    1:nLevs][rank(textPos[[tr]])]
+                    seq_len(nLevs)][rank(textPos[[tr]])]
             }
         }
         jIndex = nRows
         if (is.null(rowLabels)) 
-            rowLabels = c(1:nColorRows)
+            rowLabels = seq_len(nColorRows)
         C[is.na(C)] = "grey"
-        for (j in 1:nColorRows) {
+        for (j in seq_len(nColorRows)) {
             jj = jIndex
-            ind = (1:dimC[1])
+            ind = seq_len(dimC[1])
             xl = (ind - 1.5 + startAt) * step
             xr = (ind - 0.5 + startAt) * step
             yb = rep(yBottom[jj], dimC[1])
@@ -852,7 +854,7 @@ plot_CORE <- function(original.tree, list_clusters = NULL,
                     (textPosY[[textRow]] + 1/(2 * nCharFit + 2))
                 nt = length(textLevs[[textRow]])
                 if (addTextGuide) 
-                    for (l in 1:nt) lines(c(xt[l], xt[l]), 
+                    for (l in seq_len(nt)) lines(c(xt[l], xt[l]), 
                         c(yt[l], yTop[jIndex]), col = "darkgrey", lty = 3)
                 textAdj = c(0, 0.5, 1)[match(rowTextAlignment, c("left", 
                     "center", "right"))]
@@ -861,8 +863,9 @@ plot_CORE <- function(original.tree, list_clusters = NULL,
             }
             jIndex = jIndex - 1
         }
-        for (j in 0:(nColorRows + nTextRows)) lines(x = c(0, 1), 
-            y = c(yBottom[j + 1], yBottom[j + 1]))
+        for (j in seq(from = 0, to = (nColorRows + nTextRows))) { 
+            lines(x = c(0, 1), y = c(yBottom[j + 1], yBottom[j + 1]))
+        }
     }
     
     #---------------------------------------------------------------------------
@@ -874,7 +877,7 @@ plot_CORE <- function(original.tree, list_clusters = NULL,
     color_range <- color_branch
     number_colors <- length(unique(unlist(col_all)))
     col_all2 <- col_all
-    for (i in 1:number_colors) {
+    for (i in seq_len(number_colors)) {
         col_all2[col_all2 == i] <- as.character(color_range[i])
     }
     colnames(col_all2) <- gsub("V", "", colnames(col_all2))
@@ -909,7 +912,8 @@ plot_CORE <- function(original.tree, list_clusters = NULL,
 #' optimal_res <- CORE_cluster$optimalClust$OptimalRes
 #' optimal_index = which(key_height == optimal_res)
 #' plot_optimal_CORE(original_tree= CORE_cluster$tree, 
-#'     optimal_cluster = unlist(CORE_cluster$Cluster[optimal_index]), shift = -2000)
+#'     optimal_cluster = unlist(CORE_cluster$Cluster[optimal_index]),
+#'     shift = -2000)
 #'
 
 plot_optimal_CORE <- function(original_tree, optimal_cluster = NULL, 
@@ -938,8 +942,8 @@ plot_optimal_CORE <- function(original_tree, optimal_cluster = NULL,
     index_to_overwriteNA <- c(rep(NA, length(dendro.labels)))
     index_to_overwriteNA[1] <- c(round(dendro.labels[1]/2))
     # the loop only uses information from dendro.labels
-    for (i in 2:length(dendro.labels)) {
-        index_to_overwriteNA[i] <- sum(dendro.labels[1:i - 1]) + 
+    for (i in seq(from = 2, to = length(dendro.labels))) {
+        index_to_overwriteNA[i] <- sum(dendro.labels[seq_len(i - 1)]) + 
             round(dendro.labels[i]/2)
         message(i)
         message(index_to_overwriteNA)

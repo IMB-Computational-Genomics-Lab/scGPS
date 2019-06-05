@@ -95,8 +95,8 @@ new_scGPS_object <- function(ExpressionMatrix = NULL, GeneMetadata = NULL,
 #'
 #'
 #'
-new_summarized_scGPS_object <- function(ExpressionMatrix = NULL, GeneMetadata = NULL, 
-    CellMetadata = NULL) {
+new_summarized_scGPS_object <- function(ExpressionMatrix = NULL, 
+    GeneMetadata = NULL, CellMetadata = NULL) {
     # Check that we have the essential arguments - an expression matrix
     arg.check <- list(ExpressionMatrix = missing(ExpressionMatrix), 
         GeneMetadata = missing(GeneMetadata), 

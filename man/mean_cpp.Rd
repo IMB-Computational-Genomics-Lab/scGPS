@@ -16,6 +16,6 @@ a scalar value
 Calculate mean
 }
 \examples{
-mean_cpp(c(1:10^6))
+mean_cpp(seq_len(10^6))
 
 }

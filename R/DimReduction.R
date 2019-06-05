@@ -33,7 +33,7 @@ PCA <- function(expression.matrix = NULL, ngenes = 1500, scaling = TRUE,
     pca.result <- stats::prcomp(pca.input.matrix, scale = scaling)
     pca.percent.var <- pca.result$sdev^2/sum(pca.result$sdev^2)
 
-    return(list(reduced_dat = pca.result$x[, 1:npcs], 
+    return(list(reduced_dat = pca.result$x[, seq_len(npcs)], 
         variance = pca.percent.var))
 }
 

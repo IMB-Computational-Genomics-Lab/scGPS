@@ -37,7 +37,8 @@ key_height <- CORE_cluster$optimalClust$KeyStats$Height
 optimal_res <- CORE_cluster$optimalClust$OptimalRes
 optimal_index = which(key_height == optimal_res)
 plot_optimal_CORE(original_tree= CORE_cluster$tree, 
-    optimal_cluster = unlist(CORE_cluster$Cluster[optimal_index]), shift = -2000)
+    optimal_cluster = unlist(CORE_cluster$Cluster[optimal_index]),
+    shift = -2000)
 
 }
 \author{

@@ -83,7 +83,7 @@ rcpp_Eucl_distance_NotPar <- function(mat) {
 #' @return a scalar value
 #' @export
 #' @examples
-#' mean_cpp(c(1:10^6))
+#' mean_cpp(seq_len(10^6))
 #'
 mean_cpp <- function(x) {
     .Call('_scGPS_mean_cpp', PACKAGE = 'scGPS', x)
@@ -96,7 +96,7 @@ mean_cpp <- function(x) {
 #' @return a variance value
 #' @export
 #' @examples
-#'var_cpp(c(1:10^6))
+#'var_cpp(seq_len(10^6))
 #'
 var_cpp <- function(x, bias = TRUE) {
     .Call('_scGPS_var_cpp', PACKAGE = 'scGPS', x, bias)

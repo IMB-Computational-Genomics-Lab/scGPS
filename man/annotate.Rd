@@ -30,7 +30,7 @@ installation of several databases as described below.
 }
 \examples{
 genes <-training_gene_sample
-genes <-genes$Merged_unique[1:50]
+genes <-genes$Merged_unique[seq_len(50)]
 enrichment_test <- annotate(genes, pvalueCutoff=0.05, 
     gene_symbol=TRUE, species = 'human')
 clusterProfiler::dotplot(enrichment_test, showCategory=15)

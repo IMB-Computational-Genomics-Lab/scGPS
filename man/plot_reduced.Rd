@@ -36,11 +36,11 @@ mixedpop1 <-new_scGPS_object(ExpressionMatrix = day2$dat2_counts,
     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
 #CIDR_dim <-CIDR(expression.matrix=assay(mixedpop1))
 #p <- plot_reduced(CIDR_dim, color_fac = factor(colData(mixedpop1)[,1]),
-#     palletes =1:length(unique(colData(mixedpop1)[,1])))
+#     palletes = seq_len(length(unique(colData(mixedpop1)[,1]))))
 #plot(p)
 tSNE_dim <-tSNE(expression.mat=assay(mixedpop1))
 p2 <- plot_reduced(tSNE_dim, color_fac = factor(colData(mixedpop1)[,1]),
-    palletes =1:length(unique(colData(mixedpop1)[,1])))
+    palletes = seq_len(length(unique(colData(mixedpop1)[,1]))))
 plot(p2)
 
 }

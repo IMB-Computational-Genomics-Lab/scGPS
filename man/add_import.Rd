@@ -4,5 +4,5 @@
 \alias{add_import}
 \title{add_import}
 \description{
-temp function to import packages to namespace using devtools/roxygen
+import packages to namespace
 }

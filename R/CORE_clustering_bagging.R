@@ -38,7 +38,7 @@
 #' @author Quan Nguyen, 2018-05-11
 
 CORE_bagging <- function(mixedpop = NULL, bagging_run = 20, 
-    subsample_proportion = 0.8, windows = seq(0.025:1, by = 0.025), 
+    subsample_proportion = 0.8, windows = seq(from = 0.025, to = 1, by = 0.025),
     remove_outlier = c(0), nRounds = 1, PCA = FALSE, nPCs = 20, ngenes = 1500) {
     
     # perform the clustering runs
@@ -50,7 +50,7 @@ CORE_bagging <- function(mixedpop = NULL, bagging_run = 20,
     
     # find the optimal stability for each of the bagging runs
     optimal_stab <- vector(mode = "list", length = bagging_run)
-    for (i in 1:bagging_run) {
+    for (i in seq_len(bagging_run)) {
         stab_df <- find_stability(list_clusters = 
             cluster_all$bootstrap_clusters[[i]][[1]], 
             cluster_ref = unname(unlist(
@@ -63,13 +63,13 @@ CORE_bagging <- function(mixedpop = NULL, bagging_run = 20,
     
     # record the optimal and highest resolutions to find stable cluster
     OptimalCluster_bagging <- vector(mode = "double", length = bagging_run)
-    for (i in 1:bagging_run) {
+    for (i in seq_len(bagging_run)) {
         OptimalCluster_bagging[i] <- optimal_stab[[i]]$OptimalClust
     }
     
     # to find rare cluster
     RareCluster_bagging <- vector(mode = "double", length  = bagging_run)
-    for (i in 1:bagging_run) {
+    for (i in seq_len(bagging_run)) {
         RareCluster_bagging[i] <- optimal_stab[[i]]$HighestRes
     }
     
@@ -78,7 +78,7 @@ CORE_bagging <- function(mixedpop = NULL, bagging_run = 20,
         OptimalCluster_bagging))[1]
     
     NumberClusters <- vector(mode = "double", length  = length(windows))
-    for (i in 1:length(windows)) {
+    for (i in seq_len(length(windows))) {
         NumberClusters[i] <- max(unlist(cluster_all$clustering_param[[i]]))
     }
     
@@ -145,8 +145,8 @@ CORE_bagging <- function(mixedpop = NULL, bagging_run = 20,
 
 clustering_bagging <- function(object = NULL, ngenes = 1500, 
     bagging_run = 20, subsample_proportion = 0.8, 
-    windows = seq(0.025:1, by = 0.025), remove_outlier = c(0), nRounds = 1, 
-    PCA = FALSE, nPCs = 20) {
+    windows = seq(from = 0.025, to = 1, by = 0.025), remove_outlier = c(0),
+    nRounds = 1, PCA = FALSE, nPCs = 20) {
     
     
     # function for the highest resolution clustering (i.e. no window applied)
@@ -163,7 +163,7 @@ clustering_bagging <- function(object = NULL, ngenes = 1500,
             message(paste0("Performing PCA analysis ", 
                 "(Note: the variance for each cell needs to be > 0)"))
             exprs_mat_topVar_PCA <- prcomp(t(exprs_mat_topVar))
-            exprs_mat_t <- as.data.frame(exprs_mat_topVar_PCA$x[, 1:nPCs])
+            exprs_mat_t <- as.data.frame(exprs_mat_topVar_PCA$x[,seq_len(nPCs)])
             
         }
         
@@ -261,7 +261,7 @@ clustering_bagging <- function(object = NULL, ngenes = 1500,
         
         clustering_param <- vector(mode = "list", length = length(windows))
         
-        for (i in 1:length(windows)) {
+        for (i in seq_len(length(windows))) {
             
             namelist = paste0("window", windows[i])
             toadd <- as.vector(cutreeDynamic(tree, distM = as.matrix(dist_mat), 
@@ -281,9 +281,9 @@ clustering_bagging <- function(object = NULL, ngenes = 1500,
     message(paste0("Running ", bagging_run, " bagging runs, with ", 
         subsample_proportion, " subsampling..."))
     bootstrap_list <- vector(mode = "list", length = bagging_run)
-    for (i in 1:bagging_run) {
+    for (i in seq_len(bagging_run)) {
         # subsample the distance matrix for every bagging run
-        dist_mat_bootstrap_row_idx <- sample(1:nrow(exprs_mat_t), 
+        dist_mat_bootstrap_row_idx <- sample(seq_len(nrow(exprs_mat_t)), 
             subsample_proportion * nrow(exprs_mat_t), replace = TRUE)
         dist_mat_bootstrap <- dist_mat[dist_mat_bootstrap_row_idx, 
             dist_mat_bootstrap_row_idx]

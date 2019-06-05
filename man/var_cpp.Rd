@@ -18,6 +18,6 @@ a variance value
 Calculate variance
 }
 \examples{
-var_cpp(c(1:10^6))
+var_cpp(seq_len(10^6))
 
 }

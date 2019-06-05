@@ -4,7 +4,7 @@
 \alias{CORE}
 \title{Main clustering CORE V2.0 updated}
 \usage{
-CORE(mixedpop = NULL, windows = seq(0.025:1, by = 0.025),
+CORE(mixedpop = NULL, windows = seq(from = 0.025, to = 1, by = 0.025),
   remove_outlier = c(0), nRounds = 1, PCA = FALSE, nPCs = 20,
   ngenes = 1500)
 }
