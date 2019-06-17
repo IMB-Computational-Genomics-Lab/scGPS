@@ -184,7 +184,7 @@ find_markers <- function(expression_matrix = NULL, cluster = NULL,
     return(DE_results)
 }
 
-#' annotate functionally annotates the identified clusters
+#' annotate_clusters functionally annotates the identified clusters
 #'
 #' @description often we need to label clusters with unique biological 
 #' characters. One of the common approach to annotate a cluster is to perform 
@@ -202,7 +202,7 @@ find_markers <- function(expression_matrix = NULL, cluster = NULL,
 #' @examples
 #' genes <-training_gene_sample
 #' genes <-genes$Merged_unique[seq_len(50)]
-#' enrichment_test <- annotate(genes, pvalueCutoff=0.05, 
+#' enrichment_test <- annotate_clusters(genes, pvalueCutoff=0.05, 
 #'     gene_symbol=TRUE, species = 'human')
 #' clusterProfiler::dotplot(enrichment_test, showCategory=15)
 #'
@@ -219,7 +219,7 @@ find_markers <- function(expression_matrix = NULL, cluster = NULL,
 # type='source') Done installation needed for reactome pathway analysis reactome
 # in R----------------------------
 
-annotate <- function(DEgeneList, pvalueCutoff = 0.05, gene_symbol = TRUE,
+annotate_clusters <- function(DEgeneList, pvalueCutoff = 0.05, gene_symbol = TRUE,
     species = "human") {
     # assumming the geneList is gene symbol (common for 10X data)
     if (species == "human") {

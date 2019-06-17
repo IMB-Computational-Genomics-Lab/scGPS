@@ -51,14 +51,14 @@ CORE_bagging <- function(mixedpop = NULL, bagging_run = 20,
     # find the optimal stability for each of the bagging runs
     optimal_stab <- vector(mode = "list", length = bagging_run)
     for (i in seq_len(bagging_run)) {
-        stab_df <- find_stability(list_clusters = 
+        stab_df <- suppressMessages(find_stability(list_clusters = 
             cluster_all$bootstrap_clusters[[i]][[1]], 
             cluster_ref = unname(unlist(
-            cluster_all$bootstrap_clusters[[i]][[1]][[1]])))
+            cluster_all$bootstrap_clusters[[i]][[1]][[1]]))))
         
-        optimal_stab[[i]] <- find_optimal_stability(list_clusters = 
-            cluster_all$bootstrap_clusters[[i]][[1]], 
-            stab_df, bagging = TRUE, windows = windows)
+        optimal_stab[[i]] <- suppressMessages(find_optimal_stability(
+            list_clusters = cluster_all$bootstrap_clusters[[i]][[1]], 
+            stab_df, bagging = TRUE, windows = windows))
     }
     
     # record the optimal and highest resolutions to find stable cluster
@@ -101,7 +101,7 @@ CORE_bagging <- function(mixedpop = NULL, bagging_run = 20,
     }
     
     optimal_index <- which(NumberClusters == OptimalCluster_bagging_count)[1]
-    
+    message("Done finding optimal clustering")
     
     return(list(Cluster = cluster_all$clustering_param, tree = cluster_all$tree,
         optimalClust = OptimalCluster_bagging, 

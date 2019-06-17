@@ -1,26 +1,20 @@
 ---
 title: "scGPS introduction"
-description: "scGPS is a single cell RNA analysis framework to decompose a mixed
-population into clusters (SCORE), followed by analysing the relationship
-between clusters (scGPS)"
+description: "scGPS is a single cell RNA analysis framework to decompose a mixed population into clusters (SCORE), followed by analysing the relationship between clusters (scGPS)"
 author: "Quan Nguyen and Michael Thompson"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
     %\VignetteIndexEntry{single cell Global fate Potential of Subpopulations}
     %\VignetteEngine{knitr::rmarkdown}
-    %\VignetteEncoding{UTF-8}
+    \usepackage[utf8]{inputenc}
 ---
 
-```{r setup, out.width = '100%', include = FALSE, eval = FALSE}
+```{r setup, eval = TRUE, echo = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.path = "man/figures/",
-  fig.keep = 'all'
+    collapse = TRUE,
+    comment = "#>"
 )
-#Homepage 
-knitr::include_graphics("./man/figures/packagePlan.png")
 ```
 
 #1. Installation instruction
@@ -69,6 +63,7 @@ mixedpop2 <- new_scGPS_object(ExpressionMatrix = day5$dat5_counts,
     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
 
 ```
+
 ##2.2 Run prediction
 ```{r prediction, warning = FALSE, message = FALSE}
 
@@ -81,20 +76,15 @@ genes <- genes$Merged_unique
 cluster_mixedpop1 <- colData(mixedpop1)[,1]
 cluster_mixedpop2 <- colData(mixedpop2)[,1]
 #run training (running nboots = 3 here, but recommend to use nboots = 50-100)
-LSOLDA_dat <- bootstrap(nboots = 3, mixedpop1 = mixedpop1, 
+LSOLDA_dat <- bootstrap_prediction(nboots = 3, mixedpop1 = mixedpop1, 
     mixedpop2 = mixedpop2, genes = genes, c_selectID  = c_selectID,
     listData = list(), cluster_mixedpop1 = cluster_mixedpop1, 
     cluster_mixedpop2 = cluster_mixedpop2, trainset_ratio = 0.7)
-
+names(LSOLDA_dat)
 ```
+
 ##2.3 Summarise results 
 ```{r summarise_results, warning = FALSE, message = FALSE}
-
-# display the list of result information in the LASOLDA_dat object 
-names(LSOLDA_dat)
-LSOLDA_dat$ElasticNetPredict
-LSOLDA_dat$LDAPredict
-
 # summary results LDA
 sum_pred_lda <- summary_prediction_lda(LSOLDA_dat = LSOLDA_dat, nPredSubpop = 4)
 # summary results Lasso to show the percent of cells
@@ -118,407 +108,399 @@ plot_sum(sum_pred_lda)
 summary_accuracy(object = LSOLDA_dat)
 # summary maximum deviance explained by the model 
 summary_deviance(object = LSOLDA_dat)
-
-###############################################
-# for building time in bioconductor, the following 
-# is not run, but users can run it in their machine
-###############################################
-# #3. A complete workflow of the scGPS:
-# * The purpose of this workflow is to solve the following task: given an unknown*
-#   * mixed population, find clusters and estimate relationship between clusters*
-#   
-#   ##3.1 Identify clusters in a dataset using CORE
-#   *(skip this step if clusters are known)*
-#   ```{r CORE, warning = FALSE, message = FALSE, eval = FALSE}
-# 
-# # find clustering information in an expresion data using CORE
-# day5 <- day_5_cardio_cell_sample
-# cellnames <- colnames(day5$dat5_counts)
-# cluster <-day5$dat5_clusters
-# cellnames <-data.frame("Cluster"=cluster, "cellBarcodes" = cellnames)
-# mixedpop2 <-new_scGPS_object(ExpressionMatrix = day5$dat5_counts,
-#                      GeneMetadata = day5$dat5geneInfo, CellMetadata = cellnames)
-# 
-# CORE_cluster <- CORE(mixedpop2, remove_outlier = c(0), PCA=FALSE)
-# 
-# # to update the clustering information, users can ...
-# key_height <- CORE_cluster$optimalClust$KeyStats$Height
-# optimal_res <- CORE_cluster$optimalClust$OptimalRes
-# optimal_index = which(key_height == optimal_res)
-# 
-# clustering_after_outlier_removal <- unname(unlist(
-#   CORE_cluster$Cluster[[optimal_index]]))
-# corresponding_cells_after_outlier_removal <- CORE_cluster$cellsForClustering
-# original_cells_before_removal <- colData(mixedpop2)[,2]
-# corresponding_index <- match(corresponding_cells_after_outlier_removal,
-#                              original_cells_before_removal )
-# # check the matching
-# identical(as.character(original_cells_before_removal[corresponding_index]),
-#           corresponding_cells_after_outlier_removal)
-# # create new object with the new clustering after removing outliers
-# mixedpop2_post_clustering <- mixedpop2[,corresponding_index]
-# colData(mixedpop2_post_clustering)[,1] <- clustering_after_outlier_removal
-# 
-# ```
-# 
-# ##3.2 Identify clusters in a dataset using SCORE
-# ##(Stable Clustering at Optimal REsolution)
-# *(skip this step if clusters are known)*
-#   *(SCORE aims to get stable subpopulation results, *
-#       * by introducing bagging aggregation and bootstrapping to the CORE algorithm)*
-#   ```{r SCORE with bagging, warning = FALSE, message = FALSE, eval = FALSE}
-# 
-# # find clustering information in an expresion data using SCORE
-# day5 <- day_5_cardio_cell_sample
-# cellnames <- colnames(day5$dat5_counts)
-# cluster <-day5$dat5_clusters
-# cellnames <-data.frame("Cluster"=cluster, "cellBarcodes" = cellnames)
-# mixedpop2 <-new_scGPS_object(ExpressionMatrix = day5$dat5_counts,
-#                      GeneMetadata = day5$dat5geneInfo, CellMetadata = cellnames )
-# 
-# SCORE_test <- CORE_bagging(mixedpop2, remove_outlier = c(0), PCA=FALSE,
-#                                  bagging_run = 20, subsample_proportion = .8)
-# 
-# ```
-# 
-# ##3.3 Visualise all cluster results in all iterations
-# ```{r visualisation, dev='CairoPDF', eval = FALSE}
-# dev.off()
-# ##3.2.1 plot CORE clustering
-# p1 <- plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster,
-#                 color_branch = c("#208eb7", "#6ce9d3", "#1c5e39", "#8fca40", "#154975",
-#                                  "#b1c8eb"))
-# p1
-# #extract optimal index identified by CORE
-# key_height <- CORE_cluster$optimalClust$KeyStats$Height
-# optimal_res <- CORE_cluster$optimalClust$OptimalRes
-# optimal_index = which(key_height == optimal_res)
-# #plot one optimal clustering bar
-# plot_optimal_CORE(original_tree= CORE_cluster$tree,
-#                   optimal_cluster = unlist(CORE_cluster$Cluster[optimal_index]),
-#                   shift = -2000)
-# 
-# ##3.2.2 plot SCORE clustering
-# #plot all clustering bars
-# plot_CORE(SCORE_test$tree, list_clusters = SCORE_test$Cluster)
-# #plot one stable optimal clustering bar
-# plot_optimal_CORE(original_tree= SCORE_test$tree,
-#                   optimal_cluster = unlist(SCORE_test$Cluster[SCORE_test$optimal_index]),
-#                   shift = -100)
-# 
-# ```
-# 
-# ##3.4 Compare clustering results with other dimensional reduction methods
-# ##(e.g., tSNE or CIDR)
-# ```{r compare_clustering, eval = FALSE}
-# #library(cidr)
-# t <- tSNE(expression.mat=assay(mixedpop2))
-# p2 <-plotReduced(t, color_fac = factor(colData(mixedpop2)[,1]),
-#                        palletes =1:length(unique(colData(mixedpop2)[,1])))
-# p2
-# ```
-# 
-# ##3.5 Find gene markers and annotate clusters
-# 
-# ```{r find_markers, warning = FALSE, message = FALSE, eval = FALSE}
-# #load gene list (this can be any lists of user-selected genes)
-# genes <-training_gene_sample
-# genes <-genes$Merged_unique
-# 
-# #the gene list can also be objectively identified by differential expression
-# #analysis cluster information is requied for find_markers. Here, we use
-# #CORE results.
-# 
-# #colData(mixedpop2)[,1] <- unlist(SCORE_test$Cluster[SCORE_test$optimal_index])
-# 
-# suppressMessages(library(locfit))
-# suppressMessages(library(DESeq))
-# 
-# DEgenes <- find_markers(expression_matrix=assay(mixedpop2),
-#                              cluster = colData(mixedpop2)[,1],
-#                              selected_cluster=unique(colData(mixedpop2)[,1]))
-# 
-# #the output contains dataframes for each cluster.
-# #the data frame contains all genes, sorted by p-values
-# names(DEgenes)
-# 
-# #you can annotate the identified clusters
-# DEgeneList_1vsOthers <- DEgenes$DE_Subpop1vsRemaining$id
-# 
-# #users need to check the format of the gene input to make sure they are
-# #consistent to the gene names in the expression matrix
-# 
-# #the following command saves the file "PathwayEnrichment.xlsx" to the
-# #working dir
-# #use 500 top DE genes
-# suppressMessages(library(DOSE))
-# suppressMessages(library(ReactomePA))
-# suppressMessages(library(clusterProfiler))
-# enrichment_test <- annotate(DEgeneList_1vsOthers[1:500],
-#                                   pvalueCutoff=0.05, gene_symbol=TRUE)
-# 
-# #the enrichment outputs can be displayed by running
-# dotplot(enrichment_test, showCategory=10, font.size = 6)
-# 
-# ```
-# 
-# #4. Relationship between clusters within one sample or between two samples
-# *The purpose of this workflow is to solve the following task: *
-#   *given one or two unknown mixed population(s) and clusters in each mixed*
-#   *population, estimate and visualise relationship between clusters*
-#   
-#   ##4.1 Start the scGPS prediction to find relationship between clusters
-#   
-#   ```{r scGPS_prediction, warning = FALSE, message = FALSE, eval = FALSE}
-# 
-# #select a subpopulation, and input gene list
-# c_selectID <- 1
-# #note make sure the format for genes input here is the same to the format
-# #for genes in the mixedpop1 and mixedpop2
-# genes = DEgenes$DE_Subpop1vsRemaining$id[1:500]
-# 
-# #run the test bootstrap with nboots = 2 runs
-# 
-# cluster_mixedpop1 <- colData(mixedpop1)[,1]
-# cluster_mixedpop2 <- colData(mixedpop2)[,1]
-# 
-# sink("temp")
-# LSOLDA_dat <- bootstrap(nboots = 2, mixedpop1 = mixedpop1,
-#                               mixedpop2 = mixedpop2, genes = genes, c_selectID  = c_selectID,
-#                               listData = list(),
-#                               cluster_mixedpop1 = cluster_mixedpop1,
-#                               cluster_mixedpop2 = cluster_mixedpop2)
-# 
-# sink()
-# 
-# ```
-# 
-# ##4.2 Display summary results for the prediction
-# 
-# ```{r summarise_prediction, eval = FALSE}
-# #get the number of rows for the summary matrix
-# row_cluster <-length(unique(colData(mixedpop2)[,1]))
-# 
-# #summary results LDA to to show the percent of cells classified as cells
-# #belonging by LDA classifier
-# summary_prediction_lda(LSOLDA_dat=LSOLDA_dat, nPredSubpop = row_cluster )
-# 
-# #summary results Lasso to show the percent of cells classified as cells
-# #belonging by Lasso classifier
-# summary_prediction_lasso(LSOLDA_dat=LSOLDA_dat, nPredSubpop = row_cluster)
-# 
-# # summary maximum deviance explained by the model during the model training
-# summary_deviance(object = LSOLDA_dat)
-# 
-# # summary accuracy to check the model accuracy in the leave-out test set
-# summary_accuracy(object = LSOLDA_dat)
-# 
-# ```
-# 
-# ##4.3 Plot the relationship between clusters in one sample
-# *Here we look at one example use case to find relationship between clusters
-# #within one sample or between two sample*
-# 
-# ```{r prediction_one_sample, warning = FALSE, message = FALSE, eval = FALSE}
-# #run prediction for 3 clusters
-# cluster_mixedpop1 <- colData(mixedpop1)[,1]
-# cluster_mixedpop2 <- colData(mixedpop2)[,1]
-# #cluster_mixedpop2 <- as.numeric(as.vector(colData(mixedpop2)[,1]))
-# 
-# c_selectID <- 1
-# #top 200 gene markers distinguishing cluster 1
-# genes = DEgenes$DE_Subpop1vsRemaining$id[1:200]
-# 
-# LSOLDA_dat1 <- bootstrap(nboots = 2, mixedpop1 = mixedpop2,
-#                                mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
-#                                cluster_mixedpop1 = cluster_mixedpop2,
-#                                cluster_mixedpop2 = cluster_mixedpop2)
-# 
-# c_selectID <- 2
-# genes = DEgenes$DE_Subpop2vsRemaining$id[1:200]
-# 
-# LSOLDA_dat2 <- bootstrap(nboots = 2,mixedpop1 = mixedpop2,
-#                                mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
-#                                cluster_mixedpop1 = cluster_mixedpop2,
-#                                cluster_mixedpop2 = cluster_mixedpop2)
-# 
-# c_selectID <- 3
-# genes = DEgenes$DE_Subpop3vsRemaining$id[1:200]
-# LSOLDA_dat3 <- bootstrap(nboots = 2,mixedpop1 = mixedpop2,
-#                                mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
-#                                cluster_mixedpop1 = cluster_mixedpop2,
-#                                cluster_mixedpop2 = cluster_mixedpop2)
-# 
-# c_selectID <- 4
-# genes = DEgenes$DE_Subpop4vsRemaining$id[1:200]
-# LSOLDA_dat4 <- bootstrap(nboots = 2,mixedpop1 = mixedpop2,
-#                                mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
-#                                cluster_mixedpop1 = cluster_mixedpop2,
-#                                cluster_mixedpop2 = cluster_mixedpop2)
-# 
-# 
-# #prepare table input for sankey plot
-# 
-# LASSO_C1S2  <- reformat_LASSO(c_selectID=1, mp_selectID = 2,
-#                               LSOLDA_dat=LSOLDA_dat1,
-#                               nPredSubpop = length(unique(colData(mixedpop2)[,1])),
-#                               Nodes_group ="#7570b3")
-# 
-# LASSO_C2S2  <- reformat_LASSO(c_selectID=2, mp_selectID =2,
-#                               LSOLDA_dat=LSOLDA_dat2,
-#                               nPredSubpop = length(unique(colData(mixedpop2)[,1])),
-#                               Nodes_group ="#1b9e77")
-# 
-# LASSO_C3S2  <- reformat_LASSO(c_selectID=3, mp_selectID =2,
-#                               LSOLDA_dat=LSOLDA_dat3,
-#                               nPredSubpop = length(unique(colData(mixedpop2)[,1])),
-#                               Nodes_group ="#e7298a")
-# 
-# LASSO_C4S2  <- reformat_LASSO(c_selectID=4, mp_selectID =2,
-#                               LSOLDA_dat=LSOLDA_dat4,
-#                               nPredSubpop = length(unique(colData(mixedpop2)[,1])),
-#                               Nodes_group ="#00FFFF")
-# 
-# combined <- rbind(LASSO_C1S2,LASSO_C2S2,LASSO_C3S2, LASSO_C4S2 )
-# combined <- combined[is.na(combined$Value) != TRUE,]
-# 
-# nboots = 2
-# #links: source, target, value
-# #source: node, nodegroup
-# combined_D3obj <-list(Nodes=combined[,(nboots+3):(nboots+4)],
-#                       Links=combined[,c((nboots+2):(nboots+1),ncol(combined))])
-# 
-# library(networkD3)
-# 
-# Node_source <- as.vector(sort(unique(combined_D3obj$Links$Source)))
-# Node_target <- as.vector(sort(unique(combined_D3obj$Links$Target)))
-# Node_all <-unique(c(Node_source, Node_target))
-# 
-# #assign IDs for Source (start from 0)
-# Source <-combined_D3obj$Links$Source
-# Target <- combined_D3obj$Links$Target
-# 
-# for(i in 1:length(Node_all)){
-#   Source[Source==Node_all[i]] <-i-1
-#   Target[Target==Node_all[i]] <-i-1
-# }
-# 
-# combined_D3obj$Links$Source <- as.numeric(Source)
-# combined_D3obj$Links$Target <- as.numeric(Target)
-# combined_D3obj$Links$LinkColor <- combined$NodeGroup
-# 
-# #prepare node info
-# node_df <-data.frame(Node=Node_all)
-# node_df$id <-as.numeric(c(0, 1:(length(Node_all)-1)))
-# 
-# suppressMessages(library(dplyr))
-# Color <- combined %>% count(Node, color=NodeGroup) %>% select(2)
-# node_df$color <- Color$color
-# 
-# suppressMessages(library(networkD3))
-# p1<-sankeyNetwork(Links =combined_D3obj$Links, Nodes = node_df,
-#                   Value = "Value", NodeGroup ="color", LinkGroup = "LinkColor", NodeID="Node",
-#                   Source="Source", Target="Target", fontSize = 22 )
-# p1
-# 
-# #saveNetwork(p1, file = paste0(path,'Subpopulation_Net.html'))
-# 
-# ```
-# 
-# ##4.3 Plot the relationship between clusters in two samples
-# *Here we look at one example use case to find relationship between clusters*
-#   *within one sample or between two sample*
-#   
-#   ```{r prediction_two_samples,warning = FALSE, message = FALSE, eval = FALSE}
-# #run prediction for 3 clusters
-# cluster_mixedpop1 <- colData(mixedpop1)[,1]
-# cluster_mixedpop2 <- colData(mixedpop2)[,1]
-# row_cluster <-length(unique(colData(mixedpop2)[,1]))
-# 
-# c_selectID <- 1
-# #top 200 gene markers distinguishing cluster 1
-# genes = DEgenes$DE_Subpop1vsRemaining$id[1:200]
-# LSOLDA_dat1 <- bootstrap(nboots = 2, mixedpop1 = mixedpop1,
-#                                mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
-#                                cluster_mixedpop1 = cluster_mixedpop1,
-#                                cluster_mixedpop2 = cluster_mixedpop2)
-# 
-# 
-# c_selectID <- 2
-# genes = DEgenes$DE_Subpop2vsRemaining$id[1:200]
-# LSOLDA_dat2 <- bootstrap(nboots = 2,mixedpop1 = mixedpop1,
-#                                mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
-#                                cluster_mixedpop1 = cluster_mixedpop1,
-#                                cluster_mixedpop2 = cluster_mixedpop2)
-# 
-# c_selectID <- 3
-# genes = DEgenes$DE_Subpop3vsRemaining$id[1:200]
-# LSOLDA_dat3 <- bootstrap(nboots = 2,mixedpop1 = mixedpop1,
-#                                mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
-#                                cluster_mixedpop1 = cluster_mixedpop1,
-#                                cluster_mixedpop2 = cluster_mixedpop2)
-# 
-# #prepare table input for sankey plot
-# 
-# LASSO_C1S1  <- reformat_LASSO(c_selectID=1, mp_selectID = 1,
-#                               LSOLDA_dat=LSOLDA_dat1, nPredSubpop = row_cluster, Nodes_group = "#7570b3")
-# 
-# LASSO_C2S1  <- reformat_LASSO(c_selectID=2, mp_selectID = 1,
-#                               LSOLDA_dat=LSOLDA_dat2, nPredSubpop = row_cluster, Nodes_group = "#1b9e77")
-# 
-# LASSO_C3S1  <- reformat_LASSO(c_selectID=3, mp_selectID = 1,
-#                               LSOLDA_dat=LSOLDA_dat3, nPredSubpop = row_cluster, Nodes_group = "#e7298a")
-# 
-# 
-# combined <- rbind(LASSO_C1S1,LASSO_C2S1,LASSO_C3S1)
-# 
-# nboots = 2
-# #links: source, target, value
-# #source: node, nodegroup
-# combined_D3obj <-list(Nodes=combined[,(nboots+3):(nboots+4)],
-#                       Links=combined[,c((nboots+2):(nboots+1),ncol(combined))])
-# combined <- combined[is.na(combined$Value) != TRUE,]
-# 
-# 
-# library(networkD3)
-# 
-# Node_source <- as.vector(sort(unique(combined_D3obj$Links$Source)))
-# Node_target <- as.vector(sort(unique(combined_D3obj$Links$Target)))
-# Node_all <-unique(c(Node_source, Node_target))
-# 
-# #assign IDs for Source (start from 0)
-# Source <-combined_D3obj$Links$Source
-# Target <- combined_D3obj$Links$Target
-# 
-# for(i in 1:length(Node_all)){
-#   Source[Source==Node_all[i]] <-i-1
-#   Target[Target==Node_all[i]] <-i-1
-# }
-# 
-# combined_D3obj$Links$Source <- as.numeric(Source)
-# combined_D3obj$Links$Target <- as.numeric(Target)
-# combined_D3obj$Links$LinkColor <- combined$NodeGroup
-# 
-# #prepare node info
-# node_df <-data.frame(Node=Node_all)
-# node_df$id <-as.numeric(c(0, 1:(length(Node_all)-1)))
-# 
-# suppressMessages(library(dplyr))
-# n <- length(unique(node_df$Node))
-# getPalette = colorRampPalette(RColorBrewer::brewer.pal(9, "Set1"))
-# Color = getPalette(n)
-# node_df$color <- Color
-# suppressMessages(library(networkD3))
-# p1<-sankeyNetwork(Links =combined_D3obj$Links, Nodes = node_df,
-#                   Value = "Value", NodeGroup ="color", LinkGroup = "LinkColor",
-#                   NodeID="Node", Source="Source", Target="Target", fontSize = 22)
-# p1
-# #saveNetwork(p1, file = paste0(path,'Subpopulation_Net.html'))
-# ```
-# 
-# ##4.4 Annotation: scGPS prediction can be used to compare scGPS clusters with
-# ##a reference dataset to see which cluster is most similar to the reference
 ```
+
+
+#3. A complete workflow of the scGPS:
+* The purpose of this workflow is to solve the following task: given an unknown*
+ * mixed population, find clusters and estimate relationship between clusters*
+ 
+ ##3.1 Identify clusters in a dataset using CORE
+ *(skip this step if clusters are known)*
+```{r CORE, warning = FALSE, message = FALSE}
+
+# find clustering information in an expresion data using CORE
+day5 <- day_5_cardio_cell_sample
+cellnames <- colnames(day5$dat5_counts)
+cluster <-day5$dat5_clusters
+cellnames <-data.frame("Cluster"=cluster, "cellBarcodes" = cellnames)
+mixedpop2 <-new_scGPS_object(ExpressionMatrix = day5$dat5_counts,
+                    GeneMetadata = day5$dat5geneInfo, CellMetadata = cellnames)
+
+CORE_cluster <- CORE_clustering(mixedpop2, remove_outlier = c(0), PCA=FALSE)
+
+# to update the clustering information, users can ...
+key_height <- CORE_cluster$optimalClust$KeyStats$Height
+optimal_res <- CORE_cluster$optimalClust$OptimalRes
+optimal_index = which(key_height == optimal_res)
+
+clustering_after_outlier_removal <- unname(unlist(
+ CORE_cluster$Cluster[[optimal_index]]))
+corresponding_cells_after_outlier_removal <- CORE_cluster$cellsForClustering
+original_cells_before_removal <- colData(mixedpop2)[,2]
+corresponding_index <- match(corresponding_cells_after_outlier_removal,
+                            original_cells_before_removal )
+# check the matching
+identical(as.character(original_cells_before_removal[corresponding_index]),
+         corresponding_cells_after_outlier_removal)
+# create new object with the new clustering after removing outliers
+mixedpop2_post_clustering <- mixedpop2[,corresponding_index]
+colData(mixedpop2_post_clustering)[,1] <- clustering_after_outlier_removal
+
+```
+
+##3.2 Identify clusters in a dataset using SCORE
+##(Stable Clustering at Optimal REsolution)
+*(skip this step if clusters are known)*
+ *(SCORE aims to get stable subpopulation results, *
+ * by introducing bagging aggregation and bootstrapping to the CORE algorithm)*
+```{r SCORE with bagging, warning = FALSE, message = FALSE}
+
+# find clustering information in an expresion data using SCORE
+day5 <- day_5_cardio_cell_sample
+cellnames <- colnames(day5$dat5_counts)
+cluster <-day5$dat5_clusters
+cellnames <-data.frame("Cluster"=cluster, "cellBarcodes" = cellnames)
+mixedpop2 <-new_scGPS_object(ExpressionMatrix = day5$dat5_counts,
+                    GeneMetadata = day5$dat5geneInfo, CellMetadata = cellnames )
+
+SCORE_test <- CORE_bagging(mixedpop2, remove_outlier = c(0), PCA=FALSE,
+                                bagging_run = 20, subsample_proportion = .8)
+
+```
+
+
+##3.3 Visualise all cluster results in all iterations
+```{r visualisation, dev='CairoPDF'}
+dev.off()
+##3.2.1 plot CORE clustering
+p1 <- plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster,
+               color_branch = c("#208eb7", "#6ce9d3", "#1c5e39", "#8fca40", "#154975",
+                                "#b1c8eb"))
+p1
+#extract optimal index identified by CORE
+key_height <- CORE_cluster$optimalClust$KeyStats$Height
+optimal_res <- CORE_cluster$optimalClust$OptimalRes
+optimal_index = which(key_height == optimal_res)
+#plot one optimal clustering bar
+plot_optimal_CORE(original_tree= CORE_cluster$tree,
+                 optimal_cluster = unlist(CORE_cluster$Cluster[optimal_index]),
+                 shift = -2000)
+
+##3.2.2 plot SCORE clustering
+#plot all clustering bars
+plot_CORE(SCORE_test$tree, list_clusters = SCORE_test$Cluster)
+#plot one stable optimal clustering bar
+plot_optimal_CORE(original_tree= SCORE_test$tree,
+                 optimal_cluster = unlist(SCORE_test$Cluster[SCORE_test$optimal_index]),
+                 shift = -100)
+
+```
+
+##3.4 Compare clustering results with other dimensional reduction methods
+##(e.g., tSNE)
+```{r compare_clustering}
+t <- tSNE(expression.mat=assay(mixedpop2))
+p2 <-plot_reduced(t, color_fac = factor(colData(mixedpop2)[,1]),
+                      palletes =1:length(unique(colData(mixedpop2)[,1])))
+p2
+```
+
+##3.5 Find gene markers and annotate clusters
+
+```{r find_markers, warning = FALSE, message = FALSE}
+#load gene list (this can be any lists of user-selected genes)
+genes <-training_gene_sample
+genes <-genes$Merged_unique
+
+#the gene list can also be objectively identified by differential expression
+#analysis cluster information is requied for find_markers. Here, we use
+#CORE results.
+
+#colData(mixedpop2)[,1] <- unlist(SCORE_test$Cluster[SCORE_test$optimal_index])
+
+suppressMessages(library(locfit))
+suppressMessages(library(DESeq))
+
+DEgenes <- find_markers(expression_matrix=assay(mixedpop2),
+                            cluster = colData(mixedpop2)[,1],
+                            selected_cluster=unique(colData(mixedpop2)[,1]))
+
+#the output contains dataframes for each cluster.
+#the data frame contains all genes, sorted by p-values
+names(DEgenes)
+
+#you can annotate the identified clusters
+DEgeneList_1vsOthers <- DEgenes$DE_Subpop1vsRemaining$id
+
+#users need to check the format of the gene input to make sure they are
+#consistent to the gene names in the expression matrix
+
+#the following command saves the file "PathwayEnrichment.xlsx" to the
+#working dir
+#use 500 top DE genes
+suppressMessages(library(DOSE))
+suppressMessages(library(ReactomePA))
+suppressMessages(library(clusterProfiler))
+genes500 <- as.factor(DEgeneList_1vsOthers[seq_len(500)])
+enrichment_test <- annotate_clusters(genes, pvalueCutoff=0.05, gene_symbol=TRUE)
+
+#the enrichment outputs can be displayed by running
+clusterProfiler::dotplot(enrichment_test, showCategory=10, font.size = 6)
+
+```
+
+#4. Relationship between clusters within one sample or between two samples
+*The purpose of this workflow is to solve the following task: *
+ *given one or two unknown mixed population(s) and clusters in each mixed*
+ *population, estimate and visualise relationship between clusters*
+ 
+ ##4.1 Start the scGPS prediction to find relationship between clusters
+ 
+```{r scGPS_prediction, warning = FALSE, message = FALSE}
+
+#select a subpopulation, and input gene list
+c_selectID <- 1
+#note make sure the format for genes input here is the same to the format
+#for genes in the mixedpop1 and mixedpop2
+genes = DEgenes$DE_Subpop1vsRemaining$id[1:500]
+
+#run the test bootstrap with nboots = 2 runs
+
+cluster_mixedpop1 <- colData(mixedpop1)[,1]
+cluster_mixedpop2 <- colData(mixedpop2)[,1]
+
+LSOLDA_dat <- bootstrap_prediction(nboots = 2, mixedpop1 = mixedpop1,
+                             mixedpop2 = mixedpop2, genes = genes, c_selectID  = c_selectID,
+                             listData = list(),
+                             cluster_mixedpop1 = cluster_mixedpop1,
+                             cluster_mixedpop2 = cluster_mixedpop2)
+
+```
+
+##4.2 Display summary results for the prediction
+
+```{r summarise_prediction}
+#get the number of rows for the summary matrix
+row_cluster <-length(unique(colData(mixedpop2)[,1]))
+
+#summary results LDA to to show the percent of cells classified as cells
+#belonging by LDA classifier
+summary_prediction_lda(LSOLDA_dat=LSOLDA_dat, nPredSubpop = row_cluster )
+
+#summary results Lasso to show the percent of cells classified as cells
+#belonging by Lasso classifier
+summary_prediction_lasso(LSOLDA_dat=LSOLDA_dat, nPredSubpop = row_cluster)
+
+# summary maximum deviance explained by the model during the model training
+summary_deviance(object = LSOLDA_dat)
+
+# summary accuracy to check the model accuracy in the leave-out test set
+summary_accuracy(object = LSOLDA_dat)
+
+```
+
+##4.3 Plot the relationship between clusters in one sample
+*Here we look at one example use case to find relationship between clusters
+#within one sample or between two sample*
+
+```{r prediction_one_sample, warning = FALSE, message = FALSE}
+#run prediction for 3 clusters
+cluster_mixedpop1 <- colData(mixedpop1)[,1]
+cluster_mixedpop2 <- colData(mixedpop2)[,1]
+#cluster_mixedpop2 <- as.numeric(as.vector(colData(mixedpop2)[,1]))
+
+c_selectID <- 1
+#top 200 gene markers distinguishing cluster 1
+genes = DEgenes$DE_Subpop1vsRemaining$id[1:200]
+
+LSOLDA_dat1 <- bootstrap_prediction(nboots = 2, mixedpop1 = mixedpop2,
+                        mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
+                        cluster_mixedpop1 = cluster_mixedpop2,
+                        cluster_mixedpop2 = cluster_mixedpop2)
+
+c_selectID <- 2
+genes = DEgenes$DE_Subpop2vsRemaining$id[1:200]
+
+LSOLDA_dat2 <- bootstrap_prediction(nboots = 2,mixedpop1 = mixedpop2,
+                        mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
+                        cluster_mixedpop1 = cluster_mixedpop2,
+                        cluster_mixedpop2 = cluster_mixedpop2)
+
+c_selectID <- 3
+genes = DEgenes$DE_Subpop3vsRemaining$id[1:200]
+LSOLDA_dat3 <- bootstrap_prediction(nboots = 2,mixedpop1 = mixedpop2,
+                        mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
+                        cluster_mixedpop1 = cluster_mixedpop2,
+                        cluster_mixedpop2 = cluster_mixedpop2)
+
+c_selectID <- 4
+genes = DEgenes$DE_Subpop4vsRemaining$id[1:200]
+LSOLDA_dat4 <- bootstrap_prediction(nboots = 2,mixedpop1 = mixedpop2,
+                        mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
+                        cluster_mixedpop1 = cluster_mixedpop2,
+                        cluster_mixedpop2 = cluster_mixedpop2)
+
+
+#prepare table input for sankey plot
+
+LASSO_C1S2  <- reformat_LASSO(c_selectID=1, mp_selectID = 2,
+                             LSOLDA_dat=LSOLDA_dat1,
+                             nPredSubpop = length(unique(colData(mixedpop2)[,1])),
+                             Nodes_group ="#7570b3")
+
+LASSO_C2S2  <- reformat_LASSO(c_selectID=2, mp_selectID =2,
+                             LSOLDA_dat=LSOLDA_dat2,
+                             nPredSubpop = length(unique(colData(mixedpop2)[,1])),
+                             Nodes_group ="#1b9e77")
+
+LASSO_C3S2  <- reformat_LASSO(c_selectID=3, mp_selectID =2,
+                             LSOLDA_dat=LSOLDA_dat3,
+                             nPredSubpop = length(unique(colData(mixedpop2)[,1])),
+                             Nodes_group ="#e7298a")
+
+LASSO_C4S2  <- reformat_LASSO(c_selectID=4, mp_selectID =2,
+                             LSOLDA_dat=LSOLDA_dat4,
+                             nPredSubpop = length(unique(colData(mixedpop2)[,1])),
+                             Nodes_group ="#00FFFF")
+
+combined <- rbind(LASSO_C1S2,LASSO_C2S2,LASSO_C3S2, LASSO_C4S2 )
+combined <- combined[is.na(combined$Value) != TRUE,]
+
+nboots = 2
+#links: source, target, value
+#source: node, nodegroup
+combined_D3obj <-list(Nodes=combined[,(nboots+3):(nboots+4)],
+                     Links=combined[,c((nboots+2):(nboots+1),ncol(combined))])
+
+library(networkD3)
+
+Node_source <- as.vector(sort(unique(combined_D3obj$Links$Source)))
+Node_target <- as.vector(sort(unique(combined_D3obj$Links$Target)))
+Node_all <-unique(c(Node_source, Node_target))
+
+#assign IDs for Source (start from 0)
+Source <-combined_D3obj$Links$Source
+Target <- combined_D3obj$Links$Target
+
+for(i in 1:length(Node_all)){
+   Source[Source==Node_all[i]] <-i-1
+   Target[Target==Node_all[i]] <-i-1
+}
+# 
+combined_D3obj$Links$Source <- as.numeric(Source)
+combined_D3obj$Links$Target <- as.numeric(Target)
+combined_D3obj$Links$LinkColor <- combined$NodeGroup
+
+#prepare node info
+node_df <-data.frame(Node=Node_all)
+node_df$id <-as.numeric(c(0, 1:(length(Node_all)-1)))
+
+suppressMessages(library(dplyr))
+Color <- combined %>% count(Node, color=NodeGroup) %>% select(2)
+node_df$color <- Color$color
+
+suppressMessages(library(networkD3))
+p1<-sankeyNetwork(Links =combined_D3obj$Links, Nodes = node_df,
+                 Value = "Value", NodeGroup ="color", LinkGroup = "LinkColor", NodeID="Node",
+                 Source="Source", Target="Target", fontSize = 22 )
+p1
+
+#saveNetwork(p1, file = paste0(path,'Subpopulation_Net.html'))
+
+```
+
+##4.3 Plot the relationship between clusters in two samples
+*Here we look at one example use case to find relationship between clusters*
+ *within one sample or between two sample*
+ 
+```{r prediction_two_samples,warning = FALSE, message = FALSE}
+#run prediction for 3 clusters
+cluster_mixedpop1 <- colData(mixedpop1)[,1]
+cluster_mixedpop2 <- colData(mixedpop2)[,1]
+row_cluster <-length(unique(colData(mixedpop2)[,1]))
+
+c_selectID <- 1
+#top 200 gene markers distinguishing cluster 1
+genes = DEgenes$DE_Subpop1vsRemaining$id[1:200]
+LSOLDA_dat1 <- bootstrap_prediction(nboots = 2, mixedpop1 = mixedpop1,
+                        mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
+                        cluster_mixedpop1 = cluster_mixedpop1,
+                        cluster_mixedpop2 = cluster_mixedpop2)
+
+
+c_selectID <- 2
+genes = DEgenes$DE_Subpop2vsRemaining$id[1:200]
+LSOLDA_dat2 <- bootstrap_prediction(nboots = 2,mixedpop1 = mixedpop1,
+                        mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
+                        cluster_mixedpop1 = cluster_mixedpop1,
+                        cluster_mixedpop2 = cluster_mixedpop2)
+
+c_selectID <- 3
+genes = DEgenes$DE_Subpop3vsRemaining$id[1:200]
+LSOLDA_dat3 <- bootstrap_prediction(nboots = 2,mixedpop1 = mixedpop1,
+                        mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
+                        cluster_mixedpop1 = cluster_mixedpop1,
+                        cluster_mixedpop2 = cluster_mixedpop2)
+
+#prepare table input for sankey plot
+
+LASSO_C1S1  <- reformat_LASSO(c_selectID=1, mp_selectID = 1,
+                             LSOLDA_dat=LSOLDA_dat1, nPredSubpop = row_cluster, Nodes_group = "#7570b3")
+
+LASSO_C2S1  <- reformat_LASSO(c_selectID=2, mp_selectID = 1,
+                             LSOLDA_dat=LSOLDA_dat2, nPredSubpop = row_cluster, Nodes_group = "#1b9e77")
+
+LASSO_C3S1  <- reformat_LASSO(c_selectID=3, mp_selectID = 1,
+                             LSOLDA_dat=LSOLDA_dat3, nPredSubpop = row_cluster, Nodes_group = "#e7298a")
+
+
+combined <- rbind(LASSO_C1S1,LASSO_C2S1,LASSO_C3S1)
+
+nboots = 2
+#links: source, target, value
+#source: node, nodegroup
+combined_D3obj <-list(Nodes=combined[,(nboots+3):(nboots+4)],
+                     Links=combined[,c((nboots+2):(nboots+1),ncol(combined))])
+combined <- combined[is.na(combined$Value) != TRUE,]
+
+
+library(networkD3)
+
+Node_source <- as.vector(sort(unique(combined_D3obj$Links$Source)))
+Node_target <- as.vector(sort(unique(combined_D3obj$Links$Target)))
+Node_all <-unique(c(Node_source, Node_target))
+
+#assign IDs for Source (start from 0)
+Source <-combined_D3obj$Links$Source
+Target <- combined_D3obj$Links$Target
+
+for(i in 1:length(Node_all)){
+   Source[Source==Node_all[i]] <-i-1
+   Target[Target==Node_all[i]] <-i-1
+}
+
+combined_D3obj$Links$Source <- as.numeric(Source)
+combined_D3obj$Links$Target <- as.numeric(Target)
+combined_D3obj$Links$LinkColor <- combined$NodeGroup
+
+#prepare node info
+node_df <-data.frame(Node=Node_all)
+node_df$id <-as.numeric(c(0, 1:(length(Node_all)-1)))
+
+suppressMessages(library(dplyr))
+n <- length(unique(node_df$Node))
+getPalette = colorRampPalette(RColorBrewer::brewer.pal(9, "Set1"))
+Color = getPalette(n)
+node_df$color <- Color
+suppressMessages(library(networkD3))
+p1<-sankeyNetwork(Links =combined_D3obj$Links, Nodes = node_df,
+                 Value = "Value", NodeGroup ="color", LinkGroup = "LinkColor",
+                 NodeID="Node", Source="Source", Target="Target", fontSize = 22)
+p1
+#saveNetwork(p1, file = paste0(path,'Subpopulation_Net.html'))
+```
+
 
 
 ```{r session_info, include=TRUE, echo=TRUE, results='markup'}

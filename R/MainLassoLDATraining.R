@@ -644,6 +644,7 @@ predicting <- function(listData = NULL, cluster_mixedpop2 = NULL,
 #' @param c_selectID the root cluster in mixedpop1 to becompared to clusters in
 #' mixedpop2 
 #' @param genes a gene list to build the model
+#' @param verbose a logical whether to display additional messages
 #' @param nboots a number specifying how many bootstraps to be run
 #' @param trainset_ratio a number specifying the proportion of cells to be part 
 #' of the training subpopulation
@@ -665,7 +666,7 @@ predicting <- function(listData = NULL, cluster_mixedpop2 = NULL,
 #' cluster_mixedpop1 <- colData(mixedpop1)[,1]
 #' cluster_mixedpop2 <- colData(mixedpop2)[,1]
 #' c_selectID <- 2
-#' test <- bootstrap(nboots = 1, mixedpop1 = mixedpop1, 
+#' test <- bootstrap_prediction(nboots = 1, mixedpop1 = mixedpop1, 
 #'     mixedpop2 = mixedpop2, genes=genes, listData =list(), 
 #'     cluster_mixedpop1 = cluster_mixedpop1, 
 #'     cluster_mixedpop2 = cluster_mixedpop2, c_selectID = c_selectID)
@@ -673,12 +674,12 @@ predicting <- function(listData = NULL, cluster_mixedpop2 = NULL,
 #' test$ElasticNetPredict
 #' test$LDAPredict
 
-bootstrap <- function(nboots = 1, genes = genes, mixedpop1 = mixedpop1, 
-    mixedpop2 = mixedpop2, c_selectID = NULL, listData = list(), 
-    cluster_mixedpop1 = NULL, cluster_mixedpop2 = NULL, trainset_ratio = 0.5, 
-    LDA_run = TRUE) {
-    
-    for (out_idx in seq_len(nboots)) {
+bootstrap_prediction <- function(nboots = 1, genes = genes, 
+	mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, c_selectID = NULL, 
+	listData = list(), cluster_mixedpop1 = NULL, cluster_mixedpop2 = NULL, 
+	trainset_ratio = 0.5, LDA_run = TRUE, verbose = FALSE) {
+    if (verbose) {
+        for (out_idx in seq_len(nboots)) {
         listData <- training(genes = genes, mixedpop1 = mixedpop1, 
             mixedpop2 = mixedpop2, trainset_ratio = trainset_ratio, c_selectID,
             listData = listData, out_idx = out_idx, 
@@ -690,15 +691,31 @@ bootstrap <- function(nboots = 1, genes = genes, mixedpop1 = mixedpop1,
             out_idx = out_idx, standardize = TRUE, 
             cluster_mixedpop2 = cluster_mixedpop2, 
             LDA_run = LDA_run, c_selectID = c_selectID)
+        }
+    } else {
+        for (out_idx in seq_len(nboots)) {
+            listData <- suppressMessages(training(genes = genes, 
+            	mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, 
+            	trainset_ratio = trainset_ratio, c_selectID,
+                listData = listData, out_idx = out_idx, 
+                cluster_mixedpop1 = cluster_mixedpop1, standardize = TRUE, 
+                LDA_run = LDA_run))
+            message(paste0("done training for bootstrap ", out_idx,
+                ", moving to prediction..."))
+            listData <- suppressMessages(predicting(listData = listData,
+                mixedpop2 = mixedpop2, out_idx = out_idx, standardize = TRUE, 
+                cluster_mixedpop2 = cluster_mixedpop2, 
+                LDA_run = LDA_run, c_selectID = c_selectID))
+        }
     }
-    return(listData)
+        return(listData)
 }
 
 
 #' BootStrap runs for both scGPS training and prediction
 #' with parallel option
 #'
-#' @description  same as bootstrap, but with an multicore option
+#' @description  same as bootstrap_prediction, but with an multicore option
 #' @param listData  a \code{list} object, which contains trained results for the
 #' first mixed population
 #' @param mixedpop1 a \linkS4class{SingleCellExperiment} object from a mixed 

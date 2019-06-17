@@ -38,7 +38,7 @@ a \code{list} with prediction results written in to the index
 \code{out_idx}
 }
 \description{
-same as bootstrap, but with an multicore option
+same as bootstrap_prediction, but with an multicore option
 }
 \examples{
 day2 <- day_2_cardio_cell_sample

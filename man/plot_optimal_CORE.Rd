@@ -32,7 +32,7 @@ clutering results
 day5 <- day_5_cardio_cell_sample
 mixedpop2 <-new_summarized_scGPS_object(ExpressionMatrix = day5$dat5_counts, 
     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
-CORE_cluster <- CORE(mixedpop2, remove_outlier = c(0))
+CORE_cluster <- CORE_clustering(mixedpop2, remove_outlier = c(0))
 key_height <- CORE_cluster$optimalClust$KeyStats$Height
 optimal_res <- CORE_cluster$optimalClust$OptimalRes
 optimal_index = which(key_height == optimal_res)

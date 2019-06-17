@@ -21,6 +21,7 @@
 #' outliers.
 #' @param nPCs an integer specifying the number of principal components to use.
 #' @param ngenes number of genes used for clustering calculations.
+#' @param verbose a logical whether to display additional messages
 #' @return a \code{list} with clustering results of all iterations, and a 
 #' selected optimal resolution
 #' @examples
@@ -31,17 +32,17 @@
 #' cellnames <-data.frame('Cluster'=cluster, 'cellBarcodes' = cellnames)
 #' mixedpop2 <-new_summarized_scGPS_object(ExpressionMatrix = day5$dat5_counts, 
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
-#' test <- CORE(mixedpop2, remove_outlier = c(0), PCA=FALSE, nPCs=20,
+#' test <- CORE_clustering(mixedpop2, remove_outlier = c(0), PCA=FALSE, nPCs=20,
 #'     ngenes=1500)
 #' @export
 #' @author Quan Nguyen, 2017-11-25
 
-CORE <- function(mixedpop = NULL, windows = seq(from = 0.025, to = 1,
+CORE_clustering <- function(mixedpop = NULL, windows = seq(from = 0.025, to = 1,
     by = 0.025), remove_outlier = c(0), nRounds = 1, PCA = FALSE, nPCs = 20,
-    ngenes = 1500) {
+    ngenes = 1500, verbose = FALSE) {
     cluster_all <- clustering(object = mixedpop, windows = windows, 
-        remove_outlier = remove_outlier, 
-        nRounds = nRounds, PCA = PCA, nPCs = nPCs)
+        remove_outlier = remove_outlier, nRounds = nRounds, PCA = PCA,
+        verbose = verbose, nPCs = nPCs)
     
     stab_df <- find_stability(list_clusters = cluster_all$list_clusters,
         cluster_ref = cluster_all$cluster_ref)
@@ -69,7 +70,7 @@ CORE <- function(mixedpop = NULL, windows = seq(from = 0.025, to = 1,
 #' day5 <- day_5_cardio_cell_sample
 #' mixedpop2 <-new_summarized_scGPS_object(ExpressionMatrix = day5$dat5_counts,
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
-#' test <- CORE(mixedpop2,remove_outlier= c(0))
+#' test <- CORE_clustering(mixedpop2,remove_outlier= c(0))
 #' @export
 #' @author Quan Nguyen, 2017-11-25
 
@@ -105,6 +106,7 @@ CORE_subcluster <- function(mixedpop = NULL, windows = seq(from = 0.025, to = 1,
 #' be used
 #' @param nRounds number of iterations to remove a selected clusters
 #' @param windows a numeric specifying the number of windows to test
+#' @param verbose a logical whether to display additional messages
 #' @return clustering results
 #' @export
 #' @author Quan Nguyen, 2017-11-25
@@ -116,7 +118,7 @@ CORE_subcluster <- function(mixedpop = NULL, windows = seq(from = 0.025, to = 1,
 
 clustering <- function(object = NULL, ngenes = 1500, 
     windows = seq(from = 0.025, to = 1, by = 0.025), remove_outlier = c(0),
-    nRounds = 1, PCA = FALSE, nPCs = 20) {
+    nRounds = 1, PCA = FALSE, nPCs = 20, verbose = FALSE) {
     
     # function for the highest resolution clustering (i.e. no window applied, 
     # no cell removal)
@@ -130,8 +132,6 @@ clustering <- function(object = NULL, ngenes = 1500,
             # perform PCA dimensionality reduction
             message(paste0("Performing PCA analysis (Note: the variance for ",
                 "each cell needs to be >0)"))
-            # message('Performing PCA analysis (Note: the variance for each cell
-            # needs to be >0)')
             exprs_mat_topVar_PCA <- prcomp(t(exprs_mat_topVar))
             exprs_mat_t <- as.data.frame(exprs_mat_topVar_PCA$x[,seq_len(nPCs)])
             
@@ -226,7 +226,9 @@ clustering <- function(object = NULL, ngenes = 1500,
             distM = as.matrix(dist_mat), minSplitHeight = windows[i], 
             verbose = 0))
         
-        message(paste0("writing clustering result for run ", i))
+        if (verbose) {
+            message(paste0("writing clustering result for run ", i))
+        }
         clustering_param[[i]] <- list(toadd)
         names(clustering_param[[i]]) <- namelist
     }
@@ -646,7 +648,7 @@ find_optimal_stability <- function(list_clusters, run_RandIdx, bagging = FALSE,
 #' cellnames <-data.frame('Cluster'=cluster, 'cellBarcodes' = cellnames)
 #' mixedpop2 <-new_summarized_scGPS_object(ExpressionMatrix = day5$dat5_counts,
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = cellnames)
-#' CORE_cluster <- CORE(mixedpop2, remove_outlier = c(0))
+#' CORE_cluster <- CORE_clustering(mixedpop2, remove_outlier = c(0))
 #' plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster)
 
 plot_CORE <- function(original.tree, list_clusters = NULL, 
@@ -907,7 +909,7 @@ plot_CORE <- function(original.tree, list_clusters = NULL,
 #' day5 <- day_5_cardio_cell_sample
 #' mixedpop2 <-new_summarized_scGPS_object(ExpressionMatrix = day5$dat5_counts, 
 #'     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
-#' CORE_cluster <- CORE(mixedpop2, remove_outlier = c(0))
+#' CORE_cluster <- CORE_clustering(mixedpop2, remove_outlier = c(0))
 #' key_height <- CORE_cluster$optimalClust$KeyStats$Height
 #' optimal_res <- CORE_cluster$optimalClust$OptimalRes
 #' optimal_index = which(key_height == optimal_res)

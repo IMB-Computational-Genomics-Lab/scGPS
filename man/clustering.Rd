@@ -6,7 +6,7 @@
 \usage{
 clustering(object = NULL, ngenes = 1500, windows = seq(from = 0.025,
   to = 1, by = 0.025), remove_outlier = c(0), nRounds = 1,
-  PCA = FALSE, nPCs = 20)
+  PCA = FALSE, nPCs = 20, verbose = FALSE)
 }
 \arguments{
 \item{object}{is a \linkS4class{SingleCellExperiment} object from the
@@ -26,6 +26,8 @@ matrix}
 
 \item{nPCs}{number of principal components from PCA dimensional reduction to
 be used}
+
+\item{verbose}{a logical whether to display additional messages}
 }
 \value{
 clustering results
