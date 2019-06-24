@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-#1. Installation instruction
+# 1. Installation instruction
 
 ```{r installation, eval = FALSE}
 # To install scGPS from github (Depending on the configuration of the local
@@ -42,12 +42,12 @@ library(scGPS)
 
 ```
 
-#2. A simple workflow of the scGPS: 
-*The purpose of this workflow is to solve the following task: *
-*given a mixed population with known subpopulations, *
-*estimate transition scores between these subpopulation.*
+# 2. A simple workflow of the scGPS: 
+The purpose of this workflow is to solve the following task:
 
-##2.1 Create scGPS objects
+* Given a mixed population with known subpopulations, estimate transition scores between these subpopulation.
+
+## 2.1 Create scGPS objects
 ```{r scGPS_object, warning = FALSE, message = FALSE}
 
 # load mixed population 1 (loaded from day_2_cardio_cell_sample dataset, named it as day2)
@@ -64,7 +64,7 @@ mixedpop2 <- new_scGPS_object(ExpressionMatrix = day5$dat5_counts,
 
 ```
 
-##2.2 Run prediction
+## 2.2 Run prediction
 ```{r prediction, warning = FALSE, message = FALSE}
 
 # select a subpopulation
@@ -83,7 +83,7 @@ LSOLDA_dat <- bootstrap_prediction(nboots = 3, mixedpop1 = mixedpop1,
 names(LSOLDA_dat)
 ```
 
-##2.3 Summarise results 
+## 2.3 Summarise results 
 ```{r summarise_results, warning = FALSE, message = FALSE}
 # summary results LDA
 sum_pred_lda <- summary_prediction_lda(LSOLDA_dat = LSOLDA_dat, nPredSubpop = 4)
@@ -111,12 +111,13 @@ summary_deviance(object = LSOLDA_dat)
 ```
 
 
-#3. A complete workflow of the scGPS:
-* The purpose of this workflow is to solve the following task: given an unknown*
- * mixed population, find clusters and estimate relationship between clusters*
+# 3. A complete workflow of the scGPS:
+The purpose of this workflow is to solve the following task:
+
+* Given an unknown mixed population, find clusters and estimate relationship between clusters
  
- ##3.1 Identify clusters in a dataset using CORE
- *(skip this step if clusters are known)*
+## 3.1 Identify clusters in a dataset using CORE
+ (skip this step if clusters are known)
 ```{r CORE, warning = FALSE, message = FALSE}
 
 # find clustering information in an expresion data using CORE
@@ -149,11 +150,10 @@ colData(mixedpop2_post_clustering)[,1] <- clustering_after_outlier_removal
 
 ```
 
-##3.2 Identify clusters in a dataset using SCORE
-##(Stable Clustering at Optimal REsolution)
-*(skip this step if clusters are known)*
- *(SCORE aims to get stable subpopulation results, *
- * by introducing bagging aggregation and bootstrapping to the CORE algorithm)*
+## 3.2 Identify clusters in a dataset using SCORE (Stable Clustering at Optimal REsolution)
+(skip this step if clusters are known)
+
+(SCORE aims to get stable subpopulation results by introducing bagging aggregation and bootstrapping to the CORE algorithm)
 ```{r SCORE with bagging, warning = FALSE, message = FALSE}
 
 # find clustering information in an expresion data using SCORE
@@ -170,7 +170,7 @@ SCORE_test <- CORE_bagging(mixedpop2, remove_outlier = c(0), PCA=FALSE,
 ```
 
 
-##3.3 Visualise all cluster results in all iterations
+## 3.3 Visualise all cluster results in all iterations
 ```{r visualisation, dev='CairoPDF'}
 dev.off()
 ##3.2.1 plot CORE clustering
@@ -197,8 +197,7 @@ plot_optimal_CORE(original_tree= SCORE_test$tree,
 
 ```
 
-##3.4 Compare clustering results with other dimensional reduction methods
-##(e.g., tSNE)
+## 3.4 Compare clustering results with other dimensional reduction methods (e.g., tSNE)
 ```{r compare_clustering}
 t <- tSNE(expression.mat=assay(mixedpop2))
 p2 <-plot_reduced(t, color_fac = factor(colData(mixedpop2)[,1]),
@@ -206,7 +205,7 @@ p2 <-plot_reduced(t, color_fac = factor(colData(mixedpop2)[,1]),
 p2
 ```
 
-##3.5 Find gene markers and annotate clusters
+## 3.5 Find gene markers and annotate clusters
 
 ```{r find_markers, warning = FALSE, message = FALSE}
 #load gene list (this can be any lists of user-selected genes)
@@ -250,12 +249,13 @@ clusterProfiler::dotplot(enrichment_test, showCategory=10, font.size = 6)
 
 ```
 
-#4. Relationship between clusters within one sample or between two samples
-*The purpose of this workflow is to solve the following task: *
- *given one or two unknown mixed population(s) and clusters in each mixed*
- *population, estimate and visualise relationship between clusters*
+# 4. Relationship between clusters within one sample or between two samples
+The purpose of this workflow is to solve the following task:
+
+* Given one or two unknown mixed population(s) and clusters in each mixed population, estimate
+* Visualise relationship between clusters*
  
- ##4.1 Start the scGPS prediction to find relationship between clusters
+## 4.1 Start the scGPS prediction to find relationship between clusters
  
 ```{r scGPS_prediction, warning = FALSE, message = FALSE}
 
@@ -278,7 +278,7 @@ LSOLDA_dat <- bootstrap_prediction(nboots = 2, mixedpop1 = mixedpop1,
 
 ```
 
-##4.2 Display summary results for the prediction
+## 4.2 Display summary results for the prediction
 
 ```{r summarise_prediction}
 #get the number of rows for the summary matrix
@@ -300,9 +300,9 @@ summary_accuracy(object = LSOLDA_dat)
 
 ```
 
-##4.3 Plot the relationship between clusters in one sample
-*Here we look at one example use case to find relationship between clusters
-#within one sample or between two sample*
+## 4.3 Plot the relationship between clusters in one sample
+Here we look at one example use case to find relationship between clusters
+within one sample or between two sample
 
 ```{r prediction_one_sample, warning = FALSE, message = FALSE}
 #run prediction for 3 clusters
@@ -410,9 +410,8 @@ p1
 
 ```
 
-##4.3 Plot the relationship between clusters in two samples
-*Here we look at one example use case to find relationship between clusters*
- *within one sample or between two sample*
+## 4.3 Plot the relationship between clusters in two samples
+Here we look at one example use case to find relationship between clusters within one sample or between two sample
  
 ```{r prediction_two_samples,warning = FALSE, message = FALSE}
 #run prediction for 3 clusters
