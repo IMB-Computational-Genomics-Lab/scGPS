@@ -8,7 +8,7 @@ Authors@R: c(
     person("Quan", "Nguyen", email="quan.nguyen@uq.edu.au", 
     role=c("aut", "cre")),
     person("Michael", "Thompson",role=c("aut")),
-    person("Anne", "Asenbouth",role=c("aut"))
+    person("Anne", "Senabouth",role=c("aut"))
     )
 Description: The package implements two main algorithms to answer two key
     questions: a SCORE (Stable Clustering at Optimal REsolution) to find
