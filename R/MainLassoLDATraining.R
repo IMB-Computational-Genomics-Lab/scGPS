@@ -675,9 +675,9 @@ predicting <- function(listData = NULL, cluster_mixedpop2 = NULL,
 #' test$LDAPredict
 
 bootstrap_prediction <- function(nboots = 1, genes = genes, 
-	mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, c_selectID = NULL, 
-	listData = list(), cluster_mixedpop1 = NULL, cluster_mixedpop2 = NULL, 
-	trainset_ratio = 0.5, LDA_run = TRUE, verbose = FALSE) {
+    mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, c_selectID = NULL, 
+    listData = list(), cluster_mixedpop1 = NULL, cluster_mixedpop2 = NULL, 
+    trainset_ratio = 0.5, LDA_run = TRUE, verbose = FALSE) {
     if (verbose) {
         for (out_idx in seq_len(nboots)) {
         listData <- training(genes = genes, mixedpop1 = mixedpop1, 
@@ -695,8 +695,8 @@ bootstrap_prediction <- function(nboots = 1, genes = genes,
     } else {
         for (out_idx in seq_len(nboots)) {
             listData <- suppressMessages(training(genes = genes, 
-            	mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, 
-            	trainset_ratio = trainset_ratio, c_selectID,
+                mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, 
+                trainset_ratio = trainset_ratio, c_selectID,
                 listData = listData, out_idx = out_idx, 
                 cluster_mixedpop1 = cluster_mixedpop1, standardize = TRUE, 
                 LDA_run = LDA_run))
