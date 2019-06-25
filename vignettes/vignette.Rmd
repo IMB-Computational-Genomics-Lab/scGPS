@@ -97,8 +97,10 @@ plot_sum <-function(sum_dat){
     sum_dat_tf <- na.omit(sum_dat_tf)
     sum_dat_tf <- apply(sum_dat[, -ncol(sum_dat)],1,
         function(x){as.numeric(as.vector(x))})
-    sum_dat$names <- gsub("for subpop ","sp",  sum_dat$names )
+    sum_dat$names <- gsub("ElasticNet for subpop","sp",  sum_dat$names )
     sum_dat$names <- gsub("in target mixedpop","in p",  sum_dat$names) 
+    sum_dat$names <- gsub("LDA for subpop","sp",  sum_dat$names )
+    sum_dat$names <- gsub("in target mixedpop","in p",  sum_dat$names)
     colnames(sum_dat_tf) <- sum_dat$names
     boxplot(sum_dat_tf, las=2)
 }
@@ -198,7 +200,7 @@ plot_optimal_CORE(original_tree= SCORE_test$tree,
 ```
 
 ## 3.4 Compare clustering results with other dimensional reduction methods (e.g., tSNE)
-```{r compare_clustering}
+```{r compare_clustering, fig.width=5, fig.height=5}
 t <- tSNE(expression.mat=assay(mixedpop2))
 p2 <-plot_reduced(t, color_fac = factor(colData(mixedpop2)[,1]),
                       palletes =1:length(unique(colData(mixedpop2)[,1])))
@@ -207,7 +209,7 @@ p2
 
 ## 3.5 Find gene markers and annotate clusters
 
-```{r find_markers, warning = FALSE, message = FALSE}
+```{r find_markers, warning = FALSE, message = FALSE, fig.width=7}
 #load gene list (this can be any lists of user-selected genes)
 genes <-training_gene_sample
 genes <-genes$Merged_unique
