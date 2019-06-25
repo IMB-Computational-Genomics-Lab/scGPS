@@ -178,19 +178,19 @@
 <p><img src="vignette_files/figure-html/summarise_results-2.png" width="700"></p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="co"># summary accuracy to check the model accuracy in the leave-out test set </span></a>
 <a class="sourceLine" id="cb6-2" title="2"><span class="kw"><a href="../reference/summary_accuracy.html">summary_accuracy</a></span>(<span class="dt">object =</span> LSOLDA_dat)</a>
-<a class="sourceLine" id="cb6-3" title="3"><span class="co">#&gt; [1] 62.50000 64.95327 63.50711</span></a>
+<a class="sourceLine" id="cb6-3" title="3"><span class="co">#&gt; [1] 67.28972 63.67925 66.82464</span></a>
 <a class="sourceLine" id="cb6-4" title="4"><span class="co"># summary maximum deviance explained by the model </span></a>
 <a class="sourceLine" id="cb6-5" title="5"><span class="kw"><a href="../reference/summary_deviance.html">summary_deviance</a></span>(<span class="dt">object =</span> LSOLDA_dat)</a>
 <a class="sourceLine" id="cb6-6" title="6"><span class="co">#&gt; $allDeviance</span></a>
-<a class="sourceLine" id="cb6-7" title="7"><span class="co">#&gt; [1] "0.1098"  "0.1077"  "0.08327"</span></a>
+<a class="sourceLine" id="cb6-7" title="7"><span class="co">#&gt; [1] "0.0596"  "0.08978" "0.07554"</span></a>
 <a class="sourceLine" id="cb6-8" title="8"><span class="co">#&gt; </span></a>
 <a class="sourceLine" id="cb6-9" title="9"><span class="co">#&gt; $DeviMax</span></a>
 <a class="sourceLine" id="cb6-10" title="10"><span class="co">#&gt;          dat_DE$Dfd          Deviance           DEgenes</span></a>
-<a class="sourceLine" id="cb6-11" title="11"><span class="co">#&gt; 1                 0            0.1098    genes_cluster1</span></a>
-<a class="sourceLine" id="cb6-12" title="12"><span class="co">#&gt; 2                 1            0.1098    genes_cluster1</span></a>
-<a class="sourceLine" id="cb6-13" title="13"><span class="co">#&gt; 3                 2            0.1098    genes_cluster1</span></a>
-<a class="sourceLine" id="cb6-14" title="14"><span class="co">#&gt; 4                 3            0.1098    genes_cluster1</span></a>
-<a class="sourceLine" id="cb6-15" title="15"><span class="co">#&gt; 5                 4            0.1098    genes_cluster1</span></a>
+<a class="sourceLine" id="cb6-11" title="11"><span class="co">#&gt; 1                 0           0.08978    genes_cluster1</span></a>
+<a class="sourceLine" id="cb6-12" title="12"><span class="co">#&gt; 2                 1           0.08978    genes_cluster1</span></a>
+<a class="sourceLine" id="cb6-13" title="13"><span class="co">#&gt; 3                 2           0.08978    genes_cluster1</span></a>
+<a class="sourceLine" id="cb6-14" title="14"><span class="co">#&gt; 4                 3           0.08978    genes_cluster1</span></a>
+<a class="sourceLine" id="cb6-15" title="15"><span class="co">#&gt; 5                 4           0.08978    genes_cluster1</span></a>
 <a class="sourceLine" id="cb6-16" title="16"><span class="co">#&gt; 6 remaining DEgenes remaining DEgenes remaining DEgenes</span></a>
 <a class="sourceLine" id="cb6-17" title="17"><span class="co">#&gt; </span></a>
 <a class="sourceLine" id="cb6-18" title="18"><span class="co">#&gt; $LassoGenesMax</span></a>
@@ -293,21 +293,11 @@
 <a class="sourceLine" id="cb9-33" title="33">                 <span class="dt">shift =</span> <span class="dv">-100</span>)</a>
 <a class="sourceLine" id="cb9-34" title="34"><span class="co">#&gt; Ordering and assigning labels...</span></a>
 <a class="sourceLine" id="cb9-35" title="35"><span class="co">#&gt; 2</span></a>
-<a class="sourceLine" id="cb9-36" title="36"><span class="co">#&gt; 24112NANANANANANA</span></a>
+<a class="sourceLine" id="cb9-36" title="36"><span class="co">#&gt; 162335NA</span></a>
 <a class="sourceLine" id="cb9-37" title="37"><span class="co">#&gt; 3</span></a>
-<a class="sourceLine" id="cb9-38" title="38"><span class="co">#&gt; 24112224NANANANANA</span></a>
-<a class="sourceLine" id="cb9-39" title="39"><span class="co">#&gt; 4</span></a>
-<a class="sourceLine" id="cb9-40" title="40"><span class="co">#&gt; 24112224299NANANANA</span></a>
-<a class="sourceLine" id="cb9-41" title="41"><span class="co">#&gt; 5</span></a>
-<a class="sourceLine" id="cb9-42" title="42"><span class="co">#&gt; 24112224299335NANANA</span></a>
-<a class="sourceLine" id="cb9-43" title="43"><span class="co">#&gt; 6</span></a>
-<a class="sourceLine" id="cb9-44" title="44"><span class="co">#&gt; 24112224299335367NANA</span></a>
-<a class="sourceLine" id="cb9-45" title="45"><span class="co">#&gt; 7</span></a>
-<a class="sourceLine" id="cb9-46" title="46"><span class="co">#&gt; 24112224299335367414NA</span></a>
-<a class="sourceLine" id="cb9-47" title="47"><span class="co">#&gt; 8</span></a>
-<a class="sourceLine" id="cb9-48" title="48"><span class="co">#&gt; 24112224299335367414470</span></a>
-<a class="sourceLine" id="cb9-49" title="49"><span class="co">#&gt; Plotting the colored dendrogram now....</span></a>
-<a class="sourceLine" id="cb9-50" title="50"><span class="co">#&gt; Plotting the bar underneath now....</span></a></code></pre></div>
+<a class="sourceLine" id="cb9-38" title="38"><span class="co">#&gt; 162335423</span></a>
+<a class="sourceLine" id="cb9-39" title="39"><span class="co">#&gt; Plotting the colored dendrogram now....</span></a>
+<a class="sourceLine" id="cb9-40" title="40"><span class="co">#&gt; Plotting the bar underneath now....</span></a></code></pre></div>
 </div>
 <div id="compare-clustering-results-with-other-dimensional-reduction-methods-e-g--tsne" class="section level2">
 <h2 class="hasAnchor">
@@ -407,19 +397,19 @@
 <a class="sourceLine" id="cb13-5" title="5"><span class="co">#belonging by LDA classifier</span></a>
 <a class="sourceLine" id="cb13-6" title="6"><span class="kw"><a href="../reference/summary_prediction_lda.html">summary_prediction_lda</a></span>(<span class="dt">LSOLDA_dat=</span>LSOLDA_dat, <span class="dt">nPredSubpop =</span> row_cluster )</a>
 <a class="sourceLine" id="cb13-7" title="7"><span class="co">#&gt;                 V1               V2                                names</span></a>
-<a class="sourceLine" id="cb13-8" title="8"><span class="co">#&gt; 1 8.02139037433155 38.5026737967914 LDA for subpop 1 in target mixedpop2</span></a>
-<a class="sourceLine" id="cb13-9" title="9"><span class="co">#&gt; 2 52.1428571428571 98.5714285714286 LDA for subpop 2 in target mixedpop2</span></a>
-<a class="sourceLine" id="cb13-10" title="10"><span class="co">#&gt; 3 0.75187969924812 42.1052631578947 LDA for subpop 3 in target mixedpop2</span></a>
-<a class="sourceLine" id="cb13-11" title="11"><span class="co">#&gt; 4               35             67.5 LDA for subpop 4 in target mixedpop2</span></a>
+<a class="sourceLine" id="cb13-8" title="8"><span class="co">#&gt; 1 66.8449197860963 2.67379679144385 LDA for subpop 1 in target mixedpop2</span></a>
+<a class="sourceLine" id="cb13-9" title="9"><span class="co">#&gt; 2 92.1428571428571 40.7142857142857 LDA for subpop 2 in target mixedpop2</span></a>
+<a class="sourceLine" id="cb13-10" title="10"><span class="co">#&gt; 3 60.9022556390977 6.01503759398496 LDA for subpop 3 in target mixedpop2</span></a>
+<a class="sourceLine" id="cb13-11" title="11"><span class="co">#&gt; 4               70             17.5 LDA for subpop 4 in target mixedpop2</span></a>
 <a class="sourceLine" id="cb13-12" title="12"></a>
 <a class="sourceLine" id="cb13-13" title="13"><span class="co">#summary results Lasso to show the percent of cells classified as cells</span></a>
 <a class="sourceLine" id="cb13-14" title="14"><span class="co">#belonging by Lasso classifier</span></a>
 <a class="sourceLine" id="cb13-15" title="15"><span class="kw"><a href="../reference/summary_prediction_lasso.html">summary_prediction_lasso</a></span>(<span class="dt">LSOLDA_dat=</span>LSOLDA_dat, <span class="dt">nPredSubpop =</span> row_cluster)</a>
 <a class="sourceLine" id="cb13-16" title="16"><span class="co">#&gt;                 V1               V2</span></a>
-<a class="sourceLine" id="cb13-17" title="17"><span class="co">#&gt; 1 51.8716577540107 62.0320855614973</span></a>
-<a class="sourceLine" id="cb13-18" title="18"><span class="co">#&gt; 2 86.4285714285714 83.5714285714286</span></a>
-<a class="sourceLine" id="cb13-19" title="19"><span class="co">#&gt; 3 82.7067669172932 45.1127819548872</span></a>
-<a class="sourceLine" id="cb13-20" title="20"><span class="co">#&gt; 4               95             62.5</span></a>
+<a class="sourceLine" id="cb13-17" title="17"><span class="co">#&gt; 1 26.2032085561497 24.5989304812834</span></a>
+<a class="sourceLine" id="cb13-18" title="18"><span class="co">#&gt; 2 95.7142857142857 95.7142857142857</span></a>
+<a class="sourceLine" id="cb13-19" title="19"><span class="co">#&gt; 3 68.4210526315789 78.1954887218045</span></a>
+<a class="sourceLine" id="cb13-20" title="20"><span class="co">#&gt; 4             92.5             87.5</span></a>
 <a class="sourceLine" id="cb13-21" title="21"><span class="co">#&gt;                                        names</span></a>
 <a class="sourceLine" id="cb13-22" title="22"><span class="co">#&gt; 1 ElasticNet for subpop1 in target mixedpop2</span></a>
 <a class="sourceLine" id="cb13-23" title="23"><span class="co">#&gt; 2 ElasticNet for subpop2 in target mixedpop2</span></a>
@@ -429,38 +419,33 @@
 <a class="sourceLine" id="cb13-27" title="27"><span class="co"># summary maximum deviance explained by the model during the model training</span></a>
 <a class="sourceLine" id="cb13-28" title="28"><span class="kw"><a href="../reference/summary_deviance.html">summary_deviance</a></span>(<span class="dt">object =</span> LSOLDA_dat)</a>
 <a class="sourceLine" id="cb13-29" title="29"><span class="co">#&gt; $allDeviance</span></a>
-<a class="sourceLine" id="cb13-30" title="30"><span class="co">#&gt; [1] "0.6571" "0.5665"</span></a>
+<a class="sourceLine" id="cb13-30" title="30"><span class="co">#&gt; [1] "0.3624" "0.5885"</span></a>
 <a class="sourceLine" id="cb13-31" title="31"><span class="co">#&gt; </span></a>
 <a class="sourceLine" id="cb13-32" title="32"><span class="co">#&gt; $DeviMax</span></a>
 <a class="sourceLine" id="cb13-33" title="33"><span class="co">#&gt;           dat_DE$Dfd          Deviance           DEgenes</span></a>
-<a class="sourceLine" id="cb13-34" title="34"><span class="co">#&gt; 1                  0            0.6571    genes_cluster1</span></a>
-<a class="sourceLine" id="cb13-35" title="35"><span class="co">#&gt; 2                  1            0.6571    genes_cluster1</span></a>
-<a class="sourceLine" id="cb13-36" title="36"><span class="co">#&gt; 3                  3            0.6571    genes_cluster1</span></a>
-<a class="sourceLine" id="cb13-37" title="37"><span class="co">#&gt; 4                  5            0.6571    genes_cluster1</span></a>
-<a class="sourceLine" id="cb13-38" title="38"><span class="co">#&gt; 5                  9            0.6571    genes_cluster1</span></a>
-<a class="sourceLine" id="cb13-39" title="39"><span class="co">#&gt; 6                 11            0.6571    genes_cluster1</span></a>
-<a class="sourceLine" id="cb13-40" title="40"><span class="co">#&gt; 7                 16            0.6571    genes_cluster1</span></a>
-<a class="sourceLine" id="cb13-41" title="41"><span class="co">#&gt; 8                 17            0.6571    genes_cluster1</span></a>
-<a class="sourceLine" id="cb13-42" title="42"><span class="co">#&gt; 9                 19            0.6571    genes_cluster1</span></a>
-<a class="sourceLine" id="cb13-43" title="43"><span class="co">#&gt; 10                20            0.6571    genes_cluster1</span></a>
-<a class="sourceLine" id="cb13-44" title="44"><span class="co">#&gt; 11                22            0.6571    genes_cluster1</span></a>
-<a class="sourceLine" id="cb13-45" title="45"><span class="co">#&gt; 12                25            0.6571    genes_cluster1</span></a>
-<a class="sourceLine" id="cb13-46" title="46"><span class="co">#&gt; 13                27            0.6571    genes_cluster1</span></a>
-<a class="sourceLine" id="cb13-47" title="47"><span class="co">#&gt; 14                28            0.6571    genes_cluster1</span></a>
-<a class="sourceLine" id="cb13-48" title="48"><span class="co">#&gt; 15                30            0.6571    genes_cluster1</span></a>
-<a class="sourceLine" id="cb13-49" title="49"><span class="co">#&gt; 16                31            0.6571    genes_cluster1</span></a>
-<a class="sourceLine" id="cb13-50" title="50"><span class="co">#&gt; 17                34            0.6571    genes_cluster1</span></a>
-<a class="sourceLine" id="cb13-51" title="51"><span class="co">#&gt; 18                37            0.6571    genes_cluster1</span></a>
-<a class="sourceLine" id="cb13-52" title="52"><span class="co">#&gt; 19                39            0.6571    genes_cluster1</span></a>
-<a class="sourceLine" id="cb13-53" title="53"><span class="co">#&gt; 20                41            0.6571    genes_cluster1</span></a>
-<a class="sourceLine" id="cb13-54" title="54"><span class="co">#&gt; 21 remaining DEgenes remaining DEgenes remaining DEgenes</span></a>
-<a class="sourceLine" id="cb13-55" title="55"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb13-56" title="56"><span class="co">#&gt; $LassoGenesMax</span></a>
-<a class="sourceLine" id="cb13-57" title="57"><span class="co">#&gt; NULL</span></a>
-<a class="sourceLine" id="cb13-58" title="58"></a>
-<a class="sourceLine" id="cb13-59" title="59"><span class="co"># summary accuracy to check the model accuracy in the leave-out test set</span></a>
-<a class="sourceLine" id="cb13-60" title="60"><span class="kw"><a href="../reference/summary_accuracy.html">summary_accuracy</a></span>(<span class="dt">object =</span> LSOLDA_dat)</a>
-<a class="sourceLine" id="cb13-61" title="61"><span class="co">#&gt; [1] 68.30357 70.98214</span></a></code></pre></div>
+<a class="sourceLine" id="cb13-34" title="34"><span class="co">#&gt; 1                  0            0.5885    genes_cluster1</span></a>
+<a class="sourceLine" id="cb13-35" title="35"><span class="co">#&gt; 2                  1            0.5885    genes_cluster1</span></a>
+<a class="sourceLine" id="cb13-36" title="36"><span class="co">#&gt; 3                  2            0.5885    genes_cluster1</span></a>
+<a class="sourceLine" id="cb13-37" title="37"><span class="co">#&gt; 4                  5            0.5885    genes_cluster1</span></a>
+<a class="sourceLine" id="cb13-38" title="38"><span class="co">#&gt; 5                  6            0.5885    genes_cluster1</span></a>
+<a class="sourceLine" id="cb13-39" title="39"><span class="co">#&gt; 6                  8            0.5885    genes_cluster1</span></a>
+<a class="sourceLine" id="cb13-40" title="40"><span class="co">#&gt; 7                  9            0.5885    genes_cluster1</span></a>
+<a class="sourceLine" id="cb13-41" title="41"><span class="co">#&gt; 8                 11            0.5885    genes_cluster1</span></a>
+<a class="sourceLine" id="cb13-42" title="42"><span class="co">#&gt; 9                 13            0.5885    genes_cluster1</span></a>
+<a class="sourceLine" id="cb13-43" title="43"><span class="co">#&gt; 10                16            0.5885    genes_cluster1</span></a>
+<a class="sourceLine" id="cb13-44" title="44"><span class="co">#&gt; 11                17            0.5885    genes_cluster1</span></a>
+<a class="sourceLine" id="cb13-45" title="45"><span class="co">#&gt; 12                19            0.5885    genes_cluster1</span></a>
+<a class="sourceLine" id="cb13-46" title="46"><span class="co">#&gt; 13                20            0.5885    genes_cluster1</span></a>
+<a class="sourceLine" id="cb13-47" title="47"><span class="co">#&gt; 14                22            0.5885    genes_cluster1</span></a>
+<a class="sourceLine" id="cb13-48" title="48"><span class="co">#&gt; 15                24            0.5885    genes_cluster1</span></a>
+<a class="sourceLine" id="cb13-49" title="49"><span class="co">#&gt; 16 remaining DEgenes remaining DEgenes remaining DEgenes</span></a>
+<a class="sourceLine" id="cb13-50" title="50"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb13-51" title="51"><span class="co">#&gt; $LassoGenesMax</span></a>
+<a class="sourceLine" id="cb13-52" title="52"><span class="co">#&gt; NULL</span></a>
+<a class="sourceLine" id="cb13-53" title="53"></a>
+<a class="sourceLine" id="cb13-54" title="54"><span class="co"># summary accuracy to check the model accuracy in the leave-out test set</span></a>
+<a class="sourceLine" id="cb13-55" title="55"><span class="kw"><a href="../reference/summary_accuracy.html">summary_accuracy</a></span>(<span class="dt">object =</span> LSOLDA_dat)</a>
+<a class="sourceLine" id="cb13-56" title="56"><span class="co">#&gt; [1] 69.64286 70.53571</span></a></code></pre></div>
 </div>
 <div id="plot-the-relationship-between-clusters-in-one-sample" class="section level2">
 <h2 class="hasAnchor">
@@ -566,8 +551,8 @@
 <a class="sourceLine" id="cb14-98" title="98">                 <span class="dt">Value =</span> <span class="st">"Value"</span>, <span class="dt">NodeGroup =</span><span class="st">"color"</span>, <span class="dt">LinkGroup =</span> <span class="st">"LinkColor"</span>, <span class="dt">NodeID=</span><span class="st">"Node"</span>,</a>
 <a class="sourceLine" id="cb14-99" title="99">                 <span class="dt">Source=</span><span class="st">"Source"</span>, <span class="dt">Target=</span><span class="st">"Target"</span>, <span class="dt">fontSize =</span> <span class="dv">22</span> )</a>
 <a class="sourceLine" id="cb14-100" title="100">p1</a></code></pre></div>
-<div id="htmlwidget-754ea917299fc57e7bcb" style="width:700px;height:432.632880098888px;" class="sankeyNetwork html-widget"></div>
-<script type="application/json" data-for="htmlwidget-754ea917299fc57e7bcb">{"x":{"links":{"source":[0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,3],"target":[0,1,2,3,0,1,2,3,0,1,2,3,0,1,2,3],"value":[91.4438502673797,2.14285714285715,17.2932330827068,26.25,7.2192513368984,100,23.3082706766917,51.25,55.0802139037433,1.07142857142857,84.2105263157895,13.75,65.24064171123,49.2857142857143,39.8496240601503,83.75],"group":["#7570b3","#7570b3","#7570b3","#7570b3","#1b9e77","#1b9e77","#1b9e77","#1b9e77","#e7298a","#e7298a","#e7298a","#e7298a","#00FFFF","#00FFFF","#00FFFF","#00FFFF"]},"nodes":{"name":["C1_MP2","C2_MP2","C3_MP2","C4_MP2"],"group":["#7570b3","#1b9e77","#e7298a","#00FFFF"]},"options":{"NodeID":"Node","NodeGroup":"color","LinkGroup":"LinkColor","colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":22,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"></a>
+<div id="htmlwidget-eb9d68251b896b134464" style="width:480px;height:432.632880098888px;" class="sankeyNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-eb9d68251b896b134464">{"x":{"links":{"source":[0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,3],"target":[0,1,2,3,0,1,2,3,0,1,2,3,0,1,2,3],"value":[84.75935828877,0,3.38345864661654,12.5,2.40641711229947,100,27.0676691729323,57.5,48.1283422459893,0,32.3308270676691,7.5,64.7058823529412,79.2857142857143,83.8345864661654,96.25],"group":["#7570b3","#7570b3","#7570b3","#7570b3","#1b9e77","#1b9e77","#1b9e77","#1b9e77","#e7298a","#e7298a","#e7298a","#e7298a","#00FFFF","#00FFFF","#00FFFF","#00FFFF"]},"nodes":{"name":["C1_MP2","C2_MP2","C3_MP2","C4_MP2"],"group":["#7570b3","#1b9e77","#e7298a","#00FFFF"]},"options":{"NodeID":"Node","NodeGroup":"color","LinkGroup":"LinkColor","colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":22,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"></a>
 <a class="sourceLine" id="cb15-2" title="2"><span class="co">#saveNetwork(p1, file = paste0(path,'Subpopulation_Net.html'))</span></a></code></pre></div>
 </div>
 <div id="plot-the-relationship-between-clusters-in-two-samples" class="section level2">
@@ -657,8 +642,8 @@
 <a class="sourceLine" id="cb16-81" title="81">                 <span class="dt">Value =</span> <span class="st">"Value"</span>, <span class="dt">NodeGroup =</span><span class="st">"color"</span>, <span class="dt">LinkGroup =</span> <span class="st">"LinkColor"</span>,</a>
 <a class="sourceLine" id="cb16-82" title="82">                 <span class="dt">NodeID=</span><span class="st">"Node"</span>, <span class="dt">Source=</span><span class="st">"Source"</span>, <span class="dt">Target=</span><span class="st">"Target"</span>, <span class="dt">fontSize =</span> <span class="dv">22</span>)</a>
 <a class="sourceLine" id="cb16-83" title="83">p1</a></code></pre></div>
-<div id="htmlwidget-182c997d1e6ffe89ff2c" style="width:700px;height:432.632880098888px;" class="sankeyNetwork html-widget"></div>
-<script type="application/json" data-for="htmlwidget-182c997d1e6ffe89ff2c">{"x":{"links":{"source":[0,0,0,0,1,1,1,1,2,2,2,2],"target":[3,4,5,6,3,4,5,6,3,4,5,6],"value":[48.6631016042781,62.5,25.9398496240601,53.75,31.5508021390375,8.92857142857141,27.8195488721804,18.75,75.668449197861,8.57142857142856,38.3458646616542,21.25],"group":["#7570b3","#7570b3","#7570b3","#7570b3","#1b9e77","#1b9e77","#1b9e77","#1b9e77","#e7298a","#e7298a","#e7298a","#e7298a"]},"nodes":{"name":["C1_MP1","C2_MP1","C3_MP1","C1_MP2","C2_MP2","C3_MP2","C4_MP2"],"group":["#E41A1C","#3E8E93","#7E6E85","#FF7F00","#E1C62F","#DB728C","#999999"]},"options":{"NodeID":"Node","NodeGroup":"color","LinkGroup":"LinkColor","colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":22,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1"><span class="co">#saveNetwork(p1, file = paste0(path,'Subpopulation_Net.html'))</span></a></code></pre></div>
+<div id="htmlwidget-57a7dbf72d90caa148a0" style="width:480px;height:432.632880098888px;" class="sankeyNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-57a7dbf72d90caa148a0">{"x":{"links":{"source":[0,0,0,0,1,1,1,1,2,2,2,2],"target":[3,4,5,6,3,4,5,6,3,4,5,6],"value":[54.0106951871658,60,53.0075187969925,71.25,48.6631016042781,16.0714285714286,76.6917293233083,58.75,53.2085561497326,40.3571428571428,66.1654135338346,50],"group":["#7570b3","#7570b3","#7570b3","#7570b3","#1b9e77","#1b9e77","#1b9e77","#1b9e77","#e7298a","#e7298a","#e7298a","#e7298a"]},"nodes":{"name":["C1_MP1","C2_MP1","C3_MP1","C1_MP2","C2_MP2","C3_MP2","C4_MP2"],"group":["#E41A1C","#3E8E93","#7E6E85","#FF7F00","#E1C62F","#DB728C","#999999"]},"options":{"NodeID":"Node","NodeGroup":"color","LinkGroup":"LinkColor","colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":22,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1"><span class="co">#saveNetwork(p1, file = paste0(path,'Subpopulation_Net.html'))</span></a></code></pre></div>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">session_info</a></span>()</a>
 <a class="sourceLine" id="cb18-2" title="2"><span class="co">#&gt; - Session info ----------------------------------------------------------</span></a>
 <a class="sourceLine" id="cb18-3" title="3"><span class="co">#&gt;  setting  value                       </span></a>
@@ -1068,7 +1053,7 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Quan Nguyen, Michael Thompson, Anne Asenbouth.</p>
+  <p>Developed by Quan Nguyen, Michael Thompson, Anne Senabouth.</p>
 </div>
 
 <div class="pkgdown">
