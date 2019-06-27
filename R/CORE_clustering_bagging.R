@@ -62,17 +62,14 @@ CORE_bagging <- function(mixedpop = NULL, bagging_run = 20,
     }
     
     # record the optimal and highest resolutions to find stable cluster
+
     OptimalCluster_bagging <- vector(mode = "double", length = bagging_run)
+    RareCluster_bagging <- vector(mode = "double", length = bagging_run)
     for (i in seq_len(bagging_run)) {
         OptimalCluster_bagging[i] <- optimal_stab[[i]]$OptimalClust
-    }
-    
-    # to find rare cluster
-    RareCluster_bagging <- vector(mode = "double", length  = bagging_run)
-    for (i in seq_len(bagging_run)) {
         RareCluster_bagging[i] <- optimal_stab[[i]]$HighestRes
     }
-    
+        
     # record the most frequently occurring result, favour higher resolution
     OptimalCluster_bagging_count <- which.max(tabulate(
         OptimalCluster_bagging))[1]

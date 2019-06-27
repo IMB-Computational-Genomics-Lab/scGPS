@@ -595,7 +595,7 @@ find_optimal_stability <- function(list_clusters, run_RandIdx, bagging = FALSE,
     St <- KeyStats$Stability
     St_max <- St[which.max(St)]
     
-    if ((St[window_param] > 0.5) && (St[window_param] == St_max)) {
+    if (length(table(St)) == 1) {
         optimal_param = window_param
     } else {
         concat_St <- vector(mode = "double", length = window_param)
