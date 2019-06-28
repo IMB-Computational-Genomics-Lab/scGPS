@@ -79,21 +79,13 @@ CORE_bagging <- function(mixedpop = NULL, bagging_run = 20,
         NumberClusters[i] <- max(unlist(cluster_all$clustering_param[[i]]))
     }
     
-    #-----------REWRITE THIS CODE SNIPPET---------------------#
     # Check to see if the optimal is valid in the original tree
     if (!(OptimalCluster_bagging_count %in% NumberClusters)) {
         if (OptimalCluster_bagging_count > max(NumberClusters)) {
             OptimalCluster_bagging_count <- max(NumberClusters)
         } else {
-            above <- OptimalCluster_bagging_count + 1
-            below <- OptimalCluster_bagging_count - 1
-            above_count <- length(which(NumberClusters == above))
-            below_count <- length(which(NumberClusters == below))
-            if (above_count >= below_count) {
-                OptimalCluster_bagging_count <- above
-            } else {
-                OptimalCluster_bagging_count <- below
-            }
+        	idx <- which.min(abs(NumberClusters - OptimalCluster_bagging_count))
+        	OptimalCluster_bagging_count <- NumberClusters[idx]
         }
     }
     
