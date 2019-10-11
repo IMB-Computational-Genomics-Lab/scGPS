@@ -20,6 +20,7 @@
 #' matrix.
 #' @param nPCs an integer specifying the number of principal components to use.
 #' @param ngenes number of genes used for clustering calculations.
+#' @param log_transform boolean whether log transform should be computed
 #' @return a \code{list} with clustering results of all iterations, and a 
 #' selected
 #' optimal resolution
@@ -39,14 +40,15 @@
 
 CORE_bagging <- function(mixedpop = NULL, bagging_run = 20, 
     subsample_proportion = 0.8, windows = seq(from = 0.025, to = 1, by = 0.025),
-    remove_outlier = c(0), nRounds = 1, PCA = FALSE, nPCs = 20, ngenes = 1500) {
+    remove_outlier = c(0), nRounds = 1, PCA = FALSE, nPCs = 20, ngenes = 1500,
+    log_transform = FALSE) {
     
     # perform the clustering runs
     cluster_all <- clustering_bagging(object = mixedpop, 
         windows = windows, bagging_run = bagging_run, 
         subsample_proportion = subsample_proportion, 
         remove_outlier = remove_outlier, ngenes = ngenes, nRounds = nRounds, 
-        PCA = PCA, nPCs = nPCs)
+        PCA = PCA, nPCs = nPCs, log_transform = log_transform)
     
     # find the optimal stability for each of the bagging runs
     optimal_stab <- vector(mode = "list", length = bagging_run)
@@ -121,6 +123,7 @@ CORE_bagging <- function(mixedpop = NULL, bagging_run = 20,
 #' matrix.
 #' @param nPCs an integer specifying the number of principal components to use.
 #' @param ngenes number of genes used for clustering calculations.
+#' @param log_transform boolean whether log transform should be computed
 #' @return a list of clustering results containing each bagging run
 #' as well as the clustering of the original tree and the tree itself.
 #' @export
@@ -135,12 +138,15 @@ CORE_bagging <- function(mixedpop = NULL, bagging_run = 20,
 clustering_bagging <- function(object = NULL, ngenes = 1500, 
     bagging_run = 20, subsample_proportion = 0.8, 
     windows = seq(from = 0.025, to = 1, by = 0.025), remove_outlier = c(0),
-    nRounds = 1, PCA = FALSE, nPCs = 20) {
+    nRounds = 1, PCA = FALSE, nPCs = 20, log_transform = FALSE) {
     
     
     # function for the highest resolution clustering (i.e. no window applied)
-    first_round_clustering <- function(object = NULL) {
+    first_round_clustering <- function(object = NULL, log_transform = FALSE) {
         exprs_mat <- assay(object)
+        if (log_transform) {
+            exprs_mat <- log(exprs_mat + 1)
+        }
         # take the top variable genes
         message("Identifying top variable genes")
         exprs_mat_topVar <- top_var(exprs_mat, ngenes = ngenes)
@@ -192,7 +198,7 @@ clustering_bagging <- function(object = NULL, ngenes = 1500,
         cells_to_remove <- c()
         
         while (i <= nRounds) {
-            filter_out <- first_round_clustering(objectTemp)
+            filter_out <- first_round_clustering(objectTemp, log_transform = log_transform)
             cluster_toRemove <- which(filter_out$cluster_ref %in% 
                 remove_outlier)
             if (length(cluster_toRemove) > 0) {
@@ -208,7 +214,7 @@ clustering_bagging <- function(object = NULL, ngenes = 1500,
             }
         }
         
-        filter_out <- first_round_clustering(objectTemp)
+        filter_out <- first_round_clustering(objectTemp, log_transform = log_transform)
         cluster_toRemove <- which(filter_out$cluster_ref %in% remove_outlier)
         if (length(cluster_toRemove) > 0) {
             message(paste0("Found ", length(cluster_toRemove), 

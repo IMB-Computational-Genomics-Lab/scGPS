@@ -22,6 +22,7 @@
 #' @param nPCs an integer specifying the number of principal components to use.
 #' @param ngenes number of genes used for clustering calculations.
 #' @param verbose a logical whether to display additional messages
+#' @param log_transform boolean whether log transform should be computed
 #' @return a \code{list} with clustering results of all iterations, and a 
 #' selected optimal resolution
 #' @examples
@@ -39,10 +40,10 @@
 
 CORE_clustering <- function(mixedpop = NULL, windows = seq(from = 0.025, to = 1,
     by = 0.025), remove_outlier = c(0), nRounds = 1, PCA = FALSE, nPCs = 20,
-    ngenes = 1500, verbose = FALSE) {
+    ngenes = 1500, verbose = FALSE, log_transform = FALSE) {
     cluster_all <- clustering(object = mixedpop, windows = windows, 
         remove_outlier = remove_outlier, nRounds = nRounds, PCA = PCA,
-        verbose = verbose, nPCs = nPCs)
+        verbose = verbose, nPCs = nPCs, ngenes = ngenes, log_transform = log_transform)
     
     stab_df <- find_stability(list_clusters = cluster_all$list_clusters,
         cluster_ref = cluster_all$cluster_ref)
@@ -107,6 +108,7 @@ CORE_subcluster <- function(mixedpop = NULL, windows = seq(from = 0.025, to = 1,
 #' @param nRounds number of iterations to remove a selected clusters
 #' @param windows a numeric specifying the number of windows to test
 #' @param verbose a logical whether to display additional messages
+#' @param log_transform boolean whether log transform should be computed
 #' @return clustering results
 #' @export
 #' @author Quan Nguyen, 2017-11-25
@@ -118,12 +120,16 @@ CORE_subcluster <- function(mixedpop = NULL, windows = seq(from = 0.025, to = 1,
 
 clustering <- function(object = NULL, ngenes = 1500, 
     windows = seq(from = 0.025, to = 1, by = 0.025), remove_outlier = c(0),
-    nRounds = 1, PCA = FALSE, nPCs = 20, verbose = FALSE) {
+    nRounds = 1, PCA = FALSE, nPCs = 20, verbose = FALSE,
+    log_transform = FALSE) {
     
     # function for the highest resolution clustering (i.e. no window applied, 
     # no cell removal)
-    first_round_clustering <- function(object = NULL) {
+    first_round_clustering <- function(object = NULL, log_transform = FALSE) {
         exprs_mat <- assay(object)
+        if (log_transform) {
+        	exprs_mat <- log(exprs_mat + 1)
+        }
         # take the top variable genes
         message("Identifying top variable genes")
         exprs_mat_topVar <- top_var(exprs_mat, ngenes = ngenes)
@@ -172,7 +178,7 @@ clustering <- function(object = NULL, ngenes = 1500,
         cells_to_remove <- c()
         
         while (i <= nRounds) {
-            filter_out <- first_round_clustering(objectTemp)
+            filter_out <- first_round_clustering(objectTemp, log_transform = log_transform)
             cluster_toRemove <- which(
                 filter_out$cluster_ref %in% remove_outlier)
             if (length(cluster_toRemove) > 0) {
@@ -188,7 +194,7 @@ clustering <- function(object = NULL, ngenes = 1500,
             }
         }
         
-        filter_out <- first_round_clustering(objectTemp)
+        filter_out <- first_round_clustering(objectTemp, log_transform = log_transform)
         cluster_toRemove <- which(filter_out$cluster_ref %in% remove_outlier)
         if (length(cluster_toRemove) > 0) {
             message(paste0("Found ", length(cluster_toRemove), 
