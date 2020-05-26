@@ -48,7 +48,8 @@
 
 training <- function(genes = NULL, cluster_mixedpop1 = NULL, 
     mixedpop1 = NULL, mixedpop2 = NULL, c_selectID = NULL, listData = list(), 
-    out_idx = 1, standardize = TRUE, trainset_ratio = 0.5, LDA_run = FALSE) {
+    out_idx = 1, standardize = TRUE, trainset_ratio = 0.5, LDA_run = FALSE,
+    log_transform = FALSE) {
     # subsammpling--------------------------------------------------------------
     # taking a subsampling size of trainset_ratio of the cluster_select out for
     # training
@@ -98,6 +99,9 @@ training <- function(genes = NULL, cluster_mixedpop1 = NULL,
     predictor_S1 <- mixedpop1[genes_in_both_idx1, c(subpop1_train_indx, 
         subremaining1_train_indx)]
     predictor_S1 <- assay(predictor_S1)
+    if (log_transform) {
+        predictor_S1 <- log2(predictor_S1 + 1)
+    }
     message(paste0("use ", dim(predictor_S1)[1], " genes ", 
         dim(predictor_S1)[2], " cells for testing model"))
     # generate categorical response
@@ -257,6 +261,9 @@ training <- function(genes = NULL, cluster_mixedpop1 = NULL,
     temp_S2 <- mixedpop1[, c(cluster_select_indx_Round2,
         cluster_compare_indx_Round2)]  #genes_in_trainset_idx_ordered
     temp_S2 <- assay(temp_S2)
+    if (log_transform) {
+        temp_S2 <- log2(temp_S2 + 1)
+    }
     predictor_S2 <- t(temp_S2)
     
     # before prediction, check genes in cvfit and predictor_S2 are compatible
@@ -425,7 +432,7 @@ training <- function(genes = NULL, cluster_mixedpop1 = NULL,
 
 predicting <- function(listData = NULL, cluster_mixedpop2 = NULL, 
     mixedpop2 = NULL, out_idx = NULL, standardize = TRUE, LDA_run = FALSE, 
-    c_selectID = NULL) {
+    c_selectID = NULL, log_transform = FALSE) {
     # predictor_S1 is the dataset used for the training phase 
     # (already transposed)
     predictor_S1 <- listData$predictor_S1[[out_idx]][[1]]  #1 for extract matrix
@@ -434,6 +441,9 @@ predicting <- function(listData = NULL, cluster_mixedpop2 = NULL,
     
     my.clusters <- cluster_mixedpop2
     ori_dat_2 <- assay(mixedpop2)
+    if (log_transform) {
+        ori_dat_2 <- log2(ori_dat_2 + 1)
+    }
     
     # standardizing data (centered and scaled)
     standardizing <- function(X) {
@@ -451,6 +461,7 @@ predicting <- function(listData = NULL, cluster_mixedpop2 = NULL,
         length = length(unique(my.clusters)))
     list_predict_clusters_LDA <- vector(mode = "list",
         length = length(unique(my.clusters)))
+    list_cell_results <- vector(mode = "list")
     
     for (clust in unique(my.clusters)) {
         message(paste0("predicting from source to target subpop ", clust, 
@@ -530,8 +541,9 @@ predicting <- function(listData = NULL, cluster_mixedpop2 = NULL,
         predict_clusters_ElasticNet <- predict(cvfit_best, 
             newx = t(predictor_S2_temp), type = "class",
             s = cvfit_best$lambda.min)
-        
+        list_cell_results[[clust]] <- predict_clusters_ElasticNet
         ElasticNet_result <- as.data.frame(table(predict_clusters_ElasticNet))
+
         #convert table() to 2x2 dataframe, 
         # it will always have 2 variable names: $name, Freq
         report_ElasticNet <- paste0("ElasticNet for subpop", c_selectID_2,
@@ -575,6 +587,9 @@ predicting <- function(listData = NULL, cluster_mixedpop2 = NULL,
                 # for better LDA conversion, the target data should not be 
                 # standardised
                 ori_dat_2 <- assay(mixedpop2)
+                if (log_transform) {
+                    ori_dat_2 <- log2(ori_dat_2 + 1)
+                }
                 
                 newdataset <- matching_genes(target_dataset = ori_dat_2, 
                     model_genes = fit.lda$finalModel$xNames, 
@@ -621,7 +636,7 @@ predicting <- function(listData = NULL, cluster_mixedpop2 = NULL,
     } else {
         listData$LDAPredict[out_idx] <- list(NA)
     }
-    
+    listData$cell_results <- list_cell_results
     return(listData)
 }
 
@@ -677,20 +692,22 @@ predicting <- function(listData = NULL, cluster_mixedpop2 = NULL,
 bootstrap_prediction <- function(nboots = 1, genes = genes, 
     mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, c_selectID = NULL, 
     listData = list(), cluster_mixedpop1 = NULL, cluster_mixedpop2 = NULL, 
-    trainset_ratio = 0.5, LDA_run = TRUE, verbose = FALSE) {
+    trainset_ratio = 0.5, LDA_run = TRUE, verbose = FALSE, 
+    log_transform = FALSE) {
     if (verbose) {
         for (out_idx in seq_len(nboots)) {
         listData <- training(genes = genes, mixedpop1 = mixedpop1, 
             mixedpop2 = mixedpop2, trainset_ratio = trainset_ratio, c_selectID,
             listData = listData, out_idx = out_idx, 
             cluster_mixedpop1 = cluster_mixedpop1, standardize = TRUE, 
-            LDA_run = LDA_run)
+            LDA_run = LDA_run, , log_transform = log_transform)
         message(paste0("done training for bootstrap ", out_idx,
             ", moving to prediction..."))
         listData <- predicting(listData = listData, mixedpop2 = mixedpop2,
             out_idx = out_idx, standardize = TRUE, 
             cluster_mixedpop2 = cluster_mixedpop2, 
-            LDA_run = LDA_run, c_selectID = c_selectID)
+            LDA_run = LDA_run, c_selectID = c_selectID, 
+            log_transform = log_transform)
         }
     } else {
         for (out_idx in seq_len(nboots)) {
@@ -699,13 +716,14 @@ bootstrap_prediction <- function(nboots = 1, genes = genes,
                 trainset_ratio = trainset_ratio, c_selectID,
                 listData = listData, out_idx = out_idx, 
                 cluster_mixedpop1 = cluster_mixedpop1, standardize = TRUE, 
-                LDA_run = LDA_run))
+                LDA_run = LDA_run, log_transform = log_transform))
             message(paste0("done training for bootstrap ", out_idx,
                 ", moving to prediction..."))
             listData <- suppressMessages(predicting(listData = listData,
                 mixedpop2 = mixedpop2, out_idx = out_idx, standardize = TRUE, 
                 cluster_mixedpop2 = cluster_mixedpop2, 
-                LDA_run = LDA_run, c_selectID = c_selectID))
+                LDA_run = LDA_run, c_selectID = c_selectID, 
+                log_transform = log_transform))
         }
     }
         return(listData)

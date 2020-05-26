@@ -43,7 +43,8 @@ CORE_clustering <- function(mixedpop = NULL, windows = seq(from = 0.025, to = 1,
     ngenes = 1500, verbose = FALSE, log_transform = FALSE) {
     cluster_all <- clustering(object = mixedpop, windows = windows, 
         remove_outlier = remove_outlier, nRounds = nRounds, PCA = PCA,
-        verbose = verbose, nPCs = nPCs, ngenes = ngenes, log_transform = log_transform)
+        verbose = verbose, nPCs = nPCs, ngenes = ngenes, 
+        log_transform = log_transform)
     
     stab_df <- find_stability(list_clusters = cluster_all$list_clusters,
         cluster_ref = cluster_all$cluster_ref)
@@ -128,7 +129,7 @@ clustering <- function(object = NULL, ngenes = 1500,
     first_round_clustering <- function(object = NULL, log_transform = FALSE) {
         exprs_mat <- assay(object)
         if (log_transform) {
-        	exprs_mat <- log(exprs_mat + 1)
+        	exprs_mat <- log2(exprs_mat + 1)
         }
         # take the top variable genes
         message("Identifying top variable genes")
