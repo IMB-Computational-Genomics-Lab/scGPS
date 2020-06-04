@@ -98,10 +98,12 @@ training <- function(genes = NULL, cluster_mixedpop1 = NULL,
     # prepare predictor matrix containing both clustering classes
     predictor_S1 <- mixedpop1[genes_in_both_idx1, c(subpop1_train_indx, 
         subremaining1_train_indx)]
-    predictor_S1 <- assay(predictor_S1)
     if (log_transform) {
-        predictor_S1 <- log2(predictor_S1 + 1)
+        predictor_S1 <- logcounts(predictor_S1)
+    } else {
+        predictor_S1 <- counts(predictor_S1)
     }
+
     message(paste0("use ", dim(predictor_S1)[1], " genes ", 
         dim(predictor_S1)[2], " cells for testing model"))
     # generate categorical response
@@ -260,10 +262,13 @@ training <- function(genes = NULL, cluster_mixedpop1 = NULL,
     # use the leave-out dataset in mixed pop1 to evaluate the model
     temp_S2 <- mixedpop1[, c(cluster_select_indx_Round2,
         cluster_compare_indx_Round2)]  #genes_in_trainset_idx_ordered
-    temp_S2 <- assay(temp_S2)
+
     if (log_transform) {
-        temp_S2 <- log2(temp_S2 + 1)
+        temp_S2 <- logcounts(temp_S2)
+    } else {
+        temp_S2 <- counts(temp_S2)
     }
+
     predictor_S2 <- t(temp_S2)
     
     # before prediction, check genes in cvfit and predictor_S2 are compatible
@@ -440,9 +445,11 @@ predicting <- function(listData = NULL, cluster_mixedpop2 = NULL,
     fit.lda <- listData$LDAFit[[out_idx]][[1]]
     
     my.clusters <- cluster_mixedpop2
-    ori_dat_2 <- assay(mixedpop2)
+
     if (log_transform) {
-        ori_dat_2 <- log2(ori_dat_2 + 1)
+        ori_dat_2 <- logcounts(mixedpop2)
+    } else {
+        ori_dat_2 <- counts(mixedpop2)
     }
     
     # standardizing data (centered and scaled)
@@ -586,9 +593,10 @@ predicting <- function(listData = NULL, cluster_mixedpop2 = NULL,
                 # newdataset <- as.data.frame(t(ori_dat_2[,cluster_select])) 
                 # for better LDA conversion, the target data should not be 
                 # standardised
-                ori_dat_2 <- assay(mixedpop2)
                 if (log_transform) {
-                    ori_dat_2 <- log2(ori_dat_2 + 1)
+                    ori_dat_2 <- logcounts(mixedpop2)
+                } else {
+                    ori_dat_2 <- counts(mixedpop2)
                 }
                 
                 newdataset <- matching_genes(target_dataset = ori_dat_2, 

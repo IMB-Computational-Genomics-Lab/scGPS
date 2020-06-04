@@ -33,7 +33,7 @@
 #'
 #'
 new_scGPS_object <- function(ExpressionMatrix = NULL, GeneMetadata = NULL, 
-    CellMetadata = NULL) {
+    CellMetadata = NULL, LogMatrix = NULL) {
     # Check that we have the essential arguments - an expression matrix
     arg.check <- list(ExpressionMatrix = missing(ExpressionMatrix), 
         GeneMetadata = missing(GeneMetadata), 
@@ -50,9 +50,20 @@ new_scGPS_object <- function(ExpressionMatrix = NULL, GeneMetadata = NULL,
         stop(paste0("Please supply an expression matrix in one of the ", 
             "following formats: data.frame or matrix"))
     }
+
+    if (is.null(LogMatrix)) {
+        LogMatrix <- log2(ExpressionMatrix + 1)
+    } else {
+        if (!is.data.frame(LogMatrix) &
+            !is.matrix(LogMatrix)) {
+            stop(paste0("Please supply the log expression matrix in one of the ", 
+                "following formats: data.frame or matrix"))
+        } 
+    }
+
     
     # Create a new scGPS object.
-    scGPSset <- SingleCellExperiment(assays = list(counts = ExpressionMatrix),
+    scGPSset <- SingleCellExperiment(assays = list(counts = ExpressionMatrix, logcounts = LogMatrix),
         rowData = GeneMetadata, colData = CellMetadata)
     
     # All clear, return the object
