@@ -99,9 +99,9 @@ training <- function(genes = NULL, cluster_mixedpop1 = NULL,
     predictor_S1 <- mixedpop1[genes_in_both_idx1, c(subpop1_train_indx, 
         subremaining1_train_indx)]
     if (log_transform) {
-        predictor_S1 <- logcounts(predictor_S1)
+        predictor_S1 <- assays(predictor_S1)$logcounts
     } else {
-        predictor_S1 <- counts(predictor_S1)
+        predictor_S1 <- assays(predictor_S1)$counts
     }
 
     message(paste0("use ", dim(predictor_S1)[1], " genes ", 
@@ -264,9 +264,9 @@ training <- function(genes = NULL, cluster_mixedpop1 = NULL,
         cluster_compare_indx_Round2)]  #genes_in_trainset_idx_ordered
 
     if (log_transform) {
-        temp_S2 <- logcounts(temp_S2)
+        temp_S2 <- assays(temp_S2)$logcounts
     } else {
-        temp_S2 <- counts(temp_S2)
+        temp_S2 <- assays(temp_S2)$counts
     }
 
     predictor_S2 <- t(temp_S2)
@@ -447,9 +447,9 @@ predicting <- function(listData = NULL, cluster_mixedpop2 = NULL,
     my.clusters <- cluster_mixedpop2
 
     if (log_transform) {
-        ori_dat_2 <- logcounts(mixedpop2)
+        ori_dat_2 <- assays(mixedpop2)$logcounts
     } else {
-        ori_dat_2 <- counts(mixedpop2)
+        ori_dat_2 <- assays(mixedpop2)$counts
     }
     
     # standardizing data (centered and scaled)
@@ -594,9 +594,9 @@ predicting <- function(listData = NULL, cluster_mixedpop2 = NULL,
                 # for better LDA conversion, the target data should not be 
                 # standardised
                 if (log_transform) {
-                    ori_dat_2 <- logcounts(mixedpop2)
+                    ori_dat_2 <- assays(mixedpop2)$logcounts
                 } else {
-                    ori_dat_2 <- counts(mixedpop2)
+                    ori_dat_2 <- assays(mixedpop2)$counts
                 }
                 
                 newdataset <- matching_genes(target_dataset = ori_dat_2, 

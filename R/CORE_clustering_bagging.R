@@ -143,9 +143,10 @@ clustering_bagging <- function(object = NULL, ngenes = 1500,
     
     # function for the highest resolution clustering (i.e. no window applied)
     first_round_clustering <- function(object = NULL, log_transform = FALSE) {
-        exprs_mat <- assay(object)
         if (log_transform) {
-            exprs_mat <- log2(exprs_mat + 1)
+            exprs_mat <- assays(object)$logcounts
+        } else {
+            exprs_mat <- assays(object)$counts
         }
         # take the top variable genes
         message("Identifying top variable genes")

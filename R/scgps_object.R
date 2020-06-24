@@ -125,7 +125,7 @@ new_summarized_scGPS_object <- function(ExpressionMatrix = NULL,
     }
     
     # Create a new scGPS object.
-    scGPSset <- SummarizedExperiment(assays = list(ExpressionMatrix), 
+    scGPSset <- SummarizedExperiment(assays = list(counts = ExpressionMatrix), 
         rowData = GeneMetadata, colData = CellMetadata)
     
     # All clear, return the object
