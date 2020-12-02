@@ -4,8 +4,12 @@
 \alias{CORE_subcluster}
 \title{sub_clustering (optional) after running CORE 'test'}
 \usage{
-CORE_subcluster(mixedpop = NULL, windows = seq(from = 0.025, to = 1, by
-  = 0.025), select_cell_index = NULL, ngenes = 1500)
+CORE_subcluster(
+  mixedpop = NULL,
+  windows = seq(from = 0.025, to = 1, by = 0.025),
+  select_cell_index = NULL,
+  ngenes = 1500
+)
 }
 \arguments{
 \item{mixedpop}{is a \linkS4class{SingleCellExperiment} object from the train

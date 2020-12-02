@@ -22,7 +22,8 @@
 #' @param listData list to store output in
 #' @param trainset_ratio a number specifying the proportion of cells to be part
 #' of the training subpopulation
-#' @param LDA_run logical, if the LDA run is added to compare to ElasticNet 
+#' @param LDA_run logical, if the LDA run is added to compare to ElasticNet
+#' @param log_transform boolean whether log transform should be computed
 #' @return a \code{list} with prediction results written in to the indexed 
 #' \code{out_idx}
 #' @export
@@ -411,6 +412,7 @@ training <- function(genes = NULL, cluster_mixedpop1 = NULL,
 #' ElasticNet, the LDA model needs to be trained from the training before
 #' inputting to this prediction step
 #' @param c_selectID a number to specify the trained cluster used for prediction
+#' @param log_transform boolean whether log transform should be computed
 #' @return a \code{list} with prediction results written in to the index
 #' \code{out_idx}
 #' @export
@@ -673,6 +675,7 @@ predicting <- function(listData = NULL, cluster_mixedpop2 = NULL,
 #' of the training subpopulation
 #' @param LDA_run logical, if the LDA prediction is added to compare to 
 #' ElasticNet
+#' @param log_transform boolean whether log transform should be computed
 #' @return a \code{list} with prediction results written in to the index 
 #' \code{out_idx}
 #' @export
@@ -708,7 +711,7 @@ bootstrap_prediction <- function(nboots = 1, genes = genes,
             mixedpop2 = mixedpop2, trainset_ratio = trainset_ratio, c_selectID,
             listData = listData, out_idx = out_idx, 
             cluster_mixedpop1 = cluster_mixedpop1, standardize = TRUE, 
-            LDA_run = LDA_run, , log_transform = log_transform)
+            LDA_run = LDA_run, log_transform = log_transform)
         message(paste0("done training for bootstrap ", out_idx,
             ", moving to prediction..."))
         listData <- predicting(listData = listData, mixedpop2 = mixedpop2,

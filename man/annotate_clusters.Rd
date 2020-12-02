@@ -4,8 +4,12 @@
 \alias{annotate_clusters}
 \title{annotate_clusters functionally annotates the identified clusters}
 \usage{
-annotate_clusters(DEgeneList, pvalueCutoff = 0.05, gene_symbol = TRUE,
-  species = "human")
+annotate_clusters(
+  DEgeneList,
+  pvalueCutoff = 0.05,
+  gene_symbol = TRUE,
+  species = "human"
+)
 }
 \arguments{
 \item{DEgeneList}{is a vector of gene symbols, convertable to ENTREZID}

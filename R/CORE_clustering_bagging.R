@@ -86,8 +86,8 @@ CORE_bagging <- function(mixedpop = NULL, bagging_run = 20,
         if (OptimalCluster_bagging_count > max(NumberClusters)) {
             OptimalCluster_bagging_count <- max(NumberClusters)
         } else {
-        	idx <- which.min(abs(NumberClusters - OptimalCluster_bagging_count))
-        	OptimalCluster_bagging_count <- NumberClusters[idx]
+            idx <- which.min(abs(NumberClusters - OptimalCluster_bagging_count))
+            OptimalCluster_bagging_count <- NumberClusters[idx]
         }
     }
     
@@ -199,7 +199,8 @@ clustering_bagging <- function(object = NULL, ngenes = 1500,
         cells_to_remove <- c()
         
         while (i <= nRounds) {
-            filter_out <- first_round_clustering(objectTemp, log_transform = log_transform)
+            filter_out <- first_round_clustering(objectTemp, 
+                log_transform = log_transform)
             cluster_toRemove <- which(filter_out$cluster_ref %in% 
                 remove_outlier)
             if (length(cluster_toRemove) > 0) {
@@ -215,7 +216,8 @@ clustering_bagging <- function(object = NULL, ngenes = 1500,
             }
         }
         
-        filter_out <- first_round_clustering(objectTemp, log_transform = log_transform)
+        filter_out <- first_round_clustering(objectTemp, 
+            log_transform = log_transform)
         cluster_toRemove <- which(filter_out$cluster_ref %in% remove_outlier)
         if (length(cluster_toRemove) > 0) {
             message(paste0("Found ", length(cluster_toRemove), 

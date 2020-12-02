@@ -5,10 +5,19 @@
 \title{Main model training function for finding the best model
 that characterises a subpopulation}
 \usage{
-training(genes = NULL, cluster_mixedpop1 = NULL, mixedpop1 = NULL,
-  mixedpop2 = NULL, c_selectID = NULL, listData = list(),
-  out_idx = 1, standardize = TRUE, trainset_ratio = 0.5,
-  LDA_run = FALSE)
+training(
+  genes = NULL,
+  cluster_mixedpop1 = NULL,
+  mixedpop1 = NULL,
+  mixedpop2 = NULL,
+  c_selectID = NULL,
+  listData = list(),
+  out_idx = 1,
+  standardize = TRUE,
+  trainset_ratio = 0.5,
+  LDA_run = FALSE,
+  log_transform = FALSE
+)
 }
 \arguments{
 \item{genes}{a vector of gene names (for ElasticNet shrinkage); gene symbols
@@ -40,6 +49,8 @@ the train matrix}
 of the training subpopulation}
 
 \item{LDA_run}{logical, if the LDA run is added to compare to ElasticNet}
+
+\item{log_transform}{boolean whether log transform should be computed}
 }
 \value{
 a \code{list} with prediction results written in to the indexed 

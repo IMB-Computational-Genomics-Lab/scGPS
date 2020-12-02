@@ -4,11 +4,20 @@
 \alias{bootstrap_prediction}
 \title{BootStrap runs for both scGPS training and prediction}
 \usage{
-bootstrap_prediction(nboots = 1, genes = genes,
-  mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, c_selectID = NULL,
-  listData = list(), cluster_mixedpop1 = NULL,
-  cluster_mixedpop2 = NULL, trainset_ratio = 0.5, LDA_run = TRUE,
-  verbose = FALSE)
+bootstrap_prediction(
+  nboots = 1,
+  genes = genes,
+  mixedpop1 = mixedpop1,
+  mixedpop2 = mixedpop2,
+  c_selectID = NULL,
+  listData = list(),
+  cluster_mixedpop1 = NULL,
+  cluster_mixedpop2 = NULL,
+  trainset_ratio = 0.5,
+  LDA_run = TRUE,
+  verbose = FALSE,
+  log_transform = FALSE
+)
 }
 \arguments{
 \item{nboots}{a number specifying how many bootstraps to be run}
@@ -38,6 +47,8 @@ of the training subpopulation}
 ElasticNet}
 
 \item{verbose}{a logical whether to display additional messages}
+
+\item{log_transform}{boolean whether log transform should be computed}
 }
 \value{
 a \code{list} with prediction results written in to the index 

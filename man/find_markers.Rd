@@ -4,9 +4,14 @@
 \alias{find_markers}
 \title{find marker genes}
 \usage{
-find_markers(expression_matrix = NULL, cluster = NULL,
-  selected_cluster = NULL, fitType = "local",
-  dispersion_method = "per-condition", sharing_Mode = "maximum")
+find_markers(
+  expression_matrix = NULL,
+  cluster = NULL,
+  selected_cluster = NULL,
+  fitType = "local",
+  dispersion_method = "per-condition",
+  sharing_Mode = "maximum"
+)
 }
 \arguments{
 \item{expression_matrix}{is  a normalised expression matrix.}

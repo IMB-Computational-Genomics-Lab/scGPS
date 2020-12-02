@@ -5,10 +5,18 @@
 \title{Main clustering SCORE (CORE V2.0) Stable Clustering
 at Optimal REsolution with bagging and bootstrapping}
 \usage{
-CORE_bagging(mixedpop = NULL, bagging_run = 20,
-  subsample_proportion = 0.8, windows = seq(from = 0.025, to = 1, by =
-  0.025), remove_outlier = c(0), nRounds = 1, PCA = FALSE,
-  nPCs = 20, ngenes = 1500)
+CORE_bagging(
+  mixedpop = NULL,
+  bagging_run = 20,
+  subsample_proportion = 0.8,
+  windows = seq(from = 0.025, to = 1, by = 0.025),
+  remove_outlier = c(0),
+  nRounds = 1,
+  PCA = FALSE,
+  nPCs = 20,
+  ngenes = 1500,
+  log_transform = FALSE
+)
 }
 \arguments{
 \item{mixedpop}{is a \linkS4class{SingleCellExperiment} object from the train
@@ -34,6 +42,8 @@ matrix.}
 \item{nPCs}{an integer specifying the number of principal components to use.}
 
 \item{ngenes}{number of genes used for clustering calculations.}
+
+\item{log_transform}{boolean whether log transform should be computed}
 }
 \value{
 a \code{list} with clustering results of all iterations, and a 

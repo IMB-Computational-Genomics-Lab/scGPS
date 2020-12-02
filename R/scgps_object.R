@@ -20,6 +20,8 @@
 #' the CellMetadata dataframe If clustering information is not available, users
 #' can run CORE function and add the information to the scGPS before running
 #' scGPS prediction
+#' @param LogMatrix optional input for a log matrix of the data. If no log
+#' matrix is supplied one will be created for the object
 #' @return This function generates an scGPS object belonging to the 
 #' \linkS4class{SingleCellExperiment}.
 #' @seealso \linkS4class{SingleCellExperiment}
@@ -56,15 +58,15 @@ new_scGPS_object <- function(ExpressionMatrix = NULL, GeneMetadata = NULL,
     } else {
         if (!is.data.frame(LogMatrix) &
             !is.matrix(LogMatrix)) {
-            stop(paste0("Please supply the log expression matrix in one of the ", 
-                "following formats: data.frame or matrix"))
+            stop(paste0("Please supply the log expression matrix in one of the", 
+                " following formats: data.frame or matrix"))
         } 
     }
 
     
     # Create a new scGPS object.
-    scGPSset <- SingleCellExperiment(assays = list(counts = ExpressionMatrix, logcounts = LogMatrix),
-        rowData = GeneMetadata, colData = CellMetadata)
+    scGPSset <- SingleCellExperiment(assays = list(counts = ExpressionMatrix, 
+        logcounts = LogMatrix), rowData = GeneMetadata, colData = CellMetadata)
     
     # All clear, return the object
     return(scGPSset)

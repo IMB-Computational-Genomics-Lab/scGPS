@@ -3,7 +3,7 @@ Type: Package
 Title: A complete analysis of single cell subpopulations, from identifying
     subpopulations to analysing their relationship
     (scGPS = single cell Global Predictions of Subpopulation)
-Version: 0.99.24
+Version: 1.5.1
 Authors@R: c(
     person("Quan", "Nguyen", email="quan.nguyen@uq.edu.au", 
     role=c("aut", "cre")),
@@ -19,7 +19,7 @@ LazyData: true
 License: GPL-3
 BugReports: https://github.com/IMB-Computational-Genomics-Lab/scGPS/issues
 url: https://github.com/IMB-Computational-Genomics-Lab/scGPS/
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1
 Depends: R (>= 3.6), SummarizedExperiment, dynamicTreeCut, SingleCellExperiment
 biocViews: SingleCell, Clustering, DataImport, Sequencing, Coverage
 Imports:
@@ -35,7 +35,7 @@ Imports:
   graphics,
   stats,
   utils,
-  DESeq,
+  DESeq2,
   locfit
 Suggests:
   Matrix (>= 1.2),

@@ -4,8 +4,13 @@
 \alias{tSNE}
 \title{tSNE}
 \usage{
-tSNE(expression.mat = NULL, topgenes = 1500, scale = TRUE,
-  thet = 0.5, perp = 30)
+tSNE(
+  expression.mat = NULL,
+  topgenes = 1500,
+  scale = TRUE,
+  thet = 0.5,
+  perp = 30
+)
 }
 \arguments{
 \item{expression.mat}{An expression matrix, with genes in rows}

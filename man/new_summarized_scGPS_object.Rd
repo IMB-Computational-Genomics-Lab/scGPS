@@ -4,8 +4,11 @@
 \alias{new_summarized_scGPS_object}
 \title{new_summarized_scGPS_object}
 \usage{
-new_summarized_scGPS_object(ExpressionMatrix = NULL,
-  GeneMetadata = NULL, CellMetadata = NULL)
+new_summarized_scGPS_object(
+  ExpressionMatrix = NULL,
+  GeneMetadata = NULL,
+  CellMetadata = NULL
+)
 }
 \arguments{
 \item{ExpressionMatrix}{An expression dataset in matrix format.

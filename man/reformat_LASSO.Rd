@@ -4,9 +4,14 @@
 \alias{reformat_LASSO}
 \title{summarise bootstrap runs for Lasso model, from \code{n} bootstraps}
 \usage{
-reformat_LASSO(c_selectID = NULL, mp_selectID = NULL,
-  LSOLDA_dat = NULL, nPredSubpop = NULL, Nodes_group = "#7570b3",
-  nboots = 2)
+reformat_LASSO(
+  c_selectID = NULL,
+  mp_selectID = NULL,
+  LSOLDA_dat = NULL,
+  nPredSubpop = NULL,
+  Nodes_group = "#7570b3",
+  nboots = 2
+)
 }
 \arguments{
 \item{c_selectID}{is the original cluster to be projected}

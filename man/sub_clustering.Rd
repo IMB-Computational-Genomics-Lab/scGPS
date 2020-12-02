@@ -4,8 +4,12 @@
 \alias{sub_clustering}
 \title{sub_clustering for selected cells}
 \usage{
-sub_clustering(object = NULL, ngenes = 1500, windows = seq(from =
-  0.025, to = 1, by = 0.025), select_cell_index = NULL)
+sub_clustering(
+  object = NULL,
+  ngenes = 1500,
+  windows = seq(from = 0.025, to = 1, by = 0.025),
+  select_cell_index = NULL
+)
 }
 \arguments{
 \item{object}{is a \linkS4class{SingleCellExperiment} object from the

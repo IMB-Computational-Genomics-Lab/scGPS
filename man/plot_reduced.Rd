@@ -4,9 +4,14 @@
 \alias{plot_reduced}
 \title{plot reduced data}
 \usage{
-plot_reduced(reduced_dat, color_fac = NULL, dims = c(1, 2),
-  dimNames = c("Dim1", "Dim2"), palletes = NULL,
-  legend_title = "Cluster")
+plot_reduced(
+  reduced_dat,
+  color_fac = NULL,
+  dims = c(1, 2),
+  dimNames = c("Dim1", "Dim2"),
+  palletes = NULL,
+  legend_title = "Cluster"
+)
 }
 \arguments{
 \item{reduced_dat}{is a matrix with genes in rows and cells in columns}

@@ -130,57 +130,31 @@ plot_reduced <- function(reduced_dat, color_fac = NULL, dims = c(1, 2),
 #'                         )
 #'names(DEgenes)
 
-
-
 find_markers <- function(expression_matrix = NULL, cluster = NULL, 
     selected_cluster = NULL, fitType = "local", 
     dispersion_method = "per-condition",
     sharing_Mode = "maximum") {
-    DE_exprsMat <- round(expression_matrix + 1)
-    
-    DE_results <- vector(mode = "list", 
-        length = length(unique(selected_cluster)))
-    for (cl_id in unique(selected_cluster)) {
-        # arrange clusters and exprs matrix
-        cl_index <- which(as.character(cluster) == as.character(cl_id))
-        mainCl_idx <- which(as.character(cluster) != as.character(cl_id))
-        diff_mat <- DE_exprsMat[, c(mainCl_idx, cl_index)]
-        # start DE
-        
-        condition_cluster = as.vector(cluster)
-        condition_cluster[seq_len(length(mainCl_idx))] <- rep("Others", 
-            length(mainCl_idx))
-        condition_cluster[
-            seq(from = (length(mainCl_idx) + 1), to = ncol(diff_mat))] <- 
-            rep(as.character(cl_id), length(cl_index))
-        
-        message(paste0("Start estimate dispersions for cluster ", 
-            as.character(cl_id), "..."))
-        # Note: the local fit option requires the library
-        cds = DESeq::newCountDataSet(diff_mat, condition_cluster)
-        cds = DESeq::estimateSizeFactors(cds)
-        #library(locfit)
-        cds = DESeq::estimateDispersions(cds, method = dispersion_method, 
-            fitType = fitType, sharingMode = sharing_Mode)
-        message(paste0("Done estimate dispersions. ",
-            "Start nbinom test for cluster ", as.character(cl_id), "..."))
-        res1 = DESeq::nbinomTest(cds, "Others", as.character(cl_id))
-        message(paste0("Done nbinom test for cluster ", as.character(cl_id),
-            " ..."))
-        # adjust folchange
-        message(paste0("Adjust foldchange by subtracting basemean to 1..."))
-        res1 <- mutate(res1, AdjustedFC = (res1$baseMeanB - 1)/
-            (res1$baseMeanA - 1))
-        res1 <- mutate(res1, AdjustedLogFC = log2((res1$baseMeanB - 1)/
-            (res1$baseMeanA - 1)))
-        # order
-        res1_order <- arrange(res1, res1$pval, desc(abs(res1$AdjustedLogFC)))
-        # write to list
-        DE_results <- c(DE_results, list(res1_order))
-        name_list = paste0("DE_Subpop", cl_id, "vsRemaining")
-        names(DE_results)[length(DE_results)] <- name_list
-    }
-    
+    diff_mat <- round(expression_matrix + 1)
+
+    # Gather cluster information for use in the model
+    condition_cluster = factor(cluster)
+    condition_cluster = as.data.frame(condition_cluster)
+
+    # Perform differential gene expression analysis
+    cds = DESeq2::DESeqDataSetFromMatrix(diff_mat, condition_cluster,
+        ~condition_cluster)
+    cds = DESeq2::estimateSizeFactors(cds)
+    cds = DESeq2::estimateDispersions(cds, fitType = fitType)
+    res1 = DESeq2::nbinomWaldTest(cds)
+
+    # Reformat ouput data
+    res1 <- DESeq2::results(res1)
+    res_names <- rownames(res1)
+    res1 <- res1@listData
+    res1 <- as.data.frame(res1)
+    res1$id <- res_names
+    # Order data based on p-value
+    DE_results <- arrange(res1, res1$pvalue, desc(abs(res1$log2FoldChange)))
     return(DE_results)
 }
 
@@ -219,8 +193,8 @@ find_markers <- function(expression_matrix = NULL, cluster = NULL,
 # type='source') Done installation needed for reactome pathway analysis reactome
 # in R----------------------------
 
-annotate_clusters <- function(DEgeneList, pvalueCutoff = 0.05, gene_symbol = TRUE,
-    species = "human") {
+annotate_clusters <- function(DEgeneList, pvalueCutoff = 0.05, 
+    gene_symbol = TRUE, species = "human") {
     # assumming the geneList is gene symbol (common for 10X data)
     if (species == "human") {
         if (gene_symbol == TRUE) {
@@ -278,7 +252,7 @@ annotate_clusters <- function(DEgeneList, pvalueCutoff = 0.05, gene_symbol = TRU
 #' @import RcppParallel
 #' @import SingleCellExperiment
 #' @import SummarizedExperiment
-#' @import DESeq
+#' @import DESeq2
 #' @import locfit
 #' @importFrom graphics barplot lines rect strheight strwidth text
 #' @importFrom stats as.dist coef na.omit prcomp predict sd as.dendrogram

@@ -4,9 +4,16 @@
 \alias{predicting}
 \title{Main prediction function applying the optimal ElasticNet and LDA models}
 \usage{
-predicting(listData = NULL, cluster_mixedpop2 = NULL,
-  mixedpop2 = NULL, out_idx = NULL, standardize = TRUE,
-  LDA_run = FALSE, c_selectID = NULL)
+predicting(
+  listData = NULL,
+  cluster_mixedpop2 = NULL,
+  mixedpop2 = NULL,
+  out_idx = NULL,
+  standardize = TRUE,
+  LDA_run = FALSE,
+  c_selectID = NULL,
+  log_transform = FALSE
+)
 }
 \arguments{
 \item{listData}{a \code{list} object containing trained results for the
@@ -28,6 +35,8 @@ ElasticNet, the LDA model needs to be trained from the training before
 inputting to this prediction step}
 
 \item{c_selectID}{a number to specify the trained cluster used for prediction}
+
+\item{log_transform}{boolean whether log transform should be computed}
 }
 \value{
 a \code{list} with prediction results written in to the index

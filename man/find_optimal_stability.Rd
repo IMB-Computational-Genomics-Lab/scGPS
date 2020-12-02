@@ -4,8 +4,12 @@
 \alias{find_optimal_stability}
 \title{Find the optimal cluster}
 \usage{
-find_optimal_stability(list_clusters, run_RandIdx, bagging = FALSE,
-  windows = seq(from = 0.025, to = 1, by = 0.025))
+find_optimal_stability(
+  list_clusters,
+  run_RandIdx,
+  bagging = FALSE,
+  windows = seq(from = 0.025, to = 1, by = 0.025)
+)
 }
 \arguments{
 \item{list_clusters}{is a \code{list} object containing 40 clustering results}

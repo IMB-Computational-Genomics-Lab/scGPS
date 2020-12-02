@@ -4,8 +4,12 @@
 \alias{new_scGPS_object}
 \title{new_scGPS_object}
 \usage{
-new_scGPS_object(ExpressionMatrix = NULL, GeneMetadata = NULL,
-  CellMetadata = NULL)
+new_scGPS_object(
+  ExpressionMatrix = NULL,
+  GeneMetadata = NULL,
+  CellMetadata = NULL,
+  LogMatrix = NULL
+)
 }
 \arguments{
 \item{ExpressionMatrix}{An expression matrix in data.frame or matrix format.
@@ -23,6 +27,9 @@ The column containing clustering information needs to be the first column in
 the CellMetadata dataframe If clustering information is not available, users
 can run CORE function and add the information to the scGPS before running
 scGPS prediction}
+
+\item{LogMatrix}{optional input for a log matrix of the data. If no log
+matrix is supplied one will be created for the object}
 }
 \value{
 This function generates an scGPS object belonging to the 

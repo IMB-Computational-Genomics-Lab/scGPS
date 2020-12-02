@@ -50,14 +50,16 @@ The purpose of this workflow is to solve the following task:
 ## 2.1 Create scGPS objects
 ```{r scGPS_object, warning = FALSE, message = FALSE}
 
-# load mixed population 1 (loaded from day_2_cardio_cell_sample dataset, named it as day2)
+# load mixed population 1 (loaded from day_2_cardio_cell_sample dataset, 
+# named it as day2)
 library(scGPS)
 
 day2 <- day_2_cardio_cell_sample
 mixedpop1 <- new_scGPS_object(ExpressionMatrix = day2$dat2_counts,
     GeneMetadata = day2$dat2geneInfo, CellMetadata = day2$dat2_clusters)
 
-# load mixed population 2 (loaded from day_5_cardio_cell_sample dataset, named it as day5)
+# load mixed population 2 (loaded from day_5_cardio_cell_sample dataset, 
+# named it as day5)
 day5 <- day_5_cardio_cell_sample
 mixedpop2 <- new_scGPS_object(ExpressionMatrix = day5$dat5_counts,
     GeneMetadata = day5$dat5geneInfo, CellMetadata = day5$dat5_clusters)
@@ -176,9 +178,9 @@ SCORE_test <- CORE_bagging(mixedpop2, remove_outlier = c(0), PCA=FALSE,
 ```{r visualisation, dev='CairoPDF'}
 dev.off()
 ##3.2.1 plot CORE clustering
-p1 <- plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster,
-               color_branch = c("#208eb7", "#6ce9d3", "#1c5e39", "#8fca40", "#154975",
-                                "#b1c8eb"))
+p1 <- plot_CORE(CORE_cluster$tree, CORE_cluster$Cluster, 
+    color_branch = c("#208eb7", "#6ce9d3", "#1c5e39", "#8fca40", "#154975",
+        "#b1c8eb"))
 p1
 #extract optimal index identified by CORE
 key_height <- CORE_cluster$optimalClust$KeyStats$Height
@@ -194,7 +196,8 @@ plot_optimal_CORE(original_tree= CORE_cluster$tree,
 plot_CORE(SCORE_test$tree, list_clusters = SCORE_test$Cluster)
 #plot one stable optimal clustering bar
 plot_optimal_CORE(original_tree= SCORE_test$tree,
-                 optimal_cluster = unlist(SCORE_test$Cluster[SCORE_test$optimal_index]),
+                 optimal_cluster = unlist(SCORE_test$Cluster[
+                    SCORE_test$optimal_index]),
                  shift = -100)
 
 ```
@@ -221,7 +224,6 @@ genes <-genes$Merged_unique
 #colData(mixedpop2)[,1] <- unlist(SCORE_test$Cluster[SCORE_test$optimal_index])
 
 suppressMessages(library(locfit))
-suppressMessages(library(DESeq))
 
 DEgenes <- find_markers(expression_matrix=assay(mixedpop2),
                             cluster = colData(mixedpop2)[,1],
@@ -265,7 +267,7 @@ The purpose of this workflow is to solve the following task:
 c_selectID <- 1
 #note make sure the format for genes input here is the same to the format
 #for genes in the mixedpop1 and mixedpop2
-genes = DEgenes$DE_Subpop1vsRemaining$id[1:500]
+genes = DEgenes$id[1:500]
 
 #run the test bootstrap with nboots = 2 runs
 
@@ -273,7 +275,8 @@ cluster_mixedpop1 <- colData(mixedpop1)[,1]
 cluster_mixedpop2 <- colData(mixedpop2)[,1]
 
 LSOLDA_dat <- bootstrap_prediction(nboots = 2, mixedpop1 = mixedpop1,
-                             mixedpop2 = mixedpop2, genes = genes, c_selectID  = c_selectID,
+                             mixedpop2 = mixedpop2, genes = genes, 
+                             c_selectID  = c_selectID,
                              listData = list(),
                              cluster_mixedpop1 = cluster_mixedpop1,
                              cluster_mixedpop2 = cluster_mixedpop2)
@@ -314,32 +317,36 @@ cluster_mixedpop2 <- colData(mixedpop2)[,1]
 
 c_selectID <- 1
 #top 200 gene markers distinguishing cluster 1
-genes = DEgenes$DE_Subpop1vsRemaining$id[1:200]
+genes = DEgenes$id[1:200]
 
 LSOLDA_dat1 <- bootstrap_prediction(nboots = 2, mixedpop1 = mixedpop2,
-                        mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
+                        mixedpop2 = mixedpop2, genes=genes, c_selectID, 
+                        listData =list(),
                         cluster_mixedpop1 = cluster_mixedpop2,
                         cluster_mixedpop2 = cluster_mixedpop2)
 
 c_selectID <- 2
-genes = DEgenes$DE_Subpop2vsRemaining$id[1:200]
+genes = DEgenes$id[1:200]
 
 LSOLDA_dat2 <- bootstrap_prediction(nboots = 2,mixedpop1 = mixedpop2,
-                        mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
+                        mixedpop2 = mixedpop2, genes=genes, c_selectID, 
+                        listData =list(),
                         cluster_mixedpop1 = cluster_mixedpop2,
                         cluster_mixedpop2 = cluster_mixedpop2)
 
 c_selectID <- 3
-genes = DEgenes$DE_Subpop3vsRemaining$id[1:200]
+genes = DEgenes$id[1:200]
 LSOLDA_dat3 <- bootstrap_prediction(nboots = 2,mixedpop1 = mixedpop2,
-                        mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
+                        mixedpop2 = mixedpop2, genes=genes, c_selectID, 
+                        listData =list(),
                         cluster_mixedpop1 = cluster_mixedpop2,
                         cluster_mixedpop2 = cluster_mixedpop2)
 
 c_selectID <- 4
-genes = DEgenes$DE_Subpop4vsRemaining$id[1:200]
+genes = DEgenes$id[1:200]
 LSOLDA_dat4 <- bootstrap_prediction(nboots = 2,mixedpop1 = mixedpop2,
-                        mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
+                        mixedpop2 = mixedpop2, genes=genes, c_selectID, 
+                        listData =list(),
                         cluster_mixedpop1 = cluster_mixedpop2,
                         cluster_mixedpop2 = cluster_mixedpop2)
 
@@ -348,22 +355,26 @@ LSOLDA_dat4 <- bootstrap_prediction(nboots = 2,mixedpop1 = mixedpop2,
 
 LASSO_C1S2  <- reformat_LASSO(c_selectID=1, mp_selectID = 2,
                              LSOLDA_dat=LSOLDA_dat1,
-                             nPredSubpop = length(unique(colData(mixedpop2)[,1])),
+                             nPredSubpop = length(unique(colData(mixedpop2)
+                                [,1])),
                              Nodes_group ="#7570b3")
 
 LASSO_C2S2  <- reformat_LASSO(c_selectID=2, mp_selectID =2,
                              LSOLDA_dat=LSOLDA_dat2,
-                             nPredSubpop = length(unique(colData(mixedpop2)[,1])),
+                             nPredSubpop = length(unique(colData(mixedpop2)
+                                [,1])),
                              Nodes_group ="#1b9e77")
 
 LASSO_C3S2  <- reformat_LASSO(c_selectID=3, mp_selectID =2,
                              LSOLDA_dat=LSOLDA_dat3,
-                             nPredSubpop = length(unique(colData(mixedpop2)[,1])),
+                             nPredSubpop = length(unique(colData(mixedpop2)
+                                [,1])),
                              Nodes_group ="#e7298a")
 
 LASSO_C4S2  <- reformat_LASSO(c_selectID=4, mp_selectID =2,
                              LSOLDA_dat=LSOLDA_dat4,
-                             nPredSubpop = length(unique(colData(mixedpop2)[,1])),
+                             nPredSubpop = length(unique(colData(mixedpop2)
+                                [,1])),
                              Nodes_group ="#00FFFF")
 
 combined <- rbind(LASSO_C1S2,LASSO_C2S2,LASSO_C3S2, LASSO_C4S2 )
@@ -404,8 +415,8 @@ node_df$color <- Color$color
 
 suppressMessages(library(networkD3))
 p1<-sankeyNetwork(Links =combined_D3obj$Links, Nodes = node_df,
-                 Value = "Value", NodeGroup ="color", LinkGroup = "LinkColor", NodeID="Node",
-                 Source="Source", Target="Target", fontSize = 22 )
+                 Value = "Value", NodeGroup ="color", LinkGroup = "LinkColor", 
+                 NodeID="Node", Source="Source", Target="Target", fontSize = 22)
 p1
 
 #saveNetwork(p1, file = paste0(path,'Subpopulation_Net.html'))
@@ -423,37 +434,43 @@ row_cluster <-length(unique(colData(mixedpop2)[,1]))
 
 c_selectID <- 1
 #top 200 gene markers distinguishing cluster 1
-genes = DEgenes$DE_Subpop1vsRemaining$id[1:200]
+genes = DEgenes$id[1:200]
 LSOLDA_dat1 <- bootstrap_prediction(nboots = 2, mixedpop1 = mixedpop1,
-                        mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
+                        mixedpop2 = mixedpop2, genes=genes, c_selectID, 
+                        listData =list(),
                         cluster_mixedpop1 = cluster_mixedpop1,
                         cluster_mixedpop2 = cluster_mixedpop2)
 
 
 c_selectID <- 2
-genes = DEgenes$DE_Subpop2vsRemaining$id[1:200]
+genes = DEgenes$id[1:200]
 LSOLDA_dat2 <- bootstrap_prediction(nboots = 2,mixedpop1 = mixedpop1,
-                        mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
+                        mixedpop2 = mixedpop2, genes=genes, c_selectID, 
+                        listData =list(),
                         cluster_mixedpop1 = cluster_mixedpop1,
                         cluster_mixedpop2 = cluster_mixedpop2)
 
 c_selectID <- 3
-genes = DEgenes$DE_Subpop3vsRemaining$id[1:200]
+genes = DEgenes$id[1:200]
 LSOLDA_dat3 <- bootstrap_prediction(nboots = 2,mixedpop1 = mixedpop1,
-                        mixedpop2 = mixedpop2, genes=genes, c_selectID, listData =list(),
+                        mixedpop2 = mixedpop2, genes=genes, c_selectID, 
+                        listData =list(),
                         cluster_mixedpop1 = cluster_mixedpop1,
                         cluster_mixedpop2 = cluster_mixedpop2)
 
 #prepare table input for sankey plot
 
 LASSO_C1S1  <- reformat_LASSO(c_selectID=1, mp_selectID = 1,
-                             LSOLDA_dat=LSOLDA_dat1, nPredSubpop = row_cluster, Nodes_group = "#7570b3")
+                             LSOLDA_dat=LSOLDA_dat1, nPredSubpop = row_cluster, 
+                             Nodes_group = "#7570b3")
 
 LASSO_C2S1  <- reformat_LASSO(c_selectID=2, mp_selectID = 1,
-                             LSOLDA_dat=LSOLDA_dat2, nPredSubpop = row_cluster, Nodes_group = "#1b9e77")
+                             LSOLDA_dat=LSOLDA_dat2, nPredSubpop = row_cluster, 
+                             Nodes_group = "#1b9e77")
 
 LASSO_C3S1  <- reformat_LASSO(c_selectID=3, mp_selectID = 1,
-                             LSOLDA_dat=LSOLDA_dat3, nPredSubpop = row_cluster, Nodes_group = "#e7298a")
+                             LSOLDA_dat=LSOLDA_dat3, nPredSubpop = row_cluster, 
+                             Nodes_group = "#e7298a")
 
 
 combined <- rbind(LASSO_C1S1,LASSO_C2S1,LASSO_C3S1)

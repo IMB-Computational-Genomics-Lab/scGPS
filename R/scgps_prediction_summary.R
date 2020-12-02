@@ -256,7 +256,7 @@ reformat_LASSO <- function(c_selectID = NULL, mp_selectID = NULL,
     colnames(LASSO_out) <- c(paste0("Boostrap", seq_len(nboots)), "Target", 
         "Source", "Node", "NodeGroup")
     matrx_mean <- apply(LASSO_out[, seq_len(nboots)], 1, function(x) {
-        mean(as.numeric(x))
+        sum(as.numeric(x)[which(!is.na(as.numeric(x)))])/length(as.numeric(x))
     })
     
     LASSO_out$Value <- matrx_mean

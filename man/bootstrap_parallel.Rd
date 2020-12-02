@@ -5,10 +5,17 @@
 \title{BootStrap runs for both scGPS training and prediction
 with parallel option}
 \usage{
-bootstrap_parallel(ncores = 4, nboots = 1, genes = genes,
-  mixedpop1 = mixedpop1, mixedpop2 = mixedpop2, c_selectID,
-  listData = list(), cluster_mixedpop1 = NULL,
-  cluster_mixedpop2 = NULL)
+bootstrap_parallel(
+  ncores = 4,
+  nboots = 1,
+  genes = genes,
+  mixedpop1 = mixedpop1,
+  mixedpop2 = mixedpop2,
+  c_selectID,
+  listData = list(),
+  cluster_mixedpop1 = NULL,
+  cluster_mixedpop2 = NULL
+)
 }
 \arguments{
 \item{ncores}{a number specifying how many cpus to be used for running}

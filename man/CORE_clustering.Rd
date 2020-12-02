@@ -4,9 +4,17 @@
 \alias{CORE_clustering}
 \title{Main clustering CORE V2.0 updated}
 \usage{
-CORE_clustering(mixedpop = NULL, windows = seq(from = 0.025, to = 1, by
-  = 0.025), remove_outlier = c(0), nRounds = 1, PCA = FALSE,
-  nPCs = 20, ngenes = 1500, verbose = FALSE)
+CORE_clustering(
+  mixedpop = NULL,
+  windows = seq(from = 0.025, to = 1, by = 0.025),
+  remove_outlier = c(0),
+  nRounds = 1,
+  PCA = FALSE,
+  nPCs = 20,
+  ngenes = 1500,
+  verbose = FALSE,
+  log_transform = FALSE
+)
 }
 \arguments{
 \item{mixedpop}{is a \linkS4class{SingleCellExperiment} object from the train
@@ -28,6 +36,8 @@ matrix}
 \item{ngenes}{number of genes used for clustering calculations.}
 
 \item{verbose}{a logical whether to display additional messages}
+
+\item{log_transform}{boolean whether log transform should be computed}
 }
 \value{
 a \code{list} with clustering results of all iterations, and a 

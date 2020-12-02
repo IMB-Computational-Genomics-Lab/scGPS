@@ -4,10 +4,18 @@
 \alias{clustering_bagging}
 \title{HC clustering for a number of resolutions}
 \usage{
-clustering_bagging(object = NULL, ngenes = 1500, bagging_run = 20,
-  subsample_proportion = 0.8, windows = seq(from = 0.025, to = 1, by =
-  0.025), remove_outlier = c(0), nRounds = 1, PCA = FALSE,
-  nPCs = 20)
+clustering_bagging(
+  object = NULL,
+  ngenes = 1500,
+  bagging_run = 20,
+  subsample_proportion = 0.8,
+  windows = seq(from = 0.025, to = 1, by = 0.025),
+  remove_outlier = c(0),
+  nRounds = 1,
+  PCA = FALSE,
+  nPCs = 20,
+  log_transform = FALSE
+)
 }
 \arguments{
 \item{object}{is a \linkS4class{SingleCellExperiment} object from the train
@@ -33,6 +41,8 @@ outliers.}
 matrix.}
 
 \item{nPCs}{an integer specifying the number of principal components to use.}
+
+\item{log_transform}{boolean whether log transform should be computed}
 }
 \value{
 a list of clustering results containing each bagging run

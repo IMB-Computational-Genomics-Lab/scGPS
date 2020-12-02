@@ -5,8 +5,10 @@
 \alias{day_2_cardio_cell_sample}
 \title{One of the two example single-cell count matrices to be used
 for training \pkg{scGPS} model}
-\format{a list instance, containing a count matrix and a vector with 
-clustering information}
+\format{
+a list instance, containing a count matrix and a vector with 
+clustering information
+}
 \source{
 Dr Joseph Powell's laboratory, IMB, UQ
 }

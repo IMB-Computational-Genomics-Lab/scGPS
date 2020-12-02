@@ -4,8 +4,7 @@
 \alias{PCA}
 \title{PCA}
 \usage{
-PCA(expression.matrix = NULL, ngenes = 1500, scaling = TRUE,
-  npcs = 50)
+PCA(expression.matrix = NULL, ngenes = 1500, scaling = TRUE, npcs = 50)
 }
 \arguments{
 \item{expression.matrix}{An expression matrix, with genes in rows}
