@@ -8,21 +8,29 @@
 
 <title>Function reference • scGPS</title>
 
+
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
-<!-- sticky kit -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+<!-- headroom.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -30,7 +38,9 @@
 
 
 
+
 <meta property="og:title" content="Function reference" />
+
 
 
 
@@ -44,9 +54,10 @@
 <![endif]-->
 
 
+
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-index">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -60,19 +71,13 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">scGPS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.20</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5.1</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -97,23 +102,35 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../benchmarking/benchMarking_baron.html" target="_blank">Baron</a>
-      <a href="../benchmarking/benchMarking_camp.html" target="_blank">Camp</a>
-      <a href="../benchmarking/benchMarking_klein.html" target="_blank">Klein</a>
-      <a href="../benchmarking/benchMarking_koh.html" target="_blank">Koh</a>
-      <a href="../benchmarking/benchMarking_kumar.html" target="_blank">Kumar</a>
-      <a href="../benchmarking/benchMarking_yan.html" target="_blank">Yan</a>
-      <a href="../benchmarking/benchMarking_pseudotime.html" target="_blank">Pseudo-time</a>
+      <a href="../benchmarking/benchMarking_baron.html" target="_blank">Baron Cluster</a>
+      <a href="../benchmarking/benchMarking_camp.html" target="_blank">Camp Cluster</a>
+      <a href="../benchmarking/benchMarking_klein.html" target="_blank">Klein Cluster</a>
+      <a href="../benchmarking/benchMarking_koh.html" target="_blank">Koh Cluster</a>
+      <a href="../benchmarking/benchMarking_kumar.html" target="_blank">Kumar Cluster</a>
+      <a href="../benchmarking/benchMarking_yan.html" target="_blank">Yan Cluster</a>
+      <a href="../benchmarking/buettner.html" target="_blank">Buettner Trajectory</a>
+      <a href="../benchmarking/engel.html" target="_blank">Engel Trajectory</a>
+      <a href="../benchmarking/guo.html" target="_blank">Guo Trajectory</a>
+      <a href="../benchmarking/hayashi.html" target="_blank">Hayashi Trajectory</a>
+      <a href="../benchmarking/kowalczyk.html" target="_blank">Kowalczyk Trajectory</a>
+      <a href="../benchmarking/loh.html" target="_blank">Loh Trajectory</a>
+      <a href="../benchmarking/petropoulos.html" target="_blank">Petropoulos Trajectory</a>
+      <a href="../benchmarking/saliba.html" target="_blank">Saliba Trajectory</a>
+      <a href="../benchmarking/schlitzer.html" target="_blank">Schlitzer Trajectory</a>
+      <a href="../benchmarking/trapnell.html" target="_blank">Trapnell Trajectory</a>
+      <a href="../benchmarking/zhang.html" target="_blank">Zhang Trajectory</a>
     </li>
   </ul>
 </li>
 
-
-
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/IMB-Computational-Genomics-Lab/scGPS/">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -121,6 +138,7 @@
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -144,7 +162,43 @@
           <p class="section-desc"></p>
         </th>
       </tr>
+      
+      
+    </tbody><tbody>
+      
+      
       <tr>
+        
+        <td>
+          <p><code><a href="CORE_bagging.html">CORE_bagging()</a></code> </p>
+        </td>
+        <td><p>Main clustering SCORE (CORE V2.0) Stable Clustering
+at Optimal REsolution with bagging and bootstrapping</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="CORE_clustering.html">CORE_clustering()</a></code> </p>
+        </td>
+        <td><p>Main clustering CORE V2.0 updated</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="CORE_subcluster.html">CORE_subcluster()</a></code> </p>
+        </td>
+        <td><p>sub_clustering (optional) after running CORE 'test'</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="PCA.html">PCA()</a></code> </p>
+        </td>
+        <td><p>PCA</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="PrinComp_cpp.html">PrinComp_cpp()</a></code> </p>
+        </td>
+        <td><p>Principal component analysis</p></td>
+      </tr><tr>
         
         <td>
           <p><code><a href="add_import.html">add_import</a></code> </p>
@@ -193,25 +247,6 @@ with parallel option</p></td>
           <p><code><a href="clustering_bagging.html">clustering_bagging()</a></code> </p>
         </td>
         <td><p>HC clustering for a number of resolutions</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="CORE_bagging.html">CORE_bagging()</a></code> </p>
-        </td>
-        <td><p>Main clustering SCORE (CORE V2.0) Stable Clustering
-at Optimal REsolution with bagging and bootstrapping</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="CORE_clustering.html">CORE_clustering()</a></code> </p>
-        </td>
-        <td><p>Main clustering CORE V2.0 updated</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="CORE_subcluster.html">CORE_subcluster()</a></code> </p>
-        </td>
-        <td><p>sub_clustering (optional) after running CORE 'test'</p></td>
       </tr><tr>
         
         <td>
@@ -271,12 +306,6 @@ for <span class="pkg">scGPS</span> prediction</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="PCA.html">PCA()</a></code> </p>
-        </td>
-        <td><p>PCA</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="plot_CORE.html">plot_CORE()</a></code> </p>
         </td>
         <td><p>Plot dendrogram tree for CORE result</p></td>
@@ -298,12 +327,6 @@ for <span class="pkg">scGPS</span> prediction</p></td>
           <p><code><a href="predicting.html">predicting()</a></code> </p>
         </td>
         <td><p>Main prediction function applying the optimal ElasticNet and LDA models</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="PrinComp_cpp.html">PrinComp_cpp()</a></code> </p>
-        </td>
-        <td><p>Principal component analysis</p></td>
       </tr><tr>
         
         <td>
@@ -331,15 +354,15 @@ for <span class="pkg">scGPS</span> prediction</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="subset_cpp.html">subset_cpp()</a></code> </p>
-        </td>
-        <td><p>Subset a matrix</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="sub_clustering.html">sub_clustering()</a></code> </p>
         </td>
         <td><p>sub_clustering for selected cells</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="subset_cpp.html">subset_cpp()</a></code> </p>
+        </td>
+        <td><p>Subset a matrix</p></td>
       </tr><tr>
         
         <td>
@@ -369,6 +392,12 @@ bootstraps</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="tSNE.html">tSNE()</a></code> </p>
+        </td>
+        <td><p>tSNE</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="top_var.html">top_var()</a></code> </p>
         </td>
         <td><p>select top variable genes</p></td>
@@ -395,12 +424,6 @@ expressed genes</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="tSNE.html">tSNE()</a></code> </p>
-        </td>
-        <td><p>tSNE</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="var_cpp.html">var_cpp()</a></code> </p>
         </td>
         <td><p>Calculate variance</p></td>
@@ -409,13 +432,13 @@ expressed genes</p></td>
     </table>
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-all-functions">All functions</a></li>
-    </ul>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
+
 
       <footer>
       <div class="copyright">
@@ -423,13 +446,16 @@ expressed genes</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 
